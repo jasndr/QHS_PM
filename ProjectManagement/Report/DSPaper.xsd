@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSPaper" targetNamespace="http://tempuri.org/DSPaper.xsd" xmlns:mstns="http://tempuri.org/DSPaper.xsd" xmlns="http://tempuri.org/DSPaper.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Web.config" AppSettingsPropertyName="BioStatProjectConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="BioStatProjectConnectionString (Web.config)" ParameterPrefix="@" PropertyReference="AppConfig.System.Configuration.ConfigurationManager.0.ConnectionStrings.BioStatProjectConnectionString.ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PaperTableAdapter" GeneratorDataComponentClassName="PaperTableAdapter" Name="Paper" UserDataComponentName="PaperTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="BioStatProjectConnectionString (Web.config)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT 
+		p.[Id]
+		,[ProjectId]
+		,p.Status as StatusId
+		,s.Name as PubStatus
+		,CASE 
+			WHEN s.Name='Submitted' THEN p.SubmitDate
+			WHEN s.Name='Accepted'	THEN p.AcceptDate
+			WHEN s.Name='Published' THEN p.PubDate
+		END as StatusDate
+		,[Author]
+		,replace(replace([Title], char(10), '') , char(13),'') as Title
+		,replace(replace(j.JournalName, char(10), '') , char(13),'') as JournalName
+		,replace(replace(c.ConfName, char(10), '') , char(13),'') as conf
+		,c.ConfLoc
+		,c.StartDate
+		,c.EndDate
+		,CASE WHEN [IsPosterConf]=1 THEN 'Poster' ELSE 'presentation' END  as pp
+		,YEAR(PubDate) AS pubYear
+		,MONTH(PubDate) AS pubMonth
+		,[Volume]
+		,[Issue]
+		,[Page]
+		,[DOI]
+		,[PMID]
+		,[PMCID]
+		,g.GrantAffilName AS GrantAffilName
+	FROM [dbo].[Publications] p
+	left outer join [dbo].[PublishStatus] s
+		on p.Status = s.Id
+	left outer join [dbo].[Journals] j
+		on j.Id = p.JounralId
+	left outer join [dbo].[Conferences] c
+		on c.Id = p.ConferenceId
+                   left outer join PublicationGrants pg
+                                      on pg.PublicationId = p.Id
+                    inner join  GrantAffils g
+                                      on g.Id = pg.GrantAffilId</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Id" DataSetColumn="Id" />
+              <Mapping SourceColumn="ProjectId" DataSetColumn="ProjectId" />
+              <Mapping SourceColumn="StatusId" DataSetColumn="StatusId" />
+              <Mapping SourceColumn="PubStatus" DataSetColumn="PubStatus" />
+              <Mapping SourceColumn="StatusDate" DataSetColumn="StatusDate" />
+              <Mapping SourceColumn="Author" DataSetColumn="Author" />
+              <Mapping SourceColumn="Title" DataSetColumn="Title" />
+              <Mapping SourceColumn="JournalName" DataSetColumn="JournalName" />
+              <Mapping SourceColumn="conf" DataSetColumn="conf" />
+              <Mapping SourceColumn="ConfLoc" DataSetColumn="ConfLoc" />
+              <Mapping SourceColumn="StartDate" DataSetColumn="StartDate" />
+              <Mapping SourceColumn="EndDate" DataSetColumn="EndDate" />
+              <Mapping SourceColumn="pp" DataSetColumn="pp" />
+              <Mapping SourceColumn="pubYear" DataSetColumn="pubYear" />
+              <Mapping SourceColumn="pubMonth" DataSetColumn="pubMonth" />
+              <Mapping SourceColumn="Volume" DataSetColumn="Volume" />
+              <Mapping SourceColumn="Issue" DataSetColumn="Issue" />
+              <Mapping SourceColumn="Page" DataSetColumn="Page" />
+              <Mapping SourceColumn="DOI" DataSetColumn="DOI" />
+              <Mapping SourceColumn="PMID" DataSetColumn="PMID" />
+              <Mapping SourceColumn="PMCID" DataSetColumn="PMCID" />
+              <Mapping SourceColumn="GrantAffilName" DataSetColumn="GrantAffilName" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSPaper" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DSPaper" msprop:Generator_UserDSName="DSPaper">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Paper" msprop:Generator_TableClassName="PaperDataTable" msprop:Generator_TableVarName="tablePaper" msprop:Generator_TablePropName="Paper" msprop:Generator_RowDeletingName="PaperRowDeleting" msprop:Generator_RowChangingName="PaperRowChanging" msprop:Generator_RowEvHandlerName="PaperRowChangeEventHandler" msprop:Generator_RowDeletedName="PaperRowDeleted" msprop:Generator_UserTableName="Paper" msprop:Generator_RowChangedName="PaperRowChanged" msprop:Generator_RowEvArgName="PaperRowChangeEvent" msprop:Generator_RowClassName="PaperRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnId" msprop:Generator_ColumnPropNameInRow="Id" msprop:Generator_ColumnPropNameInTable="IdColumn" msprop:Generator_UserColumnName="Id" type="xs:int" />
+              <xs:element name="ProjectId" msprop:Generator_ColumnVarNameInTable="columnProjectId" msprop:Generator_ColumnPropNameInRow="ProjectId" msprop:Generator_ColumnPropNameInTable="ProjectIdColumn" msprop:Generator_UserColumnName="ProjectId" type="xs:int" />
+              <xs:element name="StatusId" msprop:Generator_ColumnVarNameInTable="columnStatusId" msprop:Generator_ColumnPropNameInRow="StatusId" msprop:Generator_ColumnPropNameInTable="StatusIdColumn" msprop:Generator_UserColumnName="StatusId" type="xs:int" />
+              <xs:element name="PubStatus" msprop:Generator_ColumnVarNameInTable="columnPubStatus" msprop:Generator_ColumnPropNameInRow="PubStatus" msprop:Generator_ColumnPropNameInTable="PubStatusColumn" msprop:Generator_UserColumnName="PubStatus" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StatusDate" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnStatusDate" msprop:Generator_ColumnPropNameInRow="StatusDate" msprop:Generator_ColumnPropNameInTable="StatusDateColumn" msprop:Generator_UserColumnName="StatusDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Author" msprop:Generator_ColumnVarNameInTable="columnAuthor" msprop:Generator_ColumnPropNameInRow="Author" msprop:Generator_ColumnPropNameInTable="AuthorColumn" msprop:Generator_UserColumnName="Author">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Title" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTitle" msprop:Generator_ColumnPropNameInRow="Title" msprop:Generator_ColumnPropNameInTable="TitleColumn" msprop:Generator_UserColumnName="Title" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="JournalName" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnJournalName" msprop:Generator_ColumnPropNameInRow="JournalName" msprop:Generator_ColumnPropNameInTable="JournalNameColumn" msprop:Generator_UserColumnName="JournalName" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="conf" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnconf" msprop:Generator_ColumnPropNameInRow="conf" msprop:Generator_ColumnPropNameInTable="confColumn" msprop:Generator_UserColumnName="conf" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ConfLoc" msprop:Generator_ColumnVarNameInTable="columnConfLoc" msprop:Generator_ColumnPropNameInRow="ConfLoc" msprop:Generator_ColumnPropNameInTable="ConfLocColumn" msprop:Generator_UserColumnName="ConfLoc" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StartDate" msprop:Generator_ColumnVarNameInTable="columnStartDate" msprop:Generator_ColumnPropNameInRow="StartDate" msprop:Generator_ColumnPropNameInTable="StartDateColumn" msprop:Generator_UserColumnName="StartDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="EndDate" msprop:Generator_ColumnVarNameInTable="columnEndDate" msprop:Generator_ColumnPropNameInRow="EndDate" msprop:Generator_ColumnPropNameInTable="EndDateColumn" msprop:Generator_UserColumnName="EndDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="pp" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnpp" msprop:Generator_ColumnPropNameInRow="pp" msprop:Generator_ColumnPropNameInTable="ppColumn" msprop:Generator_UserColumnName="pp" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="12" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="pubYear" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnpubYear" msprop:Generator_ColumnPropNameInRow="pubYear" msprop:Generator_ColumnPropNameInTable="pubYearColumn" msprop:Generator_UserColumnName="pubYear" type="xs:int" minOccurs="0" />
+              <xs:element name="pubMonth" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnpubMonth" msprop:Generator_ColumnPropNameInRow="pubMonth" msprop:Generator_ColumnPropNameInTable="pubMonthColumn" msprop:Generator_UserColumnName="pubMonth" type="xs:int" minOccurs="0" />
+              <xs:element name="Volume" msprop:Generator_ColumnVarNameInTable="columnVolume" msprop:Generator_ColumnPropNameInRow="Volume" msprop:Generator_ColumnPropNameInTable="VolumeColumn" msprop:Generator_UserColumnName="Volume" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Issue" msprop:Generator_ColumnVarNameInTable="columnIssue" msprop:Generator_ColumnPropNameInRow="Issue" msprop:Generator_ColumnPropNameInTable="IssueColumn" msprop:Generator_UserColumnName="Issue" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Page" msprop:Generator_ColumnVarNameInTable="columnPage" msprop:Generator_ColumnPropNameInRow="Page" msprop:Generator_ColumnPropNameInTable="PageColumn" msprop:Generator_UserColumnName="Page" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="DOI" msprop:Generator_ColumnVarNameInTable="columnDOI" msprop:Generator_ColumnPropNameInRow="DOI" msprop:Generator_ColumnPropNameInTable="DOIColumn" msprop:Generator_UserColumnName="DOI" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PMID" msprop:Generator_ColumnVarNameInTable="columnPMID" msprop:Generator_ColumnPropNameInRow="PMID" msprop:Generator_ColumnPropNameInTable="PMIDColumn" msprop:Generator_UserColumnName="PMID" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PMCID" msprop:Generator_ColumnVarNameInTable="columnPMCID" msprop:Generator_ColumnPropNameInRow="PMCID" msprop:Generator_ColumnPropNameInTable="PMCIDColumn" msprop:Generator_UserColumnName="PMCID" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="GrantAffilName" msprop:Generator_ColumnVarNameInTable="columnGrantAffilName" msprop:Generator_ColumnPropNameInRow="GrantAffilName" msprop:Generator_ColumnPropNameInTable="GrantAffilNameColumn" msprop:Generator_UserColumnName="GrantAffilName">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="FromDate" msprop:Generator_ColumnVarNameInTable="columnFromDate" msprop:Generator_ColumnPropNameInRow="FromDate" msprop:Generator_ColumnPropNameInTable="FromDateColumn" msprop:Generator_UserColumnName="FromDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ToDate" msprop:Generator_ColumnVarNameInTable="columnToDate" msprop:Generator_ColumnPropNameInRow="ToDate" msprop:Generator_ColumnPropNameInTable="ToDateColumn" msprop:Generator_UserColumnName="ToDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CitationFormat" msprop:Generator_ColumnVarNameInTable="columnCitationFormat" msprop:Generator_ColumnPropNameInRow="CitationFormat" msprop:Generator_ColumnPropNameInTable="CitationFormatColumn" msprop:Generator_UserColumnName="CitationFormat" type="xs:boolean" default="false" minOccurs="0" />
+              <xs:element name="Citation" msprop:Generator_ColumnVarNameInTable="columnCitation" msprop:Generator_ColumnPropNameInRow="Citation" msprop:Generator_ColumnPropNameInTable="CitationColumn" msprop:Generator_UserColumnName="Citation" type="xs:string" minOccurs="0" />
+              <xs:element name="BiostatName" msprop:Generator_ColumnVarNameInTable="columnBiostatName" msprop:Generator_ColumnPropNameInRow="BiostatName" msprop:Generator_ColumnPropNameInTable="BiostatNameColumn" msprop:Generator_UserColumnName="BiostatName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Paper" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

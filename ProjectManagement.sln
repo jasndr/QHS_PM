@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement", "ProjectManagement\ProjectManagement.csproj", "{2093E8A1-91A7-4C42-8154-3368096ADA5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biostat.DAL", "Biostat.DAL\Biostat.DAL.csproj", "{1D9C85C8-9A29-4CF4-BF3A-C2F71699B593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biostat.Model", "Biostat.Model\Biostat.Model.csproj", "{F96EEF48-091C-4E3E-A820-BBCB52DA0D69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biostat.BL", "Biostat.BL\Biostat.BL.csproj", "{521B7782-F509-400A-93BD-529C8040BA32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2093E8A1-91A7-4C42-8154-3368096ADA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2093E8A1-91A7-4C42-8154-3368096ADA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2093E8A1-91A7-4C42-8154-3368096ADA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2093E8A1-91A7-4C42-8154-3368096ADA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D9C85C8-9A29-4CF4-BF3A-C2F71699B593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D9C85C8-9A29-4CF4-BF3A-C2F71699B593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D9C85C8-9A29-4CF4-BF3A-C2F71699B593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D9C85C8-9A29-4CF4-BF3A-C2F71699B593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F96EEF48-091C-4E3E-A820-BBCB52DA0D69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F96EEF48-091C-4E3E-A820-BBCB52DA0D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F96EEF48-091C-4E3E-A820-BBCB52DA0D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F96EEF48-091C-4E3E-A820-BBCB52DA0D69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{521B7782-F509-400A-93BD-529C8040BA32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{521B7782-F509-400A-93BD-529C8040BA32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{521B7782-F509-400A-93BD-529C8040BA32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{521B7782-F509-400A-93BD-529C8040BA32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

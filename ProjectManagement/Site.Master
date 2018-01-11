@@ -1,0 +1,267 @@
+﻿<%@ master language="C#" autoeventwireup="true" codebehind="Site.master.cs" inherits="ProjectManagement.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title><%: Page.Title %> - Biostat Project Tracking</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <%--<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />--%>
+    <link href="~/images/Logo_Final.png" rel="shortcut icon" type="image/x-icon" />    
+    <link href="Content/bootstrap-datepicker.min.css" rel="stylesheet" />
+  
+    <%--<script src="Scripts/master.js"></script>--%>
+    
+    <!-- Custom Fonts -->
+    <link href="Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="Content/custom.min.css" rel="stylesheet" />
+    <%--<link href="Content/Site.css" rel="stylesheet" />--%>
+</head>
+<body class="nav-md menu_fixed">
+    <form runat="server" id="commentForm" class="form-horizontal">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see http://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <%--<asp:ScriptReference Name="MsAjaxBundle" />--%>
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />                
+                <asp:ScriptReference Name="respond" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+
+            </Scripts>
+        </asp:ScriptManager>
+
+        <asp:ContentPlaceHolder ID="head" runat="server">
+        </asp:ContentPlaceHolder>               
+               
+        <div class="container body">
+            <div class="main_container">
+
+                <div class="col-md-3 left_col menu_fixed">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title" style="border: 0;">
+                            <a class="site_title" runat="server" href="~/">
+                            <i class="fa fa-gears"></i>
+                            <span>Project Tracking</span>
+                            </a>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <br />
+
+                        <!-- sidebar menu -->
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                            <div class="menu_section">
+                                <ul class="nav side-menu">
+                                    <li><a runat="server" href="~/Default"><i class="fa fa-home"></i>Home</a>
+                                        <%--<ul class="nav child_menu">
+                                            <li><a runat="server" href="~/Default">Index</a></li>
+                                        </ul>--%>
+                                    </li>
+                                    <li><a><i class="fa fa-edit"></i>Forms <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a runat="server" href="~/PI" visible="false" id="PILink" data-toggle="menu">Principal Investigator</a></li>
+                                            <li><a runat="server" href="~/ProjectForm2" visible="false" id="ProjectLink">Project</a></li>
+                                            <%--<li><a runat="server" href="#" visible="false" id="ProjectLink">Project<span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li class="sub_menu"><a runat="server" href="~/ProjectForm2">Form</a>
+                                                    </li>
+                                                    <li><a runat="server" href="~/ProjectList">List</a>
+                                                    </li>
+                                                </ul>
+                                            </li>--%>
+                                            <li>
+                                                <a runat="server" href="~/TimeEntry" visible="false" id="TimeEntryLink" data-toggle="menu">TimeEntry</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a visible="false" id="AdminLink"><i class="fa fa-table"></i>Tracking <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li id="li_paperform1">
+                                                <a runat="server" href="~/Tracking/PaperForm">Paper</a>
+                                            </li>
+                                            <li id="li_grantform1">
+                                                <a runat="server" href="~/Tracking/GrantForm">Grant</a>
+                                            </li>
+                                            <li id="li_academicform1">
+                                                <a runat="server" href="~/Tracking/AcademicForm">Academic</a>
+                                            </li>
+                                            <li id="li_taskform1">
+                                                <a runat="server" href="~/Tracking/TaskForm">Task</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-bar-chart-o"></i>Data Presentation <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                             <li id="li_report4"><a runat="server" href="~/Report/Project" visible="false" id="ReportLink4" data-toggle="menu">Project</a></li>
+                                            <li id="li_report1"><a runat="server" href="~/Report/AdhocReport" visible="false" id="ReportLink1" data-toggle="menu">General Report</a></li>
+                                            <li id="li_report2"><a runat="server" href="~/Report/RmatrixMonthly" visible="false" id="ReportLink2" data-toggle="menu">RMATRIX Monthly Report</a></li>
+                                            <li id="li_report3"><a runat="server" href="~/Report/RmatrixSummary" visible="false" id="ReportLink3" data-toggle="menu">RMATRIX Summary Report</a></li>
+                                        </ul>
+                                    </li>                                  
+                                    <li><a><i class="fa fa-book"></i>Admin <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li id="li_staffform1">
+                                                <a runat="server" href="~/Admin/StaffForm">Staff</a>
+                                            </li>
+                                            <li id="li_clientform1">
+                                                <a runat="server" href="~/Admin/ClientForm">Client</a>
+                                            </li>
+                                            <li id="li_affiliationform">
+                                                <a runat="server" href="~/Admin/AffiliationForm">Affiliation</a>
+                                            </li>  
+                                            
+                                            <li><a>Billing<span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li id="li_ccform1">
+                                                        <a runat="server" href="~/Admin/CollaborativeCenterForm" tabindex="-1">Collaborative Center</a>
+                                                    </li>
+                                                    <li id="li_clientagmtform1">
+                                                        <a runat="server" href="~/Admin/ClientAgreementForm" tabindex="-1">Client Agreement</a>
+                                                    </li>
+                                                    <li id="li_invoiceform1">
+                                                        <a runat="server" href="~/Admin/InvoiceForm" tabindex="-1">Invoice</a>
+                                                    </li>
+                                                </ul>
+                                            </li>    
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <%--<div class="menu_section">
+                                <h3>Live On</h3>
+                                <ul class="nav side-menu">
+                                    <li><a><i class="fa fa-book"></i>Admin <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="e_commerce.html">E-commerce</a></li>
+                                            <li><a href="projects.html">Projects</a></li>
+                                            <li><a href="project_detail.html">Project Detail</a></li>
+                                            <li><a href="contacts.html">Contacts</a></li>
+                                            <li><a href="profile.html">Profile</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-windows"></i>Extras <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="page_403.html">403 Error</a></li>
+                                            <li><a href="page_404.html">404 Error</a></li>
+                                            <li><a href="page_500.html">500 Error</a></li>
+                                            <li><a href="plain_page.html">Plain Page</a></li>
+                                            <li><a href="login.html">Login Page</a></li>
+                                            <li><a href="pricing_tables.html">Pricing Tables</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-sitemap"></i>Multilevel Menu <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="#level1_1">Level One</a>
+                                            <li><a>Level One<span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li class="sub_menu"><a href="level2.html">Level Two</a>
+                                                    </li>
+                                                    <li><a href="#level2_1">Level Two</a>
+                                                    </li>
+                                                    <li><a href="#level2_2">Level Two</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#level1_2">Level One</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i>Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
+                                </ul>
+                            </div>--%>
+
+                        </div>
+                        <!-- /sidebar menu -->
+                                                
+                    </div>
+                </div>
+
+                <!-- top navigation -->
+                <div class="top_nav">
+                    <div class="nav_menu">
+                        <nav>
+                            <div class="nav toggle">
+                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                            </div>
+                            
+                            <asp:LoginView runat="server" ViewStateMode="Disabled">
+                                <AnonymousTemplate>
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <%--<li><a runat="server" href="~/Account/Register">Register</a></li>--%>
+                                        <li><a runat="server" href="~/Account/Login">Log in</a></li>
+                                    </ul>
+                                </AnonymousTemplate>
+                                <LoggedInTemplate>
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li class="">
+                                        <%--<li><a runat="server" href="~/Account/Manage" title="Manage your account">Hello, <%: Context.User.Identity.Name  %> !</a></li>--%>
+                                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <img src="<%=Page.ResolveUrl("~/images/Logo_Final.png")%>">Hello, <%: Context.User.Identity.Name  %>
+                                                <span class=" fa fa-angle-down"></span>
+                                              </a>
+                                        <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                            <li>
+                                                <a runat="server" href="~/Account/Manage" title="Manage your account">Manage account</a>
+                                            </li>
+                                            <li>
+                                                <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                                            </li>
+                                        </ul>
+                                        </li>
+                                    </ul>
+                                </LoggedInTemplate>
+                            </asp:LoginView>
+
+
+                        </nav>
+                    </div>
+                </div>
+                <!-- /top navigation -->
+                             
+                <div class="right_col" role="main">
+                    <div class="clearfix"></div>
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                    <div class="clearfix"></div>                                 
+                </div>                     
+                             
+                <!-- footer content -->
+                <footer>
+                  <div class="pull-right">
+                      &copy; <%: DateTime.Now.Year %> - <a href="http://biostat.jabsom.hawaii.edu">Office of Biostatistics & Quantitative Health Sciences</a>                     
+                  </div>
+                  <div class="clearfix"></div>
+                </footer>
+                <!-- /footer content -->
+                
+            </div>
+
+             
+        </div>  
+       
+
+    </form>
+
+    <script src="<%=Page.ResolveUrl("~/Scripts/custom.min.js")%>"></script>
+</body>
+</html>

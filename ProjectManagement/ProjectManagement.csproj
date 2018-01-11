@@ -1,0 +1,1277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2093E8A1-91A7-4C42-8154-3368096ADA5C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProjectManagement</RootNamespace>
+    <AssemblyName>ProjectManagement</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.69.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Downloads\ExportExcel_Warning\Bin\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DropDownChosen">
+      <HintPath>..\..\..\Users\yrui.JABSOMIT\Desktop\DropDownChosen\DropDownChosen\DropDownTest\bin\DropDownChosen.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\TimeTracker_V5_2\packages\Microsoft.Owin.Host.SystemWeb.2.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNet.ScriptManager.bootstrap">
+      <HintPath>..\packages\AspNet.ScriptManager.bootstrap.3.0.0\lib\net45\AspNet.ScriptManager.bootstrap.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNet.ScriptManager.jQuery">
+      <HintPath>..\packages\AspNet.ScriptManager.jQuery.1.10.2\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.MSAjax">
+      <HintPath>..\packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\lib\net45\Microsoft.ScriptManager.MSAjax.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.WebForms">
+      <HintPath>..\packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\lib\net45\Microsoft.ScriptManager.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.1\lib\net45\Microsoft.AspNet.Web.Optimization.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.FriendlyUrls">
+      <HintPath>..\packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net45\Microsoft.AspNet.FriendlyUrls.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="UploadFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="About.aspx" />
+    <Content Include="Account\Forgot.aspx" />
+    <Content Include="Account\Login.aspx" />
+    <Content Include="Account\Manage.aspx" />
+    <Content Include="Account\OpenAuthProviders.ascx" />
+    <Content Include="Account\Register.aspx" />
+    <Content Include="Account\RegisterExternalLogin.aspx" />
+    <Content Include="Account\ResetPassword.aspx" />
+    <Content Include="Account\ResetPasswordConfirmation.aspx" />
+    <Content Include="Admin\AffiliationForm.aspx" />
+    <Content Include="Admin\ClientForm.aspx" />
+    <Content Include="Admin\StaffForm.aspx" />
+    <Content Include="Content\custom.css" />
+    <Content Include="Content\custom.min.css" />
+    <Content Include="Content\dataTables.bootstrap.css" />
+    <Content Include="Content\dataTables.bootstrap.min.css" />
+    <Content Include="Guest\BingHeatMap.html" />
+    <Content Include="Guest\HeatMap.aspx" />
+    <Content Include="images\Logo_Final.png" />
+    <Content Include="images\sort_asc.png" />
+    <Content Include="images\sort_asc_disabled.png" />
+    <Content Include="images\sort_both.png" />
+    <Content Include="images\sort_desc.png" />
+    <Content Include="images\sort_desc_disabled.png" />
+    <Content Include="ProjectForm2.aspx" />
+    <Content Include="Report\Project.aspx" />
+    <Content Include="Report\RmatrixMonthly.aspx" />
+    <Content Include="Report\RmatrixSummary.aspx" />
+    <Content Include="Scripts\bloodhound.js" />
+    <Content Include="Scripts\bloodhound.min.js" />
+    <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\custom.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap.js" />
+    <Content Include="Scripts\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\typeahead.bundle.js" />
+    <Content Include="Scripts\typeahead.bundle.min.js" />
+    <Content Include="Scripts\typeahead.jquery.js" />
+    <Content Include="Scripts\typeahead.jquery.min.js" />
+    <Content Include="Scripts\WebForms\jquerymousewheel.js" />
+    <Content Include="Tracking\AcademicForm.aspx" />
+    <Content Include="Admin\ClientAgreementForm.aspx" />
+    <Content Include="Admin\CollaborativeCenterForm.aspx" />
+    <Content Include="Admin\InvoiceForm.aspx" />
+    <Content Include="Tracking\TaskForm.aspx" />
+    <Content Include="Contact.aspx" />
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-datepicker.min.css" />
+    <Content Include="Content\bootstrap-datepicker.standalone.css" />
+    <Content Include="Content\bootstrap-datepicker.standalone.min.css" />
+    <Content Include="Content\bootstrap-datepicker3.css" />
+    <Content Include="Content\bootstrap-datepicker3.min.css" />
+    <Content Include="Content\bootstrap-datepicker3.standalone.css" />
+    <Content Include="Content\bootstrap-datepicker3.standalone.min.css" />
+    <Content Include="Content\bootstrap-select.css" />
+    <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\chosen-sprite%402x.png" />
+    <Content Include="Content\chosen-sprite.png" />
+    <Content Include="Content\chosen.css" />
+    <Content Include="Content\fileinput.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\jquery.steps.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\the-big-picture.css" />
+    <Content Include="ErrorPage.aspx" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Tracking\GrantForm.aspx" />
+    <Content Include="images\background_addhours.jpg" />
+    <Content Include="images\background_body.gif" />
+    <Content Include="images\background_calendar.gif" />
+    <Content Include="images\background_drop_menu.jpg" />
+    <Content Include="images\background_formsection.gif" />
+    <Content Include="images\background_main.jpg" />
+    <Content Include="images\Banner_Print3.jpg" />
+    <Content Include="images\icon-calendar.gif" />
+    <Content Include="images\icon-cancel.gif" />
+    <Content Include="images\icon-delete.gif" />
+    <Content Include="images\icon-delete.png" />
+    <Content Include="images\icon-edit.gif" />
+    <Content Include="images\icon-edit.png" />
+    <Content Include="images\icon-save.gif" />
+    <Content Include="images\icon_left_white_arrow.gif" />
+    <Content Include="images\loader.gif" />
+    <Content Include="images\loading-sm.gif" />
+    <Content Include="images\loading.gif" />
+    <Content Include="images\page-loader.gif" />
+    <Content Include="images\Preloader_21.gif" />
+    <Content Include="images\tab.gif" />
+    <Content Include="images\tab_bg.gif" />
+    <Content Include="images\tab_dim.gif" />
+    <Content Include="images\timesheet_data_bg.gif" />
+    <Content Include="images\time_tracker_logo.gif" />
+    <Content Include="Investor.aspx" />
+    <Content Include="MonthlyReport.aspx" />
+    <Content Include="packages.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <EntityDeploy Include="ProjectTracker.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ProjectTracker.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Tracking\PaperForm.aspx" />
+    <Content Include="ProjectForm.aspx" />
+    <Content Include="ProjectList.aspx" />
+    <Content Include="ProjectTracker.edmx.diagram">
+      <DependentUpon>ProjectTracker.edmx</DependentUpon>
+    </Content>
+    <Content Include="ProjectTracker.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ProjectTracker.Context.cs</LastGenOutput>
+      <DependentUpon>ProjectTracker.edmx</DependentUpon>
+    </Content>
+    <Content Include="ProjectTracker.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ProjectTracker.cs</LastGenOutput>
+      <DependentUpon>ProjectTracker.edmx</DependentUpon>
+    </Content>
+    <Content Include="Content\bootstrap-select.css.map" />
+    <Content Include="Account\Web.config" />
+    <Content Include="BioStatProjectDataSet.xsc">
+      <DependentUpon>BioStatProjectDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="Tracking\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Admin\Web.config" />
+    <None Include="BioStatProjectDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BioStatProjectDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="BioStatProjectDataSet.xss">
+      <DependentUpon>BioStatProjectDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="MonthlyTrend.xsc">
+      <DependentUpon>MonthlyTrend.xsd</DependentUpon>
+    </Content>
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="images\Sorting icons.psd" />
+    <None Include="MonthlyTrend.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MonthlyTrend.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MonthlyTrend.xss">
+      <DependentUpon>MonthlyTrend.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\DEV.pubxml" />
+    <None Include="Properties\PublishProfiles\PM.pubxml" />
+    <Content Include="PubHistory.aspx" />
+    <Content Include="Publication.aspx" />
+    <Content Include="Report\AdhocReport.aspx" />
+    <Content Include="Scripts\bootstrap-select.js" />
+    <Content Include="Scripts\bootstrap-select.js.map" />
+    <Content Include="Report\Web.config" />
+    <Content Include="Report\DSIndividual.xsc">
+      <DependentUpon>DSIndividual.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\WebDeployDev.pubxml" />
+    <Content Include="Report\DSAcademic.xsc">
+      <DependentUpon>DSAcademic.xsd</DependentUpon>
+    </Content>
+    <None Include="Report\DSAcademic.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DSAcademic.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Report\DSAcademic.xss">
+      <DependentUpon>DSAcademic.xsd</DependentUpon>
+    </Content>
+    <None Include="Report\DSIndividual.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DSIndividual.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Report\DSIndividual.xss">
+      <DependentUpon>DSIndividual.xsd</DependentUpon>
+    </Content>
+    <Content Include="Report\ProjectDetail.xsc">
+      <DependentUpon>ProjectDetail.xsd</DependentUpon>
+    </Content>
+    <Content Include="Report\DSPaper.xsc">
+      <DependentUpon>DSPaper.xsd</DependentUpon>
+    </Content>
+    <None Include="Report\DSPaper.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DSPaper.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Report\DSPaper.xss">
+      <DependentUpon>DSPaper.xsd</DependentUpon>
+    </Content>
+    <None Include="Report\ProjectDetail.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ProjectDetail.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Report\ProjectDetail.xss">
+      <DependentUpon>ProjectDetail.xsd</DependentUpon>
+    </Content>
+    <Content Include="Report\TimeEntry.xsc">
+      <DependentUpon>TimeEntry.xsd</DependentUpon>
+    </Content>
+    <None Include="Report\TimeEntry.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>TimeEntry.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Report\TimeEntry.xss">
+      <DependentUpon>TimeEntry.xsd</DependentUpon>
+    </Content>
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="ProjectTracker.edmx.sql" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\chosen.jquery.js" />
+    <Content Include="Scripts\fileinput.js" />
+    <Content Include="Scripts\highcharts\4.2.0\adapters\standalone-framework.js" />
+    <Content Include="Scripts\highcharts\4.2.0\adapters\standalone-framework.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\highcharts-3d.js" />
+    <Content Include="Scripts\highcharts\4.2.0\highcharts-3d.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\highcharts-more.js" />
+    <Content Include="Scripts\highcharts\4.2.0\highcharts-more.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\highcharts.js" />
+    <Content Include="Scripts\highcharts\4.2.0\highcharts.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\boost.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\boost.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\broken-axis.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\broken-axis.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\canvas-tools.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\canvas-tools.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\data.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\data.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\drilldown.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\drilldown.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\exporting.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\exporting.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\funnel.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\funnel.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\heatmap.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\heatmap.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\no-data-to-display.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\no-data-to-display.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\offline-exporting.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\offline-exporting.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\solid-gauge.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\solid-gauge.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\treemap.js" />
+    <Content Include="Scripts\highcharts\4.2.0\modules\treemap.src.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\dark-blue.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\dark-green.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\dark-unica.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\gray.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\grid-light.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\grid.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\sand-signika.js" />
+    <Content Include="Scripts\highcharts\4.2.0\themes\skies.js" />
+    <Content Include="Scripts\i18n\defaults-bg_BG.js" />
+    <Content Include="Scripts\i18n\defaults-bg_BG.min.js" />
+    <Content Include="Scripts\i18n\defaults-cs_CZ.js" />
+    <Content Include="Scripts\i18n\defaults-cs_CZ.min.js" />
+    <Content Include="Scripts\i18n\defaults-de_DE.js" />
+    <Content Include="Scripts\i18n\defaults-de_DE.min.js" />
+    <Content Include="Scripts\i18n\defaults-en_US.js" />
+    <Content Include="Scripts\i18n\defaults-en_US.min.js" />
+    <Content Include="Scripts\i18n\defaults-es_CL.js" />
+    <Content Include="Scripts\i18n\defaults-es_CL.min.js" />
+    <Content Include="Scripts\i18n\defaults-eu.js" />
+    <Content Include="Scripts\i18n\defaults-eu.min.js" />
+    <Content Include="Scripts\i18n\defaults-fr_FR.js" />
+    <Content Include="Scripts\i18n\defaults-fr_FR.min.js" />
+    <Content Include="Scripts\i18n\defaults-hu_HU.js" />
+    <Content Include="Scripts\i18n\defaults-hu_HU.min.js" />
+    <Content Include="Scripts\i18n\defaults-it_IT.js" />
+    <Content Include="Scripts\i18n\defaults-it_IT.min.js" />
+    <Content Include="Scripts\i18n\defaults-nl_NL.js" />
+    <Content Include="Scripts\i18n\defaults-nl_NL.min.js" />
+    <Content Include="Scripts\i18n\defaults-pl_PL.js" />
+    <Content Include="Scripts\i18n\defaults-pl_PL.min.js" />
+    <Content Include="Scripts\i18n\defaults-pt_BR.js" />
+    <Content Include="Scripts\i18n\defaults-pt_BR.min.js" />
+    <Content Include="Scripts\i18n\defaults-ro_RO.js" />
+    <Content Include="Scripts\i18n\defaults-ro_RO.min.js" />
+    <Content Include="Scripts\i18n\defaults-ru_RU.js" />
+    <Content Include="Scripts\i18n\defaults-ru_RU.min.js" />
+    <Content Include="Scripts\i18n\defaults-sl_SI.js" />
+    <Content Include="Scripts\i18n\defaults-sl_SI.min.js" />
+    <Content Include="Scripts\i18n\defaults-sv_SE.js" />
+    <Content Include="Scripts\i18n\defaults-sv_SE.min.js" />
+    <Content Include="Scripts\i18n\defaults-tr_TR.js" />
+    <Content Include="Scripts\i18n\defaults-tr_TR.min.js" />
+    <Content Include="Scripts\i18n\defaults-ua_UA.js" />
+    <Content Include="Scripts\i18n\defaults-ua_UA.min.js" />
+    <Content Include="Scripts\i18n\defaults-zh_CN.js" />
+    <Content Include="Scripts\i18n\defaults-zh_CN.min.js" />
+    <Content Include="Scripts\i18n\defaults-zh_TW.js" />
+    <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.bootpag.min.js" />
+    <Content Include="Scripts\jquery.bootstrap.wizard.js" />
+    <Content Include="Scripts\jquery.bootstrap.wizard.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.steps.js" />
+    <Content Include="Scripts\jquery.steps.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ca.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.da.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.de.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.el.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-GB.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.es.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.et.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fa.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.gl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.he.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.id.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.is.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ja.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ka.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kh.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.me.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ms.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nb.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.no.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ro.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ru.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sq.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sw.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.th.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <Content Include="Scripts\master.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\WebForms\DetailsView.js" />
+    <Content Include="Scripts\WebForms\Focus.js" />
+    <Content Include="Scripts\WebForms\GrantForm.js" />
+    <Content Include="Scripts\WebForms\GridView.js" />
+    <Content Include="Scripts\WebForms\Menu.js" />
+    <Content Include="Scripts\WebForms\MenuStandards.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjax.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxApplicationServices.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxComponentModel.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxCore.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxGlobalization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxHistory.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxNetwork.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxSerialization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxTimer.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebForms.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebServices.js" />
+    <Content Include="Scripts\WebForms\ProjectList.js" />
+    <Content Include="Scripts\WebForms\SmartNav.js" />
+    <Content Include="Scripts\WebForms\TreeView.js" />
+    <Content Include="Scripts\WebForms\WebForms.js" />
+    <Content Include="Scripts\WebForms\WebParts.js" />
+    <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Default.aspx" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Site.Master" />
+    <Content Include="PI.aspx" />
+    <Content Include="Guest\ClientRequestForm.aspx" />
+    <Content Include="Guest\GenerateCaptcha.aspx" />
+    <Content Include="Guest\MahaloRequest.aspx" />
+    <Content Include="Guest\PISurvey.aspx" />
+    <Content Include="Guest\PISurveyForm.aspx" />
+    <Content Include="Guest\ThankYou.aspx" />
+    <Content Include="TimeEntry.aspx" />
+    <Content Include="ViewSwitcher.ascx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Bundle.config" />
+    <None Include="Project_Readme.html" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Site.Mobile.Master" />
+    <Content Include="Scripts\jquery.bootstrap.wizard.min.js.map" />
+    <Content Include="Scripts\jquery.bootstrap.wizard.js.map" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Academic.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AcademicField.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Forgot.aspx.cs">
+      <DependentUpon>Forgot.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Forgot.aspx.designer.cs">
+      <DependentUpon>Forgot.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Manage.aspx.cs">
+      <DependentUpon>Manage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Manage.aspx.designer.cs">
+      <DependentUpon>Manage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\OpenAuthProviders.ascx.cs">
+      <DependentUpon>OpenAuthProviders.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\OpenAuthProviders.ascx.designer.cs">
+      <DependentUpon>OpenAuthProviders.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\RegisterExternalLogin.aspx.cs">
+      <DependentUpon>RegisterExternalLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\RegisterExternalLogin.aspx.designer.cs">
+      <DependentUpon>RegisterExternalLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\ResetPassword.aspx.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\ResetPassword.aspx.designer.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\ResetPasswordConfirmation.aspx.cs">
+      <DependentUpon>ResetPasswordConfirmation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\ResetPasswordConfirmation.aspx.designer.cs">
+      <DependentUpon>ResetPasswordConfirmation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\AffiliationForm.aspx.cs">
+      <DependentUpon>AffiliationForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AffiliationForm.aspx.designer.cs">
+      <DependentUpon>AffiliationForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Dtos\PaperDto.cs" />
+    <Compile Include="Dtos\PaperHistory.cs" />
+    <Compile Include="Guest\HeatMap.aspx.cs">
+      <DependentUpon>HeatMap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\HeatMap.aspx.designer.cs">
+      <DependentUpon>HeatMap.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceItem2.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\AgreementExportEnum.cs" />
+    <Compile Include="Model\ProjectType.cs" />
+    <Compile Include="Model\FileExport.cs" />
+    <Compile Include="Model\IProjectTrackerRepository.cs" />
+    <Compile Include="Model\ProjectTrackerRepository.cs" />
+    <Compile Include="Project2.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectField.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectForm2.aspx.cs">
+      <DependentUpon>ProjectForm2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProjectForm2.aspx.designer.cs">
+      <DependentUpon>ProjectForm2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="P_INVOICE_HOURS_Result.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Report\DSAcademic.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DSAcademic.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Report\Project.aspx.cs">
+      <DependentUpon>Project.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\Project.aspx.designer.cs">
+      <DependentUpon>Project.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RmatrixMonthly.aspx.cs">
+      <DependentUpon>RmatrixMonthly.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\RmatrixMonthly.aspx.designer.cs">
+      <DependentUpon>RmatrixMonthly.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RmatrixSummary.aspx.cs">
+      <DependentUpon>RmatrixSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\RmatrixSummary.aspx.designer.cs">
+      <DependentUpon>RmatrixSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="vwAgreement.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwBiostatTime.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwProject.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwProjectBiostat.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\ProjectController.cs" />
+    <Compile Include="Admin\ClientForm.aspx.cs">
+      <DependentUpon>ClientForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ClientForm.aspx.designer.cs">
+      <DependentUpon>ClientForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\StaffForm.aspx.cs">
+      <DependentUpon>StaffForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\StaffForm.aspx.designer.cs">
+      <DependentUpon>StaffForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tracking\AcademicForm.aspx.cs">
+      <DependentUpon>AcademicForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tracking\AcademicForm.aspx.designer.cs">
+      <DependentUpon>AcademicForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ClientAgreementForm.aspx.cs">
+      <DependentUpon>ClientAgreementForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ClientAgreementForm.aspx.designer.cs">
+      <DependentUpon>ClientAgreementForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CollaborativeCenterForm.aspx.cs">
+      <DependentUpon>CollaborativeCenterForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CollaborativeCenterForm.aspx.designer.cs">
+      <DependentUpon>CollaborativeCenterForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\InvoiceForm.aspx.cs">
+      <DependentUpon>InvoiceForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\InvoiceForm.aspx.designer.cs">
+      <DependentUpon>InvoiceForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tracking\TaskForm.aspx.cs">
+      <DependentUpon>TaskForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tracking\TaskForm.aspx.designer.cs">
+      <DependentUpon>TaskForm.aspx</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\DashboardController.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="About.aspx.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="About.aspx.designer.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="AspNetRole.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUser.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserClaim.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserLogin.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BioStat.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BioStatGroup.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BioStatProjectDataSet.cs">
+      <DependentUpon>BioStatProjectDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BioStatProjectDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BioStatProjectDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BiostatReport.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientAgmt.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequest.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CoAuthorAffil.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CollabCtr.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ComplexType1.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Conference.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contact.aspx.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.designer.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Date1.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EthnicGroup.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Grant.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GrantAffil.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GrantApp.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GrantBiostat.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tracking\GrantForm.aspx.cs">
+      <DependentUpon>GrantForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tracking\GrantForm.aspx.designer.cs">
+      <DependentUpon>GrantForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GrantFundStatu.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GrantPI.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HiProgram.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Invest.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Investor.aspx.cs">
+      <DependentUpon>Investor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Investor.aspx.designer.cs">
+      <DependentUpon>Investor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="InvestStatus.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Invoice.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Invoice1.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JabsomAffil.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JabsomDept.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JabsomOffice.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Journal.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ExceptionUtility.cs" />
+    <Compile Include="Model\GrantManager.cs" />
+    <Compile Include="Model\IdentityModels.cs" />
+    <Compile Include="Model\IObjectWithState.cs" />
+    <Compile Include="Model\Logger.cs" />
+    <Compile Include="Model\PageUtility.cs" />
+    <Compile Include="Model\RoleActions.cs" />
+    <Compile Include="MonthlyReport.aspx.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MonthlyReport.aspx.designer.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MonthlyTrend.cs">
+      <DependentUpon>MonthlyTrend.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MonthlyTrend.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MonthlyTrend.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Tracking\PaperForm.aspx.cs">
+      <DependentUpon>PaperForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tracking\PaperForm.aspx.designer.cs">
+      <DependentUpon>PaperForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pilot.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Project.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectBioStat.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectForm.aspx.cs">
+      <DependentUpon>ProjectForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProjectForm.aspx.designer.cs">
+      <DependentUpon>ProjectForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectGrant.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectList.aspx.cs">
+      <DependentUpon>ProjectList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProjectList.aspx.designer.cs">
+      <DependentUpon>ProjectList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectPhase.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ProjectPI.cs" />
+    <Compile Include="ProjectServiceDetail.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectServiceType.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectStudy.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectTracker.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectTracker.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectTracker.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectTracker.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectTracker.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PTTask.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PubHistory.aspx.cs">
+      <DependentUpon>PubHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PubHistory.aspx.designer.cs">
+      <DependentUpon>PubHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PubHistory.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Publication.aspx.cs">
+      <DependentUpon>Publication.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Publication.aspx.designer.cs">
+      <DependentUpon>Publication.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Publication.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublicationBioStat.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublicationCoAuthorAffil.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublicationGrant.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublishStatu.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublishType.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PubTypeEnum.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Report\AdhocReport.aspx.cs">
+      <DependentUpon>AdhocReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\AdhocReport.aspx.designer.cs">
+      <DependentUpon>AdhocReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\DSIndividual.cs">
+      <DependentUpon>DSIndividual.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Report\DSIndividual.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DSIndividual.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Report\DSPaper.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DSPaper.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ProjectDetail.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectDetail.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Report\TimeEntry.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TimeEntry.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceType.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Site.Master.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.Master.designer.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Site.Mobile.Master.cs">
+      <DependentUpon>Site.Mobile.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.Mobile.Master.designer.cs">
+      <DependentUpon>Site.Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Startup.cs" />
+    <Compile Include="StatusEnum.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PI.aspx.cs">
+      <DependentUpon>PI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PI.aspx.designer.cs">
+      <DependentUpon>PI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StudyPopulation.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudyType.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Survey.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SurveyForm.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SurveyFormAnswer.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SurveyQuestion.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SurveyQuestionOption.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Guest\ClientRequestForm.aspx.cs">
+      <DependentUpon>ClientRequestForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\ClientRequestForm.aspx.designer.cs">
+      <DependentUpon>ClientRequestForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Guest\GenerateCaptcha.aspx.cs">
+      <DependentUpon>GenerateCaptcha.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\GenerateCaptcha.aspx.designer.cs">
+      <DependentUpon>GenerateCaptcha.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Guest\MahaloRequest.aspx.cs">
+      <DependentUpon>MahaloRequest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\MahaloRequest.aspx.designer.cs">
+      <DependentUpon>MahaloRequest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Guest\PISurvey.aspx.cs">
+      <DependentUpon>PISurvey.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\PISurvey.aspx.designer.cs">
+      <DependentUpon>PISurvey.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Guest\PISurveyForm.aspx.cs">
+      <DependentUpon>PISurveyForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\PISurveyForm.aspx.designer.cs">
+      <DependentUpon>PISurveyForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Guest\ThankYou.aspx.cs">
+      <DependentUpon>ThankYou.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\ThankYou.aspx.designer.cs">
+      <DependentUpon>ThankYou.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TaskField.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaskHistory.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TimeEntry.aspx.cs">
+      <DependentUpon>TimeEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TimeEntry.aspx.designer.cs">
+      <DependentUpon>TimeEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TimeEntry.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewGrant.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewInvoice.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewSwitcher.ascx.cs">
+      <DependentUpon>ViewSwitcher.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewSwitcher.ascx.designer.cs">
+      <DependentUpon>ViewSwitcher.ascx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Report\Academic.rdlc" />
+    <EmbeddedResource Include="Report\IndividualSummaryProject.rdlc" />
+    <EmbeddedResource Include="Report\IndividualDailyHours.rdlc" />
+    <EmbeddedResource Include="Report\MonthlyTrend.rdlc" />
+    <EmbeddedResource Include="Report\PaperAbstract.rdlc" />
+    <EmbeddedResource Include="Report\PaperManuscript.rdlc" />
+    <EmbeddedResource Include="Report\ProjectByBiostat.rdlc" />
+    <EmbeddedResource Include="Report\ProjectDetail.rdlc" />
+    <EmbeddedResource Include="Report\ProjectSummary.rdlc" />
+    <EmbeddedResource Include="Report\StaffSummary.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biostat.BL\Biostat.BL.csproj">
+      <Project>{521b7782-f509-400a-93bd-529c8040ba32}</Project>
+      <Name>Biostat.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Biostat.Model\Biostat.Model.csproj">
+      <Project>{f96eef48-091c-4e3e-a820-bbcb52da0d69}</Project>
+      <Name>Biostat.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51611</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51612/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f3fbaeb618a14ba5826f7a09e1ebf993" Name="Diagram1" ZoomLevel="94" >
+        <EntityTypeShape EntityType="ProjectTracker.Project" Width="2.125" PointX="7.125" PointY="5.5" />
+        <EntityTypeShape EntityType="ProjectTracker.Invest" Width="1.5" PointX="5.75" PointY="0.5" />
+        <EntityTypeShape EntityType="ProjectTracker.InvestStatus" Width="1.5" PointX="3.25" PointY="2.125" />
+        <EntityTypeShape EntityType="ProjectTracker.ServiceType" Width="1.5" PointX="1.125" PointY="11.5" />
+        <EntityTypeShape EntityType="ProjectTracker.BioStatGroup" Width="1.5" PointX="1.125" PointY="2.125" />
+        <EntityTypeShape EntityType="ProjectTracker.BioStat" Width="1.5" PointX="10.5" PointY="14.125" />
+        <EntityTypeShape EntityType="ProjectTracker.GrantApp" Width="1.5" PointX="13.5" PointY="2" />
+        <EntityTypeShape EntityType="ProjectTracker.GrantAffil" Width="1.5" PointX="1.125" PointY="3.875" />
+        <EntityTypeShape EntityType="ProjectTracker.Pilot" Width="1.5" PointX="1.125" PointY="6" />
+        <AssociationConnector Association="ProjectTracker.PilotProject" />
+        <EntityTypeShape EntityType="ProjectTracker.HiProgram" Width="1.5" PointX="1.125" PointY="7.625" />
+        <EntityTypeShape EntityType="ProjectTracker.EthnicGroup" Width="1.5" PointX="1.125" PointY="9.75" />
+        <AssociationConnector Association="ProjectTracker.EthincGroupProject" />
+        <EntityTypeShape EntityType="ProjectTracker.JabsomDept" Width="1.5" PointX="1.125" PointY="0.5" />
+        <EntityTypeShape EntityType="ProjectTracker.JabsomOffice" Width="1.5" PointX="2.75" PointY="0.5" />
+        <EntityTypeShape EntityType="ProjectTracker.JabsomAffil" Width="1.5" PointX="8.625" PointY="0.5" />
+        <EntityTypeShape EntityType="ProjectTracker.Conference" Width="1.5" PointX="17.125" PointY="10.625" />
+        <AssociationConnector Association="ProjectTracker.InvestGrantApp" />
+        <AssociationConnector Association="ProjectTracker.ProjectGrantApp" />
+        <EntityTypeShape EntityType="ProjectTracker.TimeEntry" Width="1.5" PointX="13.25" PointY="14.375" />
+        <AssociationConnector Association="ProjectTracker.ProjectFact" />
+        <AssociationConnector Association="ProjectTracker.BioStatFact" />
+        <AssociationConnector Association="ProjectTracker.InvestStatusInvest" />
+        <AssociationConnector Association="ProjectTracker.InvestProject" />
+        <AssociationConnector Association="ProjectTracker.InvestJabsomAffil" />
+        <EntityTypeShape EntityType="ProjectTracker.ProjectBioStat" Width="1.5" PointX="5.125" PointY="14.25" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectBioStat_BioStat" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectBioStat_Project" />
+        <EntityTypeShape EntityType="ProjectTracker.ProjectGrant" Width="1.5" PointX="3.75" PointY="4.625" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectGrants_GrantAffils" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectGrants_Projects" />
+        <EntityTypeShape EntityType="ProjectTracker.ProjectServiceType" Width="1.75" PointX="3.375" PointY="11.5" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectServiceType_Project" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectServiceType_ServiceType" />
+        <EntityTypeShape EntityType="ProjectTracker.PublicationBioStat" Width="1.5" PointX="10.625" PointY="10.375" />
+        <EntityTypeShape EntityType="ProjectTracker.PublicationGrant" Width="1.5" PointX="10.125" PointY="3.375" />
+        <EntityTypeShape EntityType="ProjectTracker.Publication" Width="1.5" PointX="13.625" PointY="5.75" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationBioStat_BioStat" />
+        <AssociationConnector Association="ProjectTracker.FK_ConferencePublication" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationGrants_GrantAffils" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationBioStat_Publication" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationGrants_Publications" />
+        <EntityTypeShape EntityType="ProjectTracker.Journal" Width="1.5" PointX="17" PointY="7.25" />
+        <AssociationConnector Association="ProjectTracker.FK_JounralInfoPublication1" />
+        <EntityTypeShape EntityType="ProjectTracker.Date1" Width="1.5" PointX="3.375" PointY="15" />
+        <AssociationConnector Association="ProjectTracker.Date1TimeEntry" />
+        <EntityTypeShape EntityType="ProjectTracker.AspNetRole" Width="1.5" PointX="15.375" PointY="16.5" />
+        <EntityTypeShape EntityType="ProjectTracker.AspNetUserClaim" Width="1.5" PointX="19.875" PointY="17.625" />
+        <EntityTypeShape EntityType="ProjectTracker.AspNetUserLogin" Width="1.5" PointX="19.875" PointY="15" />
+        <EntityTypeShape EntityType="ProjectTracker.AspNetUser" Width="1.5" PointX="17.625" PointY="15.375" />
+        <AssociationConnector Association="ProjectTracker.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="ProjectTracker.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="ProjectTracker.AspNetUserRoles" />
+        <EntityTypeShape EntityType="ProjectTracker.PubHistory" Width="1.5" PointX="15.875" PointY="2.875" />
+        <EntityTypeShape EntityType="ProjectTracker.PublishStatu" Width="1.5" PointX="16.5" PointY="0.5" />
+        <EntityTypeShape EntityType="ProjectTracker.PublishType" Width="1.5" PointX="13.875" PointY="0.5" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationPubHistory" ManuallyRouted="false" >
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ProjectTracker.ProjectStudy" Width="1.5" PointX="3.75" PointY="7.5" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectStudy_Study" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectStudy_Project" />
+        <EntityTypeShape EntityType="ProjectTracker.CoAuthorAffil" Width="1.875" PointX="19.375" PointY="12.625" />
+        <EntityTypeShape EntityType="ProjectTracker.PublicationCoAuthorAffil" Width="2.125" PointX="19.25" PointY="9.5" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationCoAuthorAffil_CoAuthorAffils" />
+        <AssociationConnector Association="ProjectTracker.FK_PublicationCoAuthorAffil_Publications" />
+        <EntityTypeShape EntityType="ProjectTracker.ProjectServiceDetail" Width="1.875" PointX="7.375" PointY="18" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectServiceDetail_Projects" />
+        <EntityTypeShape EntityType="ProjectTracker.StudyPopulation" Width="1.5" PointX="4" PointY="18.875" />
+        <EntityTypeShape EntityType="ProjectTracker.StudyType" Width="1.5" PointX="19.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ProjectTracker.BiostatReport" Width="1.5" PointX="1.125" PointY="19" />
+        <EntityTypeShape EntityType="ProjectTracker.Invoice" Width="2" PointX="19.375" PointY="2.625" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectInvoice_Projects" />
+        <EntityTypeShape EntityType="ProjectTracker.ViewInvoice" Width="1.5" PointX="13.125" PointY="18.125" />
+        <EntityTypeShape EntityType="ProjectTracker.GrantBiostat" Width="1.5" PointX="10.5" PointY="18" />
+        <EntityTypeShape EntityType="ProjectTracker.GrantFundStatu" Width="2.375" PointX="3.5" PointY="25" />
+        <EntityTypeShape EntityType="ProjectTracker.GrantPI" Width="1.5" PointX="4.375" PointY="21" />
+        <EntityTypeShape EntityType="ProjectTracker.Grant" Width="1.5" PointX="7.875" PointY="21.125" />
+        <AssociationConnector Association="ProjectTracker.FK_GrantCost_Biostat" />
+        <AssociationConnector Association="ProjectTracker.FK_GrantCost_Grant" />
+        <AssociationConnector Association="ProjectTracker.FK_GrantPI_Grant" />
+        <AssociationConnector Association="ProjectTracker.FK_GrantPI_Pi" />
+        <EntityTypeShape EntityType="ProjectTracker.ViewGrant" Width="1.5" PointX="13.125" PointY="21.25" />
+        <EntityTypeShape EntityType="ProjectTracker.Survey" Width="1.75" PointX="16.125" PointY="23" />
+        <EntityTypeShape EntityType="ProjectTracker.SurveyForm" Width="1.75" PointX="19.625" PointY="26" />
+        <EntityTypeShape EntityType="ProjectTracker.SurveyFormAnswer" Width="1.75" PointX="19.75" PointY="20.5" />
+        <EntityTypeShape EntityType="ProjectTracker.SurveyQuestion" Width="1.75" PointX="16.125" PointY="20.375" />
+        <EntityTypeShape EntityType="ProjectTracker.SurveyQuestionOption" Width="2.125" PointX="19.5" PointY="23.375" />
+        <AssociationConnector Association="ProjectTracker.FK_SurveyForm_Survey" />
+        <AssociationConnector Association="ProjectTracker.FK_SurveyFormAnswer_SurveyForm" />
+        <AssociationConnector Association="ProjectTracker.FK_SurveyFormAnswer_SurveyQuestion" />
+        <AssociationConnector Association="ProjectTracker.FK_SurveyFormAnswer_SurveyQuestionOption" />
+        <EntityTypeShape EntityType="ProjectTracker.PTTask" Width="1.5" PointX="22.125" PointY="2.75" />
+        <EntityTypeShape EntityType="ProjectTracker.TaskField" Width="1.5" PointX="24.5" PointY="5.75" />
+        <EntityTypeShape EntityType="ProjectTracker.TaskHistory" Width="1.5" PointX="24.5" PointY="2.75" />
+        <AssociationConnector Association="ProjectTracker.FK_TaskHistory" />
+        <AssociationConnector Association="ProjectTracker.FK_Tasks_Biostat" />
+        <EntityTypeShape EntityType="ProjectTracker.ClientRequest" Width="1.5" PointX="1.125" PointY="21.875" />
+        <AssociationConnector Association="ProjectTracker.FK_ClientRequest_Projects" />
+        <EntityTypeShape EntityType="ProjectTracker.ClientAgmt" Width="1.5" PointX="10.5" PointY="29.75" />
+        <EntityTypeShape EntityType="ProjectTracker.CollabCtr" Width="1.5" PointX="13.625" PointY="29.75" />
+        <EntityTypeShape EntityType="ProjectTracker.Invoice1" Width="1.5" PointX="13.625" PointY="36.125" />
+        <AssociationConnector Association="ProjectTracker.FK_ClientAgmt_CollabCtr" />
+        <AssociationConnector Association="ProjectTracker.FK_Invoice_CollabCtr" />
+        <EntityTypeShape EntityType="ProjectTracker.ProjectPhase" Width="1.5" PointX="1.125" PointY="13.75" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjecPhase_Project" />
+        <AssociationConnector Association="ProjectTracker.FK_TimeEntries_Phase" />
+        <EntityTypeShape EntityType="ProjectTracker.vwBiostatTime" Width="1.5" PointX="10.375" PointY="6.75" />
+        <EntityTypeShape EntityType="ProjectTracker.Academic" Width="2" PointX="24.375" PointY="8.375" />
+        <EntityTypeShape EntityType="ProjectTracker.Project2" Width="1.5" PointX="4.375" PointY="27.25" />
+        <EntityTypeShape EntityType="ProjectTracker.ProjectField" Width="1.5" PointX="2.625" PointY="27.25" />
+        <AssociationConnector Association="ProjectTracker.FK_InvestProject2" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjecPhase_Project2" />
+        <AssociationConnector Association="ProjectTracker.FK_SurveyForm_Project1" />
+        <AssociationConnector Association="ProjectTracker.FK_Grants_Project1" />
+        <AssociationConnector Association="ProjectTracker.FK_ProjectPublication1" />
+        <EntityTypeShape EntityType="ProjectTracker.AcademicField" Width="1.5" PointX="27.125" PointY="8.375" />
+        <EntityTypeShape EntityType="ProjectTracker.vwProjectBiostat" Width="1.5" PointX="10.5" PointY="21.625" />
+        <EntityTypeShape EntityType="ProjectTracker.InvoiceItem2" Width="1.5" PointX="10.5" PointY="36" />
+        <AssociationConnector Association="ProjectTracker.Invoice1InvoiceItem2" />
+        <AssociationConnector Association="ProjectTracker.ClientAgmtInvoiceItem2" />
+        <EntityTypeShape EntityType="ProjectTracker.vwAgreement" Width="1.5" PointX="22.375" PointY="14.75" />
+        <AssociationConnector Association="ProjectTracker.Project2ClientAgmt" />
+        <EntityTypeShape EntityType="ProjectTracker.vwProject" Width="1.5" PointX="22.375" PointY="20.75" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,275 @@
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+/*body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}*/
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+/*.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}*/
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,
+select,
+/*textarea {
+    max-width: 280px;
+}*/
+
+textarea { max-width: 100%; border: 1px solid #333; padding: 4px; }
+
+input[type="radio"], input[type="checkbox"] {
+    margin: 5px 5px 0;
+}
+
+.offset1 {
+    margin-left: 30px;
+    padding-top: 8px;
+}
+
+.offset2 {
+    padding: 8px;
+}
+
+
+/*@font-face {
+    font-family: initial;
+}*/
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .jumbotron {
+        margin-top: 20px;
+    }
+
+    .body-content {
+        padding: 0;
+    }
+}
+
+.navbar-custom {
+    background-color:#039aac;
+    color:#ffffff;
+    border-radius:0;
+}
+
+.navbar-custom .navbar-nav > li > a {
+    color:#fff;
+}
+.navbar-custom .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color:transparent;
+}
+.navbar-custom .navbar-brand {
+    color:#eeeeee;
+}
+
+.navbar-nav > li:hover {
+    background-color:#11bfd8;
+}
+
+/*.navbar-nav > li > a:hover {
+    background-color:#11bfd8;
+}*/
+
+.selected {
+    /*position: relative;
+    top: 0px;*/
+    font-weight:bold;
+    background-color:#11bfd8;
+    /*background:#0088cc;*/
+    /*border: 1px solid #B7B7B7;*/
+    /*border-bottom-color: white;*/
+    /*color: black;*/
+}
+
+
+select {
+    width: 100% !important;
+    max-width:100%;
+}
+
+select:focus {width:100px;}
+
+option {
+    min-width: 100%;
+    max-width: 0;
+}
+
+.pagination {
+  margin: 10px 0;
+}
+
+/* Paste this css to your style sheet file or under head tag */
+/* This only works with JavaScript, 
+if it's not present, don't show loader */
+/*.no-js #loader { display: none;  }*/
+#loader { display: block; position: absolute; left: 100px; top: 0; }
+.loader {
+	position: fixed;
+	left: 0px;
+	top: 50px;
+    bottom: 20px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(../images/page-loader.gif) center no-repeat #fff;
+    /*opacity: 0.5;*/
+    background-size: 80px 80px;
+}
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}
+
+/**********************************/
+/* BEGIN: Progress Message Styles */
+/**********************************/
+.pdsa-submit-progress {
+  position:center;
+  top: 50%;
+  left: 50%;
+  height: 6em;
+  z-index: 1;
+  /* The following properties are the ones most likely to change */
+  width: 20em;
+  /* Set 'margin-left' to a negative number that is 1/2 of 'width'. 
+         This centers the block due to the 'left: 50%' property */
+  margin-left: -10em;
+  padding-top: 2.5em;
+  padding-left: 2.1em;
+  background-color: black;
+  color: white;
+  -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  border-radius: 0.4em;
+  box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+  -webkit-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+  -moz-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+}
+/********************************/
+/* END: Progress Message Styles */
+/********************************/
+
+/*.table {
+  border: 0.0em solid #dddddd;
+}*/
+
+.inactiveLink {
+   pointer-events: none;
+   cursor: default;
+}
+
+/*dropdown menu
+    http://bootsnipp.com/user/snippets/PAlBa
+*/
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+.panel-bqhs > .panel-heading {
+    /*background-image: url('../images/Banner_Print3.jpg');*/
+    background-color: #039aac;
+    color: white;
+}
+
+.navbar-nav .open .dropdown-menu {
+    width: 50%;
+}
+
+
+/* typeahead start*/
+ .tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-menu {    /* used to be tt-dropdown-menu in older versions */
+  width: 422px;
+  margin-top: 4px;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor,.tt-suggestion:hover {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+/* typeahead end*/
