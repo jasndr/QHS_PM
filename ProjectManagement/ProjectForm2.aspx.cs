@@ -383,6 +383,11 @@ namespace ProjectManagement
             
         }        
 
+        /// <summary>
+        /// Finds the project based on the parameter 'projectId' and
+        /// populates the ProjectForm2 field based on the found project.
+        /// </summary>
+        /// <param name="projectId">Id corresponding to referred project.</param>
         private void BindProject(int projectId)
         {
             //Biostat.Model.Project2 project = businessLayer.GetProjectById(projectId);
@@ -433,6 +438,13 @@ namespace ProjectManagement
             BindPhaseByProject(projectId);
         }
 
+
+        /// <summary>
+        /// Populates project field based on which project information 
+        /// indicated in parameters. Originally called when projectForm2 Project
+        /// dropdown has been changed to select indicated project.
+        /// </summary>
+        /// <param name="project">Project being referred to.</param>
         private void SetProject(Project2 project)
         {
             lnkPI.CommandArgument = project.PIId.ToString();
@@ -719,11 +731,24 @@ namespace ProjectManagement
 
         }
 
+        /// <summary>
+        /// When 'PI' dropdown is changed,
+        /// program changes project dropdown choices with the projects the PI is associated with.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlPI_Changed(Object sender, EventArgs e)
         {
             BindProject(-1);       
         }
 
+        /// <summary>
+        /// When 'Project' dropdown is changed,
+        /// program fills out project fields in relation to the project based on the selected project
+        /// through BindProject(projectId) > SetProject(project).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlProject_Changed(Object sender, EventArgs e)
         {
             //BindProject(-1);
@@ -818,7 +843,12 @@ namespace ProjectManagement
 
             return dt;
         }
-
+        /// <summary>
+        /// Binds grid of checkboxes to the values of referred table.
+        /// </summary>
+        /// <param name="rpt">Grid of Checkboxes (e.g., rptBiostat = List of Biostat Members)</param>
+        /// <param name="bitSum">Bitsum of referred field to match grid of checkboxes. 
+        ///                      (e.g., Bitsum 894224 = Chelu & Ved [pseudoexample])</param>
         private void BindTable(Repeater rpt, int bitSum)
         {
             foreach (RepeaterItem i in rpt.Items)

@@ -21,7 +21,7 @@ namespace ProjectManagement
             // Credentials:
             var credentialUserName = "bqhspt@hawaii.edu";
             var sentFrom = "bqhspt@hawaii.edu";
-            var pwd = "abcdefg";
+            var pwd = "Track211!";
 
             // Configure the client:
             System.Net.Mail.SmtpClient client =
