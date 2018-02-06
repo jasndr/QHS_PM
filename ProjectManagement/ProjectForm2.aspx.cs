@@ -41,6 +41,11 @@ namespace ProjectManagement
             }    
         }        
 
+        /// <summary>
+        /// Saves project into database when user clicks "submit" button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit1_Click(object sender, EventArgs e)
         {           
             string str = ValidateResult();
@@ -69,6 +74,14 @@ namespace ProjectManagement
             
         }
 
+        /// <summary>
+        /// Either:
+        /// (1) Adds new project in database.
+        ///      - Sends an email to QHS tracking list to view current project.
+        /// (2) Saves existing project in database.
+        /// </summary>
+        /// <param name="project">Current project in view.</param>
+        /// <returns></returns>
         private string SaveProject(Project2 project)
         {
             string errorMsg = "";
@@ -78,6 +91,7 @@ namespace ProjectManagement
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
+                /// If no existing id, adds project to database and sends email to tracking team for review.
                 if (0 == id)
                 {
                     //using (var dbTrans = db.Database.BeginTransaction())
@@ -111,6 +125,11 @@ namespace ProjectManagement
                         }
                     //}
                 }
+                /// If current user is not admin,
+                ///     - prevents user from making changes if admin already approved.
+                ///     - otherwise, saves current values of database.
+                /// If current user is admin
+                ///     - creates new phase information.
                 else if (id > 0)
                 {
                     bool isAdmin = Page.User.IsInRole("Admin");
@@ -286,12 +305,16 @@ namespace ProjectManagement
         
 
         #region Bind UI
+        /// <summary>
+        /// C
+        /// </summary>
         private void BindControl()
         {
             var dropDownSource = new Dictionary<int, string>();
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
+                /// Populates PI dropdown
                 dropDownSource = db.Invests
                                 .Where(i => i.Id > 0)
                                 .OrderBy(d => d.FirstName).ThenBy(l => l.LastName)
@@ -299,6 +322,7 @@ namespace ProjectManagement
                                 .ToDictionary(c => c.Id, c => c.Name);
                 PageUtility.BindDropDownList(ddlPI, dropDownSource, String.Empty);
 
+                /// Populates dropdown of projects.
                 dropDownSource = db.Project2
                                 .OrderByDescending(d => d.Id)
                                 .Select(x => new { x.Id, FullName = (x.Id + " " + x.Title).Substring(0, 99) })
@@ -306,6 +330,7 @@ namespace ProjectManagement
 
                 PageUtility.BindDropDownList(ddlProject, dropDownSource, "Add new project");
 
+                /// Populates dropdown of projects based on selected PI.
                 dropDownSource = db.Project2
                                 .OrderByDescending(d => d.Id)
                                 .Select(x => new { x.Id, FullName = x.Id + " " + x.Invests.FirstName + " " + x.Invests.LastName })
@@ -319,6 +344,7 @@ namespace ProjectManagement
 
                 //PageUtility.BindDropDownList(ddlPhaseHdn, dropDownSource, "--- Select ---");
 
+                /// Populates Lead member dropdown (current, active QHS faculty/staff and not 'N/A' marker)
                 var query = db.BioStats
                             .Where(b => b.EndDate >= DateTime.Now);
 
@@ -329,9 +355,10 @@ namespace ProjectManagement
 
                 PageUtility.BindDropDownList(ddlLeadBiostat, dropDownSource, String.Empty);
 
+                /// Bind 
                 dropDownSource = query
                                 .Where(b => b.Id > 0)
-                                .OrderBy(b => b.Id)
+                                .OrderBy(b => b.Id == 99 ? 2:1)
                                 .ToDictionary(c => (int)c.BitValue, c => c.Name);
 
                 BindTable2(dropDownSource, rptBiostat);                
@@ -885,6 +912,11 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Binds grid of checkboxes with choices for selected areas (faculty/staff, etc).
+        /// </summary>
+        /// <param name="collection">List of choices for given selected area.</param>
+        /// <param name="rpt">Grid for selected area.</param>
         private void BindTable2(Dictionary<int, string> collection, Repeater rpt)
         {
             DataTable dt = new DataTable("tblRpt");

@@ -167,7 +167,7 @@ namespace ProjectManagement.Model
             controlSource.Add("ddlProject", dropDownSource);
 
             dropDownSource = _dbContext.BioStats
-                            .Where(b => b.EndDate > DateTime.Now && b.Id > 0 && b.Id < 99)
+                            .Where(b => b.EndDate > DateTime.Now && b.Id > 0 && b.Id != 99)
                             .OrderBy(b => b.Name)
                             .ToDictionary(c => c.Id, c => c.Name);
             controlSource.Add("ddlBiostat", dropDownSource);
