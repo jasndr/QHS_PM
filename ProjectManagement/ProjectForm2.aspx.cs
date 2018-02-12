@@ -1342,6 +1342,11 @@ namespace ProjectManagement
         #endregion
 
         #region email
+        /// <summary>
+        /// Sends notification email to QHS Admin when a user enters
+        /// a new project into the Project Tracking System.
+        /// </summary>
+        /// <param name="projectId">Id of new project that was recently entered.</param>
         private void SendNotificationEmail(int projectId)
         {
             string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];                     
@@ -1372,6 +1377,12 @@ namespace ProjectManagement
             emailService.Send(im);
         }
 
+        /// <summary>
+        /// When "Send Survey to Client" button has been clicked, an email will notify
+        /// clients (Principal Investigator) of the project to ask for a client survey
+        /// to review the services that were provided.
+        /// </summary>
+        /// <param name="surveyForm">Survey form that user will need to fill out.</param>
         private void SendSurveyEmail(SurveyForm surveyForm)
         {
             //send email invitation

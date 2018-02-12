@@ -87,6 +87,14 @@ namespace ProjectManagement.Model
 
 
         #region Paper
+        /// <summary>
+        /// Creates a list of papers of the type of publication specified and whether
+        /// or not they've indicated to narrow to a specific faculty or staff in obtaining
+        /// this list.
+        /// </summary>
+        /// <param name="pubType">Type of Publication (i.e., Abstract or Manuscript)</param>
+        /// <param name="biostatId">BQHS faculty or staff selected (e.g., John Chen)</param>
+        /// <returns></returns>
         internal DataTable GetPaperAll(int pubType, int biostatId)
         {
             DataTable dt = new DataTable("paperTable");
@@ -101,6 +109,7 @@ namespace ProjectManagement.Model
             var query = _dbContext.Publications
                         .Where(p => p.Id > 0);
 
+            /// If a BQHS Faculty or Staff was selected, extract papers from that particular member.
             if (biostatId > 0)
             {
                 query = _dbContext.PublicationBioStats
@@ -109,11 +118,13 @@ namespace ProjectManagement.Model
                         .Select(a => a.p);
             }
 
+            /// If either a manuscript or abstract was explicitly specified, filter out those that aren't.
             if (pubType > 0)
             {
                 query = query.Where(p => p.PubType == pubType);
             }
 
+            /// Publish rows in grid.
             foreach (var p in query.OrderByDescending(p => p.Id).ToList())
             {
                 DataRow row = dt.NewRow();

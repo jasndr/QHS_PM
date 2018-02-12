@@ -11,6 +11,16 @@ using System.Net.Mail;
 
 namespace ProjectManagement
 {
+
+    /// <summary>
+    /// This function is called when a program within the system is attempting
+    /// to send an email.
+    /// 
+    /// For example: sending an email to QHS Admin when a new project has been
+    /// entered into the project.
+    /// 
+    /// NOTE: Remove or falsify password upon uploading into GitHub.
+    /// </summary>
     public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
@@ -31,7 +41,7 @@ namespace ProjectManagement
             client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
 
-            // Creatte the credentials:
+            // Create the credentials:
             System.Net.NetworkCredential credentials =
                 new System.Net.NetworkCredential(credentialUserName, pwd);
 
