@@ -22,7 +22,7 @@ qhs@hawaii.edu for permission on using the front-end code for personal and/or co
 1. Download the project from GitHub.
 2. Connect the database to the project through connection string in Web.config.
 3. (Optional) Connect email notification using SMTP (e.g., Gmail).
-4. Build the project in the local project.
+4. Build the project in the local setup.
 >>- If compilation errors exist, download relevant packages and references.
 5. Run the project in the local setup and test features as pertinent.
 >>- Publish with profile **PM_DEV** if using local IIS server instead of Visual Studio development environment.
