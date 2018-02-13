@@ -34,7 +34,7 @@ qhs@hawaii.edu for permission on using the front-end code for personal and/or co
 2. Solution Explorer > Right click **Project Management** > Publish.
 3. Specify the profile **PM**.
 4. Publish to the folder setup for internal site (\\\rs\BiostatPM for JABSOM setup) through File System publish.
->>- If 500 Internal Server Error occurs, contact local IT department for responsible (e.g., JABSOM OIT)
+>>- If 500 Internal Server Error occurs, contact local IT department responsible for file system setup (e.g., JABSOM OIT)
 
 ### How to post into internet (external site)
 1. _DON'T FORGET TO GENERATE BACKUP_.
@@ -43,4 +43,4 @@ qhs@hawaii.edu for permission on using the front-end code for personal and/or co
 4. Publish to the folder setup for external site (\\\bqhsportal\BiostatPM for JABSOM setup) through File System publish.
 5. Don't worry if "validation of viewstate MAC" error appears.  Simply copy Web.config file from backup to location of live site
    as the settings that are not set through Visual Studio are only found in the actual Web.config file itself.
->>- If 500 Internal Server Error occurs, contact local IT department for responsible (e.g., JABSOM OIT)
+>>- If 500 Internal Server Error occurs, contact local IT department responsible for file system setup (e.g., JABSOM OIT)
