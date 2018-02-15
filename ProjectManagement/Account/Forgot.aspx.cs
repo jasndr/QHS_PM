@@ -31,7 +31,7 @@ namespace ProjectManagement.Account
                 // Send email with the code and the redirect to reset password page
                 string code = manager.GeneratePasswordResetToken(user.Id);
                 string callbackUrl = IdentityHelper.GetResetPasswordRedirectUrl(code, Request);
-                manager.SendEmail(user.Id, "Reset TimeTracker Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>.");
+                manager.SendEmail(user.Id, "Reset Project Tracking Password", "Aloha " + user.UserName + ",<br /><br />Please reset your <strong>Project Tracking System</strong> password by clicking <a href=\"" + callbackUrl + "\">here</a>.<br /><br />Mahalo!");
 
                 loginForm.Visible = false;
                 DisplayEmail.Visible = true;
