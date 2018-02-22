@@ -47,13 +47,16 @@ namespace ProjectManagement
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void btnSubmit1_Click(object sender, EventArgs e)
-        {           
+        {          
+            /// Produces error message if fields are blank. 
             string str = ValidateResult();
 
             if (str.Equals(string.Empty))
             {
+                /// Gets the project or creates project if not yet exists.
                 Project2 project = GetProject();
 
+                /// Adds or updates project in database; returns error message if missing fields.
                 string errorMsg = SaveProject(project);
 
                 if (errorMsg.Equals(string.Empty))
@@ -81,7 +84,7 @@ namespace ProjectManagement
         /// (2) Saves existing project in database.
         /// </summary>
         /// <param name="project">Current project in view.</param>
-        /// <returns></returns>
+        /// <returns>Error message if there is a discrepancy.</returns>
         private string SaveProject(Project2 project)
         {
             string errorMsg = "";
@@ -222,6 +225,20 @@ namespace ProjectManagement
             return errorMsg;
         }
 
+        /// <summary>
+        /// Checks the following fields to see whether or not they have been filled out in database.
+        /// - PI
+        /// - Project title
+        /// - Lead member
+        /// - Other member
+        /// - Study area
+        /// - Health data
+        /// - Study type
+        /// - Study population
+        /// - Service type
+        /// All other fields are optional.
+        /// </summary>
+        /// <returns>Error message to print out if field(s) is/are empty.</returns>
         private string ValidateResult()
         {
             System.Text.StringBuilder validateResult = new System.Text.StringBuilder();
@@ -1010,6 +1027,10 @@ namespace ProjectManagement
             return project;
         }
 
+        /// <summary>
+        /// Pulls or current project or generates new project based on what is in the database.
+        /// </summary>
+        /// <returns>Project referred to.</returns>
         private Project2 GetProject()
         {
             int id = 0,
@@ -1028,23 +1049,23 @@ namespace ProjectManagement
 
             Project2 project = new Project2()
             {
-                Id = Int32.TryParse(ddlProject.SelectedValue, out id) ? id : 0,
-                PIId = Int32.TryParse(ddlPI.SelectedValue, out piId) ? piId : -1,
-                Title = txtTitle.Value,
+                Id = Int32.TryParse(ddlProject.SelectedValue, out id) ? id : 0,   // required 
+                PIId = Int32.TryParse(ddlPI.SelectedValue, out piId) ? piId : -1, // required
+                Title = txtTitle.Value, // required
                 Summary = txtSummary.Value,
                 InitialDate = DateTime.TryParse(txtInitialDate.Text, out dtInitialDate) ? dtInitialDate : DateTime.Now,
                 DeadLine = DateTime.TryParse(txtDeadline.Text, out dtDeadline) ? dtDeadline : (DateTime?)null,
-                LeadBiostatId = Int32.TryParse(ddlLeadBiostat.SelectedValue, out leadBiostatId) ? leadBiostatId : -1,
-                OtherMemberBitSum = Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum) ? otherMemberBitSum : 0,
-                StudyAreaBitSum = Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0,
-                StudyAreaOther = txtStudyAreaOther.Value,
-                HealthDateBitSum = Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0,
+                LeadBiostatId = Int32.TryParse(ddlLeadBiostat.SelectedValue, out leadBiostatId) ? leadBiostatId : -1, // required
+                OtherMemberBitSum = Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum) ? otherMemberBitSum : 0, // required
+                StudyAreaBitSum = Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0, // required
+                StudyAreaOther = txtStudyAreaOther.Value, 
+                HealthDateBitSum = Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0, // required
                 HealthDataOther = txtHealthDataOther.Value,
-                StudyTypeBitSum = Int32.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum) ? studyTypeBitSum : 0,
+                StudyTypeBitSum = Int32.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum) ? studyTypeBitSum : 0, // required
                 StudyTypeOther = txtStudyTypeOther.Value,
-                StudyPopulationBitSum = Int32.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum) ? studyPopulationBitSum : 0,
+                StudyPopulationBitSum = Int32.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum) ? studyPopulationBitSum : 0, // required
                 StudyPopulationOther = txtStudyPopulationOther.Value,
-                ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0,
+                ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
@@ -1068,8 +1089,8 @@ namespace ProjectManagement
                 IsApproved = chkApproved.Checked,
                 Creator = User.Identity.Name,
                 CreationDate = DateTime.Now,
-                ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : (byte)ProjectType.Bioinfo,
-                CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)ProjectType.Both
+                //ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : (byte)ProjectType.Bioinfo, // if biostat is checked, then biostat, otherwise bioinfo (even if also unchecked!!!)
+                //CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)ProjectType.Both // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise both is checked (even if none is checked!!!)
             };
 
             return project;
