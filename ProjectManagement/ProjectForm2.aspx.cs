@@ -1415,7 +1415,7 @@ namespace ProjectManagement
         /// <param name="closureDate">Date of project closure.</param>
         private void SendProjectClosureEmail(int projectId, DateTime closureDate)
         {
-            string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
+            string sendTo = System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
 
             string subject = String.Format("Project # {0} has been closed.", projectId);
 
