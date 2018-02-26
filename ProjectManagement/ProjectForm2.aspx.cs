@@ -13,6 +13,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Globalization;
 
 namespace ProjectManagement
 {
@@ -129,7 +130,7 @@ namespace ProjectManagement
                     //}
                 }
                 /// If current user is not admin,
-                ///     - prevents user from making changes if admin already approved.
+                ///     - prevents non-admin user from making changes if admin already approved.
                 ///     - otherwise, saves current values of database.
                 /// If current user is admin
                 ///     - creates new phase information.
@@ -144,6 +145,15 @@ namespace ProjectManagement
                     }
                     else
                     {
+                        //sends notification of project closure if project has been newly closed
+                        if (prevProject.ProjectCompletionDate.Equals(null) && !project.ProjectCompletionDate.Equals(null))
+                        {
+                            var projectCompleteDate = project.ProjectCompletionDate ?? DateTime.ParseExact("1/1/2099", "MM/dd/yyyy", CultureInfo.InvariantCulture);
+
+                            SendProjectClosureEmail(id, projectCompleteDate);
+                        }
+
+                        //Updates current project with newly entered values.
                         db.Entry(prevProject).CurrentValues.SetValues(project);
                     }
                    
@@ -1384,6 +1394,43 @@ namespace ProjectManagement
             body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
             body.AppendFormat("Please approve new project created by {0} at {1}", User.Identity.Name, url);
             body.AppendFormat("?Id={0}</p>", projectId);
+            body.AppendLine();
+
+            IdentityMessage im = new IdentityMessage()
+            {
+                Subject = subject,
+                Destination = sendTo,
+                Body = body.ToString()
+            };
+
+            EmailService emailService = new EmailService();
+
+            emailService.Send(im);
+        }
+
+        /// <summary>
+        /// Sends notification email to QHS Admin when a user closes a project.
+        /// </summary>
+        /// <param name="projectId">Id of new project that was recently entered.</param>
+        /// <param name="closureDate">Date of project closure.</param>
+        private void SendProjectClosureEmail(int projectId, DateTime closureDate)
+        {
+            string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
+
+            string subject = String.Format("Project # {0} has been closed.", projectId);
+
+            string url = HttpContext.Current.Request.Url.AbsoluteUri;
+            if (url.IndexOf("?Id") > 0)
+            {
+                url = url.Substring(0, url.IndexOf("?Id"));
+            }
+
+            StringBuilder body = new StringBuilder();
+            //body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
+            body.AppendFormat("Aloha QHS Admin,<br /><br />");
+            body.AppendFormat("<p>Project # {0} has been closed by {1} at {2}", projectId, User.Identity.Name, url);
+            body.AppendFormat("?Id={0} with a closing date of {1}.</p><br />", projectId, closureDate.ToString("MM/dd/yyyy"));
+            body.AppendFormat("Mahalo!");
             body.AppendLine();
 
             IdentityMessage im = new IdentityMessage()
