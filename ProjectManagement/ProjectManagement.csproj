@@ -1228,16 +1228,16 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Report\Academic.rdlc" />
-    <EmbeddedResource Include="Report\IndividualSummaryProject.rdlc" />
-    <EmbeddedResource Include="Report\IndividualDailyHours.rdlc" />
-    <EmbeddedResource Include="Report\MonthlyTrend.rdlc" />
-    <EmbeddedResource Include="Report\PaperAbstract.rdlc" />
-    <EmbeddedResource Include="Report\PaperManuscript.rdlc" />
-    <EmbeddedResource Include="Report\ProjectByBiostat.rdlc" />
-    <EmbeddedResource Include="Report\ProjectDetail.rdlc" />
-    <EmbeddedResource Include="Report\ProjectSummary.rdlc" />
-    <EmbeddedResource Include="Report\StaffSummary.rdlc" />
+    <Content Include="Report\Academic.rdlc" />
+    <Content Include="Report\IndividualSummaryProject.rdlc" />
+    <Content Include="Report\IndividualDailyHours.rdlc" />
+    <Content Include="Report\MonthlyTrend.rdlc" />
+    <Content Include="Report\PaperAbstract.rdlc" />
+    <Content Include="Report\PaperManuscript.rdlc" />
+    <Content Include="Report\ProjectByBiostat.rdlc" />
+    <Content Include="Report\ProjectDetail.rdlc" />
+    <Content Include="Report\ProjectSummary.rdlc" />
+    <Content Include="Report\StaffSummary.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

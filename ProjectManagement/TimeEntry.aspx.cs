@@ -121,15 +121,24 @@ namespace ProjectManagement
                        "ModalScript", sb.ToString(), false);
         }
         
+        /// <summary>
+        /// Updates current time entry form if needs to be updated after intial entry.
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append(@"<script type='text/javascript'>");
 
+            // Makes sure that the date of entry is within the same month.
+            // Users are only allowed to enter time entries within the same
+            // month of entry.
             if (ValidateDate())
             {
+                // Verifies if hours and submission date is valid.
                 if (ValidateEdit())
                 {
+                    // Updates current time entry if reached this point.
                     UpdateTimeEntry();
 
                     sb.Append("alert('Records Updated Successfully');");
@@ -150,6 +159,9 @@ namespace ProjectManagement
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "EditHideModalScript", sb.ToString(), false);
         }
 
+        /// <summary>
+        /// Updates current time entry record.
+        /// </summary>
         private void UpdateTimeEntry()
         {
             int id;
@@ -181,10 +193,20 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Adds time entry into Project Tracking System.
+        /// Prevents moving forward if either submit value is not a valid date, 
+        /// time entry hours is not a valid value, or time exceed estimated hours.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit_Click(object sender, EventArgs e)
         {            
+            // Proceeds with checking if time entry is valid value; if not, prints error message.
             if (ValidateControl().Equals(string.Empty))
             {
+                // Proceeds if the submission date is valid (within the time allotted to enter time entry hours).
+                // Only admin can enter hours past the expiration date to do so.
                 if (ValidateSubmitDate() || Page.User.IsInRole("Admin"))
                 {
                     var timeOverspend = false;
@@ -1015,6 +1037,12 @@ namespace ProjectManagement
             return dateKey;
         }
 
+        /// <summary>
+        /// Checks if time entry (hours) value is valid:
+        ///     => If valid, returns nothing.
+        ///     => If not valid, returns error message.
+        /// </summary>
+        /// <returns>Error message if time entry (hours) value not valid.</returns>
         private string ValidateControl()
         {
             System.Text.StringBuilder validateResult = new System.Text.StringBuilder();
@@ -1054,6 +1082,10 @@ namespace ProjectManagement
             return validateResult.ToString();
         }
 
+        /// <summary>
+        /// Verifies whether the time entry hours and date of entry is valid.
+        /// </summary>
+        /// <returns></returns>
         private bool ValidateEdit()
         {
             decimal timeEntry;
@@ -1067,6 +1099,12 @@ namespace ProjectManagement
             return result1 && result2 && (i > 0) && (timeEntry > Decimal.Zero); //&& (dateEntry.Month.ToString() == ddlMonth.SelectedValue);
         }
 
+        /// <summary>
+        /// Verifies whether or not it is okay to enter the time entry
+        /// as time entries are only allowed to be entered within the
+        /// same month that it has been entered.
+        /// </summary>
+        /// <returns>A negative number if the time entry can still be entered.</returns>
         private bool ValidateDate()
         {
             //var firstDay = new DateTime(entryDate.Year, entryDate.Month, 1);
@@ -1077,6 +1115,10 @@ namespace ProjectManagement
             return (dateDiff - _leadTime < 0);
         }
 
+        /// <summary>
+        /// Assures that time entries are allowed to be entered into the system.
+        /// </summary>
+        /// <returns>Returns a numeric value if time entry date is still valid to be entered.</returns>
         private bool ValidateSubmitDate()
         {
             DateTime submitDate = Convert.ToDateTime(TextBoxSubmitDate.Text);
