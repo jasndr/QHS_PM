@@ -1,4 +1,5 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="ProjectManagement._Default" %>
+﻿
+<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="ProjectManagement._Default" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">   
     <%--<script src="<%=Page.ResolveUrl("~/Scripts/highcharts/4.2.0/highcharts.js")%>"></script>--%>
     <script src="<%=Page.ResolveUrl("~/Scripts/jquery.dataTables.min.js")%>"></script>

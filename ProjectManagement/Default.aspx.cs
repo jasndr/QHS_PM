@@ -7,10 +7,30 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+/// <summary>
+/// @File: Default.aspx.cs
+/// @Author: Yang Rui
+/// @Summary: Home page of Project Tracking System. Lists active and inactive projects with information
+///           such as Project ID, PI Name, Project Title, and Last Entry Date aimed to help faculty/staff 
+///           manage their own existing projects.
+///           
+/// @Maintenance/Revision History:
+///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+///  2018MAR19 - Jason Delos Reyes  -  Started adding documentation to make code more easily maintainable. 
+/// </summary>
 namespace ProjectManagement
 {
     public partial class _Default : Page
     {
+        /// <summary>
+        /// Displays/hides what user sees based on whether or not they have logged into the system.
+        /// (1) If user is logged in,
+        ///         - display active and inactive projects dashboards.
+        /// (2) If user is not logged in,
+        ///         - hide active and inactive projects dashboards.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (User.Identity.IsAuthenticated)
@@ -27,6 +47,12 @@ namespace ProjectManagement
 
         }
 
+        /// <summary>
+        /// Assigns the project based on inactivity, i.e., if a project's latest time entry has been
+        /// over three months, then it will be placed in the "idle projects" list.  Otherwise, if the
+        /// latest time entry has been more recent than three months, it will be placesd in the "active
+        /// projects" list.
+        /// </summary>
         private void BindControl()
         {
             int projectCnt = 0;
