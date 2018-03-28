@@ -21,6 +21,11 @@ namespace ProjectManagement
     {
         //IBusinessLayer businessLayer = new BusinessLayer();
 
+        /// <summary>
+        /// Loads page based on current status.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             string projectId = Request.QueryString["Id"];
@@ -32,9 +37,11 @@ namespace ProjectManagement
                 int id = 0;
                 Int32.TryParse(projectId, out id);
 
+                // Auto-populate project if existing id specified.
                 if (id > 0)
                     BindProject(id);                    
 
+                // Second page is only available for Admin only.
                 if (!Page.User.IsInRole("Admin"))
                 {
                     tabAdmin.Style["display"] = "none";
@@ -79,6 +86,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
+        /// Saves current project in database.
         /// Either:
         /// (1) Adds new project in database.
         ///      - Sends an email to QHS tracking list to view current project.
