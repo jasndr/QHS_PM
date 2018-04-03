@@ -10,7 +10,9 @@ using System.Web.UI.WebControls;
 /// <summary>
 /// @File: Default.aspx.cs
 /// @Author: Yang Rui
-/// @Summary: Home page of Project Tracking System. Lists active and inactive projects with information
+/// @Summary: Home page of Project Tracking System. 
+/// 
+///           Lists active and inactive projects with information
 ///           such as Project ID, PI Name, Project Title, and Last Entry Date aimed to help faculty/staff 
 ///           manage their own existing projects.
 ///           
@@ -107,6 +109,12 @@ namespace ProjectManagement
             hlTimeCnt.Text = timeCnt.ToString();
         }        
 
+        /// <summary>
+        /// Status: CURRENTLY NOT BEING USED.
+        /// 
+        /// Summary: Loads list of publications into the screen based on the drop down source.
+        /// </summary>
+        /// <returns></returns>
         [WebMethod]
         public static string LoadPublication()
         {
@@ -120,6 +128,14 @@ namespace ProjectManagement
             return jscript.Serialize(dropDownSource);
         }
 
+        /// <summary>
+        /// In the 'Active Projects' and 'Idle Projects' tables, sets links to the following fields on grid:
+        ///             - Id & Project Title >>> ProjectForm2 to review and edit project information.
+        ///             - PI Name            >>> PI page and access to PI form for review and edit if needed.
+        ///             - TimeEntry          >>> TimeEntry to review hours and enter more time entry.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptProject_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {          
             string command = e.CommandName;

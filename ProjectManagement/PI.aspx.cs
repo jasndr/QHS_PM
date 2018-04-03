@@ -18,6 +18,17 @@ namespace ProjectManagement
 {
     public partial class PI : System.Web.UI.Page
     {       
+        /// <summary>
+        /// In the pop-out form, if there is a previous PI specified,
+        /// the form will populate with the PI information already 
+        /// existing in the database.  Otherwise, a blank form will
+        /// be presented for the user to type in a new PI.
+        /// 
+        /// The "Admin Reviewed" checkbox will also be activated for those with
+        /// Admin privileges.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             string piId = Request.QueryString["Id"];
@@ -643,6 +654,13 @@ namespace ProjectManagement
             }
         }    
             
+        /// <summary>
+        /// If there is an existing PI in the request, the pop-out form will populate with
+        /// the PI information already stored into the database.
+        /// 
+        /// Otherwise, a brand new, blank form will be presented to the user.
+        /// </summary>
+        /// <param name="piId"></param>
         private void BindControl(string piId)
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())

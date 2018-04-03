@@ -31,6 +31,12 @@ namespace ProjectManagement.Admin
             string t = ddlBiostat.SelectedValue;
         }
 
+        /// <summary>
+        /// Binds dropdowns and checkboxes of PaperForm page with
+        /// currently stored information in the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -59,11 +65,20 @@ namespace ProjectManagement.Admin
             }
         }       
 
+        /// <summary>
+        /// Button that activates function to pull list of papers from the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSumbit_Click(object sender, EventArgs e)
         {
             BindGridViewPaperAll();            
         }
 
+        /// <summary>
+        /// When "Submit" button is selected, a full list of papers with either a specified paper type 
+        /// (abstract or manuscript), QHS faculty and staff, both, or neither is indicated for selection.
+        /// </summary>
         private void BindGridViewPaperAll()
         {
             int pubType, biostatId;
@@ -77,6 +92,11 @@ namespace ProjectManagement.Admin
             GridViewPaper.DataBind();
         }
 
+        /// <summary>
+        /// Saves the newly-entered infomation on the Paper form onto the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             //var names = Request.Form["Name"];
@@ -134,6 +154,13 @@ namespace ProjectManagement.Admin
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "EditHideModalScript", sb.ToString(), false);
         }
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Gets selected id of paper affiliations.
+        /// </summary>
+        /// <param name="rpt"></param>
+        /// <returns></returns>
         private List<int> GetSelectedId_Repeater(Repeater rpt)
         {
             HashSet<int> list = new HashSet<int>();
@@ -167,6 +194,13 @@ namespace ProjectManagement.Admin
             return sortedList;
         }
 
+        /// <summary>
+        /// Searches database for the affiliation id of the noted affiliations.
+        /// Adds the id to the list, to be lated applied to the grid, of the
+        /// matched affiliation.
+        /// </summary>
+        /// <param name="gvAffil">Grid with the affiliations.</param>
+        /// <returns>List of ids with affiliations.</returns>
         private List<int> GetAffiliationId(GridView gvAffil)
         {
             HashSet<int> list = new HashSet<int>();
@@ -188,6 +222,13 @@ namespace ProjectManagement.Admin
             return sortedList;
         }        
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Updates conference information.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
         private int UpdateConf(ProjectTrackerContainer db)
         {
             int confId = -1;
@@ -229,6 +270,14 @@ namespace ProjectManagement.Admin
             return confId;
         }
 
+
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Updates journal information.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
         private int UpdateJournal(ProjectTrackerContainer db)
         {
             int journalId = -1;
@@ -263,6 +312,14 @@ namespace ProjectManagement.Admin
             return journalId;
         }
 
+
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Updates coauthor information.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="paper"></param>
         private void UpdateCoAuthoAffil(ProjectTrackerContainer db, Publication paper)
         {
             ICollection<PublicationCoAuthorAffil> prevAffils = paper.PublicationCoAuthorAffils
@@ -297,8 +354,16 @@ namespace ProjectManagement.Admin
             //        EndDate = _endDate
             //    });
             //}
+
         }
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Updates grant information.
+        /// </summary>
+        /// <param name="db">Project Tracking Container</param>
+        /// <param name="paper">Paper</param>
         private void UpdateGrants(ProjectTrackerContainer db, Publication paper)
         {
             ICollection<PublicationGrant> prevGrants = paper.PublicationGrants
@@ -335,6 +400,12 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Updates paper information.
+        /// </summary>
+        /// <param name="paper">Instance of paper (publication).</param>
         private void UpdateBiostats(Publication paper)
         {
             ICollection<PublicationBioStat> prevBiostats = paper.PublicationBioStats
@@ -369,8 +440,14 @@ namespace ProjectManagement.Admin
                     EndDate = _endDate
                 });
             }
-        }        
+        }
 
+        /// <summary>
+        /// Checks to see if everything required on the Paper (Publication in database) form is
+        /// complete. Returns an error message if incomplete / not correct.
+        /// </summary>
+        /// <returns>Returns error message if one of the required fields are missing;
+        ///          Returns an empty string if all required feilds are filled out.</returns>
         private string ValidatePaper()
         {
             System.Text.StringBuilder validateResult = new System.Text.StringBuilder();
@@ -404,6 +481,16 @@ namespace ProjectManagement.Admin
             return validateResult.ToString();
         }
 
+        /// <summary>
+        ///  - Pre-populates the following dropdowns:
+        ///         (1) Paper Type - Abstract or Manuscript
+        ///         (2) Project - List of exisitng projects in the database
+        ///         (3) Biostat - List of QHS faculty and staff currently employed
+        ///  - Populates the following checkboxes:
+        ///         (1) Biostat - List of QHS faculty and staff currently employed
+        ///         (2) Grant - List of grants as paper grants currently marked as paper 
+        ///                     (RMATRIX, G12 Bridges, INBRE, Mountain West)
+        /// </summary>
         private void BindControl()
         {
             if (!Creator.Equals(string.Empty))
@@ -464,6 +551,12 @@ namespace ProjectManagement.Admin
         //    }
         //}
 
+
+        /// <summary>
+        /// Initialize Paper History grid (captures changes for paper status, journal, or conference info).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewHistory_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             DropDownList ddl = null;
@@ -509,7 +602,12 @@ namespace ProjectManagement.Admin
         //    GridView1.Controls[0].Controls.AddAt(e.Row.RowIndex + rowIndex, NewTotalRow);
         //    rowIndex++;
         //}
-
+    
+        /// <summary>
+        /// Intializes Paper History grid row command (does nothing; used to be able to add history manually).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewHistory_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             //if (e.CommandName == "InsertNew")
@@ -544,6 +642,11 @@ namespace ProjectManagement.Admin
             //}
         }
 
+        /// <summary>
+        /// Initialized list of Papers grid (ability to edit paper information with "Edit" button).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewPaper_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))
@@ -562,6 +665,14 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Pulls paper based on the paper ID given.
+        ///     - If there is a paper matching the given paper ID,
+        ///         = Paper History is populated,
+        ///         = Paper Affiliation is populated,
+        ///         = SET paper,
+        /// </summary>
+        /// <param name="paperId"></param>
         private void LoadPaperForEdit(int paperId)
         {
             Publication paper = _repository.GetPaper(paperId);
@@ -587,7 +698,11 @@ namespace ProjectManagement.Admin
         }  
 
         
-
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Creates an empty grid view.
+        /// </summary>
         private void GridViewBindEmpty()
         {
             DataTable dt = new DataTable("emptyTable");
@@ -623,6 +738,12 @@ namespace ProjectManagement.Admin
         //    GridViewHistory.DataBind();
         //}
 
+        /// <summary>
+        /// Binds the paper changes history (status, journal, or conference info.) to the current
+        /// paper form.
+        /// </summary>
+        /// <param name="paperHistorys"></param>
+        /// <param name="GridViewHistory"></param>
         private void BindGridViewHistory(List<PaperHistory> paperHistorys, GridView GridViewHistory)
         {
             GridViewHistory.DataSource = paperHistorys;
@@ -712,6 +833,13 @@ namespace ProjectManagement.Admin
             }
         }        
 
+        /// <summary>
+        /// Controls the deletion of the Paper History grid.  This method should not be called
+        /// as there is no delete control within the grid.  However, if this function is called,
+        /// it deletes the specific paper history item from the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewHistory_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = GridViewHistory.Rows[e.RowIndex];
@@ -755,6 +883,10 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Get conference information.
+        /// </summary>
+        /// <returns>New instance of conference with newly entered Conference information.</returns>
         private Conference GetConference()
         {
             DateTime startDate, endDate;           
@@ -775,6 +907,11 @@ namespace ProjectManagement.Admin
             return conf;
         }
 
+        /// <summary>
+        /// Applies the conference information from the database to the paper form.
+        /// If there is not conference information, the form is prepared blank.
+        /// </summary>
+        /// <param name="conf">Instance of conference information.</param>
         private void SetConference(Conference conf)
         {
             if (conf != null && conf.Id > 0)
@@ -793,6 +930,10 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Get name of journal.
+        /// </summary>
+        /// <returns>New instance of journal with newly entered journal information.</returns>
         private Journal GetJournal()
         {
             Journal journal = new Journal()
@@ -803,6 +944,12 @@ namespace ProjectManagement.Admin
             return journal;
         }
 
+        /// <summary>
+        /// Sets the name of the journal from the database's paper journal information.
+        /// If there is no instance of journal information from the database, then
+        /// an empty journal section is prepared for the paper form view.
+        /// </summary>
+        /// <param name="journal">Instance of journal information for paper.</param>
         private void SetJournal(Journal journal)
         {
             if (journal != null && journal.Id > 0)
@@ -821,6 +968,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Get new instance of paper. 
+        /// </summary>
+        /// <param name="paperId">Exisitng paper ID value if current paper.</param>
+        /// <returns>Returns new instance of paper with newly-entered information.</returns>
         private Publication GetPaper(int paperId)
         {
             Publication paper = new Publication()
@@ -864,7 +1016,12 @@ namespace ProjectManagement.Admin
             return paper;
         }
 
-
+        /// <summary>
+        /// Pre-fills paper form with exisiting paper information from the database.
+        /// </summary>
+        /// <param name="paper">Paper being referred to.</param>
+        /// <param name="affils">Author affiliations (JABSOM-related) of paper.</param>
+        /// <param name="paperHistorys">Paper change history of status, journal, or conference info.</param>
         private void SetPaper(Publication paper, List<JabsomAffil> affils, List<PaperHistory> paperHistorys)
         {
             if (paper != null)
@@ -993,6 +1150,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Opens the paper form with the preparation for new paper entry.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             ClearEditForm();
@@ -1000,6 +1162,9 @@ namespace ProjectManagement.Admin
             LoadEditScript();
         }
 
+        /// <summary>
+        /// Clears edit Paper form for a fresh new entry.
+        /// </summary>
         private void ClearEditForm()
         {
             optionAbstract.Checked = true;
@@ -1077,6 +1242,12 @@ namespace ProjectManagement.Admin
             BindAffilByIndex(99);
         }       
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Validates if conference value is true.
+        /// </summary>
+        /// <returns>False if conference name, location, start or end dates are empty, otherwise true.</returns>
         private bool ValidateConf()
         {
             if (TextBoxName.Text.Equals(string.Empty) || TextBoxLocation.Text.Equals(string.Empty)
@@ -1088,6 +1259,12 @@ namespace ProjectManagement.Admin
                 return true;
         }
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Validates if journal value is true.
+        /// </summary>
+        /// <returns>False if journal title is empty; otherwise true.</returns>
         private bool ValidateJournal()
         {
             if (TextBoxJournal.Text.Equals(string.Empty) )
@@ -1099,6 +1276,13 @@ namespace ProjectManagement.Admin
                 return true;
         }
 
+        /// <summary>
+        /// Gets Publication status: 
+        ///     - Returns 1 if "Submitted" checked,
+        ///     - Returns 2 if "Accepted" checked,
+        ///     - Returns 3 if "Published" checked,
+        ///     - Returns 4 if "Not Accepted" checked.
+        /// </summary>
         protected int GetPubStatus
         {
             get
@@ -1110,6 +1294,14 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Sets radio button (submitted, accpeted, published, or not accepted) to true if not accepted.
+        ///     - If pubStatus = 1, then "Submitted" checked,
+        ///     - If pubStatus = 2, then "Accpeted" checked,
+        ///     - If pubStatus = 3, then "Published" checked,
+        ///     - If pubStatus = 4, then "Not Accepted" checked,
+        /// </summary>
+        /// <param name="pubStatus"></param>
         private void SetPubStatus(int pubStatus)
         {
             if (pubStatus == (int)StatusEnum.SubResub) optionSubmitted.Checked = true;
@@ -1118,6 +1310,9 @@ namespace ProjectManagement.Admin
             else optionNotAccepted.Checked = true;
         }
 
+        /// <summary>
+        /// Clears pre-filled publication status, unmarking all radio buttons by default.
+        /// </summary>
         void ResetPubStatus()
         {
             optionSubmitted.Checked = false;
@@ -1126,6 +1321,9 @@ namespace ProjectManagement.Admin
             optionNotAccepted.Checked = false;
         }
 
+        /// <summary>
+        /// Loads Javascript pop-up screen for editable paper form.
+        /// </summary>
         private void LoadEditScript()
         {
             StringBuilder sb = new StringBuilder();
@@ -1318,6 +1516,11 @@ namespace ProjectManagement.Admin
         //    }
         //}
 
+            /// <summary>
+            /// Action taken when row is being deleted in the affiliations section of the paper form.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
         protected void gvAffil_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvAffil.Rows[e.RowIndex];
@@ -1328,6 +1531,13 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Takes index of row of affiliation and binds and adds row to
+        /// data table.
+        /// 
+        /// Adds new row if a negative number or a new row is indicated.
+        /// </summary>
+        /// <param name="rowIndex">Index of row of affiliation.</param>
         private void BindAffilByIndex(int rowIndex)
         {
             DataTable dt = new DataTable();
@@ -1362,6 +1572,11 @@ namespace ProjectManagement.Admin
             gvAffil.DataBind();
         }
 
+        /// <summary>
+        /// Adds new affiliation row when the "add new affiliation" button is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAddAffil_Click(object sender, EventArgs e)
         {
             BindAffilByIndex(-1);
@@ -1409,6 +1624,13 @@ namespace ProjectManagement.Admin
         //    } 
         //}
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Old method of combinding affiliations table to paper form.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="rpt"></param>
         private void BindTable(Dictionary<int, string> collection, Repeater rpt)
         {
             DataTable dt = new DataTable("tblRpt");
@@ -1443,6 +1665,11 @@ namespace ProjectManagement.Admin
             rpt.DataBind();
         }
 
+        /// <summary>
+        /// Primarily used to bind affiliation table to paper form.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="rpt"></param>
         private void BindTable2(Dictionary<int, string> collection, Repeater rpt)
         {
             DataTable dt = new DataTable("tblRpt");

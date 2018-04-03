@@ -489,6 +489,7 @@ namespace ProjectManagement
                     }
                 }
             }
+            /// Binds empty project if there is no match to exisitng project in database.
             else
             {
                 int piId = 0;
@@ -994,6 +995,11 @@ namespace ProjectManagement
             rpt.DataBind();
         }
 
+        /// <summary>
+        /// Creates a new project with nothing initialized.
+        /// </summary>
+        /// <param name="piId">Id = 0</param>
+        /// <returns>New, initialized project with no values.</returns>
         private Project2 InitProject(int piId)
         {
             Project2 project = new Project2()
