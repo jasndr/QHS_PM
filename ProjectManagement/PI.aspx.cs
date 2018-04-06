@@ -16,6 +16,7 @@ using System.Text;
 
 namespace ProjectManagement
 {
+
     public partial class PI : System.Web.UI.Page
     {       
         /// <summary>
@@ -44,6 +45,12 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Brings out the pop-out form and populates form with the information 
+        /// corresponding to the PI listed on the same row as the "Edit" button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptPI_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
@@ -211,6 +218,12 @@ namespace ProjectManagement
         //    }
         //}
 
+        /// <summary>
+        /// Creates a blank pop-up form to be able to enter a PI.
+        /// Activates when "Add a new PI" button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
         {          
             ClearEditForm();
@@ -223,6 +236,9 @@ namespace ProjectManagement
 
         }
 
+        /// <summary>
+        /// Resets pop-out PI form to default (blank/default fields and/or choices).
+        /// </summary>
         private void ClearEditForm()
         {
             lblInvestId.Text = string.Empty;
@@ -267,6 +283,11 @@ namespace ProjectManagement
             chkPilot.Checked = false;
         }
 
+        /// <summary>
+        /// Completes a series of checks before saving the PI form into the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             string vr = ValidateResult();
@@ -302,6 +323,11 @@ namespace ProjectManagement
 
         }
 
+        /// <summary>
+        /// Validates paper form.  Only checks if first or last name fields are entered
+        /// as those are the only two required fields to enter a PI.
+        /// </summary>
+        /// <returns></returns>
         private string ValidateResult()
         {
             System.Text.StringBuilder validateResult = new System.Text.StringBuilder();
@@ -324,6 +350,9 @@ namespace ProjectManagement
             return validateResult.ToString();
         }
 
+        /// <summary>
+        /// Updates the newly-entered PI information on the list of investigators.
+        /// </summary>
         private void BindGridView()
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -338,6 +367,20 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Creates new instance of PI.
+        /// 
+        ///     - If a new PI is being entered, the program checks to see if there is any exisitng PI with the 
+        ///     same first as last name.  If the name is new altogether, a new PI is created into the database
+        ///     and an email is sent to the tracking team for review.
+        ///     
+        ///     - If an existing PI is being saved, the program checks PI already has been reviewed by the
+        ///     tracking team.  If the tracking team has already reviewed the program, the program halts the 
+        ///     user from saving the newly entered information.  Only the tracking team can make existing
+        ///     changes to the PI form after approval.
+        /// </summary>
+        /// <param name="investId">PI Id in database.  0 indicates new PI, otherwise exisiting PI.</param>
+        /// <returns>True if okay to save, False if unable to save.</returns>
         private bool SetPIValue(int investId)
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -469,6 +512,17 @@ namespace ProjectManagement
             return true;
         }        
 
+        /// <summary>
+        /// - Populates lists for each of the following author affilation sections:
+        ///     (1) UH Department
+        ///     (2) UH/JABSOM Office
+        ///     (3) NonUH Hawaii Client location
+        ///     (4) Community College
+        ///     (5) Community Partner
+        ///     (6) UH School
+        ///     (7) UH Faculty
+        /// </summary>
+        /// <returns>List of author affiliation sections with their section options.</returns>
         private List<int> GetInvestJabsomAffil()
         {
             ICollection<JabsomAffil> jabsomAffilCollection = new Collection<JabsomAffil>();
@@ -525,6 +579,11 @@ namespace ProjectManagement
         //    BindGridView();
         //}
 
+        /// <summary>
+        /// Populates PI Affiliations grid with affiliations from the database onto
+        /// the PI form.
+        /// </summary>
+        /// <param name="jabsomAffilList">List of PI affiliations.</param>
         private void Bind_JabsomAffil(ICollection<JabsomAffil> jabsomAffilList)
         {
             List<int> idList = new List<int>();
@@ -636,6 +695,12 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// For each gridview of PI affiliations, adds checkboxes to each of PI affiliation.
+        /// Eventually stores all of the gridview of PI affiliations into a list.
+        /// </summary>
+        /// <param name="gv">Gridview of PI affiliations (e.g., Department, Office, etc.).</param>
+        /// <param name="idList">List of author affiliation sections with their section options.</param>
         private void AddSelectedRowToList(GridView gv, List<int> idList)
         {
             foreach (GridViewRow row in gv.Rows)

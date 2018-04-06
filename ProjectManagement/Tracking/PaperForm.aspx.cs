@@ -14,6 +14,27 @@ using ProjectManagement.Dtos;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: PaperForm.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: Lists publications with QHS involvement, both paper and abstracts. 
+    /// 
+    ///           The initial view displays a list of all the papers that QHS has collaborated in
+    ///           sequential order of by the latest "add" date.  The list can be filtered by paper type
+    ///           (manuscript or abstract) as well as by QHS faculty or staff member.
+    ///           
+    ///           When users click either the "Add a new paper" or "Edit" buttons, users are able to 
+    ///           determing whether or not a paper was an abstract or manuscript, add the paper information
+    ///           such as title, authors, affiliations, journal or conference accepted to, and its status 
+    ///           (submitted, accepted, published, or accepted) and date of status, as well as add paper-related 
+    ///           information such as the project in the database that corresponds to the paper, the affiliations
+    ///           of the authors (to be able to track QHS collaborations), as well as QHS faculty and staff that has been
+    ///           involved in the paper.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  2018APR02 - Jason Delos Reyes  -  Added documentation to be able to describe the methods' functionalities. 
+    /// </summary>
     public partial class PaperForm : System.Web.UI.Page
     {
         ProjectTrackerRepository _repository = new ProjectTrackerRepository();

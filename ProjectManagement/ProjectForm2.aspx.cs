@@ -161,7 +161,7 @@ namespace ProjectManagement
                             SendProjectClosureEmail(id, projectCompleteDate);
                         }
 
-                        //Updates current project with newly entered values.
+                        //Updates current project with newly-entered values.
                         db.Entry(prevProject).CurrentValues.SetValues(project);
                     }
                    
@@ -1113,8 +1113,8 @@ namespace ProjectManagement
                 IsApproved = chkApproved.Checked,
                 Creator = User.Identity.Name,
                 CreationDate = DateTime.Now,
-                //ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : (byte)ProjectType.Bioinfo, // if biostat is checked, then biostat, otherwise bioinfo (even if also unchecked!!!)
-                //CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)ProjectType.Both // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise both is checked (even if none is checked!!!)
+                ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : chkBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)0 , // if biostat is checked, then biostat, otherwise bioinfo (even if also unchecked!!!)
+                CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : chkCreditToBoth.Checked ? (byte)ProjectType.Both : (byte)0 // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise both is checked (even if none is checked!!!)
             };
 
             return project;
