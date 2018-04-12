@@ -153,7 +153,7 @@
                     </div>--%>
                 </div>
                 <br />
-                <h5>BQHS Faculty/Staff</h5>
+                <h5>QHS Faculty/Staff</h5>
                 <div class="row">
                     <div class="col-sm-2 text-left">
                         <label class="control-label" for="txtFirstName">Lead member:</label></div>

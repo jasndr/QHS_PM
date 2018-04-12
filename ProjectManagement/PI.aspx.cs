@@ -17,6 +17,22 @@ using System.Text;
 namespace ProjectManagement
 {
 
+    /// <summary>
+    /// @File: PI.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: PI Form of Project Tracking System.
+    /// 
+    ///           Lists the PI currently in the database, with the
+    ///           ability to add and edit PI information to be
+    ///           used to link projects in the database.
+    ///           Note: A PI is required to submit an entry for a paper form.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  2018APR06 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///  2018APR09 - Jason Delos Reyes  -  Added comments/documentation for SendNotificationEmail script.
+    /// </summary>
     public partial class PI : System.Web.UI.Page
     {       
         /// <summary>
@@ -864,6 +880,12 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Sends a notification email to tracking admin that a new PI has been created.
+        /// Only called when a new PI has been saved into the database, i.e., doesn't currently exist in
+        /// the database.
+        /// </summary>
+        /// <param name="investId">PI Id</param>
         private void SendNotificationEmail(int investId)
         {
             string email = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];

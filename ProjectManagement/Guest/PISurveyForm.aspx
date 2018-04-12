@@ -70,9 +70,9 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">    
-    <img src="<%=Page.ResolveUrl("~/images/Banner_Print3.jpg")%>" class="img-rounded" />
+    <img src="<%=Page.ResolveUrl("~/images/Banner_Print3_CIM.png")%>" class="img-rounded" />
     <br />
-    <h3>JABSOM BQHS FOLLOW-UP SURVEY</h3>
+    <h3>QUANTITATIVE HEALTH SCIENCES (QHS) FOLLOW-UP SURVEY</h3>
     <%-- <div class="text-center"><h4>Project Title</h4></div>--%>
     <br />
     <div>
@@ -139,7 +139,7 @@
     </div>
     <br />
     <div>
-        <h4>2.	Would you recommend your colleagues to BQHS for quantitative health sciences support?</h4>
+        <h4>2.	Would you recommend your colleagues to QHS for quantitative health sciences support?</h4>
         <div class="radio">
             <div class="col-xs-1 col-md-1"></div>
             <label>

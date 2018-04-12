@@ -17,6 +17,40 @@ using System.Globalization;
 
 namespace ProjectManagement
 {
+    /// <summary>
+    /// @File: ProjectForm2.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: Project Form of Project Tracking System.
+    /// 
+    ///           Manages and collects project information.  Items that can be collected and
+    ///           entered includes, but not limited to, Project Name, PI (need to be entered before project),
+    ///           description, QHS faculty/staff assigned to, study type, study population, which grants
+    ///           are supporting the project, and estimated Ph.D. and/or M.S. hours for the project that
+    ///           serves as a "cap" that needs approval from admin before adding more hours.
+    ///           Sends an email to tracking team if a new project has been entered.
+    ///           Ability to send a survey email after a project has been entered.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018FEB01 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///  2018FEB05 - Jason Delos Reyes  -  Added more comments for easier legibility.
+    ///  2018FEB12 - Jason Delos Reyes  -  Added more comments.
+    ///  2018FEB22 - Jason Delos Reyes  -  Removes the functionality that requires "Core" information from
+    ///                                    defaulting to "Bioinformatics"and "Credit To" information from
+    ///                                    defaulting to "Both".
+    ///  2018FEB26 - Jason Delos Reyes  -  Added a "send project closure notication" email to admin to notify
+    ///                                    the QHS admin list (assigned in Web.config file) that a project
+    ///                                    has been closed.
+    ///  2018APR06 - Jason Delos Reyes  -  The change made on 2/22 prevented "Core" and "Credit To" to be edited,
+    ///                                    basically also undoing any pre-checked items in those sections if the
+    ///                                    project form has to be saved (problematic for admin reviews).  The
+    ///                                    bug has been removed in this revision, while still also able to save
+    ///                                    "empty" (unchecked) choices when necessary.
+    ///  2018APR12 - Jason Delos Reyes  -  Fixed the "Send Client Survey" button so it should work as intended.
+    ///                                    Also added more documentation for easier understandability.
+    /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
         //IBusinessLayer businessLayer = new BusinessLayer();
@@ -331,6 +365,13 @@ namespace ProjectManagement
             return validateResult.ToString();
         }
 
+        /// <summary>
+        /// NOTE: Currently not being used.
+        /// 
+        /// Returns valid under *all* cases.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns>0 if valid, 1 if not valid.</returns>
         private bool IsValidProject(Project2 project)
         {
             bool isValid = true;
@@ -341,7 +382,8 @@ namespace ProjectManagement
 
         #region Bind UI
         /// <summary>
-        /// C
+        /// Populates grids and checkboxes based on what already exists in the database, e.g., 
+        /// list of faculty and staff, "Study Type" checkboxes, etc.
         /// </summary>
         private void BindControl()
         {
@@ -379,7 +421,7 @@ namespace ProjectManagement
 
                 //PageUtility.BindDropDownList(ddlPhaseHdn, dropDownSource, "--- Select ---");
 
-                /// Populates Lead member dropdown (current, active QHS faculty/staff and not 'N/A' marker)
+                /// Populates Lead member dropdown (current, active QHS faculty/staff and not 'N/A' marker).
                 var query = db.BioStats
                             .Where(b => b.EndDate >= DateTime.Now);
 
@@ -390,7 +432,7 @@ namespace ProjectManagement
 
                 PageUtility.BindDropDownList(ddlLeadBiostat, dropDownSource, String.Empty);
 
-                /// Bind 
+                /// Populates dropdown of checkbox grid of other members.
                 dropDownSource = query
                                 .Where(b => b.Id > 0)
                                 .OrderBy(b => b.Id == 99 ? 2:1)
@@ -398,6 +440,7 @@ namespace ProjectManagement
 
                 BindTable2(dropDownSource, rptBiostat);                
 
+                /// Populates "Study Area" checkbox grid.
                 var qProjectField = db.ProjectField.Where(f => f.IsStudyArea == true).ToList();
 
                 rptStudyArea.DataSource = qProjectField;
@@ -405,29 +448,35 @@ namespace ProjectManagement
 
                 //dtProjectField.Clear();
 
+                /// Populates "Health Data" checkbox grid.
                 qProjectField = db.ProjectField.Where(f => f.IsHealthData == true).ToList();
                 rptHealthData.DataSource = qProjectField;
                 rptHealthData.DataBind();
 
+                /// Populates "Study Type" checkbox grid.
                 qProjectField = db.ProjectField.Where(f => f.IsStudyType == true).ToList();
                 rptStudyType.DataSource = qProjectField;
                 rptStudyType.DataBind();
 
+                /// Populates "Study Population" checkbox grid.
                 qProjectField = db.ProjectField.Where(f => f.IsStudyPopulation == true).ToList();
                 rptStudyPopulation.DataSource = qProjectField;
                 rptStudyPopulation.DataBind();
 
+                /// Populates "Service" checkbox grid.
                 qProjectField = db.ProjectField.Where(f => f.IsService == true).ToList();
                 rptService.DataSource = qProjectField;
                 rptService.DataBind();
 
                 //BindgvPhase(1);
+                /// Creates the default phase, since the project # -1 is a pseudo-project for initialization.
                 BindPhaseByProject(-1);
 
                 //var qPhase = db.ProjectPhase.Where(p => p.ProjectId == 1120).ToList();
                 //rptPhase.DataSource = qPhase;
                 //rptPhase.DataBind();
 
+                /// Populates "Grant" checkbox grid.
                 dropDownSource = db.ProjectField
                                 .Where(f => f.IsGrant == true)
                                 .OrderBy(b => b.Id)
@@ -435,6 +484,7 @@ namespace ProjectManagement
 
                 BindTable2(dropDownSource, rptGrant);
 
+                /// Only Admin are allowed to approve (review) projects.
                 if (!Page.User.IsInRole("Admin"))
                 {
                     chkApproved.Disabled = true;
@@ -489,7 +539,7 @@ namespace ProjectManagement
                     }
                 }
             }
-            /// Binds empty project if there is no match to exisitng project in database.
+            /// Binds empty project if there is no match to existing project in database.
             else
             {
                 int piId = 0;
@@ -685,6 +735,10 @@ namespace ProjectManagement
             chkCreditToBoth.Checked = project.CreditTo == (byte)ProjectType.Both;
         }
 
+        /// <summary>
+        /// Binds the phase information based on the current project for the project form.
+        /// </summary>
+        /// <param name="projectId">Referenced Project ID.</param>
         private void BindPhaseByProject(int projectId)
         {
             DataTable dt = CreatePhaseTable(projectId);
@@ -696,6 +750,10 @@ namespace ProjectManagement
             //rptPhaseCompletion.DataBind();
         }
 
+        /// <summary>
+        /// Obtains the written phase information on the form and adds them to the database.
+        /// </summary>
+        /// <param name="rowIndex">Referenced row index of Phase table/grid.</param>
         private void BindPhaseByIndex(int rowIndex)
         {
             DataTable dt = CreatePhaseTable(0);
@@ -747,6 +805,13 @@ namespace ProjectManagement
             //rptPhaseCompletion.DataBind();
         }
 
+        /// <summary>
+        /// Auto-ppulates Phase and Agreement sections of the phase grid/table with data specific
+        /// to the referred data row. Creates delete button if there is not an attached 
+        /// agreement to a phase yet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void gvPhase_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -766,6 +831,13 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Fundamentally deletes row being referred to by creating a new instance of the grid,
+        /// copying all the other rows (phase 0 can't be deleted), and replacing the information
+        /// from the new grid into the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void gvPhase_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvPhase.Rows[e.RowIndex];
@@ -776,11 +848,22 @@ namespace ProjectManagement
             }            
         }
 
+        /// <summary>
+        /// Initializes a new row for the phase grid/table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAddPhase_Click(object sender, EventArgs e)
         {
             BindPhaseByIndex(-1);
         }
 
+        /// <summary>
+        /// Creates a link to the PI of the referred project if there is
+        /// PI information already specified in the PI dropdown.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void lnkPI_Command(object sender, CommandEventArgs e)
         {
             int id = 0;
@@ -832,6 +915,13 @@ namespace ProjectManagement
 
         #region Other
         //private DataTable CreatePhaseTable(ICollection<ProjectPhase> phases, bool hasRow)
+        /// <summary>
+        /// If there is a referenced project, sets up a new phase grid/table with the default Phase-0 
+        /// consultation hours of 1 MS and 1 PhD hours.
+        /// </summary>
+        /// <param name="projectId">Referenced project ID.</param>
+        /// <returns>New table with phase ID, Phase Name, Title, Estimated MS Hours, Estimated 
+        ///          PhD Hours, Start Date, Completion Date, and corresponding Agreement ID.</returns>
         private DataTable CreatePhaseTable(int projectId)
         {
             DataTable dt = new DataTable();
@@ -1120,6 +1210,11 @@ namespace ProjectManagement
             return project;
         }
 
+        /// <summary>
+        /// Obtains the phase information from the database onto the Project Form.
+        /// </summary>
+        /// <param name="projectId">Referred project ID.</param>
+        /// <returns>List of project phases for the referred-to project.</returns>
         private List<ProjectPhase> GetPhase(int projectId)
         {
             List<ProjectPhase> phases = new List<ProjectPhase>();
@@ -1164,37 +1259,60 @@ namespace ProjectManagement
             return phases;
         }
 
+     /// <summary>
+     /// Prepares the survey form for the client corresponding to the current project.
+     /// Opens a pop-up (divProjectInfo) that will be shown before sending the actual survey.
+     /// </summary>
+     /// <param name="sender"></param>
+     /// <param name="e"></param>
         protected void btnSurvey_Click(object sender, EventArgs e)
         {
             int projectId = 0;
             Int32.TryParse(ddlProject.SelectedValue, out projectId);
 
             DateTime projectCompletionDate;
+            /// If project exists and a project completion date exists, 
+            /// the survey is being retrieved for that specific project.
             if (projectId > 0 && DateTime.TryParse(txtCompletionDate.Text, out projectCompletionDate))
             {
                 SurveyForm sf = GetSurvey(projectId);
 
                 int requestCount = sf.RequestCount;
-                if (sf.Project2 != null && requestCount > 1)
+                if (sf.Project2 != null /*&& requestCount > 1*/)
                 {
+                    /// Redirects to current survey if already completed.
                     if (sf.Responded)
                     {
                         Response.Redirect("~/Guest/PISurveyForm?Id=" + sf.Id);
                     }
+                    /// Sends an error message if the survey has been sent twice before.
                     else if (requestCount > 1)
-                    {                      
-                        lblSurveyMsg.Text = "Survey has been sent to PI twice already.";
+                    {
+                        lblSurveyMsg.Text = "<strong><h3>Survey has been sent to PI twice already.</h3></strong>";
                         divProjectInfo.Visible = false;
-                        btnSendSurvey.Visible = false;                        
+                        btnSendSurvey.Visible = false;
                     }
                     else
-                        UpdateSurvey(sf.Id);
+                    {
+                        /// Adds survey count if PI has *not* responded 
+                        ///                      AND request count less than 2. 
+                        //UpdateSurvey(sf.Id);
+                    }
+                /// Sends an error message if there is no time entry hours for the project.
+                } else if (string.IsNullOrEmpty(sf.LeadBiostat))
+                {
+                    lblSurveyMsg.Text = "<strong><h3>There have been <u>no</u> hours entered for this *closed* project.</h3><br />Please check the time entry hours for this project and try again.</strong>";
+                    divProjectInfo.Visible = false;
+                    btnSendSurvey.Visible = false;
                 }
+                /// If survey is ready to be sent (project is closed AND time entry hours have been entered),
+                /// project title, biostats, and project period information is made available to the sender
+                /// before he/she has a chance to send the survey to the client.
                 else
                 {
                     string PIName = ddlPI.SelectedItem.Text;
-                    lblSurveyMsg.Text = String.Format("Survey invitation will be sent to PI {0}."
-                         , PIName + "(" + sf.SendTo + ")");
+                    lblSurveyMsg.Text = String.Format("Survey invitation will be sent to PI, <strong>{0}</strong> <u>({1})</u>."
+                         , PIName, sf.SendTo);
 
                     lblProjectTitle.Text = txtTitle.Value;
                     lblBiostats.Text = sf.LeadBiostat;
@@ -1205,9 +1323,12 @@ namespace ProjectManagement
                     btnSendSurvey.Visible = true;
                 }
             }
+            /// Sends an error message if the project is not closed, 
+            /// i.e., there is no project completion date saved.
             else
             {
-                lblSurveyMsg.Text = "Please check project is completed.";
+                lblSurveyMsg.Text = "<strong><h3>The project has not yet been closed. Please check if project has been completed.</h3></strong>";
+                divProjectInfo.Visible = false;
                 btnSendSurvey.Visible = false;
             }
 
@@ -1222,6 +1343,13 @@ namespace ProjectManagement
             //Response.Redirect("Guest/PISurveyForm");
         }              
 
+        /// <summary>
+        /// Final button that needs to be pressed in order to send out the client survey.
+        /// Sends the survey email with the link to the survey form before sending a final
+        /// confirmation message that the survey email has been sent.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSendSurvey_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
@@ -1250,6 +1378,10 @@ namespace ProjectManagement
                     }
 
                     SendSurveyEmail(surveyForm);
+
+                    /// Adds survey count
+                    UpdateSurvey(surveyForm.Id);
+
                     sb.Append("alert('Survey is sent.');");
                     sb.Append("$('#surveyModal').modal('hide');");
 
@@ -1265,6 +1397,12 @@ namespace ProjectManagement
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "HideModalScript", sb.ToString(), false);
         }
 
+        /// <summary>
+        /// Based on project that corresponds to the survey, prepares the survey form that is 
+        /// to be distributed to clients after project completion.
+        /// </summary>
+        /// <param name="projectId">Project being referred to.</param>
+        /// <returns>Prepared survey form, or exisiting filled-out survey form.</returns>
         private SurveyForm GetSurvey(int projectId)
         {
             SurveyForm surveyForm = null;
@@ -1324,11 +1462,11 @@ namespace ProjectManagement
                                 MsHours = m,
                                 ProjectInitialDate = project.InitialDate,
                                 ProjectCompletionDate = project.ProjectCompletionDate,
-                                LeadBiostat = sb.ToString().Substring(0, sb.Length - 2),
+                                LeadBiostat = string.IsNullOrEmpty(sb.ToString()) ? sb.ToString() : sb.ToString().Substring(0, sb.Length - 2),
                                 ProjectTitle = project.Title,
                                 SendTo = project.Invests.Email,
                                 Comment = string.Empty,
-                                RequestCount = 1
+                                RequestCount = 0
                             };
 
                             surveyForm = sf;
@@ -1341,6 +1479,10 @@ namespace ProjectManagement
             return surveyForm;
         }
 
+        /// <summary>
+        /// Add a request count to the instance of the survey (*not* the answers, but survey record). 
+        /// </summary>
+        /// <param name="surveyId">Specified Survey ID.</param>
         private void UpdateSurvey(string surveyId)
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -1355,6 +1497,13 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Adds grant/funding information to specified Project Form
+        /// and pre-populates grant form with exisiting information from 
+        /// the project form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAddGrant_Click(object sender, EventArgs e)
         {
             int projectId = 0;
@@ -1374,6 +1523,12 @@ namespace ProjectManagement
         //    BindPhaseByProject(0);
         //}        
 
+        /// <summary>
+        /// Checks whether or not the bit value exists in the current bit sum calculation.
+        /// </summary>
+        /// <param name="bitSum">Total bit sum (e.g., 29013(fake) = Ved & Chelu)</param>
+        /// <param name="hdnBitValue">Bit Value of current selection (e.g., 392(fake) = Chelu</param>
+        /// <returns>Returns 1 if the bit value is in the bitsum, 0 if not.</returns>
         private bool CheckBitValue(int bitSum, HiddenField hdnBitValue)
         {
             int bitValue = 0;
@@ -1470,7 +1625,7 @@ namespace ProjectManagement
             //send email invitation
             EmailService email = new EmailService();
 
-            string subject = "BQHS Follow-up Survey: " + txtTitle.Value;
+            string subject = "QHS Follow-up Survey: " + txtTitle.Value;
 
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
             ApplicationUser user = manager.FindByName(User.Identity.Name);
@@ -1491,7 +1646,7 @@ namespace ProjectManagement
             StringBuilder body = new StringBuilder();
             body.AppendFormat("<p>Dear {0},</p>", ddlPI.SelectedItem.Text);
             body.AppendLine("<p></P>");
-            body.AppendLine(@"<p>Thank you for working with us. The JABSOM Office of Biostatistics and Quantitative Health Sciences (BQHS) strives for excellence in high quality, efficient, and reliable collaborations and services in the quantitative sciences. To further improve our support, we invite you to complete a brief follow-up survey regarding your project listed below. This survey will take less than 5 minutes of your time. Your feedback is valuable to us.</p>");
+            body.AppendLine(@"<p>Thank you for working with us. The Quantitative Health Sciences (QHS) strives for excellence in high quality, efficient, and reliable collaborations and services in the quantitative sciences. To further improve our support, we invite you to complete a brief follow-up survey regarding your project listed below. This survey will take less than 5 minutes of your time. Your feedback is valuable to us.</p>");
             body.AppendLine("<p></P>");
             body.AppendFormat("<p style=\"margin-left:.5in\">Project title: {0}<br />", txtTitle.Value);
             body.AppendFormat("Faculty/Staff: {0}<br />", surveyForm.LeadBiostat);
@@ -1499,7 +1654,7 @@ namespace ProjectManagement
             //body.AppendFormat("Service hours: {0} PhD hours; {1} MS hours</p>", surveyForm.PhdHours, surveyForm.MsHours);
             //body.AppendLine();
             body.AppendLine("<p></P>");
-            body.AppendLine("<p>Click on the link below to complete the BQHS follow-up survey:</p>");
+            body.AppendLine("<p>Click on the link below to complete the QHS follow-up survey:</p>");
             body.AppendLine("<p></P>");
             body.AppendFormat("<p style=\"margin-left:.5in\">{0}</p>", surveyLink);
             body.AppendLine("<p></P>");
@@ -1508,13 +1663,14 @@ namespace ProjectManagement
             body.AppendLine("<p></P>");
             body.AppendLine("<p>Aloha,</P>");
             body.AppendLine("<p></P>");
-            body.AppendLine(@"<p>Office of Biostatistics & Quantitative Health Sciences (BQHS)<br />
+            body.AppendLine(@"<p>Quantitative Health Sciences (QHS)<br />
+                                Department of Complementary & Integrative Medicine<br />
                                 University of Hawaii John A. Burns School of Medicine<br />
                                 651 Ilalo Street, Biosciences Building, Suite 211<br />
                                 Honolulu, HI 96813<br />
                                 Phone: (808) 692-1840<br />
                                 Fax: (808) 692-1966<br />
-                                E-mail: biostat@hawaii.edu</P>");
+                                E-mail: qhs@hawaii.edu</P>");
 
             IdentityMessage im = new IdentityMessage()
             {

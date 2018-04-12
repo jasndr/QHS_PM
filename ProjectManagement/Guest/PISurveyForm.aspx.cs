@@ -135,7 +135,7 @@ namespace ProjectManagement.Guest
                         {
                             if (SaveSurvey(survey, db))
                             {
-                                //SendNotificationEmail(surveyId);
+                                SendNotificationEmail(surveyId);
                                 Response.Redirect("ThankYou");
                             }
 
