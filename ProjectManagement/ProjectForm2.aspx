@@ -1,34 +1,38 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectForm2.aspx.cs" Inherits="ProjectManagement.ProjectForm2" %>
+
 <%@ Register Assembly="DropDownChosen" Namespace="CustomDropDown" TagPrefix="ucc" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="Scripts/jquery.bootstrap.wizard.min.js"></script>
     <script src="Scripts/bootstrap-datepicker.min.js"></script>
-    <script src="Scripts/chosen.jquery.js"></script> 
-    <link href="Content/chosen.css" rel="stylesheet" />   
+    <script src="Scripts/chosen.jquery.js"></script>
+    <link href="Content/chosen.css" rel="stylesheet" />
     <style>
         h5 {
             overflow: hidden;
             text-align: center;
             font-weight: bold;
         }
-        h5:before,
-        h5:after {
-            background-color: #000;
-            content: "";
-            display: inline-block;
-            height: 1px;
-            position: relative;
-            vertical-align: middle;
-            width: 50%;
-        }
-        h5:before {
-            right: 0.5em;
-            margin-left: -50%;
-        }
-        h5:after {
-            left: 0.5em;
-            margin-right: -50%;
-        }       
+
+            h5:before,
+            h5:after {
+                background-color: #000;
+                content: "";
+                display: inline-block;
+                height: 1px;
+                position: relative;
+                vertical-align: middle;
+                width: 50%;
+            }
+
+            h5:before {
+                right: 0.5em;
+                margin-left: -50%;
+            }
+
+            h5:after {
+                left: 0.5em;
+                margin-right: -50%;
+            }
 
         .table-borderless tbody tr td, .table-borderless tbody tr th, .table-borderless thead tr th {
             border: none;
@@ -37,111 +41,116 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="loader"></div>
-    
+
     <div class="panel panel-default">
         <%--<div class="panel-heading"><b>Project</b></div>--%>
         <div class="panel-body">
-    <div id="rootwizard" class="">
-       
-        <ul>
-            <li class="hidden"><a href="#tab1" data-toggle="tab"></a></li>
-            <li class="hidden"><a href="#MainContent_tabAdmin" data-toggle="tab"></a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4 class="text-center"><b>Project Form</b></h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-9"></div>
-                <div class="col-md-1">
-                    Id: <asp:Label ID="lblProjectId" runat="server" Text=""></asp:Label>
-                </div>
-                <div class="col-md-2">PI:&nbsp;
+            <div id="rootwizard" class="">
+
+                <ul>
+                    <li class="hidden"><a href="#tab1" data-toggle="tab"></a></li>
+                    <li class="hidden"><a href="#MainContent_tabAdmin" data-toggle="tab"></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4 class="text-center"><b>Project Form</b></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9"></div>
+                        <div class="col-md-1">
+                            Id:
+                            <asp:Label ID="lblProjectId" runat="server" Text=""></asp:Label>
+                        </div>
+                        <div class="col-md-2">
+                            PI:&nbsp;
                     <asp:LinkButton runat="server" ID="lnkPI" CommandName="PI" OnCommand="lnkPI_Command" OnClientClick="var originalTarget = document.forms[0].target; document.forms[0].target = '_blank'; setTimeout(function () { document.forms[0].target = originalTarget; }, 1000);">
                         <asp:Label ID="lblPI" runat="server"></asp:Label>
                     </asp:LinkButton>
-                </div>
-            </div>
-            <br />
-            <div class="tab-pane" id="tab1">
-                <div class="row">
-                    <div class="col-sm-1 text-left">
-                        <label class="control-label" for="txtTitle">PI:</label></div>
-                    <div class="col-sm-3">
-                        <ucc:dropdownlistchosen id="ddlPI" runat="server" width="200px"
-                            noresultstext="No results match."
-                            dataplaceholder="Search PI" allowsingledeselect="true">            
-                        </ucc:dropdownlistchosen>
+                        </div>
                     </div>
-                   <%-- <div class="col-sm-1">
+                    <br />
+                    <div class="tab-pane" id="tab1">
+                        <div class="row">
+                            <div class="col-sm-1 text-left">
+                                <label class="control-label" for="txtTitle">PI:</label>
+                            </div>
+                            <div class="col-sm-3">
+                                <ucc:DropDownListChosen ID="ddlPI" runat="server" Width="200px"
+                                    NoResultsText="No results match."
+                                    DataPlaceHolder="Search PI" AllowSingleDeselect="true">
+                                </ucc:DropDownListChosen>
+                            </div>
+                            <%-- <div class="col-sm-1">
                         <asp:Button ID="btnReset" runat="server" Text="Reset" OnClick="btnRest_Click" class="btn btn-info"/>
                     </div>--%>
-                    
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-1 text-left">
-                        <label class="control-label" for="txtFirstName">Project:</label></div>
-                    <div class="col-sm-6">
-                        <asp:DropDownList ID="ddlProject" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlProject_Changed" AutoPostBack="True">
-                        </asp:DropDownList>
-                    </div>
-                   
-                    <div class="col-sm-1 offset1">
-                        <asp:CheckBox ID="chkBiostat" runat="server" Text="Biostat"></asp:CheckBox>
-                    </div>
-                    <div class="col-sm-1 offset1">
-                        <asp:CheckBox ID="chkBioinfo" runat="server" Text="Bioinfo"></asp:CheckBox>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-1 text-left">
-                        <label class="control-label" for="txtTitle">Title:</label></div>
-                    <div class="col-sm-9">
-                        <input class="form-control" type="text" name="txtTitle" id="txtTitle" runat="Server" />
-                    </div>
-                    <div class="col-sm-1 hidden">
-                        <asp:DropDownList ID="ddlProjectHdn" runat="server" CssClass="form-control">
-                        </asp:DropDownList>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-1 text-left">
-                        <label class="control-label" for="txtSummary">Summary:</label>
-                    </div>
-                    <div class="col-sm-9">
-                        <textarea class="form-control noresize" rows="3" name="txtSummary" id="txtSummary" runat="Server"></textarea>
-                    </div>                    
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-1">
-                        <label class="control-label" for="txtInitialDate">Initial date:</label></div>
-                    <div class="col-sm-2">
-                        <div class='input-group date' id='dtpInitialDate'>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                            <asp:TextBox ID="txtInitialDate" runat="server" class="form-control"></asp:TextBox>
                         </div>
-                    </div>    
-                    <div class="col-sm-2 text-right">
-                        <label class="control-label" for="txtDeadline">Deadline:</label>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class='input-group date' id='dtpDeadline'>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                            <asp:TextBox ID="txtDeadline" runat="server" class="form-control"></asp:TextBox>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-1 text-left">
+                                <label class="control-label" for="txtFirstName">Project:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <asp:DropDownList ID="ddlProject" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlProject_Changed" AutoPostBack="True">
+                                </asp:DropDownList>
+                            </div>
+
+                            <div class="col-sm-1 offset1">
+                                <asp:CheckBox ID="chkBiostat" runat="server" Text="Biostat"></asp:CheckBox>
+                            </div>
+                            <div class="col-sm-1 offset1">
+                                <asp:CheckBox ID="chkBioinfo" runat="server" Text="Bioinfo"></asp:CheckBox>
+                            </div>
                         </div>
-                    </div>
-                                
-                    <%--<div class="col-sm-3 text-left">
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-1 text-left">
+                                <label class="control-label" for="txtTitle">Title:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" name="txtTitle" id="txtTitle" runat="Server" />
+                            </div>
+                            <div class="col-sm-1 hidden">
+                                <asp:DropDownList ID="ddlProjectHdn" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-1 text-left">
+                                <label class="control-label" for="txtSummary">Summary:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <textarea class="form-control noresize" rows="3" name="txtSummary" id="txtSummary" runat="Server"></textarea>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label class="control-label" for="txtInitialDate">Initial date:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class='input-group date' id='dtpInitialDate'>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    <asp:TextBox ID="txtInitialDate" runat="server" class="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <label class="control-label" for="txtDeadline">Deadline:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class='input-group date' id='dtpDeadline'>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    <asp:TextBox ID="txtDeadline" runat="server" class="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+
+                            <%--<div class="col-sm-3 text-left">
                         <label class="control-label" for="txtDeadline">Request received date:</label></div>
                     <div class="col-sm-2">
                         <div class='input-group date' id='dtpRequestRcvDate'>
@@ -151,514 +160,534 @@
                             <asp:TextBox ID="txtRequestRcvdDate" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>--%>
-                </div>
-                <br />
-                <h5>QHS Faculty/Staff</h5>
-                <div class="row">
-                    <div class="col-sm-2 text-left">
-                        <label class="control-label" for="txtFirstName">Lead member:</label></div>
-                    <div class="col-sm-3">
-                        <asp:DropDownList ID="ddlLeadBiostat" runat="server" CssClass="form-control">
-                        </asp:DropDownList>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Other member(s): check all that apply, or indicate N/A</label>
-                    </div>
-                </div>
-                <%--<br />--%>
-                <table class="table table-hover table-borderless" id="tblBiostat">
-                    <tbody>
-                        <asp:Repeater ID="rptBiostat" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td>
-                                        <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
-                                        <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
-                                        <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
-                                        <%# Eval("Name1") %>
-                                    </td>
-                                    <td>
-                                        <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
-                                        <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
-                                        <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
-                                        <%# Eval("Name2") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td>
-                                    <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
-                                    <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
-                                    <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
-                                    <%# Eval("Name1") %>
-                                </td>
-                                <td>
-                                    <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
-                                    <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
-                                    <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
-                                    <%# Eval("Name2") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtOtherMemberBitSum" id="txtOtherMemberBitSum" runat="Server" />
-                    </div>
-                </div>
-
-                <h5>Study Area</h5>                
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Check all that apply</label>
-                    </div>
-                </div>
-                <%--<br />--%>
-                <table class="table table-hover table-borderless" id="tblStudyArea">
-                    <tbody>
-                        <asp:Repeater ID="rptStudyArea" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td style="width:50%">
-                                        <asp:CheckBox ID="chkId" runat="server" ></asp:CheckBox>
-                                        <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                        <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                        <%# Eval("Name") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td style="width:50%">
-                                    <asp:CheckBox ID="chkId" runat="server" ></asp:CheckBox>
-                                    <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                    <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                    <%# Eval("Name") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtStudyAreaOther" id="txtStudyAreaOther" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtStudyAreaBitSum" id="txtStudyAreaBitSum" runat="Server" />
-                    </div>
-                </div>
-                
-                <h5>Health Data</h5>
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Check all that apply, or indicate N/A</label>
-                    </div>
-                </div>
-               <%-- <br />--%>
-                <table class="table table-hover table-borderless" id="tblHealthData">
-                    <tbody>
-                        <asp:Repeater ID="rptHealthData" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td style="width:50%">
-                                        <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                        <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                        <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                        <%# Eval("Name") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td style="width:50%">
-                                    <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                    <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                    <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                    <%# Eval("Name") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtHealthDataOther" id="txtHealthDataOther" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtHealthDataBitSum" id="txtHealthDataBitSum" runat="Server" />
-                    </div>
-                </div>
-               
-                <h5>Study Type</h5>
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Check all that apply</label>
-                    </div>
-                </div>
-                <%--<br />--%>
-                <table class="table table-hover table-borderless" id="tblStudyType">
-                    <tbody>
-                        <asp:Repeater ID="rptStudyType" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td style="width:50%">
-                                        <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                        <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                        <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                        <%# Eval("Name") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td style="width:50%">
-                                    <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                    <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                    <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                    <%# Eval("Name") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtStudyTypeOther" id="txtStudyTypeOther" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtStudyTypeBitSum" id="txtStudyTypeBitSum" runat="Server" />
-                    </div>
-                </div>
-
-                <h5>Study Population</h5>
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Check all that apply, or indicate N/A</label>
-                    </div>
-                </div>
-               <%-- <br />--%>
-                <table class="table table-hover table-borderless" id="tblStudyPopulation">
-                    <tbody>
-                        <asp:Repeater ID="rptStudyPopulation" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td style="width:50%">
-                                        <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                        <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                        <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                        <%# Eval("Name") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td style="width:50%">
-                                    <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                    <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                    <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                    <%# Eval("Name") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtStudyPopulationOther" id="txtStudyPopulationOther" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtStudyPopulationBitSum" id="txtStudyPopulationBitSum" runat="Server" />
-                    </div>
-                </div>
-
-                <h5>Service</h5>
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Check all that apply</label>
-                    </div>
-                </div>
-               <%-- <br />--%>
-                <table class="table table-hover table-borderless" id="tblService">
-                    <tbody>
-                        <asp:Repeater ID="rptService" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td style="width:50%">
-                                        <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                        <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                        <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                        <%# Eval("Name") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td style="width:50%">
-                                    <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
-                                    <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
-                                    <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
-                                    <%# Eval("Name") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtServiceOther" id="txtServiceOther" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtServiceBitSum" id="txtServiceBitSum" runat="Server" />
-                    </div>
-                </div>
-                <br />
-                <h5>Credit To</h5>
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Credit to sister cores</label>
-                    </div>
-                </div>
-                <div class="row offset2">
-                    <div class="col-sm-2">
-                        <asp:CheckBox ID="chkCreditToBiostat" runat="server" Text="Biostat Only"></asp:CheckBox>
-                    </div>
-                    <div class="col-sm-2">
-                        <asp:CheckBox ID="chkCreditToBioinfo" runat="server" Text="Bioinfo Only"></asp:CheckBox>
-                    </div>
-                    <div class="col-sm-2">
-                        <asp:CheckBox ID="chkCreditToBoth" runat="server" Text="Biostat and Bioinfo"></asp:CheckBox>
-                    </div>
-                </div>
-                
-                <h5>Other Description</h5>
-                <br />
-                <div class="row">
-                    <div class="col-sm-2 text-left">
-                        <label class="control-label">
-                            Other project description:
-                        </label>
-                    </div>
-                    <div class="col-sm-6">
-                        <table class="table" id="tblDesc">
+                        </div>
+                        <br />
+                        <h5>QHS Faculty/Staff</h5>
+                        <div class="row">
+                            <div class="col-sm-2 text-left">
+                                <label class="control-label" for="txtFirstName">Lead member:</label>
+                            </div>
+                            <div class="col-sm-3">
+                                <asp:DropDownList ID="ddlLeadBiostat" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Other member(s): check all that apply, or indicate N/A</label>
+                            </div>
+                        </div>
+                        <%--<br />--%>
+                        <table class="table table-hover table-borderless" id="tblBiostat">
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            Is PI a junior investigator?
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" id="chkJuniorPIYes" value="1" runat="server" />Yes
-                                        &nbsp;
-                                        <input type="checkbox" id="chkJuniorPINo" value="0" runat="server" />No
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="chkMentorYes">
-                                            Does PI have mentor?
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" id="chkMentorYes" value="1" runat="server" />Yes
-                                        &nbsp;
-                                        <input type="checkbox" id="chkMentorNo" value="0" runat="server" />No
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            Is project an internal study?
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" id="chkInternalYes" value="1" runat="server" />Yes
-                                        &nbsp;
-                                        <input type="checkbox" id="chkInternalNo" value="0" runat="server" />No
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            Is project an infrastructure grant pilot study?
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" id="chkPilotYes" value="1" runat="server" />Yes
-                                        &nbsp;
-                                        <input type="checkbox" id="chkPilotNo" value="0" runat="server" />No
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            Is this a paying project?
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" id="chkPayingYes" value="1" runat="server" />Yes
-                                        &nbsp;
-                                        <input type="checkbox" id="chkPayingNo" value="0" runat="server" />No
-                                    </td>
-                                </tr>
+                                <asp:Repeater ID="rptBiostat" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td>
+                                                <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                                <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
+                                                <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                                <%# Eval("Name1") %>
+                                            </td>
+                                            <td>
+                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
+                                                <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                                <%# Eval("Name2") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td>
+                                            <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                            <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
+                                            <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                            <%# Eval("Name1") %>
+                                        </td>
+                                        <td>
+                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                            <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
+                                            <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                            <%# Eval("Name2") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div class="row" id="divMentor">
-                    <div class="col-sm-2 text-left">
-                        <label class="control-label" for="txtTitle">Mentor first name:</label></div>
-                    <div class="col-sm-2">
-                        <input class="form-control" type="text" name="txtMentorFirstName" id="txtMentorFirstName" runat="Server" />
-                    </div>
-                    <div class="col-sm-2 text-right">
-                        <label class="control-label" for="txtTitle">Mentor last name:</label></div>
-                    <div class="col-sm-2">
-                        <input class="form-control" type="text" name="txtMentorLastName" id="txtMentorLastName" runat="Server" />
-                    </div>
-                    <div class="col-sm-1 text-right">
-                        <label class="control-label" for="txtTitle">Email:</label></div>
-                    <div class="col-sm-3">
-                        <input class="form-control" type="text" name="txtMentorEmail" id="txtMentorEmail" runat="Server" />
-                    </div>
-                </div>
-                <br />
-                <div class="row" id="divPayProject">
-                    <div class="col-sm-3 text-left">
-                        <label class="control-label" for="txtPayProject">If paying project, type of payment:</label></div>
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtPayProject" id="txtPayProject" runat="Server" />
-                    </div>
-                </div>
-                <br />
-            
-                <h5>Grant</h5>
-                <%--<br />--%>
-                <div class="row">
-                    <div class="col-sm-6 text-left">
-                        <label class="control-label">Check all that apply, or indicate N/A</label>
-                    </div>
-                </div>
-                <%--<br />--%>
-                <table class="table table-hover table-borderless" id="tblGrant">
-                    <tbody>
-                        <asp:Repeater ID="rptGrant" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td style="width:25%">
-                                        <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
-                                        <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
-                                        <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
-                                        <%# Eval("Name1") %>
-                                    </td>
-                                    <td style="width:25%">
-                                        <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
-                                        <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
-                                        <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
-                                        <%# Eval("Name2") %>
-                                    </td>
-                            </ItemTemplate>
-                            <AlternatingItemTemplate>
-                                <td style="width:25%">
-                                    <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
-                                    <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
-                                    <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
-                                    <%# Eval("Name1") %>
-                                </td>
-                                <td style="width:25%">
-                                    <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
-                                    <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
-                                    <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
-                                    <%# Eval("Name2") %>
-                                </td>
-                                </tr>
-                            </AlternatingItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" name="txtGrantOther" id="txtGrantOther" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <input class="form-control hidden" type="text" name="txtGrantBitSum" id="txtGrantBitSum" runat="Server" />
-                    </div>
-                </div>
-                <br />
-
-                <h5>Phase</h5>
-                <br />
-                <asp:UpdatePanel ID="upPhase" runat="server">
-                    <ContentTemplate>
-                        <div>
-                            <asp:GridView ID="gvPhase" runat="server" AutoGenerateColumns="False"
-                                ShowFooter="True"
-                                OnRowDataBound="gvPhase_RowDataBound"
-                                OnRowDeleting="gvPhase_RowDeleting"
-                                class="table">
-                                <Columns>
-                                    <asp:TemplateField HeaderText="Id" Visible="false">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblId" runat="server" Text='<%# Eval("Id") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Phase" HeaderStyle-Width="8%">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblPhase" runat="server" Text='<%# Eval("Name") %>' />                                            
-                                        </ItemTemplate>
-                                        <FooterStyle HorizontalAlign="Left" />
-                                        <FooterTemplate>
-                                            <asp:Button ID="btnAddPhase" runat="server" CssClass="btn btn-info"
-                                                Text="Add New" OnClick="btnAddPhase_Click" OnClientClick="AddPhase()" />
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Agreement" HeaderStyle-Width="12%">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblAgmtId" runat="server" Text='<%# Eval("AgmtId") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Start Date (mm/dd/yyyy)" HeaderStyle-Width="15%">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtStartDate" runat="server" class="form-control" Text='<%# Eval("StartDate") %>'></asp:TextBox>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Completion Date (mm/dd/yyyy)" HeaderStyle-Width="15%">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control" Text='<%# Eval("CompletionDate") %>'></asp:TextBox>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Title" HeaderStyle-Width="25%">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtTitle" runat="server" class="form-control" Text='<%# Eval("Title") %>'></asp:TextBox>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Ms Hrs" HeaderStyle-Width="10%">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtMsHrs" runat="server" class="form-control" Text='<%# Eval("MsHrs") %>'></asp:TextBox>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Phd Hrs" HeaderStyle-Width="10%">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtPhdHrs" runat="server" class="form-control" Text='<%# Eval("PhdHrs") %>'></asp:TextBox>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-
-                                    <asp:TemplateField HeaderText="Del" HeaderStyle-Width="5%">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="lnkDelete" runat="server" Text="Delete" CommandName="Delete"
-                                                ToolTip="Delete" OnClientClick='return confirm("Are you sure you want to delete this entry?");'
-                                                CommandArgument=''><img src="images/icon-delete.png" /></asp:LinkButton>
-                                        </ItemTemplate>
-
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtOtherMemberBitSum" id="txtOtherMemberBitSum" runat="Server" />
+                            </div>
                         </div>
 
-                    </ContentTemplate>
-                    <%--<Triggers></Triggers>--%>
-                </asp:UpdatePanel>
+                        <h5>Study Area</h5>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Check all that apply</label>
+                            </div>
+                        </div>
+                        <%--<br />--%>
+                        <table class="table table-hover table-borderless" id="tblStudyArea">
+                            <tbody>
+                                <asp:Repeater ID="rptStudyArea" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 50%">
+                                                <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                <%# Eval("Name") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 50%">
+                                            <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                            <%# Eval("Name") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtStudyAreaOther" id="txtStudyAreaOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtStudyAreaBitSum" id="txtStudyAreaBitSum" runat="Server" />
+                            </div>
+                        </div>
 
-                <%--<table class="table table-bordered table-hover">
+                        <h5>Health Data</h5>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Check all that apply, or indicate N/A</label>
+                            </div>
+                        </div>
+                        <%-- <br />--%>
+                        <table class="table table-hover table-borderless" id="tblHealthData">
+                            <tbody>
+                                <asp:Repeater ID="rptHealthData" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 50%">
+                                                <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                <%# Eval("Name") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 50%">
+                                            <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                            <%# Eval("Name") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtHealthDataOther" id="txtHealthDataOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtHealthDataBitSum" id="txtHealthDataBitSum" runat="Server" />
+                            </div>
+                        </div>
+
+                        <h5>Study Type</h5>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Check all that apply</label>
+                            </div>
+                        </div>
+                        <%--<br />--%>
+                        <table class="table table-hover table-borderless" id="tblStudyType">
+                            <tbody>
+                                <asp:Repeater ID="rptStudyType" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 50%">
+                                                <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                <%# Eval("Name") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 50%">
+                                            <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                            <%# Eval("Name") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtStudyTypeOther" id="txtStudyTypeOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtStudyTypeBitSum" id="txtStudyTypeBitSum" runat="Server" />
+                            </div>
+                        </div>
+
+                        <h5>Study Population</h5>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Check all that apply, or indicate N/A</label>
+                            </div>
+                        </div>
+                        <%-- <br />--%>
+                        <table class="table table-hover table-borderless" id="tblStudyPopulation">
+                            <tbody>
+                                <asp:Repeater ID="rptStudyPopulation" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 50%">
+                                                <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                <%# Eval("Name") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 50%">
+                                            <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                            <%# Eval("Name") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-4" id="divHealthDisparity">
+                                <div class="col-sm-3">
+                                    <label for="chkHealthDisparityYes">Health disparity?</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkHealthDisparityYes" runat="server" Text="Yes"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkHealthDisparityNo" runat="server" Text="No"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkHealthDisparityNA" runat="server" Text="N/A"></asp:CheckBox>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtStudyPopulationOther" id="txtStudyPopulationOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-1">
+                                <input class="form-control hidden" type="text" name="txtStudyPopulationBitSum" id="txtStudyPopulationBitSum" runat="Server" />
+                            </div>
+                        </div>
+
+                        <h5>Service</h5>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Check all that apply</label>
+                            </div>
+                        </div>
+                        <%-- <br />--%>
+                        <table class="table table-hover table-borderless" id="tblService">
+                            <tbody>
+                                <asp:Repeater ID="rptService" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 50%">
+                                                <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                <%# Eval("Name") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 50%">
+                                            <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                            <%# Eval("Name") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtServiceOther" id="txtServiceOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtServiceBitSum" id="txtServiceBitSum" runat="Server" />
+                            </div>
+                        </div>
+                        <br />
+                        <h5>Credit To</h5>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Credit to sister cores</label>
+                            </div>
+                        </div>
+                        <div class="row offset2">
+                            <div class="col-sm-2">
+                                <asp:CheckBox ID="chkCreditToBiostat" runat="server" Text="Biostat Only"></asp:CheckBox>
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:CheckBox ID="chkCreditToBioinfo" runat="server" Text="Bioinfo Only"></asp:CheckBox>
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:CheckBox ID="chkCreditToBoth" runat="server" Text="Biostat and Bioinfo"></asp:CheckBox>
+                            </div>
+                        </div>
+
+                        <h5>Other Description</h5>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-2 text-left">
+                                <label class="control-label">
+                                    Other project description:
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <table class="table" id="tblDesc">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    Is PI a junior investigator?
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chkJuniorPIYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                        <input type="checkbox" id="chkJuniorPINo" value="0" runat="server" />No
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="chkMentorYes">
+                                                    Does PI have mentor?
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chkMentorYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                        <input type="checkbox" id="chkMentorNo" value="0" runat="server" />No
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    Is project an internal study?
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chkInternalYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                        <input type="checkbox" id="chkInternalNo" value="0" runat="server" />No
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    Is project an infrastructure grant pilot study?
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chkPilotYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                        <input type="checkbox" id="chkPilotNo" value="0" runat="server" />No
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    Is this a paying project?
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chkPayingYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                        <input type="checkbox" id="chkPayingNo" value="0" runat="server" />No
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row" id="divMentor">
+                            <div class="col-sm-2 text-left">
+                                <label class="control-label" for="txtTitle">Mentor first name:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="text" name="txtMentorFirstName" id="txtMentorFirstName" runat="Server" />
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <label class="control-label" for="txtTitle">Mentor last name:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="text" name="txtMentorLastName" id="txtMentorLastName" runat="Server" />
+                            </div>
+                            <div class="col-sm-1 text-right">
+                                <label class="control-label" for="txtTitle">Email:</label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" name="txtMentorEmail" id="txtMentorEmail" runat="Server" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" id="divPayProject">
+                            <div class="col-sm-3 text-left">
+                                <label class="control-label" for="txtPayProject">If paying project, type of payment:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtPayProject" id="txtPayProject" runat="Server" />
+                            </div>
+                        </div>
+                        <br />
+
+                        <h5>Grant</h5>
+                        <%--<br />--%>
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <label class="control-label">Check all that apply, or indicate N/A</label>
+                            </div>
+                        </div>
+                        <%--<br />--%>
+                        <table class="table table-hover table-borderless" id="tblGrant">
+                            <tbody>
+                                <asp:Repeater ID="rptGrant" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 25%">
+                                                <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                                <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
+                                                <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                                <%# Eval("Name1") %>
+                                            </td>
+                                            <td style="width: 25%">
+                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
+                                                <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                                <%# Eval("Name2") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 25%">
+                                            <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                            <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
+                                            <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                            <%# Eval("Name1") %>
+                                        </td>
+                                        <td style="width: 25%">
+                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                            <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
+                                            <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                            <%# Eval("Name2") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="txtGrantOther" id="txtGrantOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtGrantBitSum" id="txtGrantBitSum" runat="Server" />
+                            </div>
+                        </div>
+                        <br />
+
+                        <h5>Phase</h5>
+                        <br />
+                        <asp:UpdatePanel ID="upPhase" runat="server">
+                            <ContentTemplate>
+                                <div>
+                                    <asp:GridView ID="gvPhase" runat="server" AutoGenerateColumns="False"
+                                        ShowFooter="True"
+                                        OnRowDataBound="gvPhase_RowDataBound"
+                                        OnRowDeleting="gvPhase_RowDeleting"
+                                        class="table">
+                                        <Columns>
+                                            <asp:TemplateField HeaderText="Id" Visible="false">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblId" runat="server" Text='<%# Eval("Id") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Phase" HeaderStyle-Width="8%">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblPhase" runat="server" Text='<%# Eval("Name") %>' />
+                                                </ItemTemplate>
+                                                <FooterStyle HorizontalAlign="Left" />
+                                                <FooterTemplate>
+                                                    <asp:Button ID="btnAddPhase" runat="server" CssClass="btn btn-info"
+                                                        Text="Add New" OnClick="btnAddPhase_Click" OnClientClick="AddPhase()" />
+                                                </FooterTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Agreement" HeaderStyle-Width="12%">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblAgmtId" runat="server" Text='<%# Eval("AgmtId") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Start Date (mm/dd/yyyy)" HeaderStyle-Width="15%">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtStartDate" runat="server" class="form-control" Text='<%# Eval("StartDate") %>'></asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Completion Date (mm/dd/yyyy)" HeaderStyle-Width="15%">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control" Text='<%# Eval("CompletionDate") %>'></asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Title" HeaderStyle-Width="25%">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtTitle" runat="server" class="form-control" Text='<%# Eval("Title") %>'></asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Ms Hrs" HeaderStyle-Width="10%">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtMsHrs" runat="server" class="form-control" Text='<%# Eval("MsHrs") %>'></asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Phd Hrs" HeaderStyle-Width="10%">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtPhdHrs" runat="server" class="form-control" Text='<%# Eval("PhdHrs") %>'></asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+
+                                            <asp:TemplateField HeaderText="Del" HeaderStyle-Width="5%">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="lnkDelete" runat="server" Text="Delete" CommandName="Delete"
+                                                        ToolTip="Delete" OnClientClick='return confirm("Are you sure you want to delete this entry?");'
+                                                        CommandArgument=''><img src="images/icon-delete.png" /></asp:LinkButton>
+                                                </ItemTemplate>
+
+                                            </asp:TemplateField>
+                                        </Columns>
+                                    </asp:GridView>
+                                </div>
+
+                            </ContentTemplate>
+                            <%--<Triggers></Triggers>--%>
+                        </asp:UpdatePanel>
+
+                        <%--<table class="table table-bordered table-hover">
                     <thead class="thead-inverse">
                         <tr>
                             <td>Id</td>
@@ -715,61 +744,114 @@
                         </asp:Repeater>
                     </tbody>
                 </table>--%>
-               
-                <div class="row">
-                    <div class="col-sm-5">
-                        <input type="checkbox" id="chkApproved" value="1" runat="server" />&nbsp;<b>Admin reviewed</b>
-                    </div>
-                </div>
-                <hr />
-                <div class="row">
-                    <div class="col-sm-6">
-                    </div>
-                    <div class="col-sm-2">
-                        <asp:Button ID="btnSubmit1" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
-                    </div>
-                </div>
 
-            </div>       
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input type="checkbox" id="chkApproved" value="1" runat="server" />&nbsp;<b>Admin reviewed</b>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-6">
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:Button ID="btnSubmit1" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
+                            </div>
+                        </div>
 
-            <div class="tab-pane" id="tabAdmin" runat="server">
-                <h5>Admin</h5>
-                <br />
-                
-                <div class="row">
-                    <div class="col-sm-3">
-                        <input type="checkbox" id="chkIsRmatrix" value="1" runat="server" />&nbsp;RMATRIX-II request for resources
                     </div>
-                    <div class="col-sm-9">
-                        <div class="row" id="divRmatrixRequest">
-                            <div class="col-sm-3 text-right">
-                                <label class="control-label" for="txtTitle">Request number:</label>
-                            </div>
+
+                    <div class="tab-pane" id="tabAdmin" runat="server">
+                        <h5>Admin</h5>
+                        <br />
+
+                        <div class="row">
                             <div class="col-sm-3">
-                                <input class="form-control" type="text" name="txtRmatrixNum" id="txtRmatrixNum" runat="Server" />
+                                <input type="checkbox" id="chkIsRmatrix" value="1" runat="server" />&nbsp;RMATRIX-II request for resources
                             </div>
-                            <div class="col-sm-3 text-right">
-                                <label class="control-label" for="txtRmatrixSubDate">Submission date:</label>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class='input-group date' id='dtpRmatrixSubDate'>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                    <asp:TextBox ID="txtRmatrixSubDate" runat="server" class="form-control"></asp:TextBox>
+                            <div class="col-sm-9">
+                                <div class="row" id="divRmatrixRequest">
+                                    <div class="col-sm-3 text-right">
+                                        <label class="control-label" for="txtTitle">Request number:</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="text" name="txtRmatrixNum" id="txtRmatrixNum" runat="Server" />
+                                    </div>
+                                    <div class="col-sm-3 text-right">
+                                        <label class="control-label" for="txtRmatrixSubDate">Submission date:</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class='input-group date' id='dtpRmatrixSubDate'>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            <asp:TextBox ID="txtRmatrixSubDate" runat="server" class="form-control"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-5">
-                        <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
-                    </div>
-                </div>
-                <br />
-                <%--<b>Phase Completion:</b>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <input type="checkbox" id="chkIsOlaHawaii" value="1" runat="server" />&nbsp;Ola Hawaii request for resources
+                            </div>
+                            <div class="col-sm-9">
+
+                                <div id="divOlaHawaiiRequest">
+                                    <div class="row">
+                                        <div class="col-sm-3 text-right">
+                                            <label class="control-label" for="txtTitle">Request number:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input class="form-control" type="text" name="txtOlaHawaiiNum" id="txtOlaHawaiiNum" runat="Server" />
+                                        </div>
+                                        <div class="col-sm-3 text-right">
+                                            <label class="control-label" for="txtOlaHawaiiSubDate">Submission date:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class='input-group date' id='dtpOlaHawaiiSubDate'>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                                <asp:TextBox ID="txtOlaHawaiiSubDate" runat="server" class="form-control"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="row offset2">
+                                            <div class="col-sm-6 text-right">
+                                                <label class="control-label">Request Type:</label>
+                                            </div>
+                                            <div class="col-sm-6"></div>
+                                        </div>
+                                        <div class="row offset2">
+                                            <div class="col-sm-6"></div>
+                                            <div class="col-sm-2">
+                                                <asp:CheckBox ID="chkRequestTypeRfunded" runat="server" Text="R-funded"></asp:CheckBox>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <asp:CheckBox ID="chkRequestTypePilotPI" runat="server" Text="Pilot PI"></asp:CheckBox>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <asp:CheckBox ID="chkRequestTypeOther" runat="server" Text="Other"></asp:CheckBox>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+
+                        <%--<b>Phase Completion:</b>
                 <asp:Repeater ID="rptPhaseCompletion" runat="server">
                     <HeaderTemplate>
                         <table class="table table-bordered table-hover" id="tblPhaseCompletion">
@@ -799,60 +881,60 @@
                     </FooterTemplate>
                 </asp:Repeater>
                 <br />--%>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <label class="control-label" for="txtCompletionDate">Project completion date:</label>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class='input-group date' id='dtpCompletionDate'>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                            <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control"></asp:TextBox>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="control-label" for="txtCompletionDate">Project completion date:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class='input-group date' id='dtpCompletionDate'>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <%--<button type="button" ID="btnSurvey" OnClick="ShowSurveyModal()"  class="btn btn-primary">Survey</button>--%>
+                                <asp:Button class="btn btn-primary" ID="btnSurvey" runat="server" Text="Send Client Survey" OnClick="btnSurvey_Click"></asp:Button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <%--<button type="button" ID="btnSurvey" OnClick="ShowSurveyModal()"  class="btn btn-primary">Survey</button>--%>
-                        <asp:Button class="btn btn-primary" ID="btnSurvey" runat="server" Text="Send Client Survey" OnClick="btnSurvey_Click"></asp:Button>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-2">
-                        <label class="control-label" for="txtProjectStatus">Project status:</label>
-                    </div>
-                    <div class="col-sm-5">
-                        <input class="form-control" type="text" name="txtProjectStatus" id="txtProjectStatus" runat="Server" />
-                    </div>
-                    <div class="col-sm-2">
-                        <asp:Button class="btn btn-primary" ID="btnAddGrant" runat="server" Text="Add Fund" OnClick="btnAddGrant_Click"></asp:Button>
-                    </div>                    
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-1 text-left">
-                        <label class="control-label" for="txtSummary">Comments:</label>
-                    </div>
-                    <div class="col-sm-6">
-                        <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
-                    </div>
-                    <div class="col-sm-2">
-                        <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
-                    </div>
-                </div>
-                <br />
-                <hr />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label class="control-label" for="txtProjectStatus">Project status:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="txtProjectStatus" id="txtProjectStatus" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:Button class="btn btn-primary" ID="btnAddGrant" runat="server" Text="Add Fund" OnClick="btnAddGrant_Click"></asp:Button>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-1 text-left">
+                                <label class="control-label" for="txtSummary">Comments:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
+                            </div>
+                        </div>
+                        <br />
+                        <hr />
 
+                    </div>
+
+                    <ul class="pager wizard">
+                        <li class="previous first" style="display: none;"><a href="#">First</a></li>
+                        <li class="previous"><a href="#">Previous</a></li>
+                        <li class="next last" style="display: none;"><a href="#">Last</a></li>
+                        <li class="next"><a href="#">Next</a></li>
+                    </ul>
+                </div>
             </div>
-
-            <ul class="pager wizard">
-                <li class="previous first" style="display: none;"><a href="#">First</a></li>
-                <li class="previous"><a href="#">Previous</a></li>
-                <li class="next last" style="display: none;"><a href="#">Last</a></li>
-                <li class="next"><a href="#">Next</a></li>
-            </ul>
-        </div>
-    </div>
 
         </div>
     </div>
@@ -867,11 +949,14 @@
                 <asp:UpdatePanel ID="upSurvey" runat="server">
                     <ContentTemplate>
                         <div class="modal-body">
-                            <asp:Label ID="lblSurveyMsg" runat="server" ></asp:Label><br />
-                            <div style="margin-left:.5in" id="divProjectInfo" runat="server">
-                                Project title: <asp:Label ID="lblProjectTitle" runat="server"></asp:Label><br />
-                                Faculty/Staff: <asp:Label ID="lblBiostats" runat="server"></asp:Label><br />
-                                Project period: <asp:Label ID="lblProjectPeriod" runat="server"></asp:Label><br />
+                            <asp:Label ID="lblSurveyMsg" runat="server"></asp:Label><br />
+                            <div style="margin-left: .5in" id="divProjectInfo" runat="server">
+                                Project title:
+                                <asp:Label ID="lblProjectTitle" runat="server"></asp:Label><br />
+                                Faculty/Staff:
+                                <asp:Label ID="lblBiostats" runat="server"></asp:Label><br />
+                                Project period:
+                                <asp:Label ID="lblProjectPeriod" runat="server"></asp:Label><br />
                                 <%--Service hours: <asp:Label ID="lblServiceHours" runat="server"></asp:Label><br />--%>
                             </div>
                             <br />
@@ -893,9 +978,9 @@
 
     <div class="clearfix"></div>
 
-    <script type="text/javascript">        
+    <script type="text/javascript">
         $(document).ready(function () {
-            $(".loader").fadeOut("slow");                       
+            $(".loader").fadeOut("slow");
 
             $('#rootwizard').bootstrapWizard({
                 onTabShow: function (tab, navigation, index) {
@@ -923,6 +1008,9 @@
             var rmatrixSubDate = new biostatNS.DatePicker('dtpRmatrixSubDate');
             rmatrixSubDate.init();
 
+            var olaHawaiiSubDate = new biostatNS.DatePicker('dtpOlaHawaiiSubDate');
+            olaHawaiiSubDate.init();
+
             var completionDate = new biostatNS.DatePicker('dtpCompletionDate');
             completionDate.init();
 
@@ -936,7 +1024,7 @@
             tBiostat.Click(tblBiostat);
             $('#tblBiostat').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tBiostat.Click(this.closest('table'));
                 });
 
@@ -944,7 +1032,7 @@
             tStudyArea.Click(tblStudyArea);
             $('#tblStudyArea').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tStudyArea.Click(this.closest('table'));
                 });
 
@@ -952,7 +1040,7 @@
             tHealthData.Click(tblHealthData);
             $('#tblHealthData').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tHealthData.Click(this.closest('table'));
                 });
 
@@ -960,7 +1048,7 @@
             tStudyType.Click(tblStudyType);
             $('#tblStudyType').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tStudyType.Click(this.closest('table'));
                 });
 
@@ -968,7 +1056,7 @@
             tStudyPopulation.Click(tblStudyPopulation);
             $('#tblStudyPopulation').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tStudyPopulation.Click(this.closest('table'));
                 });
 
@@ -976,7 +1064,7 @@
             tService.Click(tblService);
             $('#tblService').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tService.Click(this.closest('table'));
                 });
 
@@ -984,21 +1072,33 @@
             tGrant.Click(tblGrant);
             $('#tblGrant').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     tGrant.Click(this.closest('table'));
                 });
 
             ToggleDiv($('#MainContent_chkMentorYes'), $('#divMentor'));
             ToggleDiv($('#MainContent_chkPayingYes'), $('#divPayProject'));
             ToggleDiv($('#MainContent_chkIsRmatrix'), $('#divRmatrixRequest'));
+            ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divOlaHawaiiRequest'));
+
+            ToggleDiv4($('#MainContent_rptStudyPopulation_chkId_0'),
+                       $('#MainContent_rptStudyPopulation_chkId_1'),
+                       $('#MainContent_rptStudyPopulation_chkId_2'),
+                       $('#MainContent_rptStudyPopulation_chkId_3'),
+                       $('#divHealthDisparity'));
+
 
             $('#MainContent_chkIsRmatrix').change(function () {
                 ToggleDiv($(this), $('#divRmatrixRequest'));
             });
 
+            $('#MainContent_chkIsOlaHawaii').change(function () {
+                ToggleDiv($(this), $('#divOlaHawaiiRequest'));
+            });
+
             $('#tblDesc').on('click',
                 'input[type="checkbox"]',
-                function() {
+                function () {
                     if ($(this).is($('#MainContent_chkMentorYes'))) {
                         ToggleDiv($(this), $('#divMentor'));
                     }
@@ -1020,6 +1120,21 @@
                             $('#divPayProject').hide();
                     }
                 });
+
+            $('#tblStudyPopulation').on('click',
+                    'input[type="checkbox"]',
+                    function () {
+                        if ($(this).is($('#MainContent_rptStudyPopulation_chkId_0')) // Native Hawaiians,
+                                                                                     //--- Pacific Islanders,
+                                                                                     //--- and Filipinos
+                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_1')) // Hawaii Populations
+                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_2')) // U.S. Populations
+                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_3')) // International Populations
+                           )
+                        {
+                            ToggleDiv($(this), $('#divHealthDisparity'));
+                        }
+             });
 
             var projectId = $("#MainContent_lblProjectId").text();
             if (projectId > 0) {
@@ -1052,7 +1167,7 @@
             //    }
             //});
 
-            
+
         });
 
         var biostatNS = biostatNS || {};
@@ -1060,7 +1175,7 @@
         biostatNS.TableToggle = function (tableId) {
             var _table = $(tableId),
                 _textOther = _table.next().find(":input[name$='Other']"),
-                _textBitSum = _table.next().find(":input[name$='BitSum']");                
+                _textBitSum = _table.next().find(":input[name$='BitSum']");
 
             return {
                 Click: function (e) {
@@ -1070,7 +1185,7 @@
                         var _checkBox = $(this).find(":input[name$='chkId']"),
                             _bitValue = $(this).find(":input[name$='BitValue']").val(),
                             _name = $(this).eq(0).text().trim();
-                
+
                         if (_name == 'Other' || _name == 'International Populations') {
                             if (_checkBox.is(':checked')) {
                                 _textOther.show();
@@ -1091,10 +1206,10 @@
                             ToggleTable(_table, false);
                         }
                     });
-                   
+
                     $(_textBitSum).val(_bitSum);
 
-                   
+
                 }
             }
         }
@@ -1140,16 +1255,16 @@
             }
         }
 
-        function bindProjects() {            
+        function bindProjects() {
             //var piId = $("#MainContent_ddlPI").val();
             var filterPI = $("#MainContent_ddlPI :selected").text();
             //var currentProjectId = $("#MainContent_ddlProjectHdn").val();
-           
+
             $('#MainContent_lblPI').text(filterPI);
             $("#MainContent_ddlProjectHdn > option").not(":first").each(function () {
                 if (this.text.indexOf(filterPI) > 0 || filterPI.length == 0 || filterPI.indexOf('Search') >= 0) {
                     $("#MainContent_ddlProjectHdn").children("option[value=" + this.value + "]").show();
-                    $("#MainContent_ddlProject").children("option[value=" + this.value + "]").show();                 
+                    $("#MainContent_ddlProject").children("option[value=" + this.value + "]").show();
                 }
                 else {
                     $("#MainContent_ddlProjectHdn").children("option[value=" + this.value + "]").hide();
@@ -1208,11 +1323,11 @@
                 });
                 $('#MainContent_txtGrantOther').val('');
                 $('#MainContent_txtGrantOther').hide();
-                               
-                <%=ClientScript.GetPostBackEventReference(upPhase, "")%>                 
-                               
+
+                <%=ClientScript.GetPostBackEventReference(upPhase, "")%>
+
                 //$('#MainContent_txtRequestRcvdDate').val('');                
-                
+
                 $('#MainContent_chkApproved').prop('checked', false);
                 //$('#MainContent_chkJuniorPIYes').prop('checked', false);
 
@@ -1223,6 +1338,13 @@
                     }
                 });
 
+                $('#divHealthDisparity > div').each(function () {
+                    var chkBox = $(this).find('input[type="checkbox"]');
+                    if (chkBox.is(':checked')) {
+                        chkbox.prop('checked', false);
+                    }
+                })
+
                 $('#MainContent_txtMentorFirstName').val('');
                 $('#MainContent_txtMentorLastName').val('');
                 $('#MainContent_txtMentorEmail').val('');
@@ -1232,21 +1354,36 @@
                 $('#MainContent_chkRmatrixReport').prop('checked', false);
 
                 $('#MainContent_txtRmatrixNum').val('');
-                $('#MainContent_txtRmatrixSubDate').val('');                
-                
+                $('#MainContent_txtRmatrixSubDate').val('');
+
+                $('#MainContent_chkIsOlaHawaii').prop('checked', false);
+
+                $('#MainContent_txtOlaHawaiiNum').val('');
+                $('#MainContent_txtOlaHawaiiSubDate').val('');
+
                 $('#MainContent_txtCompletionDate').val('');
                 $('#MainContent_txtProjectStatus').val('');
                 $('#MainContent_txtComments').val('');
             }
-            
-        }       
+
+        }
 
         function ToggleDiv(checkBox, theDiv) {
             if (checkBox.is(":checked"))
                 theDiv.show();
             else
                 theDiv.hide();
-        }        
+        }
+
+        function ToggleDiv4(checkBox1, checkBox2, checkBox3, checkBox4,  theDiv) {
+            if (checkBox1.is(":checked") 
+                || checkBox2.is(":checked") 
+                || checkBox3.is(":checked") 
+                || checkBox4.is(":checked"))
+                theDiv.show();
+            else
+                theDiv.hide();
+        }
 
         function ClientSideClick(myButton) {
             // Client side validation
@@ -1265,6 +1402,8 @@
             return true;
         }
 
+
+
         $("#MainContent_chkBiostat").change(function () {
             if (this.checked) {
                 $('#MainContent_chkBioinfo').prop('checked', false);
@@ -1280,6 +1419,54 @@
             else
                 $('#MainContent_chkBiostat').prop('checked', true);
         });
+
+        //------------------------------------------------------------------
+        $("#MainContent_chkRequestTypeRfunded").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypePilotPI').prop('checked', false);
+                $('#MainContent_chkRequestTypeOther').prop('checked', false);
+            }
+            //else
+            //    $('#MainContent_chkCreditToBioinfo').prop('checked', true);
+        });
+
+        $("#MainContent_chkRequestTypePilotPI").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeRfunded').prop('checked', false);
+                $('#MainContent_chkRequestTypeOther').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkRequestTypeOther").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeRfunded').prop('checked', false);
+                $('#MainContent_chkRequestTypePilotPI').prop('checked', false);
+            }
+        });
+
+        //-----------------------------------------------------------------
+        $("#MainContent_chkHealthDisparityYes").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkHealthDisparityNo').prop('checked', false);
+                $('#MainContent_chkHealthDisparityNA').prop('checked', false);
+            }
+        });
+        
+        $("#MainContent_chkHealthDisparityNo").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkHealthDisparityYes').prop('checked', false);
+                $('#MainContent_chkHealthDisparityNA').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkHealthDisparityNA").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkHealthDisparityYes').prop('checked', false);
+                $('#MainContent_chkHealthDisparityNo').prop('checked', false);
+            }
+        })
+
+        //-----------------------------------------------------------------
 
         $("#MainContent_chkCreditToBiostat").change(function () {
             if (this.checked) {

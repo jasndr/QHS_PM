@@ -10,8 +10,30 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Guest
 {
+    /// <summary>
+    /// @File: PISurveyForm.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: Survey Form of Project Tracking System.
+    /// 
+    ///           The form that is used to send out client feedback survey forms to the PI.
+    ///           Sends an email to admin if a survey has been taken by a PI, though the PI
+    ///           information is redacted in the email to maintain anonymity. However, the admin team 
+    ///           can simply figure out which PI took the survey to by going to Admin > Client.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018APR16 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    /// </summary>
     public partial class PISurveyForm : System.Web.UI.Page
     {
+        /// <summary>
+        /// Prepares the survey form. Also pre-populates the currently-entered responses 
+        /// for the survey form if a survey ID linking to a survey saved in the database is provided.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             string surveyId = Request.QueryString["Id"];
@@ -31,6 +53,11 @@ namespace ProjectManagement.Guest
             }
         }
 
+        /// <summary>
+        /// Pre-populates current survey form with the reponses saved in the database
+        /// with the currently provided survey ID.
+        /// </summary>
+        /// <param name="surveyId">Currently provided survey ID.</param>
         private void BindSurvey(string surveyId)
         {
             SurveyForm survey = null;
@@ -115,6 +142,11 @@ namespace ProjectManagement.Guest
         //    btnSubmit.Enabled = false;
         //}
 
+        /// <summary>
+        /// Saves the survey if there hasn't been a previously entered survey under the same PI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
             string surveyId = Request.QueryString["Id"];
@@ -145,6 +177,12 @@ namespace ProjectManagement.Guest
             }
         }
 
+        /// <summary>
+        /// Saves survey responses into the database.
+        /// </summary>
+        /// <param name="survey">Survey being referred to that has survey information stored.</param>
+        /// <param name="db">Database to hold survey data.</param>
+        /// <returns></returns>
         private bool SaveSurvey(SurveyForm survey, ProjectTrackerContainer db)
         {
             bool saved = false;
@@ -208,6 +246,13 @@ namespace ProjectManagement.Guest
             return saved;
         }
 
+        /// <summary>
+        /// NOTE: Currently Not being used.
+        /// 
+        /// Old "save survey" functionality that only needs a survey id to save the 
+        /// survey responses into.
+        /// </summary>
+        /// <param name="surveyId"></param>
         private void SaveSurvey(string surveyId)
         {          
             var questionAnswers = new List<KeyValuePair<int, int>>();
@@ -267,6 +312,10 @@ namespace ProjectManagement.Guest
             }
         }
 
+        /// <summary>
+        /// Loads pop-up message whenever the submit button is clicked and the survey taker has
+        /// already entered their responses once before.
+        /// </summary>
         private void LoadEditScript()
         {
             StringBuilder sb = new StringBuilder();
@@ -278,6 +327,13 @@ namespace ProjectManagement.Guest
                        "ShowModalScript", sb.ToString(), false);
         }
 
+        /// <summary>
+        /// Sends notification to admin email that a survey has been completed by the PI.
+        /// To maintain anonymity of the survey, only the survey ID information is sent.
+        /// However, the admin team can check who completed the survey by going to
+        /// Admin > Client in the Project Tracking System.
+        /// </summary>
+        /// <param name="surveyId">Referred survey ID.</param>
         private void SendNotificationEmail(string surveyId)
         {
             string email = System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];

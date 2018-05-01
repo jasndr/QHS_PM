@@ -37,5 +37,11 @@ namespace ProjectManagement
         public Nullable<bool> NotReportRmatrix { get; set; }
         public Nullable<bool> IsRmatrix { get; set; }
         public Nullable<System.DateTime> ReportDate { get; set; }
+        public long HealthDateBitSum { get; set; }
+        public long GrantBitSum { get; set; }
+        public int LeadBiostatId { get; set; }
+        public long OtherMemberBitSum { get; set; }
+        public byte ProjectType { get; set; }
+        public byte CreditTo { get; set; }
     }
 }

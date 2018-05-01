@@ -50,6 +50,8 @@ namespace ProjectManagement
     ///                                    "empty" (unchecked) choices when necessary.
     ///  2018APR12 - Jason Delos Reyes  -  Fixed the "Send Client Survey" button so it should work as intended.
     ///                                    Also added more documentation for easier understandability.
+    ///  2018APR26 - Jason Delos Reyes  -  Added Ola Hawaii checkboxes and fields to keep track of Ola Hawaii Requests.
+    ///  2018APR30 - Jason Delos Reyes  -  Added Health disparity options for "Study Population" section.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -161,8 +163,26 @@ namespace ProjectManagement
                             ddlProject.Items.Add(new ListItem(project.Id + " " + project.Title, project.Id.ToString()));
                             ddlProject.SelectedValue = project.Id.ToString();
 
+                            var naBitValue = db.ProjectField
+                                               .Where(f => f.IsGrant == true && f.Name == "N/A")
+                                               .Select(g => g.BitValue)
+                                               .FirstOrDefault();
+                            var noFundingBV = db.ProjectField
+                                                .Where(f => f.IsGrant == true && f.Name == "No (no funding)")
+                                                .Select(g=>g.BitValue)
+                                                .FirstOrDefault();
+
+                            // Checks if "N/A" is checked for grant section of Project Form.
+                            bool hasNA = (project.GrantBitSum & naBitValue) == naBitValue;
+
+                            // Checks if "No Funding" is checked for grant section of Project Form.
+                            bool hasNoFunding = (project.GrantBitSum & noFundingBV) == noFundingBV;
+
+                            //Sends to fiscal team if its either a paying project and/or funded by a grant (with neither N/A nor "No Funding" unchecked).
+                            bool sendToFiscal =  (project.GrantBitSum > 0 && !hasNA && !hasNoFunding && (project.IsPaid == true)) ?  true : false; //&& project.IsApproved = 1 ?? 1 : 0;
+
                             //send email
-                            SendNotificationEmail(id);
+                            SendNotificationEmail(id, sendToFiscal);
                         }
                         catch (Exception ex)
                         {
@@ -714,6 +734,34 @@ namespace ProjectManagement
 
             chkRmatrixReport.Checked = project.IsRmatrixReport.HasValue ? (bool)project.IsRmatrixReport : false;
 
+            if (project.IsOlaHawaiiRequest.HasValue)
+            {
+                chkIsOlaHawaii.Checked = (bool)project.IsOlaHawaiiRequest;
+
+                txtOlaHawaiiNum.Value = project.OlaHawaiiNum.ToString();
+                txtOlaHawaiiSubDate.Text = project.OlaHawaiiSubDate != null ? Convert.ToDateTime(project.OlaHawaiiSubDate).ToShortDateString() : string.Empty;
+
+                chkRequestTypeRfunded.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Rfunded;
+                chkRequestTypePilotPI.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.PilotPI;
+                chkRequestTypeOther.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Other;
+              
+
+            }
+            else
+            {
+                chkIsOlaHawaii.Checked = false;
+            }
+
+
+            if (project.IsHealthDisparity.HasValue)
+            {
+                chkHealthDisparityYes.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.Yes;
+                chkHealthDisparityNo.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.No;
+                chkHealthDisparityNA.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.NA;
+            }
+           
+            
+
             txtProjectStatus.Value = project.ProjectStatus;
             txtCompletionDate.Text = project.ProjectCompletionDate != null ? Convert.ToDateTime(project.ProjectCompletionDate).ToShortDateString() : string.Empty;
 
@@ -806,7 +854,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// Auto-ppulates Phase and Agreement sections of the phase grid/table with data specific
+        /// Auto-populates Phase and Agreement sections of the phase grid/table with data specific
         /// to the referred data row. Creates delete button if there is not an attached 
         /// agreement to a phase yet.
         /// </summary>
@@ -1110,6 +1158,7 @@ namespace ProjectManagement
                 StudyTypeOther = "",
                 StudyPopulationBitSum = 0,
                 StudyPopulationOther = "",
+                IsHealthDisparity = 0,
                 ServiceBitSum = 0,
                 ServiceOther = "",
                 GrantBitSum = 0,
@@ -1128,6 +1177,10 @@ namespace ProjectManagement
                 TypeOfPayment = "",
                 RmatrixNum = (Int32?)null,
                 RmatrixSubDate = (DateTime?)null,
+                IsOlaHawaiiRequest = (bool?)null,
+                OlaHawaiiNum = (Int32?)null,
+                OlaHawaiiSubDate = (DateTime?)null,
+                OlaHawaiiRequestType = 0,
                 ProjectCompletionDate = (DateTime?)null,
                 ProjectStatus = "",
                 Comments = "",
@@ -1157,9 +1210,10 @@ namespace ProjectManagement
                 studyPopulationBitSum = 0,
                 serviceBitSum = 0,
                 grantBitSum = 0,
-                rmatrixNum = 0;
+                rmatrixNum = 0,
+                olaHawaiiNum = 0;
 
-            DateTime dtInitialDate, dtDeadline, dtRmatrixSubDate, dtCompletionDate;
+            DateTime dtInitialDate, dtDeadline, dtRmatrixSubDate, dtOlaHawaiiSubDate, dtCompletionDate;
 
             Project2 project = new Project2()
             {
@@ -1172,13 +1226,14 @@ namespace ProjectManagement
                 LeadBiostatId = Int32.TryParse(ddlLeadBiostat.SelectedValue, out leadBiostatId) ? leadBiostatId : -1, // required
                 OtherMemberBitSum = Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum) ? otherMemberBitSum : 0, // required
                 StudyAreaBitSum = Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0, // required
-                StudyAreaOther = txtStudyAreaOther.Value, 
+                StudyAreaOther = txtStudyAreaOther.Value,
                 HealthDateBitSum = Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0, // required
                 HealthDataOther = txtHealthDataOther.Value,
                 StudyTypeBitSum = Int32.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum) ? studyTypeBitSum : 0, // required
                 StudyTypeOther = txtStudyTypeOther.Value,
                 StudyPopulationBitSum = Int32.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum) ? studyPopulationBitSum : 0, // required
                 StudyPopulationOther = txtStudyPopulationOther.Value,
+                IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)HealthDisparityType.Yes : chkHealthDisparityNo.Checked ? (byte)HealthDisparityType.No : chkHealthDisparityNA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
@@ -1197,6 +1252,10 @@ namespace ProjectManagement
                 TypeOfPayment = txtPayProject.Value,
                 RmatrixNum = Int32.TryParse(txtRmatrixNum.Value, out rmatrixNum) ? rmatrixNum : (Int32?)null,
                 RmatrixSubDate = DateTime.TryParse(txtRmatrixSubDate.Text, out dtRmatrixSubDate) ? dtRmatrixSubDate : (DateTime?)null,
+                IsOlaHawaiiRequest = chkIsOlaHawaii.Checked,
+                OlaHawaiiNum = Int32.TryParse(txtOlaHawaiiNum.Value, out olaHawaiiNum) ? olaHawaiiNum : (Int32?)null,
+                OlaHawaiiSubDate = DateTime.TryParse(txtOlaHawaiiSubDate.Text, out dtOlaHawaiiSubDate) ? dtOlaHawaiiSubDate : (DateTime?)null,
+                OlaHawaiiRequestType = chkRequestTypeRfunded.Checked ? (byte)OlaHawaiiRequestType.Rfunded : chkRequestTypePilotPI.Checked ? (byte)OlaHawaiiRequestType.PilotPI : chkRequestTypeOther.Checked ? (byte)OlaHawaiiRequestType.Other : (byte)0,
                 ProjectCompletionDate = DateTime.TryParse(txtCompletionDate.Text, out dtCompletionDate) ? dtCompletionDate : (DateTime?)null,
                 ProjectStatus = txtProjectStatus.Value,
                 Comments = txtComments.Value,
@@ -1204,7 +1263,7 @@ namespace ProjectManagement
                 Creator = User.Identity.Name,
                 CreationDate = DateTime.Now,
                 ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : chkBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)0 , // if biostat is checked, then biostat, otherwise bioinfo (even if also unchecked!!!)
-                CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : chkCreditToBoth.Checked ? (byte)ProjectType.Both : (byte)0 // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise both is checked (even if none is checked!!!)
+                CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : chkCreditToBoth.Checked ? (byte)ProjectType.Both : (byte)0 // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise if 'both', then both, otherwise nothing is checked (value of 0)
             };
 
             return project;
@@ -1526,8 +1585,8 @@ namespace ProjectManagement
         /// <summary>
         /// Checks whether or not the bit value exists in the current bit sum calculation.
         /// </summary>
-        /// <param name="bitSum">Total bit sum (e.g., 29013(fake) = Ved & Chelu)</param>
-        /// <param name="hdnBitValue">Bit Value of current selection (e.g., 392(fake) = Chelu</param>
+        /// <param name="bitSum">Total bit sum (e.g., [1026](fake) = Ved[2] & Chelu[1024])</param>
+        /// <param name="hdnBitValue">Bit Value of current selection (e.g., 1024 = Chelu</param>
         /// <returns>Returns 1 if the bit value is in the bitsum, 0 if not.</returns>
         private bool CheckBitValue(int bitSum, HiddenField hdnBitValue)
         {
@@ -1544,18 +1603,25 @@ namespace ProjectManagement
         #region email
         /// <summary>
         /// Sends notification email to QHS Admin when a user enters
-        /// a new project into the Project Tracking System.
+        /// a new project into the Project Tracking System. Also sends a copy to the fiscal team
+        /// if it is specified to be a paying project.
         /// </summary>
         /// <param name="projectId">Id of new project that was recently entered.</param>
-        private void SendNotificationEmail(int projectId)
+        /// <param name="sendToFiscal">Determines whether or not a paying project is sent to fiscal team.</param>
+        private void SendNotificationEmail(int projectId, bool sendToFiscal)
         {
-            string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];                     
+            string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
+
+            /// Sends to fiscal team if a project has been indicated as a paying project.
+            if (sendToFiscal == true) sendTo = sendTo + "," 
+                    + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+            
 
             string subject = String.Format("A new project is pending approval, id {0}", projectId);
 
             string url = HttpContext.Current.Request.Url.AbsoluteUri;
             if (url.IndexOf("?Id") > 0)
-            {
+            {sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];    
                 url = url.Substring(0, url.IndexOf("?Id"));
             }
 
@@ -1563,6 +1629,10 @@ namespace ProjectManagement
             body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
             body.AppendFormat("Please approve new project created by {0} at {1}", User.Identity.Name, url);
             body.AppendFormat("?Id={0}</p>", projectId);
+            if (sendToFiscal == true) body.AppendFormat("<br /><strong>QHS Fiscal Team:  This project " +
+                                                        "has been marked as either a paid project and/or " + 
+                                                        "supported by a grant.  Please verify with admin " +
+                                                        "before proceeding.  Mahalo!</strong>");
             body.AppendLine();
 
             IdentityMessage im = new IdentityMessage()
@@ -1571,6 +1641,7 @@ namespace ProjectManagement
                 Destination = sendTo,
                 Body = body.ToString()
             };
+
 
             EmailService emailService = new EmailService();
 

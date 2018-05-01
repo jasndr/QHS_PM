@@ -468,6 +468,11 @@
           <Property Name="InitialDate" Type="datetime" Nullable="false" />
           <Property Name="ProjectType" Type="tinyint" Nullable="false" />
           <Property Name="CreditTo" Type="tinyint" Nullable="false" />
+          <Property Name="IsOlaHawaiiRequest" Type="bit" />
+          <Property Name="OlaHawaiiNum" Type="int" />
+          <Property Name="OlaHawaiiSubDate" Type="datetime" />
+          <Property Name="OlaHawaiiRequestType" Type="tinyint" />
+          <Property Name="IsHealthDisparity" Type="tinyint" />
         </EntityType>
         <EntityType Name="ProjectBioStat">
           <Key>
@@ -963,6 +968,12 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProject' does not have a p
             <PropertyRef Name="StudyType" />
             <PropertyRef Name="StudyPopulation" />
             <PropertyRef Name="anslysiscompletiondate" />
+            <PropertyRef Name="HealthDateBitSum" />
+            <PropertyRef Name="GrantBitSum" />
+            <PropertyRef Name="LeadBiostatId" />
+            <PropertyRef Name="OtherMemberBitSum" />
+            <PropertyRef Name="ProjectType" />
+            <PropertyRef Name="CreditTo" />
             <PropertyRef Name="Member" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
@@ -988,6 +999,12 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProject' does not have a p
           <Property Name="Comments" Type="nvarchar" MaxLength="500" />
           <Property Name="NotReportRmatrix" Type="bit" />
           <Property Name="IsRmatrix" Type="bit" />
+          <Property Name="HealthDateBitSum" Type="bigint" Nullable="false" />
+          <Property Name="GrantBitSum" Type="bigint" Nullable="false" />
+          <Property Name="LeadBiostatId" Type="int" Nullable="false" />
+          <Property Name="OtherMemberBitSum" Type="bigint" Nullable="false" />
+          <Property Name="ProjectType" Type="tinyint" Nullable="false" />
+          <Property Name="CreditTo" Type="tinyint" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1706,8 +1723,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Parameter Name="Phase" Type="nvarchar" Mode="In" />
           <Parameter Name="StartDate" Type="datetime" Mode="In" />
           <Parameter Name="EndDate" Type="datetime" Mode="In" />
-          <Parameter Name="PhdHours" Type="decimal" Mode="InOut" Precision="8" Scale="1" />
-          <Parameter Name="MSHours" Type="decimal" Mode="InOut" Precision="8" Scale="1" />
+          <Parameter Name="PhdHours" Type="decimal" Mode="InOut" />
+          <Parameter Name="MSHours" Type="decimal" Mode="InOut" />
         </Function>
         <EntityContainer Name="ProjectTrackerStoreContainer">
           <EntitySet Name="Academic" EntityType="Self.Academic" Schema="dbo" store:Type="Tables" />
@@ -1862,7 +1879,13 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
     [vwProject].[IsInternal] AS [IsInternal], 
     [vwProject].[Comments] AS [Comments], 
     [vwProject].[NotReportRmatrix] AS [NotReportRmatrix], 
-    [vwProject].[IsRmatrix] AS [IsRmatrix]
+    [vwProject].[IsRmatrix] AS [IsRmatrix], 
+    [vwProject].[HealthDateBitSum] AS [HealthDateBitSum], 
+    [vwProject].[GrantBitSum] AS [GrantBitSum], 
+    [vwProject].[LeadBiostatId] AS [LeadBiostatId], 
+    [vwProject].[OtherMemberBitSum] AS [OtherMemberBitSum], 
+    [vwProject].[ProjectType] AS [ProjectType], 
+    [vwProject].[CreditTo] AS [CreditTo]
     FROM [dbo].[vwProject] AS [vwProject]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vwProjectBiostat" EntityType="Self.vwProjectBiostat" store:Type="Views" store:Schema="dbo">
@@ -3928,6 +3951,11 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <NavigationProperty Name="ClientAgmt" Relationship="ProjectTracker.Project2ClientAgmt" FromRole="Project2" ToRole="ClientAgmt" />
           <Property Name="ProjectType" Type="Byte" Nullable="false" />
           <Property Name="CreditTo" Type="Byte" Nullable="false" />
+          <Property Name="IsOlaHawaiiRequest" Type="Boolean" />
+          <Property Name="OlaHawaiiNum" Type="Int32" />
+          <Property Name="OlaHawaiiSubDate" Type="DateTime" Precision="3" />
+          <Property Name="OlaHawaiiRequestType" Type="Byte" />
+          <Property Name="IsHealthDisparity" Type="Byte" />
         </EntityType>
         <EntityType Name="ProjectField">
           <Key>
@@ -4148,6 +4176,12 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <PropertyRef Name="StudyType" />
             <PropertyRef Name="StudyPopulation" />
             <PropertyRef Name="anslysiscompletiondate" />
+            <PropertyRef Name="HealthDateBitSum" />
+            <PropertyRef Name="GrantBitSum" />
+            <PropertyRef Name="LeadBiostatId" />
+            <PropertyRef Name="OtherMemberBitSum" />
+            <PropertyRef Name="ProjectType" />
+            <PropertyRef Name="CreditTo" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="InvestId" Type="Int32" Nullable="false" />
@@ -4172,6 +4206,12 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="NotReportRmatrix" Type="Boolean" />
           <Property Name="IsRmatrix" Type="Boolean" />
           <Property Name="ReportDate" Type="DateTime" Precision="0" />
+          <Property Name="HealthDateBitSum" Type="Int64" Nullable="false" />
+          <Property Name="GrantBitSum" Type="Int64" Nullable="false" />
+          <Property Name="LeadBiostatId" Type="Int32" Nullable="false" />
+          <Property Name="OtherMemberBitSum" Type="Int64" Nullable="false" />
+          <Property Name="ProjectType" Type="Byte" Nullable="false" />
+          <Property Name="CreditTo" Type="Byte" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5044,6 +5084,11 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="Project2">
             <EntityTypeMapping TypeName="ProjectTracker.Project2">
               <MappingFragment StoreEntitySet="Project2">
+                <ScalarProperty Name="IsHealthDisparity" ColumnName="IsHealthDisparity" />
+                <ScalarProperty Name="OlaHawaiiRequestType" ColumnName="OlaHawaiiRequestType" />
+                <ScalarProperty Name="OlaHawaiiSubDate" ColumnName="OlaHawaiiSubDate" />
+                <ScalarProperty Name="OlaHawaiiNum" ColumnName="OlaHawaiiNum" />
+                <ScalarProperty Name="IsOlaHawaiiRequest" ColumnName="IsOlaHawaiiRequest" />
                 <ScalarProperty Name="CreditTo" ColumnName="CreditTo" />
                 <ScalarProperty Name="ProjectType" ColumnName="ProjectType" />
                 <ScalarProperty Name="InitialDate" ColumnName="InitialDate" />
@@ -5195,6 +5240,12 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="vwProject">
             <EntityTypeMapping TypeName="ProjectTracker.vwProject">
               <MappingFragment StoreEntitySet="vwProject">
+                <ScalarProperty Name="CreditTo" ColumnName="CreditTo" />
+                <ScalarProperty Name="ProjectType" ColumnName="ProjectType" />
+                <ScalarProperty Name="OtherMemberBitSum" ColumnName="OtherMemberBitSum" />
+                <ScalarProperty Name="LeadBiostatId" ColumnName="LeadBiostatId" />
+                <ScalarProperty Name="GrantBitSum" ColumnName="GrantBitSum" />
+                <ScalarProperty Name="HealthDateBitSum" ColumnName="HealthDateBitSum" />
                 <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
                 <ScalarProperty Name="IsRmatrix" ColumnName="IsRmatrix" />
                 <ScalarProperty Name="NotReportRmatrix" ColumnName="NotReportRmatrix" />

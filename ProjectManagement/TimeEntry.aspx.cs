@@ -27,6 +27,12 @@ namespace ProjectManagement
         decimal _totalTime = 0M;
 
         string strProjectId;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             strProjectId = Request.QueryString["Id"];
@@ -294,6 +300,9 @@ namespace ProjectManagement
             //Response.Redirect(Request.Url.ToString());
         }
 
+        /// <summary>
+        /// Clears time entry form to prepare for a fresh new entry.
+        /// </summary>
         private void ClearForm()
         {
             //clear projects, servicetype, description and time
@@ -313,6 +322,10 @@ namespace ProjectManagement
             BindGridView();
         }
 
+        /// <summary>
+        /// Populates "edit time entry" view with the previously-entered information from
+        /// from the database --or-- prepares new form for entry.
+        /// </summary>
         private void BindGridView()
         {
             int bioStatId, monthId, yearId;
@@ -402,7 +415,13 @@ namespace ProjectManagement
         //    GridViewTimeEntry.DataBind();
         //}
 
-
+        
+        /// <summary>
+        /// Changes the project and PI selections if there faculty/staff faculty has been
+        /// changed and repopulates form as appropriate.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlBioStat_Changed(Object sender, EventArgs e)
         {
             //ddlPI.ClearSelection();
@@ -457,6 +476,13 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// When "project phase" dropdown has been changed, clears the time entry and phase
+        /// information for that specific project, and applies the new time entry and phase
+        /// information if the dropdown was changed to another project.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlProject_Changed(Object sender, EventArgs e)
         {
             ddlPhase.Items.Clear();
@@ -468,6 +494,11 @@ namespace ProjectManagement
 
         }
 
+        /// <summary>
+        /// Binds the "phrases" table (under Project Phase box) with the phrase information already stored in
+        /// the database.
+        /// </summary>
+        /// <param name="projectId">Referred project ID.</param>
         private void BindrptPhase(int projectId)
         {
             DataTable dt = new DataTable();
@@ -689,11 +720,16 @@ namespace ProjectManagement
         //    }
         //}        
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectId"></param>
         private void BindControl(string projectId)
         {
             string userName = Page.User.Identity.Name;
             _currentDate = DateTime.Now.ToShortDateString();
 
+            /// Loads project only if the user is logged in.
             if (!userName.Equals(string.Empty))
             {
                 IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
@@ -709,6 +745,7 @@ namespace ProjectManagement
                     var biostat = context.BioStats.FirstOrDefault(b => b.LogonId == userName);
                     if (biostat != null)
                     {
+                        /// Admin has the ability to view time entries of every faculty/staff member.
                         if (Page.User.IsInRole("Admin"))
                         {
                             dropDownSource = context.BioStats
@@ -719,6 +756,8 @@ namespace ProjectManagement
                             PageUtility.BindDropDownList(ddlBioStat, dropDownSource, string.Empty);
                             ddlBioStat.Items.FindByText(biostat.Name).Selected = true;
                         }
+                        /// Non-admin faculty and staff only have access to their own 
+                        /// time entries.
                         else
                         {
                             dropDownSource.Add(biostat.Id, biostat.Name);
@@ -737,6 +776,8 @@ namespace ProjectManagement
 
                             if (projects.Count() > 0)
                             {
+                                /// Populates PI drop down with PI projects associated with
+                                /// the selected faculty or staff member for time entry.
                                 dropDownSource = projects
                                                 .OrderByDescending(d => d.InvestId)
                                                 .Select(x => new { x.InvestId, FullName = x.FirstName + " " + x.LastName })
@@ -754,6 +795,7 @@ namespace ProjectManagement
                                     projects = projects.Where(p => p.InvestId == piId);
                                 }
 
+                                /// Populates projects corresponding to PI selected.
                                 dropDownSource = projects
                                                 .OrderByDescending(d => d.ProjectId)
                                                 .Select(x => new { x.ProjectId, FullName = (x.ProjectId + " " + x.FirstName + " " + x.LastName + " | " + x.Title).Substring(0, 108) })

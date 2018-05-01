@@ -64,6 +64,11 @@ namespace ProjectManagement
         public System.DateTime CreationDate { get; set; }
         public byte ProjectType { get; set; }
         public byte CreditTo { get; set; }
+        public Nullable<bool> IsOlaHawaiiRequest { get; set; }
+        public Nullable<int> OlaHawaiiNum { get; set; }
+        public Nullable<System.DateTime> OlaHawaiiSubDate { get; set; }
+        public Nullable<byte> OlaHawaiiRequestType { get; set; }
+        public Nullable<byte> IsHealthDisparity { get; set; }
     
         public virtual Invest Invests { get; set; }
         public virtual ICollection<ProjectPhase> ProjectPhase { get; set; }

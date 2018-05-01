@@ -36,7 +36,7 @@
             <div class="panel-heading">Add Time</div>
             <div class="panel-body">               
                 <div class="row form-group-md">
-                                    <div class="col-sm-2 text-left"><label class="control-label" for="txtCCAbbrv">BQHS Faculty/Staff:</label></div>
+                                    <div class="col-sm-2 text-left"><label class="control-label" for="txtCCAbbrv">QHS Faculty/Staff:</label></div>
                                     <div class="col-sm-3">
                                         <asp:DropDownList ID="ddlBioStat" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlBioStat_Changed" AutoPostBack="True">
                                         </asp:DropDownList>

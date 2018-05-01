@@ -8,8 +8,27 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Guest
 {
+    /// <summary>
+    /// @File: PISurvey.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: Old Survey Form of Project Tracking System.
+    /// 
+    ///           NOTE: This form is no longer / currently not in use.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018APR16 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    /// </summary>
     public partial class PISurvey : System.Web.UI.Page
     {
+        /// <summary>
+        /// Prepares the survey form and its questions.  It will also 
+        /// prepopulate survey if there is previously entered data.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             string surveyId = Request.QueryString["SurveyId"];
@@ -26,6 +45,11 @@ namespace ProjectManagement.Guest
             }
         }
 
+        /// <summary>
+        /// Based on the provided survey ID, populates survey form with responses stored in the
+        /// database that has already been provided by the investigator being surveyed for feedback.
+        /// </summary>
+        /// <param name="surveyId">Provided survey ID.</param>
         private void BindSurveyData(string surveyId)
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -89,6 +113,9 @@ namespace ProjectManagement.Guest
             }
         }
 
+        /// <summary>
+        /// Loads the current survey questions to the PI Survey Form.
+        /// </summary>
         private void LoadSurvey()
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
