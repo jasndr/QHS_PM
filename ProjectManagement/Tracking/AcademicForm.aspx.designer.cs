@@ -517,6 +517,60 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.TextBox txtOtherDate;
         
         /// <summary>
+        /// txtStudentMentorStudentName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudentMentorStudentName;
+        
+        /// <summary>
+        /// txtStudentMentorDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudentMentorDepartment;
+        
+        /// <summary>
+        /// txtStudentMentorTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudentMentorTitle;
+        
+        /// <summary>
+        /// txtStudentMentorDesc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudentMentorDesc;
+        
+        /// <summary>
+        /// txtStudentMentorStartDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStudentMentorStartDate;
+        
+        /// <summary>
+        /// txtStudentMentorEndDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStudentMentorEndDate;
+        
+        /// <summary>
         /// txtComments control.
         /// </summary>
         /// <remarks>

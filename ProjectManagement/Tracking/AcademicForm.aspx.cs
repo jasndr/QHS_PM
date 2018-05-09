@@ -10,6 +10,27 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: AcademicForm.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: Academic Form of Project Tracking System.
+    /// 
+    ///           Keeps track of academic tracking information such as seminar/workshop/training/lecture given, 
+    ///           education courses taught by faculty, service in thesis and/or dissertation committees, 
+    ///           participation in a panel or committee, journal and/or grant review activities, honors and/or
+    ///           awards received, professional training attended by faculty or staff, mentor for K awards or
+    ///           other grants, participation in the data safety monitoring committee, serving as a mentor
+    ///           for student, or any other professional activities pertinent.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018MAY09 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///  2018MAY09 - Jason Delos Reyes  -  Added "mentor for student" section to be able to distinguish 
+    ///                                    student mentor from other activities (such as participation 
+    ///                                    in their thesis/dissertation committees).
+    /// </summary>
     public partial class AcademicForm : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
@@ -167,6 +188,14 @@ namespace ProjectManagement.Admin
                         txtOtherTitle.Value = Title;
                         txtOtherDesc.Value = AcademicDesc;
                         txtOtherDate.Text = StartDate;
+                        break;
+                    case 12:
+                        txtStudentMentorStudentName.Value = StudentName;
+                        txtStudentMentorDepartment.Value = Organization;
+                        txtStudentMentorTitle.Value = Title;
+                        txtStudentMentorDesc.Value = AcademicDesc;
+                        txtStudentMentorStartDate.Text = StartDate;
+                        txtStudentMentorEndDate.Text = EndDate;
                         break;
                     default:
                         break;
@@ -410,6 +439,14 @@ namespace ProjectManagement.Admin
                     a.Title = txtOtherTitle.Value;
                     a.AcademicDesc = txtOtherDesc.Value;
                     a.StartDate = DateTime.TryParse(txtOtherDate.Text, out startDate) ? startDate : (DateTime?)null;
+                    break;
+                case 12:
+                    a.Name = txtStudentMentorStudentName.Value;
+                    a.Organization = txtStudentMentorDepartment.Value;
+                    a.Title = txtStudentMentorTitle.Value;
+                    a.AcademicDesc = txtStudentMentorDesc.Value;
+                    a.StartDate = DateTime.TryParse(txtStudentMentorStartDate.Text, out startDate) ? startDate : (DateTime?)null;
+                    a.EndDate = DateTime.TryParse(txtStudentMentorEndDate.Text, out endDate) ? endDate : (DateTime?)null;
                     break;
                 default:
                     break;

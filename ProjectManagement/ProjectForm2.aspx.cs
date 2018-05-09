@@ -373,6 +373,12 @@ namespace ProjectManagement
             if (studyPopulationBitSum <= 0)
             {
                 validateResult.Append("Study population is required. \\n");
+            } else
+            {
+                if ((studyPopulationBitSum != 32 && studyPopulationBitSum > 0) && (!chkHealthDisparityYes.Checked && !chkHealthDisparityNo.Checked && !chkHealthDisparityNA.Checked))
+                {
+                    validateResult.Append("Study population >> Health disparity is required since study population was specifed");
+                }
             }
 
             int serviceBitSum = 0;

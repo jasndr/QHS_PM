@@ -480,7 +480,7 @@
                             </div>
                             <br />
                             <div class="row">
-                                <label class="col-sm-2 control-label" for="txtJournalDate">Award date:</label>
+                                <label class="col-sm-2 control-label" for="txtAwardDate">Award date:</label>
                                 <div class="col-sm-3">
                                     <div class='input-group date' id='dtpAwardDate'>
                                         <span class="input-group-addon">
@@ -519,14 +519,14 @@
                             </div>
                             <br />
                             <div class="row">
-                                <label class="col-sm-2 control-label" for="txtAwardTitle">Training title:</label>
+                                <label class="col-sm-2 control-label" for="txtTrainingTitle">Training title:</label>
                                 <div class="col-sm-9">
                                     <input class="form-control" type="text" name="txtTrainingTitle" id="txtTrainingTitle" runat="server" />
                                 </div>
                             </div>
                             <br />
                             <div class="row">
-                                <label class="col-sm-2 control-label" for="txtJournalDate">Training date:</label>
+                                <label class="col-sm-2 control-label" for="txtTrainingDate">Training date:</label>
                                 <div class="col-sm-3">
                                     <div class='input-group date' id='dtpTrainingDate'>
                                         <span class="input-group-addon">
@@ -679,7 +679,7 @@
                             </div>
                             <br />
                             <div class="row">
-                                <label class="col-sm-2 control-label" for="txtJournalDate">Date:</label>
+                                <label class="col-sm-2 control-label" for="txtOtherDate">Date:</label>
                                 <div class="col-sm-3">
                                     <div class='input-group date' id='dtpOtherDate'>
                                         <span class="input-group-addon">
@@ -689,6 +689,68 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="div12">
+                <div class="col-sm-2 text-right">
+                    <label class="control-label">Event details:</label>
+                </div>
+                <div class="col-sm-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Mentor for student</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="txtStudentMentorStudentName">Student name:</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="txtStudentMentorStudentName" id="txtStudentMentorStudentName" runat="server" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="txtStudentMentorDepartment">Department:</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="txtStudentMentorDepartment" id="txtStudentMentorDepartment" runat="server" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="txtStudentMentorTitle">Title:</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="txtStudentMentorTitle" id="txtStudentMentorTitle" runat="server" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="txtStudentMentorDesc">Description:</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="text" name="txtStudentMentorDesc" id="txtStudentMentorDesc" runat="server" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="txtStudentMentorStartDate">Start date:</label>
+                                <div class="col-sm-3">
+                                    <div class='input-group date' id='dtpStudentMentorStartDate'>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        <asp:TextBox ID="txtStudentMentorStartDate" runat="server" class="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 control-label" for="txtMentorStartDate">End date:</label>
+                                <div class="col-sm-3">
+                                    <div class='input-group date' id='dtpStudentMentorEndDate'>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        <asp:TextBox ID="txtStudentMentorEndDate" runat="server" class="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -770,6 +832,11 @@
 
             var otherDate = new biostatNS.DatePicker('dtpOtherDate');
             otherDate.init();
+
+            var studentMentorStartDate = new biostatNS.DatePicker('dtpStudentMentorStartDate');
+            studentMentorStartDate.init();
+            var studentMentorEndDate = new biostatNS.DatePicker('dtpStudentMentorEndDate');
+            studentMentorEndDate.init();
 
             //$('#MainContent_btnSave').prop("disabled", true);
             //$("#MainContent_txtCheckCode").on('change keyup paste', function () {
@@ -909,6 +976,14 @@
                     $('#MainContent_txtOtherTitle').val('');
                     $('#MainContent_txtOtherDesc').val('');
                     $('#MainContent_txtOtherDate').val('');
+                    break;
+            case '12':
+                    $('#MainContent_txtStudentMentorStudentName').val('');
+                    $('#MainContent_txtStudentMentorDepartment').val('');
+                    $('#MainContent_txtStudentMentorTitle').val('');
+                    $('#MainContent_txtStudentMentorDesc').val('');
+                    $('#MainContent_txtStudentMentorStartDate').val('');
+                    $('#MainContent_txtStudentMentorEndDate').val('');
                     break;
             default:
                     //alert("changed!");
