@@ -12,22 +12,20 @@ using System.Web.UI.WebControls;
 namespace ProjectManagement.Report
 {
     /// <summary>
-    /// @File: RmatrixSummary.aspx.cs
-    /// @Author: Yang Rui
-    /// @Summary: RMATRIX Summary Reports
+    /// @File: SummaryReport.aspx.cs
+    /// @Author: Jason Delos Reyes
+    /// @Summary: RMATRIX / OLA Hawaii Summary Reports
     /// 
-    ///           Summary reports for the list of projects, healthcare data, nonUH, publications, abstracts/presentations, 
-    ///           and academic activities conducted by the Quantitative Health Sciences branch of the Department of
-    ///           Complementary & Integrative Medicine for reporting to RMATRIX.
+    ///           Summary reports for the list of projects for both RMATRIX and OLA Hawaii, cobined into a single form. 
+    ///           May need to alter lists of healthcare data and/or nonUH projects, publications, abstracts/presentations, and academic activities,
+    ///           for Ola Hawaii requirements.
     ///           
     /// @Maintenance/Revision History:
     ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
     ///  ------------------------------------------
-    ///  2018MAY09 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
-    ///                                    easier data structure view and management.
-    ///  2018MAY14 - Jason Delos Reyes  -  Added more comments for easier data structure view and management.
+    ///  2018MAY14 - Jason Delos Reyes  -  Created 
     /// </summary>
-    public partial class RmatrixSummary : System.Web.UI.Page
+    public partial class SummaryReport : System.Web.UI.Page
     {
         /// <summary>
         /// Loads page based on initial specifications.
@@ -43,7 +41,8 @@ namespace ProjectManagement.Report
         }
 
         /// <summary>
-        /// Pre-loads dropdown list based on what the type of reports there are for the RMATRIX Summary reports.
+        /// Pre-loads dropdown list based on what the type of reports there are for the Ola Hawaii Summary reports.
+        /// Uses Rmatrix Summary drop downs as they are the same for Ola Hawaii reports.
         /// </summary>
         private void BindControl()
         {
@@ -63,6 +62,13 @@ namespace ProjectManagement.Report
                                 .ToDictionary(c => c.Id, c => c.ReportName);
 
                 PageUtility.BindDropDownList(ddlReport, dropDownSource, "--- Select Report ---");
+
+                /// Populates Grant type dropdown (RMATRIX/Ola Hawaii)
+                Dictionary<int, string> grantTypeSource = new Dictionary<int, string>();
+                grantTypeSource.Add(1, "RMATRIX");
+                grantTypeSource.Add(2, "Ola Hawaii");
+                PageUtility.BindDropDownList(ddlGrantType, grantTypeSource, null);
+
             }
         }
 
@@ -75,37 +81,38 @@ namespace ProjectManagement.Report
         {
             hdnRowCount.Value = "0";
             int reportId;
-            if (Int32.TryParse(ddlReport.SelectedValue, out reportId))
+            int grantId;
+            if (Int32.TryParse(ddlReport.SelectedValue, out reportId) && Int32.TryParse(ddlGrantType.SelectedValue, out grantId))
             {
                 DateTime fromDate, toDate;
 
                 if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
                 {
                     DataTable dt = new DataTable();
-                    if (reportId >= 11 && reportId <= 13) // Projects and NonUH
+                    if (reportId >= 11 && reportId <= 13) // Projects, Healthcare Data, and NonUH
                     {
-                        dt = GetProjectTable(reportId, fromDate, toDate);
+                        dt = GetProjectTable(grantId, reportId, fromDate, toDate);
 
-                        rptRmatrixSummary.DataSource = dt;
-                        rptRmatrixSummary.DataBind();
+                        rptOlaHawaiiSummary.DataSource = dt;
+                        rptOlaHawaiiSummary.DataBind();
                     }
                     else if (reportId == 14) // Publications
                     {
-                        dt = GetPubTable(reportId, fromDate, toDate);
-                        rptRmatrixSummaryPub.DataSource = dt;
-                        rptRmatrixSummaryPub.DataBind();
+                        dt = GetPubTable(grantId, reportId, fromDate, toDate);
+                        rptSummaryPub.DataSource = dt;
+                        rptSummaryPub.DataBind();
                     }
                     else if (reportId == 15) // AbstractsPresentations
                     {
-                        dt = GetPubTable(reportId, fromDate, toDate);
-                        rptRmatrixSummaryAbstract.DataSource = dt;
-                        rptRmatrixSummaryAbstract.DataBind();
+                        dt = GetPubTable(grantId, reportId, fromDate, toDate);
+                        rptSummaryAbstract.DataSource = dt;
+                        rptSummaryAbstract.DataBind();
                     }
                     else if (reportId == 16) // Academic
                     {
-                        dt = GetAcademicTable(reportId, fromDate, toDate);
-                        rptRmatrixSummaryAcademic.DataSource = dt;
-                        rptRmatrixSummaryAcademic.DataBind();
+                        dt = GetAcademicTable(grantId, reportId, fromDate, toDate);
+                        rptSummaryAcademic.DataSource = dt;
+                        rptSummaryAcademic.DataBind();
                     }
 
                     hdnRowCount.Value = dt.Rows.Count.ToString();
@@ -166,15 +173,19 @@ namespace ProjectManagement.Report
         }
 
         /// <summary>
-        /// Populates Data Table for Academic Report for RMATRIX Summary.
+        /// Obtains academic report from SQL database by adding report and from/to dates
+        /// into "Rpt_Academic" stored query.
         /// </summary>
-        /// <param name="reportId">Report ID (16 for "Academic")</param>
-        /// <param name="fromDate">Initial time period point.</param>
-        /// <param name="toDate">Ending time period point.</param>
-        /// <returns></returns>
-        private DataTable GetAcademicTable(int reportId, DateTime fromDate, DateTime toDate)
+        /// <param name="grantId">RMATRIX or Ola Hawaii Grant</param>
+        /// <param name="reportId">Report ID (usually just 16-Academic)</param>
+        /// <param name="fromDate">Beginning time period</param>
+        /// <param name="toDate">Ending time period</param>
+        /// <returns>Table with academic report</returns>
+        private DataTable GetAcademicTable(int grantId, int reportId, DateTime fromDate, DateTime toDate)
         {
-            DataTable dt = new DataTable("tblRmatrixAcademic");
+            DataTable dt = grantId == 1 ? new DataTable("tblRmatrixAcademic") 
+                         : grantId == 2 ? new DataTable("tblOlaHawaiiAcademic") 
+                                        : new DataTable ("tblSummaryAcademic");
             
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
@@ -217,21 +228,24 @@ namespace ProjectManagement.Report
         }
 
         /// <summary>
-        /// Generates Publications reports for either Publications (Manuscripts), or Abstracts/Presentations (Abstracts).
+        /// Generates data table for "publication" type reports, specific to OLA Hawaii-affiliated papers *only*.
         /// </summary>
-        /// <param name="reportId">Report type (either 14 for "Publications" [Manuscripts]
-        ///                                         or 15 for "Abstracts [Abstracts/Presentations]).</param>
+        /// <param name="grantId">Grant type (1 for RMATRIX, 2 for Ola Hawaii).</param>
+        /// <param name="reportId">Report type (either 14 for manuscripts/publications
+        ///                                         or 15 for abstracts/presentations.)</param>
         /// <param name="fromDate">Starting time period.</param>
         /// <param name="toDate">Ending time period.</param>
         /// <returns></returns>
-        private DataTable GetPubTable(int reportId, DateTime fromDate, DateTime toDate)
+        private DataTable GetPubTable(int grantId, int reportId, DateTime fromDate, DateTime toDate)
         {
-            DataTable dt = new DataTable("tblRmatrixPub");
+            DataTable dt = grantId == 1 ? new DataTable("tblRmatrixPub")
+                         : grantId == 2 ? new DataTable("tblOlaHawaiiPub")
+                                        : new DataTable("tblSummaryPub");
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = "Rpt_Paper"; //Calls "Rpt_Paper" stored procedure in database
+            var cmdText = grantId == 2 ? "Rpt_Paper_Ola" : "Rpt_Paper";
 
             try
             {
@@ -284,18 +298,19 @@ namespace ProjectManagement.Report
         ///  12 (Healthcare Data projects), and
         ///  13 (NonUH projects).
         /// </summary>
-        /// <param name="reportId">Id of RMATRIX Summary Report type (11 through 13 in SQL 'Report' table).</param>
+        /// <param name="grantId">Grant type (1 for RMATRIX, 2 for Ola Hawaii).</param>
+        /// <param name="reportId">Id of RMATRIX Summary Report type (11 through 16 in SQL 'Report' table).</param>
         /// <param name="fromDate">Starting date parameter specified in text field.</param>
         /// <param name="toDate">Ending date parameter specified in text field.</param>
         /// <returns>Data table selected after SQL query.</returns>
-        private DataTable GetProjectTable(int reportId, DateTime fromDate, DateTime toDate)
+        private DataTable GetProjectTable(int grantId, int reportId, DateTime fromDate, DateTime toDate)
         {
-            DataTable dt = new DataTable("tblRmatrix");
+            DataTable dt = grantId == 2 ? new DataTable("tblOlaHawaii") : new DataTable("tblRmatrix");
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = "Rpt_RMATRIX_Summary";
+            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary" : "Rpt_Rmatrix_Summary";
 
             try
             {
@@ -349,40 +364,45 @@ namespace ProjectManagement.Report
         /// <param name="e"></param>
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
+            int grantId;
             int reportId;
             DateTime fromDate, toDate;
-            string fileName= "";
+            string fileName = "";
+            string grantName = "";
 
-            if (Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
+            if (Int32.TryParse(ddlGrantType.SelectedValue, out grantId) && Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
                 DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             {
                 DataTable dt = new DataTable();
+                grantName = grantId == 1 ? "Rmatrix"
+                          : grantId == 2 ? "OlaHawaii"
+                                         : "";
 
                 switch (reportId)
                 {
                     case 11: // (all) projects
-                        dt = GetProjectTable(reportId, fromDate, toDate);
+                        dt = GetProjectTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "Project";
                         dt.Columns.Remove("HealthData");
                         dt.Columns.Remove("NonUH");
-                        fileName = "Project" + toDate.ToString("yyyyMMdd");
+                        fileName = grantName + "Project" + toDate.ToString("yyyyMMdd");
                         break;
                     case 12: // Healthcare Data projects
-                        dt = GetProjectTable(reportId, fromDate, toDate);
+                        dt = GetProjectTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "HealthData";
                         dt.Columns.Remove("HealthData");
                         dt.Columns.Remove("NonUH");
-                        fileName = "HealthData" + toDate.ToString("yyyyMMdd");
+                        fileName = grantName + "HealthData" + toDate.ToString("yyyyMMdd");
                         break;
                     case 13: // NonUH projects
-                        dt = GetProjectTable(reportId, fromDate, toDate);
+                        dt = GetProjectTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "NonUH";
                         dt.Columns.Remove("HealthData");
                         dt.Columns.Remove("NonUH");
-                        fileName = "NonUH" + toDate.ToString("yyyyMMdd");
+                        fileName = grantName + "NonUH" + toDate.ToString("yyyyMMdd");
                         break;
                     case 14: // Publications
-                        dt = GetPubTable(reportId, fromDate, toDate);
+                        dt = GetPubTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "Publications";
                         dt.Columns.Remove("conf");
                         dt.Columns.Remove("ConfLoc");
@@ -394,10 +414,10 @@ namespace ProjectManagement.Report
                         dt.Columns.Remove("ToDate");
                         dt.Columns.Remove("CitationFormat");
                         dt.Columns.Remove("BiostatName");
-                        fileName = "Publications" + toDate.ToString("yyyyMMdd");
+                        fileName = grantName + "Publications" + toDate.ToString("yyyyMMdd");
                         break;
                     case 15: // AbstractsPresentations
-                        dt = GetPubTable(reportId, fromDate, toDate);
+                        dt = GetPubTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "AbstractsPresentations";
                         dt.Columns.Remove("JournalName");
                         dt.Columns.Remove("pp");
@@ -414,14 +434,14 @@ namespace ProjectManagement.Report
                         dt.Columns.Remove("ToDate");
                         dt.Columns.Remove("CitationFormat");
                         dt.Columns.Remove("BiostatName");
-                        fileName = "AbstractsPresentations" + toDate.ToString("yyyyMMdd");
+                        fileName = grantName + "AbstractsPresentations" + toDate.ToString("yyyyMMdd");
                         break;
                     case 16: // Academic
-                        dt = GetAcademicTable(reportId, fromDate, toDate);
+                        dt = GetAcademicTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "Academic";
                         dt.Columns.Remove("Column1");
                         dt.Columns.Remove("Column2");
-                        fileName = "Academic" + toDate.ToString("yyyyMMdd");
+                        fileName = grantName + "Academic" + toDate.ToString("yyyyMMdd");
                         break;
                     default:
                         break;

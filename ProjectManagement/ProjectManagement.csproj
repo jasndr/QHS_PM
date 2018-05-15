@@ -196,8 +196,10 @@
     <Content Include="images\sort_desc.png" />
     <Content Include="images\sort_desc_disabled.png" />
     <Content Include="ProjectForm2.aspx" />
+    <Content Include="Report\SummaryReport.aspx" />
     <Content Include="Report\Project.aspx" />
     <Content Include="Report\RmatrixMonthly.aspx" />
+    <Content Include="Report\OlaHawaiiSummary.aspx" />
     <Content Include="Report\RmatrixSummary.aspx" />
     <Content Include="Scripts\bloodhound.js" />
     <Content Include="Scripts\bloodhound.min.js" />
@@ -709,6 +711,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DSAcademic.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Report\SummaryReport.aspx.cs">
+      <DependentUpon>SummaryReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\SummaryReport.aspx.designer.cs">
+      <DependentUpon>SummaryReport.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Report\Project.aspx.cs">
       <DependentUpon>Project.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -722,6 +731,13 @@
     </Compile>
     <Compile Include="Report\RmatrixMonthly.aspx.designer.cs">
       <DependentUpon>RmatrixMonthly.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\OlaHawaiiSummary.aspx.cs">
+      <DependentUpon>OlaHawaiiSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\OlaHawaiiSummary.aspx.designer.cs">
+      <DependentUpon>OlaHawaiiSummary.aspx</DependentUpon>
     </Compile>
     <Compile Include="Report\RmatrixSummary.aspx.cs">
       <DependentUpon>RmatrixSummary.aspx</DependentUpon>

@@ -116,6 +116,8 @@
                                             <li id="li_report1"><a runat="server" href="~/Report/AdhocReport" visible="false" id="ReportLink1" data-toggle="menu">General Report</a></li>
                                             <li id="li_report2"><a runat="server" href="~/Report/RmatrixMonthly" visible="false" id="ReportLink2" data-toggle="menu">RMATRIX Monthly Report</a></li>
                                             <li id="li_report3"><a runat="server" href="~/Report/RmatrixSummary" visible="false" id="ReportLink3" data-toggle="menu">RMATRIX Summary Report</a></li>
+                                            <li id="li_report5"><a runat="server" href="~/Report/OlaHawaiiSummary" visible="false" id="ReportLink5" data-toggle="menu">Ola Hawaiʻi Summary Report</a></li>
+                                            <li id="li_report6"><a runat="server" href="~/Report/SummaryReport" visible="false" id="ReportLink6" data-toggle="menu">RMATRIX / Ola Hawaiʻi Summary Report</a></li>
                                         </ul>
                                     </li>                                  
                                     <li><a><i class="fa fa-book"></i>Admin <span class="fa fa-chevron-down"></span></a>

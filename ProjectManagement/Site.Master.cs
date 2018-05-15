@@ -9,6 +9,18 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement
 {
+    /// <summary>
+    /// @File: Site.Master.cs
+    /// @Author: Yang Rui
+    /// @Summary: Links that can be viewed on all pages.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018MAY14 - Jason Delos Reyes  -  Added Ola Hawaiʻi Summary Report tab under "Data Presentations". Also added
+    ///                                    comments/documentation to improve legibility on data structure view and
+    ///                                    management.
+    /// </summary>
     public partial class SiteMaster : MasterPage
     {
         private const string AntiXsrfTokenKey = "__AntiXsrfToken";
@@ -47,6 +59,11 @@ namespace ProjectManagement
             Page.PreLoad += master_Page_PreLoad;
         }
 
+        /// <summary>
+        /// Loads page using Anti-XSRF token.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void master_Page_PreLoad(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -66,6 +83,11 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// On page load, hides links based on whether or not users are logged into the system.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (HttpContext.Current.User.IsInRole("Admin") || HttpContext.Current.User.IsInRole("Biostat"))
@@ -82,6 +104,8 @@ namespace ProjectManagement
                 ReportLink2.Visible = true;
                 ReportLink3.Visible = true;
                 ReportLink4.Visible = true;
+                ReportLink5.Visible = true;
+                ReportLink6.Visible = true;
             }
 
             //if (HttpContext.Current.User.IsInRole("Super"))
@@ -90,6 +114,11 @@ namespace ProjectManagement
             //}
         }
 
+        /// <summary>
+        /// Logs users out of system.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
             Context.GetOwinContext().Authentication.SignOut();

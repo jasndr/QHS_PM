@@ -7,117 +7,117 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectManagement {
+namespace ProjectManagement.Report {
     
     
-    public partial class SiteMaster {
+    public partial class SummaryReport {
         
         /// <summary>
-        /// commentForm control.
+        /// ddlGrantType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm commentForm;
+        protected global::System.Web.UI.WebControls.DropDownList ddlGrantType;
         
         /// <summary>
-        /// head control.
+        /// txtFromDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
+        protected global::System.Web.UI.WebControls.TextBox txtFromDate;
         
         /// <summary>
-        /// PILink control.
+        /// txtToDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor PILink;
+        protected global::System.Web.UI.WebControls.TextBox txtToDate;
         
         /// <summary>
-        /// ProjectLink control.
+        /// ddlReport control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ProjectLink;
+        protected global::System.Web.UI.WebControls.DropDownList ddlReport;
         
         /// <summary>
-        /// TimeEntryLink control.
+        /// btnSumbit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor TimeEntryLink;
+        protected global::System.Web.UI.WebControls.Button btnSumbit;
         
         /// <summary>
-        /// ReportLink4 control.
+        /// rptOlaHawaiiSummary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ReportLink4;
+        protected global::System.Web.UI.WebControls.Repeater rptOlaHawaiiSummary;
         
         /// <summary>
-        /// ReportLink1 control.
+        /// rptSummaryPub control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ReportLink1;
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryPub;
         
         /// <summary>
-        /// ReportLink2 control.
+        /// rptSummaryAbstract control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ReportLink2;
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryAbstract;
         
         /// <summary>
-        /// ReportLink3 control.
+        /// rptSummaryAcademic control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ReportLink3;
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryAcademic;
         
         /// <summary>
-        /// ReportLink5 control.
+        /// btnExportExcel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ReportLink5;
+        protected global::System.Web.UI.WebControls.Button btnExportExcel;
         
         /// <summary>
-        /// ReportLink6 control.
+        /// hdnRowCount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ReportLink6;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdnRowCount;
         
         /// <summary>
-        /// MainContent control.
+        /// download_token control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden download_token;
     }
 }

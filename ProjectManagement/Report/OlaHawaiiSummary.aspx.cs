@@ -12,22 +12,23 @@ using System.Web.UI.WebControls;
 namespace ProjectManagement.Report
 {
     /// <summary>
-    /// @File: RmatrixSummary.aspx.cs
-    /// @Author: Yang Rui
-    /// @Summary: RMATRIX Summary Reports
+    /// @File: OlaHawaiiSummary.aspx.cs
+    /// @Author: Jason Delos Reyes
+    /// @Summary: OLA Hawaii Summary Reports
     /// 
-    ///           Summary reports for the list of projects, healthcare data, nonUH, publications, abstracts/presentations, 
-    ///           and academic activities conducted by the Quantitative Health Sciences branch of the Department of
-    ///           Complementary & Integrative Medicine for reporting to RMATRIX.
+    ///           Summary reports for the list of projects for OLA Hawaii. May need to expand to extract lists of
+    ///           healthcare data and/or nonUH projects, publications, abstracts/presentations, and academic activities,
+    ///           depending on what Ola Hawaii needs to report for future deadlines.
     ///           
     /// @Maintenance/Revision History:
     ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
     ///  ------------------------------------------
-    ///  2018MAY09 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
-    ///                                    easier data structure view and management.
-    ///  2018MAY14 - Jason Delos Reyes  -  Added more comments for easier data structure view and management.
+    ///  2018MAY09 - Jason Delos Reyes  -  Created files as duplicate of RmatrixSummary.aspx and corresponding codebehind files.
+    ///  2018MAY14 - Jason Delos Reyes  -  Revised academic report table to improve pulling out courses, redirected publications and
+    ///                                    abstracts to those with just Ola Hawaii acknowledgements, and pulled projects (all, as well as
+    ///                                    health data and non-UH) that are only tied to Ola Hawaii.
     /// </summary>
-    public partial class RmatrixSummary : System.Web.UI.Page
+    public partial class OlaHawaiiSummary : System.Web.UI.Page
     {
         /// <summary>
         /// Loads page based on initial specifications.
@@ -43,7 +44,8 @@ namespace ProjectManagement.Report
         }
 
         /// <summary>
-        /// Pre-loads dropdown list based on what the type of reports there are for the RMATRIX Summary reports.
+        /// Pre-loads dropdown list based on what the type of reports there are for the Ola Hawaii Summary reports.
+        /// Uses Rmatrix Summary drop downs as they are the same for Ola Hawaii reports.
         /// </summary>
         private void BindControl()
         {
@@ -86,26 +88,26 @@ namespace ProjectManagement.Report
                     {
                         dt = GetProjectTable(reportId, fromDate, toDate);
 
-                        rptRmatrixSummary.DataSource = dt;
-                        rptRmatrixSummary.DataBind();
+                        rptOlaHawaiiSummary.DataSource = dt;
+                        rptOlaHawaiiSummary.DataBind();
                     }
                     else if (reportId == 14) // Publications
                     {
                         dt = GetPubTable(reportId, fromDate, toDate);
-                        rptRmatrixSummaryPub.DataSource = dt;
-                        rptRmatrixSummaryPub.DataBind();
+                        rptOlaHawaiiSummaryPub.DataSource = dt;
+                        rptOlaHawaiiSummaryPub.DataBind();
                     }
                     else if (reportId == 15) // AbstractsPresentations
                     {
                         dt = GetPubTable(reportId, fromDate, toDate);
-                        rptRmatrixSummaryAbstract.DataSource = dt;
-                        rptRmatrixSummaryAbstract.DataBind();
+                        rptOlaHawaiiSummaryAbstract.DataSource = dt;
+                        rptOlaHawaiiSummaryAbstract.DataBind();
                     }
                     else if (reportId == 16) // Academic
                     {
                         dt = GetAcademicTable(reportId, fromDate, toDate);
-                        rptRmatrixSummaryAcademic.DataSource = dt;
-                        rptRmatrixSummaryAcademic.DataBind();
+                        rptOlaHawaiiSummaryAcademic.DataSource = dt;
+                        rptOlaHawaiiSummaryAcademic.DataBind();
                     }
 
                     hdnRowCount.Value = dt.Rows.Count.ToString();
@@ -166,15 +168,16 @@ namespace ProjectManagement.Report
         }
 
         /// <summary>
-        /// Populates Data Table for Academic Report for RMATRIX Summary.
+        /// Obtains academic report from SQL database by adding report and from/to dates
+        /// into "Rpt_Academic" stored query.
         /// </summary>
-        /// <param name="reportId">Report ID (16 for "Academic")</param>
-        /// <param name="fromDate">Initial time period point.</param>
-        /// <param name="toDate">Ending time period point.</param>
-        /// <returns></returns>
+        /// <param name="reportId">Report ID (usually just 16-Academic)</param>
+        /// <param name="fromDate">Beginning time period</param>
+        /// <param name="toDate">Ending time period</param>
+        /// <returns>Table with academic report</returns>
         private DataTable GetAcademicTable(int reportId, DateTime fromDate, DateTime toDate)
         {
-            DataTable dt = new DataTable("tblRmatrixAcademic");
+            DataTable dt = new DataTable("tblOlaHawaiiAcademic");
             
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
@@ -217,21 +220,21 @@ namespace ProjectManagement.Report
         }
 
         /// <summary>
-        /// Generates Publications reports for either Publications (Manuscripts), or Abstracts/Presentations (Abstracts).
+        /// Generates data table for "publication" type reports, specific to OLA Hawaii-affiliated papers *only*.
         /// </summary>
-        /// <param name="reportId">Report type (either 14 for "Publications" [Manuscripts]
-        ///                                         or 15 for "Abstracts [Abstracts/Presentations]).</param>
+        /// <param name="reportId">Report type (either 14 for manuscripts/publications
+        ///                                         or 15 for abstracts/presentations.)</param>
         /// <param name="fromDate">Starting time period.</param>
         /// <param name="toDate">Ending time period.</param>
         /// <returns></returns>
         private DataTable GetPubTable(int reportId, DateTime fromDate, DateTime toDate)
         {
-            DataTable dt = new DataTable("tblRmatrixPub");
+            DataTable dt = new DataTable("tblOlaHawaiiPub");
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = "Rpt_Paper"; //Calls "Rpt_Paper" stored procedure in database
+            var cmdText = "Rpt_Paper_Ola";
 
             try
             {
@@ -284,7 +287,7 @@ namespace ProjectManagement.Report
         ///  12 (Healthcare Data projects), and
         ///  13 (NonUH projects).
         /// </summary>
-        /// <param name="reportId">Id of RMATRIX Summary Report type (11 through 13 in SQL 'Report' table).</param>
+        /// <param name="reportId">Id of RMATRIX Summary Report type (11 through 16 in SQL 'Report' table).</param>
         /// <param name="fromDate">Starting date parameter specified in text field.</param>
         /// <param name="toDate">Ending date parameter specified in text field.</param>
         /// <returns>Data table selected after SQL query.</returns>
@@ -295,7 +298,7 @@ namespace ProjectManagement.Report
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = "Rpt_RMATRIX_Summary";
+            var cmdText = "Rpt_Ola_Hawaii_Summary";
 
             try
             {

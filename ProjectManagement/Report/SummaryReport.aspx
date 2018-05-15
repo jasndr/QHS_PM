@@ -1,15 +1,24 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RmatrixSummary.aspx.cs" Inherits="ProjectManagement.Report.RmatrixSummary" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SummaryReport.aspx.cs" Inherits="ProjectManagement.Report.SummaryReport" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <b>RMATRIX Summary Report</b>
+            <b>RMATRIX / Ola Hawaiʻi Summary Report</b>
         </div>
 
         <div class="panel-body">
             <br/>
             <div>
+                <div class="row">
+                    <div class="col-md-1 text-right">
+                        <label class="control-label">Grant:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <asp:DropDownList ID="ddlGrantType" runat="server" CssClass="form-control" ></asp:DropDownList>
+                    </div>
+                </div>
+                <br />
                 <div class="row">
                     <div class="col-md-1 text-right">
                         <label class="control-label">From Date:</label>
@@ -37,7 +46,7 @@
                         <label class="control-label">Report Type:</label>
                     </div>
                     <div class="col-md-2">
-                        <asp:DropDownList ID="ddlReport" runat="server" CssClass="form-control"></asp:DropDownList>
+                        <asp:DropDownList ID="ddlReport" runat="server" CssClass="form-control" ></asp:DropDownList>
                     </div> 
                     <div class="col-md-1 text-right">
                         <asp:Button ID="btnSumbit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSumbit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False"/>
@@ -47,7 +56,7 @@
             <hr/>
             <div class="row" id="divProject">
                 <div class="col-md-12">
-                    <table class="table table-striped table-hover table-bordered" id="rmatrixMonthly">
+                    <table class="table table-striped table-hover table-bordered" id="olaHawaiiMonthly">
                         <thead>
                             <tr>
                                 <th class="col-sm-1">ProjectId</th>
@@ -69,7 +78,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <asp:Repeater ID="rptRmatrixSummary" runat="server">
+                            <asp:Repeater ID="rptOlaHawaiiSummary" runat="server">
                                 <ItemTemplate>
                                     <tr>
                                         <td><%# Eval("ProjectId") %></td>
@@ -97,7 +106,7 @@
             </div>
             <div class="row" id="divPub">
                 <div class="col-md-12">
-                    <table class="table table-striped table-hover table-bordered" id="rmatrixSummaryPub">
+                    <table class="table table-striped table-hover table-bordered" id="summaryPub">
                         <thead>
                             <tr>
                                 <th>Paper Id</th>
@@ -118,7 +127,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <asp:Repeater ID="rptRmatrixSummaryPub" runat="server">
+                            <asp:Repeater ID="rptSummaryPub" runat="server">
                                 <ItemTemplate>
                                     <tr>
                                         <td><%# Eval("Id") %></td>
@@ -145,7 +154,7 @@
             </div>
             <div class="row" id="divAbstract">
                 <div class="col-md-12">
-                    <table class="table table-striped table-hover table-bordered" id="rmatrixSummaryAbstract">
+                    <table class="table table-striped table-hover table-bordered" id="summaryAbstract">
                         <thead>
                             <tr>
                                 <th>Paper Id</th>
@@ -163,7 +172,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <asp:Repeater ID="rptRmatrixSummaryAbstract" runat="server">
+                            <asp:Repeater ID="rptSummaryAbstract" runat="server">
                                 <ItemTemplate>
                                     <tr>
                                         <td><%# Eval("Id") %></td>
@@ -186,8 +195,8 @@
                 </div>
             </div>
             <div class="row" id="divAcademic">
-                <div class="col-md-12">
-                    <table class="table table-striped table-hover table-bordered" id="rmatrixSummaryAcademic">
+                <div class="col-sm-12">
+                    <table class="table table-striped table-hover table-bordered" id="summaryAcademic">
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -205,7 +214,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <asp:Repeater ID="rptRmatrixSummaryAcademic" runat="server">
+                            <asp:Repeater ID="rptSummaryAcademic" runat="server">
                                 <ItemTemplate>
                                     <tr>
                                         <td><%# Eval("Id") %></td>
@@ -227,6 +236,7 @@
                     </table>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-2">
                     <asp:Button ID="btnExportExcel" runat="server" Text="Download" CssClass="btn btn-info" OnClick="btnExportExcel_Click" OnClientClick="blockUIForDownload(this)" UseSubmitBehavior="False" />
