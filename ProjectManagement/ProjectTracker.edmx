@@ -473,6 +473,8 @@
           <Property Name="OlaHawaiiSubDate" Type="datetime" />
           <Property Name="OlaHawaiiRequestType" Type="tinyint" />
           <Property Name="IsHealthDisparity" Type="tinyint" />
+          <Property Name="GrantDepartmentFundingType" Type="int" />
+          <Property Name="GrantDepartmentFundingOther" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="ProjectBioStat">
           <Key>
@@ -3956,6 +3958,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="OlaHawaiiSubDate" Type="DateTime" Precision="3" />
           <Property Name="OlaHawaiiRequestType" Type="Byte" />
           <Property Name="IsHealthDisparity" Type="Byte" />
+          <Property Name="GrantDepartmentFundingType" Type="Int32" />
+          <Property Name="GrantDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ProjectField">
           <Key>
@@ -5084,6 +5088,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="Project2">
             <EntityTypeMapping TypeName="ProjectTracker.Project2">
               <MappingFragment StoreEntitySet="Project2">
+                <ScalarProperty Name="GrantDepartmentFundingOther" ColumnName="GrantDepartmentFundingOther" />
+                <ScalarProperty Name="GrantDepartmentFundingType" ColumnName="GrantDepartmentFundingType" />
                 <ScalarProperty Name="IsHealthDisparity" ColumnName="IsHealthDisparity" />
                 <ScalarProperty Name="OlaHawaiiRequestType" ColumnName="OlaHawaiiRequestType" />
                 <ScalarProperty Name="OlaHawaiiSubDate" ColumnName="OlaHawaiiSubDate" />

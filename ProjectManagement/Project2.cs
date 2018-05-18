@@ -69,6 +69,8 @@ namespace ProjectManagement
         public Nullable<System.DateTime> OlaHawaiiSubDate { get; set; }
         public Nullable<byte> OlaHawaiiRequestType { get; set; }
         public Nullable<byte> IsHealthDisparity { get; set; }
+        public Nullable<int> GrantDepartmentFundingType { get; set; }
+        public string GrantDepartmentFundingOther { get; set; }
     
         public virtual Invest Invests { get; set; }
         public virtual ICollection<ProjectPhase> ProjectPhase { get; set; }

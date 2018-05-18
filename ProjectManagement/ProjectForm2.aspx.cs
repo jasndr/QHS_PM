@@ -19,6 +19,7 @@ namespace ProjectManagement
 {
     /// <summary>
     /// @File: ProjectForm2.aspx.cs
+    /// @FrontEnd: ProjectForm2.aspx
     /// @Author: Yang Rui
     /// @Summary: Project Form of Project Tracking System.
     /// 
@@ -52,6 +53,7 @@ namespace ProjectManagement
     ///                                    Also added more documentation for easier understandability.
     ///  2018APR26 - Jason Delos Reyes  -  Added Ola Hawaii checkboxes and fields to keep track of Ola Hawaii Requests.
     ///  2018APR30 - Jason Delos Reyes  -  Added Health disparity options for "Study Population" section.
+    ///  2018MAY16 - Jason Delos Reyes  -  Made "Project Type" and "Credit To" checkboxes required fields.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -387,6 +389,16 @@ namespace ProjectManagement
             {
                 validateResult.Append("Service is required. \\n");
             }
+            
+            if (!chkBiostat.Checked && !chkBioinfo.Checked)
+            {
+                validateResult.Append("Please indicate if this is a Biostat or Bioinfo project. \\n");
+            }
+            
+            if (!chkCreditToBiostat.Checked && !chkCreditToBioinfo.Checked && !chkCreditToBoth.Checked)
+            {
+                validateResult.Append("Please indicate \"Credit To\" field. \\n");
+            }
 
             return validateResult.ToString();
         }
@@ -502,13 +514,24 @@ namespace ProjectManagement
                 //rptPhase.DataSource = qPhase;
                 //rptPhase.DataBind();
 
-                /// Populates "Grant" checkbox grid.
+                /// Populates "Grant" (Changed to "Funding Source") checkbox grid. 
                 dropDownSource = db.ProjectField
                                 .Where(f => f.IsGrant == true)
                                 .OrderBy(b => b.Id)
                                 .ToDictionary(c => c.BitValue, c => c.Name);
-
+                
                 BindTable2(dropDownSource, rptGrant);
+
+                /// Populates Funding Source > Department Funding dropdown.
+                dropDownSource = db.JabsomAffils
+                                 .Where(f => f.Name == "Obstetrics, Gynecology, and Women's Health"
+                                          || f.Name == "School of Nursing & Dental Hygiene"
+                                          || f.Id == 96)
+                                 .OrderBy(b => b.Id)
+                                 .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlDepartmentFunding, dropDownSource, String.Empty);
+
 
                 /// Only Admin are allowed to approve (review) projects.
                 if (!Page.User.IsInRole("Admin"))
@@ -652,6 +675,9 @@ namespace ProjectManagement
             //}
             BindTable(rptGrant, (int)project.GrantBitSum);
             txtGrantOther.Value = project.GrantOther;
+            ddlDepartmentFunding.SelectedValue = project.GrantDepartmentFundingType > 0 ? project.GrantDepartmentFundingType.ToString() 
+                                                                                        : string.Empty;
+            txtDeptFundOth.Value = project.GrantDepartmentFundingOther;
 
             //var projectPhase = project.ProjectPhase;
             //BindPhase(projectPhase);
@@ -1169,6 +1195,8 @@ namespace ProjectManagement
                 ServiceOther = "",
                 GrantBitSum = 0,
                 GrantOther = "",
+                GrantDepartmentFundingType = 0,
+                GrantDepartmentFundingOther = "",
                 //RequestRcvdDate = (DateTime?)null,
                 IsJuniorPI = (bool?)null,
                 HasMentor = (bool?)null,
@@ -1216,8 +1244,10 @@ namespace ProjectManagement
                 studyPopulationBitSum = 0,
                 serviceBitSum = 0,
                 grantBitSum = 0,
+                grantDepartmentFundingType = 0,
                 rmatrixNum = 0,
                 olaHawaiiNum = 0;
+                
 
             DateTime dtInitialDate, dtDeadline, dtRmatrixSubDate, dtOlaHawaiiSubDate, dtCompletionDate;
 
@@ -1244,6 +1274,8 @@ namespace ProjectManagement
                 ServiceOther = txtServiceOther.Value,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
+                GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,
+                GrantDepartmentFundingOther = txtDeptFundOth.Value,
                 //RequestRcvdDate = DateTime.TryParse(txtRequestRcvdDate.Text, out dtRequestRcvdDate) ? dtRequestRcvdDate : (DateTime?)null,
                 IsJuniorPI = chkJuniorPIYes.Checked, //(bool?)null,
                 HasMentor = chkMentorYes.Checked,

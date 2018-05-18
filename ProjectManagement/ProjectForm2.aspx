@@ -560,11 +560,16 @@
                         </div>
                         <br />
 
-                        <h5>Grant</h5>
+                        <h5>Funding Source</h5>
                         <%--<br />--%>
                         <div class="row">
                             <div class="col-sm-6 text-left">
-                                <label class="control-label">Check all that apply, or indicate N/A</label>
+                                <label class="control-label" style="text-align: left;">
+                                    Check all that apply, or indicate N/A.
+                                    <br />
+                                    <em style="font-weight: normal;">(This section is used to mark
+                                    funding sources, <u>not</u> grants acknowledged.)</em><br />
+                                </label>
                             </div>
                         </div>
                         <%--<br />--%>
@@ -604,8 +609,20 @@
                                 </asp:Repeater>
                             </tbody>
                         </table>
-                        <div class="row">
-                            <div class="col-sm-6">
+                        <div class="row" id="divDeptFund">
+                            <div class="col-sm-3 col-sm-offset-1">
+                                <label class="control-label" for="ddlDepartmentFunding">Department Funding</label>
+                                <asp:DropDownList ID="ddlDepartmentFunding" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-3">
+                                <label class="control-label" for="txtDeptFundOth">Department Funding - Other</label>
+                                <input class="form-control" type="text" name="txtDeptFundOth" id="txtDeptFundOth" runat="Server" />
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-3">
+                                <label class="control-label" for="txtGrantOther">Other:</label>
                                 <input class="form-control" type="text" name="txtGrantOther" id="txtGrantOther" runat="Server" />
                             </div>
                             <div class="col-sm-2">
@@ -842,6 +859,7 @@
                                             <div class="col-sm-2">
                                                 <asp:CheckBox ID="chkRequestTypeOther" runat="server" Text="Other"></asp:CheckBox>
                                             </div>
+
                                         </div>
 
                                     </div>
@@ -996,6 +1014,7 @@
 
             });
 
+            // Initializes date for date fields.
             var initDate = new biostatNS.DatePicker('dtpInitialDate');
             initDate.init();
 
@@ -1020,6 +1039,8 @@
             //    TextBoxOtherToggle(this.closest('table'));
             //})
 
+            // ------  Intializes Other/Bitsum functionality, ----------- \\
+            // ------  points to grid of checkboxes for specific section -- \\
             var tBiostat = new biostatNS.TableToggle(tblBiostat);
             tBiostat.Click(tblBiostat);
             $('#tblBiostat').on('click',
@@ -1076,18 +1097,21 @@
                     tGrant.Click(this.closest('table'));
                 });
 
+            // -- Reveals hidden sections if certain choices are made -- \\
             ToggleDiv($('#MainContent_chkMentorYes'), $('#divMentor'));
             ToggleDiv($('#MainContent_chkPayingYes'), $('#divPayProject'));
             ToggleDiv($('#MainContent_chkIsRmatrix'), $('#divRmatrixRequest'));
             ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divOlaHawaiiRequest'));
+            //ToggleDiv($('#MainContent_rptGrant_SecondchkId_6'), $('#divDeptFund'));
 
             ToggleDiv4($('#MainContent_rptStudyPopulation_chkId_0'),
-                       $('#MainContent_rptStudyPopulation_chkId_1'),
-                       $('#MainContent_rptStudyPopulation_chkId_2'),
-                       $('#MainContent_rptStudyPopulation_chkId_3'),
-                       $('#divHealthDisparity'));
+                $('#MainContent_rptStudyPopulation_chkId_1'),
+                $('#MainContent_rptStudyPopulation_chkId_2'),
+                $('#MainContent_rptStudyPopulation_chkId_3'),
+                $('#divHealthDisparity'));
+            
 
-
+            // -- Hides/shows certain sections if certain selections are made -- \\
             $('#MainContent_chkIsRmatrix').change(function () {
                 ToggleDiv($(this), $('#divRmatrixRequest'));
             });
@@ -1095,6 +1119,11 @@
             $('#MainContent_chkIsOlaHawaii').change(function () {
                 ToggleDiv($(this), $('#divOlaHawaiiRequest'));
             });
+
+            //If Department funding is checked, show dropdown list.
+            //$('#MainContent_rptGrant_SecondchkId_6').change(function () {
+            //    ToggleDiv($(this), $('#divDeptFund'));
+            //});
 
             $('#tblDesc').on('click',
                 'input[type="checkbox"]',
@@ -1122,20 +1151,20 @@
                 });
 
             $('#tblStudyPopulation').on('click',
-                    'input[type="checkbox"]',
-                    function () {
-                        if ($(this).is($('#MainContent_rptStudyPopulation_chkId_0')) // Native Hawaiians,
-                                                                                     //--- Pacific Islanders,
-                                                                                     //--- and Filipinos
-                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_1')) // Hawaii Populations
-                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_2')) // U.S. Populations
-                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_3')) // International Populations
-                           )
-                        {
-                            ToggleDiv($(this), $('#divHealthDisparity'));
-                        }
-             });
+                'input[type="checkbox"]',
+                function () {
+                    if ($(this).is($('#MainContent_rptStudyPopulation_chkId_0')) // Native Hawaiians,
+                                                                                 //--- Pacific Islanders,
+                                                                                 //--- and Filipinos
+                        || $(this).is($('#MainContent_rptStudyPopulation_chkId_1')) // Hawaii Populations
+                        || $(this).is($('#MainContent_rptStudyPopulation_chkId_2')) // U.S. Populations
+                        || $(this).is($('#MainContent_rptStudyPopulation_chkId_3')) // International Populations
+                    ) {
+                        ToggleDiv($(this), $('#divHealthDisparity'));
+                    }
+                });
 
+            // -- If exisitng project, adds ability to add grant, invoice, or survey. -- \\
             var projectId = $("#MainContent_lblProjectId").text();
             if (projectId > 0) {
                 $("#MainContent_btnAddInvoice").prop("disabled", false);
@@ -1172,11 +1201,15 @@
 
         var biostatNS = biostatNS || {};
 
+        // TableToggle - Makes "other" appear if "other" checkboxes exists.
+        //               Also creates and adds bitsum for each checkbox checked.
         biostatNS.TableToggle = function (tableId) {
             var _table = $(tableId),
                 _textOther = _table.next().find(":input[name$='Other']"),
                 _textBitSum = _table.next().find(":input[name$='BitSum']");
 
+            // If the "Other" checkbox is checked, then then the "other" field is displayed.
+            // The bit sum total is added from the bit value of the checkbox.
             return {
                 Click: function (e) {
                     var _bitSum = 0;
@@ -1187,14 +1220,68 @@
                             _name = $(this).eq(0).text().trim();
 
                         if (_name == 'Other' || _name == 'International Populations') {
+
+                            
                             if (_checkBox.is(':checked')) {
                                 _textOther.show();
+
+                                if (tableId = '#tblGrant')
+                                {
+                                    _textOther.parent().find('label').show();
+                                }
                             }
                             else {
                                 _textOther.hide();
                                 $(_textOther).val('');
+
+                                if (tableId = '#tblGrant')
+                                {
+                                    _textOther.parent().find('label').hide();
+                                }
+
                             }
                         }
+
+                        if (_name == 'Department Funding') {
+                            
+
+                            if (_checkBox.is(':checked')) {
+                                //ddldropdown show
+                                $('#MainContent_ddlDepartmentFunding').show();
+                                $('#MainContent_ddlDepartmentFunding').parent().find('label').show();
+
+
+                                $('#MainContent_ddlDepartmentFunding').change(function () {
+                                    var selectedVal = this.value;
+                                    //alert(selectedVal);
+                                    if (selectedVal == 96)
+                                    {
+                                        $('#MainContent_txtDeptFundOth').show();
+                                        $('#MainContent_txtDeptFundOth').parent().find('label').show();
+                                    }
+                                    else
+                                    {
+                                        $('#MainContent_txtDeptFundOth').val('');
+                                        $('#MainContent_txtDeptFundOth').hide();
+                                        $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+                                    }
+                                });
+
+
+                            }
+                            else {
+                                //ddldropdown hide
+                                $('#MainContent_ddlDepartmentFunding').val('');
+                                $('#MainContent_ddlDepartmentFunding').hide();
+                                $('#MainContent_ddlDepartmentFunding').parent().find('label').hide();
+
+                                $('#MainContent_txtDeptFundOth').val('');
+                                $('#MainContent_txtDeptFundOth').hide();
+                                $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+                            }
+
+                        }
+
 
                         if (_checkBox.is(':checked'))
                             _bitSum += parseInt(_bitValue, 10);
@@ -1213,7 +1300,7 @@
                 }
             }
         }
-
+        // Disables all checkboxes if checkbox choice "N/A" is selected.
         function ToggleTable(tbl, isNA) {
             tbl.find('td').each(function () {
                 var _checkBox = $(this).find(":input[name$='chkId']"),
@@ -1232,6 +1319,7 @@
             });
         }
 
+        // DatePicker - initializes date for date fields.
         biostatNS.DatePicker = function (ctrlId) {
             var ctl = ctrlId;
 
@@ -1255,6 +1343,7 @@
             }
         }
 
+        // -- Initializes view of projects -- \\
         function bindProjects() {
             //var piId = $("#MainContent_ddlPI").val();
             var filterPI = $("#MainContent_ddlPI :selected").text();
@@ -1323,6 +1412,16 @@
                 });
                 $('#MainContent_txtGrantOther').val('');
                 $('#MainContent_txtGrantOther').hide();
+                $('#MainContent_txtGrantOther').parent().find('label').hide();
+
+                $('#MainContent_ddlDepartmentFunding').val('');
+                $('#MainContent_ddlDepartmentFunding').hide();
+                $('#MainContent_ddlDepartmentFunding').parent().find('label').hide();
+
+                $('#MainContent_txtDeptFundOth').val('');
+                $('#MainContent_txtDeptFundOth').hide();
+                $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+
 
                 <%=ClientScript.GetPostBackEventReference(upPhase, "")%>
 
@@ -1368,6 +1467,7 @@
 
         }
 
+        // ToggleDiv - shows section if check; otherwise remain hidden.
         function ToggleDiv(checkBox, theDiv) {
             if (checkBox.is(":checked"))
                 theDiv.show();
@@ -1375,10 +1475,11 @@
                 theDiv.hide();
         }
 
-        function ToggleDiv4(checkBox1, checkBox2, checkBox3, checkBox4,  theDiv) {
-            if (checkBox1.is(":checked") 
-                || checkBox2.is(":checked") 
-                || checkBox3.is(":checked") 
+        // ToggleDiv4 - Same functionality as 'ToggleDiv' with ability to handle four checkboxes.
+        function ToggleDiv4(checkBox1, checkBox2, checkBox3, checkBox4, theDiv) {
+            if (checkBox1.is(":checked")
+                || checkBox2.is(":checked")
+                || checkBox3.is(":checked")
                 || checkBox4.is(":checked"))
                 theDiv.show();
             else
@@ -1403,7 +1504,7 @@
         }
 
 
-
+        // -- Unchecks other choices if choice is selected in specific section -- \\
         $("#MainContent_chkBiostat").change(function () {
             if (this.checked) {
                 $('#MainContent_chkBioinfo').prop('checked', false);
@@ -1451,7 +1552,7 @@
                 $('#MainContent_chkHealthDisparityNA').prop('checked', false);
             }
         });
-        
+
         $("#MainContent_chkHealthDisparityNo").change(function () {
             if (this.checked) {
                 $('#MainContent_chkHealthDisparityYes').prop('checked', false);

@@ -23,7 +23,10 @@ namespace ProjectManagement.Report
     /// @Maintenance/Revision History:
     ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
     ///  ------------------------------------------
-    ///  2018MAY14 - Jason Delos Reyes  -  Created 
+    ///  2018MAY14 - Jason Delos Reyes  -  Created Summary Report tab as a consolidation of RMATRIX Summary and Ola Hawaii summary
+    ///                                    tabs so both reports can be accessed through one view.
+    ///  2018MAY16 - Jason Delos Reyes  -  Revised Ola Hawaii paper pull to extract *all* papers instead.  Will not be using 
+    ///                                    Rpt_Paper_Ola stored procedure.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
@@ -245,7 +248,7 @@ namespace ProjectManagement.Report
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = grantId == 2 ? "Rpt_Paper_Ola" : "Rpt_Paper";
+            var cmdText =  "Rpt_Paper";
 
             try
             {

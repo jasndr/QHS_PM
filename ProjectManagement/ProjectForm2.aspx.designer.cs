@@ -472,6 +472,24 @@ namespace ProjectManagement {
         protected global::System.Web.UI.WebControls.Repeater rptGrant;
         
         /// <summary>
+        /// ddlDepartmentFunding control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDepartmentFunding;
+        
+        /// <summary>
+        /// txtDeptFundOth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtDeptFundOth;
+        
+        /// <summary>
         /// txtGrantOther control.
         /// </summary>
         /// <remarks>

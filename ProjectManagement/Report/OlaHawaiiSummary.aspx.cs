@@ -27,6 +27,8 @@ namespace ProjectManagement.Report
     ///  2018MAY14 - Jason Delos Reyes  -  Revised academic report table to improve pulling out courses, redirected publications and
     ///                                    abstracts to those with just Ola Hawaii acknowledgements, and pulled projects (all, as well as
     ///                                    health data and non-UH) that are only tied to Ola Hawaii.
+    ///  2018MAY16 - Jason Delos Reyes  -  Revised Ola Hawaii paper pull to extract *all* papers instead.  Will not be using 
+    ///                                    Rpt_Paper_Ola stored procedure.
     /// </summary>
     public partial class OlaHawaiiSummary : System.Web.UI.Page
     {
@@ -234,7 +236,7 @@ namespace ProjectManagement.Report
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = "Rpt_Paper_Ola";
+            var cmdText = "Rpt_Paper";
 
             try
             {
