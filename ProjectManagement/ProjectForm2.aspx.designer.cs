@@ -508,6 +508,51 @@ namespace ProjectManagement {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtGrantBitSum;
         
         /// <summary>
+        /// rptAkn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptAkn;
+        
+        /// <summary>
+        /// ddlAknDepartmentFunding control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAknDepartmentFunding;
+        
+        /// <summary>
+        /// txtAknDeptFundOth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtAknDeptFundOth;
+        
+        /// <summary>
+        /// txtAknOther control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtAknOther;
+        
+        /// <summary>
+        /// txtAknBitSum control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtAknBitSum;
+        
+        /// <summary>
         /// upPhase control.
         /// </summary>
         /// <remarks>

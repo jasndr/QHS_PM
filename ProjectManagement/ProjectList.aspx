@@ -228,7 +228,7 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading"><b>Investigator Pending Approval</b></div>
+            <div class="panel-heading"><b>Investigator Pending Review</b></div>
             <div class="panel-body">
                 <div>
                     <asp:GridView ID="GridViewPI" runat="server"
@@ -254,7 +254,7 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading"><b>Project Pending Approval</b></div>
+            <div class="panel-heading"><b>Project Pending Review</b></div>
             <div class="panel-body">
                 <div>
                     <asp:GridView ID="GridViewPending" runat="server"

@@ -631,6 +631,78 @@
                         </div>
                         <br />
 
+                        <h5>Acknowledgements</h5>
+                        <%--<br />--%>
+                        <div class="row">
+                            <div class="col-sm-11 text-left">
+                                <label class="control-label" style="text-align: left;">
+                                    Check all that apply, or indicate N/A.
+                                    <br />
+                                    <em style="font-weight: normal;">(This section is used to mark
+                                    entities to acknowledge, which may / may not be in addition to the source of funding.  Funding sources
+                                    have been checked by default; please check/uncheck necessary acknowledgements.)</em><br />
+                                </label>
+                            </div>
+                        </div>
+                        <%--<br />--%>
+                        <table class="table table-hover table-borderless" id="tblAkn">
+                            <tbody>
+                                <asp:Repeater ID="rptAkn" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 25%">
+                                                <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                                <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
+                                                <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                                <%# Eval("Name1") %>
+                                            </td>
+                                            <td style="width: 25%">
+                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
+                                                <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                                <%# Eval("Name2") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 25%">
+                                            <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                            <%--<asp:HiddenField ID="Id1" Value='<%#Eval("Id1")%>' runat="server" />--%>
+                                            <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                            <%# Eval("Name1") %>
+                                        </td>
+                                        <td style="width: 25%">
+                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                            <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
+                                            <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                            <%# Eval("Name2") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                        <div class="row" id="divAknDeptFund">
+                            <div class="col-sm-3 col-sm-offset-1">
+                                <label class="control-label" for="ddlAknDepartmentFunding">Department Funding</label>
+                                <asp:DropDownList ID="ddlAknDepartmentFunding" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-3">
+                                <label class="control-label" for="txtAknDeptFundOth">Department Funding - Other</label>
+                                <input class="form-control" type="text" name="txtAknDeptFundOth" id="txtAknDeptFundOth" runat="Server" />
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-3">
+                                <label class="control-label" for="txtAknOther">Other:</label>
+                                <input class="form-control" type="text" name="txtAknOther" id="txtAknOther" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control hidden" type="text" name="txtAknBitSum" id="txtAknBitSum" runat="Server" />
+                            </div>
+                        </div>
+                        <br />
+
                         <h5>Phase</h5>
                         <br />
                         <asp:UpdatePanel ID="upPhase" runat="server">
@@ -1097,6 +1169,14 @@
                     tGrant.Click(this.closest('table'));
                 });
 
+            var tAkn = new biostatNS.TableToggle(tblAkn);
+            tAkn.Click(tblAkn);
+            $('#tblAkn').on('click',
+                'input[type="checkbox"]',
+                function () {
+                    tAkn.Click(this.closest('table'));
+                });
+
             // -- Reveals hidden sections if certain choices are made -- \\
             ToggleDiv($('#MainContent_chkMentorYes'), $('#divMentor'));
             ToggleDiv($('#MainContent_chkPayingYes'), $('#divPayProject'));
@@ -1206,7 +1286,9 @@
         biostatNS.TableToggle = function (tableId) {
             var _table = $(tableId),
                 _textOther = _table.next().find(":input[name$='Other']"),
-                _textBitSum = _table.next().find(":input[name$='BitSum']");
+                _textBitSum = _table.next().find(":input[name$='BitSum']"),
+                _id = _table.attr('id');
+                
 
             // If the "Other" checkbox is checked, then then the "other" field is displayed.
             // The bit sum total is added from the bit value of the checkbox.
@@ -1221,11 +1303,12 @@
 
                         if (_name == 'Other' || _name == 'International Populations') {
 
+                            //alert(_id + ' is the table id');
                             
                             if (_checkBox.is(':checked')) {
                                 _textOther.show();
 
-                                if (tableId = '#tblGrant')
+                                if (_id == 'tblGrant' || _id == 'tblAkn')
                                 {
                                     _textOther.parent().find('label').show();
                                 }
@@ -1234,15 +1317,28 @@
                                 _textOther.hide();
                                 $(_textOther).val('');
 
-                                if (tableId = '#tblGrant')
+                                if (_id == 'tblGrant' || _id == 'tblAkn')
                                 {
                                     _textOther.parent().find('label').hide();
                                 }
-
+                                
                             }
                         }
 
-                        if (_name == 'Department Funding') {
+                        if (_id == 'tblGrant') {
+                            // find tblAkn
+                            var _tableAkn = $('#tblAkn');
+                            // if _checkbox is checked
+                            if (_checkBox.is(':checked')){
+                                // find checkbox where _name is tblAkn.checkbox.name
+                                var _sameChk = _tableAkn.find(":input[name='chkId']");
+                                _sameChk.prop('checked', true);
+                            }
+                                
+                            // for each checkbox, if _checkbox is checked and if tblGrant.Name = tblAkn.name
+                        }
+
+                        if (_name == 'Department Funding' && _id == 'tblGrant') {
                             
 
                             if (_checkBox.is(':checked')) {
@@ -1253,7 +1349,7 @@
 
                                 $('#MainContent_ddlDepartmentFunding').change(function () {
                                     var selectedVal = this.value;
-                                    //alert(selectedVal);
+                                    
                                     if (selectedVal == 96)
                                     {
                                         $('#MainContent_txtDeptFundOth').show();
@@ -1278,6 +1374,46 @@
                                 $('#MainContent_txtDeptFundOth').val('');
                                 $('#MainContent_txtDeptFundOth').hide();
                                 $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+                            }
+
+                        }
+
+                        if (_name == 'Department Funding' && _id == 'tblAkn') {
+                            
+
+                            if (_checkBox.is(':checked')) {
+                                //ddldropdown show
+                                $('#MainContent_ddlAknDepartmentFunding').show();
+                                $('#MainContent_ddlAknDepartmentFunding').parent().find('label').show();
+
+
+                                $('#MainContent_ddlAknDepartmentFunding').change(function () {
+                                    var selectedVal = this.value;
+                                    
+                                    if (selectedVal == 96)
+                                    {
+                                        $('#MainContent_txtAknDeptFundOth').show();
+                                        $('#MainContent_txtAknDeptFundOth').parent().find('label').show();
+                                    }
+                                    else
+                                    {
+                                        $('#MainContent_txtAknDeptFundOth').val('');
+                                        $('#MainContent_txtAknDeptFundOth').hide();
+                                        $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();
+                                    }
+                                });
+
+
+                            }
+                            else {
+                                //ddldropdown hide
+                                $('#MainContent_ddlAknDepartmentFunding').val('');
+                                $('#MainContent_ddlAknDepartmentFunding').hide();
+                                $('#MainContent_ddlAknDepartmentFunding').parent().find('label').hide();
+
+                                $('#MainContent_txtAknDeptFundOth').val('');
+                                $('#MainContent_txtAknDeptFundOth').hide();
+                                $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();
                             }
 
                         }
@@ -1421,6 +1557,21 @@
                 $('#MainContent_txtDeptFundOth').val('');
                 $('#MainContent_txtDeptFundOth').hide();
                 $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+
+                $('#tblAkn').find('td').each(function () {
+                    $(this).find(":input[name$='chkId']").prop('checked', false);
+                });
+                $('#MainContent_txtAknOther').val('');
+                $('#MainContent_txtAknOther').hide();
+                $('#MainContent_txtAknOther').parent().find('label').hide();
+
+                $('#MainContent_ddlAknDepartmentFunding').val('');
+                $('#MainContent_ddlAknDepartmentFunding').hide();
+                $('#MainContent_ddlAknDepartmentFunding').parent().find('label').hide();
+
+                $('#MainContent_txtAknDeptFundOth').val('');
+                $('#MainContent_txtAknDeptFundOth').hide();
+                $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();
 
 
                 <%=ClientScript.GetPostBackEventReference(upPhase, "")%>
@@ -1591,6 +1742,9 @@
                 $('#MainContent_chkCreditToBioinfo').prop('checked', false);
             }
         });
+
+        //------------------------------------------------------------------
+
 
     </script>
 </asp:Content>

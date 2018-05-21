@@ -400,6 +400,20 @@ namespace ProjectManagement
                 validateResult.Append("Please indicate \"Credit To\" field. \\n");
             }
 
+            int grantBitSum = 0;
+            Int32.TryParse(txtGrantBitSum.Value, out grantBitSum);
+            if (grantBitSum <= 0)
+            {
+                validateResult.Append("Funding source is required. \\n");
+            }
+
+            int aknBitSum = 0;
+            Int32.TryParse(txtAknBitSum.Value, out aknBitSum);
+            if (aknBitSum <= 0)
+            {
+                validateResult.Append("Acknowledgements are required. \\n");
+            }
+
             return validateResult.ToString();
         }
 
@@ -521,6 +535,7 @@ namespace ProjectManagement
                                 .ToDictionary(c => c.BitValue, c => c.Name);
                 
                 BindTable2(dropDownSource, rptGrant);
+                BindTable2(dropDownSource, rptAkn); // Duplicate for acknowledgements 
 
                 /// Populates Funding Source > Department Funding dropdown.
                 dropDownSource = db.JabsomAffils
@@ -531,6 +546,7 @@ namespace ProjectManagement
                                  .ToDictionary(c => c.Id, c => c.Name);
 
                 PageUtility.BindDropDownList(ddlDepartmentFunding, dropDownSource, String.Empty);
+                PageUtility.BindDropDownList(ddlAknDepartmentFunding, dropDownSource, String.Empty); // Duplicate for acknowledgements
 
 
                 /// Only Admin are allowed to approve (review) projects.
@@ -678,6 +694,12 @@ namespace ProjectManagement
             ddlDepartmentFunding.SelectedValue = project.GrantDepartmentFundingType > 0 ? project.GrantDepartmentFundingType.ToString() 
                                                                                         : string.Empty;
             txtDeptFundOth.Value = project.GrantDepartmentFundingOther;
+
+            BindTable(rptAkn, (int)project.AknBitSum);
+            txtAknOther.Value = project.AknOther;
+            ddlAknDepartmentFunding.SelectedValue = project.AknDepartmentFundingType > 0 ? project.AknDepartmentFundingType.ToString()
+                                                                                         : string.Empty;
+            txtAknDeptFundOth.Value = project.AknDepartmentFundingOther;
 
             //var projectPhase = project.ProjectPhase;
             //BindPhase(projectPhase);
@@ -1197,6 +1219,10 @@ namespace ProjectManagement
                 GrantOther = "",
                 GrantDepartmentFundingType = 0,
                 GrantDepartmentFundingOther = "",
+                AknBitSum = 0,
+                AknOther = "",
+                AknDepartmentFundingType = 0,
+                AknDepartmentFundingOther = "",
                 //RequestRcvdDate = (DateTime?)null,
                 IsJuniorPI = (bool?)null,
                 HasMentor = (bool?)null,
@@ -1245,6 +1271,8 @@ namespace ProjectManagement
                 serviceBitSum = 0,
                 grantBitSum = 0,
                 grantDepartmentFundingType = 0,
+                aknBitSum = 0,
+                aknDepartmentFundingType = 0,
                 rmatrixNum = 0,
                 olaHawaiiNum = 0;
                 
@@ -1276,6 +1304,10 @@ namespace ProjectManagement
                 GrantOther = txtGrantOther.Value,
                 GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,
                 GrantDepartmentFundingOther = txtDeptFundOth.Value,
+                AknBitSum = int.TryParse(txtAknBitSum.Value, out aknBitSum) ? aknBitSum : 0,
+                AknOther = txtAknOther.Value,
+                AknDepartmentFundingType = Int32.TryParse(ddlAknDepartmentFunding.SelectedValue, out aknDepartmentFundingType) ? aknDepartmentFundingType : 0,
+                AknDepartmentFundingOther = txtAknDeptFundOth.Value,
                 //RequestRcvdDate = DateTime.TryParse(txtRequestRcvdDate.Text, out dtRequestRcvdDate) ? dtRequestRcvdDate : (DateTime?)null,
                 IsJuniorPI = chkJuniorPIYes.Checked, //(bool?)null,
                 HasMentor = chkMentorYes.Checked,

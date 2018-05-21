@@ -12,7 +12,7 @@
     <hr />    
     <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
     <div class="panel panel-default">
-    <div class="panel-heading">BQHS Faculty and Staff</div>
+    <div class="panel-heading">QHS Faculty and Staff</div>
         <div class="panel-body">
             <div>
                 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"
