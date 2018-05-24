@@ -292,6 +292,33 @@ namespace ProjectManagement {
         protected global::System.Web.UI.WebControls.Repeater rptService;
         
         /// <summary>
+        /// chkLetterOfSupportYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupportYes;
+        
+        /// <summary>
+        /// chkLetterOfSupportNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupportNo;
+        
+        /// <summary>
+        /// chkLetterOfSupportNA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupportNA;
+        
+        /// <summary>
         /// txtServiceOther control.
         /// </summary>
         /// <remarks>
@@ -625,13 +652,22 @@ namespace ProjectManagement {
         protected global::System.Web.UI.WebControls.TextBox txtRmatrixSubDate;
         
         /// <summary>
-        /// chkRmatrixReport control.
+        /// chkReportToRmatrix control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkRmatrixReport;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkReportToRmatrix;
+        
+        /// <summary>
+        /// chkReportToOlaHawaii control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkReportToOlaHawaii;
         
         /// <summary>
         /// chkIsOlaHawaii control.

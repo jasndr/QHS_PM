@@ -81,7 +81,7 @@
                                         <ul class="nav child_menu">
                                             <li><a runat="server" href="~/PI" visible="false" id="PILink" data-toggle="menu">Principal Investigator</a></li>
                                             <li><a runat="server" href="~/ProjectForm2" visible="false" id="ProjectLink">Project</a></li>
-                                            <%--<li><a runat="server" href="#" visible="false" id="ProjectLink">Project<span class="fa fa-chevron-down"></span></a>
+                                        <%--<li><a runat="server" href="#" visible="false" id="ProjectLink">Project<span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
                                                     <li class="sub_menu"><a runat="server" href="~/ProjectForm2">Form</a>
                                                     </li>
@@ -92,6 +92,7 @@
                                             <li>
                                                 <a runat="server" href="~/TimeEntry" visible="false" id="TimeEntryLink" data-toggle="menu">TimeEntry</a>
                                             </li>
+                                            <li><a runat="server" href="~/ProjectList" visible="false" id="ProjectList">PI / Project Review List</a></li>
                                         </ul>
                                     </li>
                                     <li><a visible="false" id="AdminLink"><i class="fa fa-table"></i>Tracking <span class="fa fa-chevron-down"></span></a>
@@ -108,6 +109,7 @@
                                             <li id="li_taskform1">
                                                 <a runat="server" href="~/Tracking/TaskForm">Task</a>
                                             </li>
+
                                         </ul>
                                     </li>
                                     <li><a><i class="fa fa-bar-chart-o"></i>Data Presentation <span class="fa fa-chevron-down"></span></a>

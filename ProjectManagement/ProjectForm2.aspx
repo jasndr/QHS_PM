@@ -428,7 +428,21 @@
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" id="divLetterOfSupport">
+                                <div class="col-sm-3">
+                                    <label for="chkLetterOfSupportYes">Letter of Support submitted with grant?</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkLetterOfSupportYes" runat="server" Text="Yes"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkLetterOfSupportNo" runat="server" Text="No"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkLetterOfSupportNA" runat="server" Text="N/A"></asp:CheckBox>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
                                 <input class="form-control" type="text" name="txtServiceOther" id="txtServiceOther" runat="Server" />
                             </div>
                             <div class="col-sm-2">
@@ -882,8 +896,14 @@
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-sm-5">
+                            <%--<div class="col-sm-5">
                                 <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
+                            </div>--%>
+                            <div class="col-sm-5">
+                                <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;Report to RMATRIX
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;Report to Ola Hawaii
                             </div>
                         </div>
                         <br />
@@ -1189,6 +1209,8 @@
                 $('#MainContent_rptStudyPopulation_chkId_2'),
                 $('#MainContent_rptStudyPopulation_chkId_3'),
                 $('#divHealthDisparity'));
+
+            ToggleDiv($('#MainContent_rptService_chkId_3'), $('#divLetterOfSupport'));
             
 
             // -- Hides/shows certain sections if certain selections are made -- \\
@@ -1241,6 +1263,14 @@
                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_3')) // International Populations
                     ) {
                         ToggleDiv($(this), $('#divHealthDisparity'));
+                    }
+                });
+
+            $('#tblService').on('click',
+                'input[type="checkbox"]',
+                function () {
+                    if ($(this).is($('#MainContent_rptService_chkId_3'))) {
+                        ToggleDiv($(this), $('#divLetterOfSupport'));
                     }
                 });
 
@@ -1325,15 +1355,48 @@
                             }
                         }
 
+                        // check equivalent checkbox in "funding source (grant)" section to "acknowledgements" section.
                         if (_id == 'tblGrant') {
                             // find tblAkn
-                            var _tableAkn = $('#tblAkn');
+                            var _tableAkn = $('#tblAkn'),
+                                _aknBitSum = 0;
                             // if _checkbox is checked
-                            if (_checkBox.is(':checked')){
+                            _checkBox.change(function () {
+                                if (_checkBox.is(':checked')){
                                 // find checkbox where _name is tblAkn.checkbox.name
-                                var _sameChk = _tableAkn.find(":input[name='chkId']");
-                                _sameChk.prop('checked', true);
-                            }
+                                    _tableAkn.find('td').each(function () {
+                                        var _aknCheckBox = $(this).find(":input[name$='chkId']"),
+                                            _aknBitValue = $(this).find(":input[name$='BitValue']").val(),
+                                            _aknName = $(this).eq(0).text().trim();
+                                        if (_name == _aknName) {
+                                            _aknCheckBox.prop('checked', true);
+
+                                            if (_aknName == 'Department Funding') {
+                                                $('#MainContent_ddlAknDepartmentFunding').show();
+                                                $('#MainContent_ddlAknDepartmentFunding').parent().find('label').show();
+
+                                            }
+                                            if (_aknName == 'Other') {
+                                                $('#MainContent_txtAknOther').show();
+                                                $('#MainContent_txtAknOther').parent().find('label').show();
+                                            }
+
+                                        }
+                                        // update bitsum for calculation
+                                        if (_aknCheckBox.is(':checked'))
+                                           _aknBitSum += parseInt(_aknBitValue, 10);
+
+                                        if (_aknName == 'N/A' && _aknCheckBox.is(':checked')) {
+                                            ToggleTable(_tableAkn, true);
+                                        }
+                                        else if (_aknBitSum == 0) {
+                                            ToggleTable(_tableAkn, false);
+                                        }
+
+                                    });
+                                }
+                            });
+                            
                                 
                             // for each checkbox, if _checkbox is checked and if tblGrant.Name = tblAkn.name
                         }
@@ -1362,6 +1425,17 @@
                                         $('#MainContent_txtDeptFundOth').parent().find('label').hide();
                                     }
                                 });
+
+                                if ($('#MainContent_ddlDepartmentFunding').val() == 96) {
+                                    $('#MainContent_txtDeptFundOth').show();
+                                    $('#MainContent_txtDeptFundOth').parent().find('label').show();
+                                }
+                                else
+                                {
+                                    $('#MainContent_txtDeptFundOth').val('');
+                                    $('#MainContent_txtDeptFundOth').hide();
+                                    $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+                                }
 
 
                             }
@@ -1402,6 +1476,15 @@
                                         $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();
                                     }
                                 });
+
+                                if ($('#MainContent_ddlAknDepartmentFunding').val() == 96) {
+                                    $('#MainContent_txtAknDeptFundOth').show();
+                                    $('#MainContent_txtAknDeptFundOth').parent().find('label').show();
+                                } else {
+                                    $('#MainContent_txtAknDeptFundOth').val('');
+                                    $('#MainContent_txtAknDeptFundOth').hide();
+                                    $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();
+                                }
 
 
                             }
@@ -1593,7 +1676,14 @@
                     if (chkBox.is(':checked')) {
                         chkbox.prop('checked', false);
                     }
-                })
+                });
+
+                $('#divLetterOfSupport > div').each(function () {
+                    var chkBox = $(this).find('input[type="checkbox"]');
+                    if (chkBox.is(':checked')) {
+                        chkBox.prop('checked', false);
+                    }
+                });
 
                 $('#MainContent_txtMentorFirstName').val('');
                 $('#MainContent_txtMentorLastName').val('');
@@ -1601,7 +1691,9 @@
                 $('#divMentor').hide();
 
                 $('#MainContent_chkIsRmatrix').prop('checked', false);
-                $('#MainContent_chkRmatrixReport').prop('checked', false);
+                //$('#MainContent_chkRmatrixReport').prop('checked', false);
+                $('#MainContent_chkReportToRmatrix').prop('checked', false);
+                $('#MainContent_chkReportToOlaHawaii').prop('checked', false);
 
                 $('#MainContent_txtRmatrixNum').val('');
                 $('#MainContent_txtRmatrixSubDate').val('');
@@ -1716,7 +1808,29 @@
                 $('#MainContent_chkHealthDisparityYes').prop('checked', false);
                 $('#MainContent_chkHealthDisparityNo').prop('checked', false);
             }
-        })
+        });
+
+        //-----------------------------------------------------------------
+        $("#MainContent_chkLetterOfSupportYes").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkLetterOfSupportNo').prop('checked', false);
+                $('#MainContent_chkLetterOfSupportNA').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkLetterOfSupportNo").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkLetterOfSupportYes').prop('checked', false);
+                $('#MainContent_chkLetterOfSupportNA').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkLetterOfSupportNA").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkLetterOfSupportYes').prop('checked', false);
+                $('#MainContent_chkLetterOfSupportNo').prop('checked', false);
+            }
+        });
 
         //-----------------------------------------------------------------
 

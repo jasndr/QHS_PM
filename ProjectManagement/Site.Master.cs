@@ -20,6 +20,9 @@ namespace ProjectManagement
     ///  2018MAY14 - Jason Delos Reyes  -  Added Ola Hawaiʻi Summary Report tab under "Data Presentations". Also added
     ///                                    comments/documentation to improve legibility on data structure view and
     ///                                    management.
+    ///  2018MAY21 - Jason Delos Reyes  -  Addded PI/Project Review List under "Forms" that is only accessible to "Admin"
+    ///                                    accounts for easier tracking purposes (instead of just relying on emails to 
+    ///                                    see a list of unreviewed PI and Project entries.).
     /// </summary>
     public partial class SiteMaster : MasterPage
     {
@@ -100,6 +103,7 @@ namespace ProjectManagement
                 //PaperLink.Visible = true;
                 //AdminLink.Visible = true;
                 TimeEntryLink.Visible = true;
+                ProjectList.Visible = true;
                 ReportLink1.Visible = true;
                 ReportLink2.Visible = true;
                 ReportLink3.Visible = true;

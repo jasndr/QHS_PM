@@ -479,6 +479,8 @@
           <Property Name="AknOther" Type="nvarchar" MaxLength="255" />
           <Property Name="AknDepartmentFundingType" Type="int" />
           <Property Name="AknDepartmentFundingOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="IsLetterOfSupport" Type="tinyint" />
+          <Property Name="IsReportOlaHawaii" Type="bit" />
         </EntityType>
         <EntityType Name="ProjectBioStat">
           <Key>
@@ -3968,6 +3970,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="AknOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="AknDepartmentFundingType" Type="Int32" />
           <Property Name="AknDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsLetterOfSupport" Type="Byte" />
+          <Property Name="IsReportOlaHawaii" Type="Boolean" />
         </EntityType>
         <EntityType Name="ProjectField">
           <Key>
@@ -5096,6 +5100,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="Project2">
             <EntityTypeMapping TypeName="ProjectTracker.Project2">
               <MappingFragment StoreEntitySet="Project2">
+                <ScalarProperty Name="IsReportOlaHawaii" ColumnName="IsReportOlaHawaii" />
+                <ScalarProperty Name="IsLetterOfSupport" ColumnName="IsLetterOfSupport" />
                 <ScalarProperty Name="AknDepartmentFundingOther" ColumnName="AknDepartmentFundingOther" />
                 <ScalarProperty Name="AknDepartmentFundingType" ColumnName="AknDepartmentFundingType" />
                 <ScalarProperty Name="AknOther" ColumnName="AknOther" />

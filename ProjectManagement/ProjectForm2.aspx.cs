@@ -54,6 +54,9 @@ namespace ProjectManagement
     ///  2018APR26 - Jason Delos Reyes  -  Added Ola Hawaii checkboxes and fields to keep track of Ola Hawaii Requests.
     ///  2018APR30 - Jason Delos Reyes  -  Added Health disparity options for "Study Population" section.
     ///  2018MAY16 - Jason Delos Reyes  -  Made "Project Type" and "Credit To" checkboxes required fields.
+    ///  2018MAY24 - Jason Delos Reyes  -  Replaced "Do not report" button with "Report to RMATRIX
+    ///                                    (stored values remain the same: 0 is report, 1 is do not report).
+    ///                                    Also made equivalent button for Ola Hawaii ("Report to Ola Hawaii").
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -379,7 +382,7 @@ namespace ProjectManagement
             {
                 if ((studyPopulationBitSum != 32 && studyPopulationBitSum > 0) && (!chkHealthDisparityYes.Checked && !chkHealthDisparityNo.Checked && !chkHealthDisparityNA.Checked))
                 {
-                    validateResult.Append("Study population >> Health disparity is required since study population was specifed");
+                    validateResult.Append("Study population >> Health disparity is required since study population is specifed.");
                 }
             }
 
@@ -388,6 +391,12 @@ namespace ProjectManagement
             if (serviceBitSum <= 0)
             {
                 validateResult.Append("Service is required. \\n");
+            } else
+            {
+                if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked && !chkLetterOfSupportNA.Checked))
+                {
+                    validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified.");
+                }
             }
             
             if (!chkBiostat.Checked && !chkBioinfo.Checked)
@@ -786,7 +795,9 @@ namespace ProjectManagement
                 chkIsRmatrix.Checked = false;
             }
 
-            chkRmatrixReport.Checked = project.IsRmatrixReport.HasValue ? (bool)project.IsRmatrixReport : false;
+            //chkRmatrixReport.Checked = project.IsRmatrixReport.HasValue ? (bool)project.IsRmatrixReport : false;
+            chkReportToRmatrix.Checked = project.IsRmatrixReport == true ? false : true;
+            chkReportToOlaHawaii.Checked = project.IsReportOlaHawaii == true ? false : true;
 
             if (project.IsOlaHawaiiRequest.HasValue)
             {
@@ -798,7 +809,6 @@ namespace ProjectManagement
                 chkRequestTypeRfunded.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Rfunded;
                 chkRequestTypePilotPI.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.PilotPI;
                 chkRequestTypeOther.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Other;
-              
 
             }
             else
@@ -806,12 +816,18 @@ namespace ProjectManagement
                 chkIsOlaHawaii.Checked = false;
             }
 
-
             if (project.IsHealthDisparity.HasValue)
             {
                 chkHealthDisparityYes.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.Yes;
                 chkHealthDisparityNo.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.No;
                 chkHealthDisparityNA.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.NA;
+            }
+
+            if (project.IsLetterOfSupport.HasValue)
+            {
+                chkLetterOfSupportYes.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.Yes;
+                chkLetterOfSupportNo.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.No;
+                chkLetterOfSupportNA.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.NA;
             }
            
             
@@ -1215,6 +1231,7 @@ namespace ProjectManagement
                 IsHealthDisparity = 0,
                 ServiceBitSum = 0,
                 ServiceOther = "",
+                IsLetterOfSupport = 0,
                 GrantBitSum = 0,
                 GrantOther = "",
                 GrantDepartmentFundingType = 0,
@@ -1300,6 +1317,7 @@ namespace ProjectManagement
                 IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)HealthDisparityType.Yes : chkHealthDisparityNo.Checked ? (byte)HealthDisparityType.No : chkHealthDisparityNA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
+                IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : chkLetterOfSupportNA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
                 GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,
@@ -1318,7 +1336,9 @@ namespace ProjectManagement
                 IsPilot = chkPilotYes.Checked,
                 IsPaid = chkPayingYes.Checked,
                 IsRmatrixRequest = chkIsRmatrix.Checked,
-                IsRmatrixReport = chkRmatrixReport.Checked,
+                //IsRmatrixReport = chkRmatrixReport.Checked
+                IsRmatrixReport = chkReportToRmatrix.Checked ? false : true,
+                IsReportOlaHawaii = chkReportToOlaHawaii.Checked ? false : true,
                 TypeOfPayment = txtPayProject.Value,
                 RmatrixNum = Int32.TryParse(txtRmatrixNum.Value, out rmatrixNum) ? rmatrixNum : (Int32?)null,
                 RmatrixSubDate = DateTime.TryParse(txtRmatrixSubDate.Text, out dtRmatrixSubDate) ? dtRmatrixSubDate : (DateTime?)null,
