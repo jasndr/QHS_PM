@@ -235,7 +235,7 @@
                         </asp:DropDownList>
                     </div>
                     <div class="col-xs-6 col-md-3">
-                        BQHS Faculty and Staff
+                        QHS Faculty and Staff
                         <asp:DropDownList ID="ddlBiostat" runat="server" CssClass="form-control">
                         </asp:DropDownList>
                     </div>
@@ -555,7 +555,7 @@
                             <div class="row">
                                 <div class="col-xs-6 col-md-6">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading">BQHS Faculty and Staff</div>
+                                        <div class="panel-heading">QHS Faculty and Staff</div>
                                         <div class="panel-body">
                                             <asp:GridView ID="GridViewBioStat" runat="server" AutoGenerateColumns="False" class="table table-bordered table-hover">
                                                 <Columns>

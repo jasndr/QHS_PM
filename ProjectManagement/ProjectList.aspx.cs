@@ -12,6 +12,21 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement
 {
+    /// @File: ProjectList.aspx.cs
+    /// @FrontEnd: ProjectList.aspx
+    /// @Author: Yang Rui
+    /// @Summary: List of pending *new* investigators and projects entered into the tracking system that need to be reviewed
+    ///           by the QHS Tracking Team before allowing users to begin entering hours for a project currently under review.
+    ///           This page is only visible to the "Admin" user group.  An email already alerts users about these pending items,
+    ///           though the ProjectList page can be used to keep track of those that have not yet been approved by the tracking
+    ///           team already.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018JUN25 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///   
     public partial class ProjectList : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
@@ -21,12 +36,19 @@ namespace ProjectManagement
                 BindControl();
             }
 
+            // "Approved (Reviewed)" Project List.
+            // *No longer being used due to a redundancy
+            //  of an approval list if you only need a "pending" list.*
             if (!Page.User.Identity.Name.Equals("yrui"))
             {
                 divProjectList.Style["display"] = "none";
             }
         }
 
+        /// <summary>
+        /// Initialize empty gridview for list of pending investigators and/or projects to review by the tracking team.
+        /// </summary>
+        /// <param name="gv">Given gridview project.</param>
         private void GridViewBindEmpty(GridView gv)
         {
             DataTable dt = new DataTable("emptyTable");
@@ -53,25 +75,33 @@ namespace ProjectManagement
             gv.Rows[0].Cells.Clear();
         }
       
+        /// <summary>
+        /// Obtains a list newly-entered investigators and projects and binds them into a separate tables
+        /// for review by the QHS Tracking Team.
+        /// </summary>
         private void BindControl()
         {
             GridViewBindEmpty(GridViewProject); 
 
             using (ProjectTrackerContainer context = new ProjectTrackerContainer())
             {
+                // List of pending Investigators to review by QHS Tracking Team.
                 var query = context.Invests
                            .Join(context.InvestStatus, i => i.InvestStatusId, s => s.Id,
                                    (i, s) => new { i.Id, i.FirstName, i.LastName, i.Email, i.Phone, s.StatusValue, i.IsApproved })
                            .Where(d => d.Id > 0 && !d.IsApproved)
                            .OrderBy(d => d.Id);
 
+                // Bind list of pending Investigators to table.
                 GridViewPI.DataSource = query.ToList();
                 GridViewPI.DataBind();
 
+                // List of pending Projects to review by QHS Tracking Team.
                 var pending = context.Project2
                             .Join(context.Invests, p => p.Invests.Id, i => i.Id, ((p, i) => new { p.Id, p.Title, p.InitialDate, p.IsApproved, i.FirstName, i.LastName}))
                             .Where(a => a.IsApproved == false && a.Id > 0);
 
+                // Binds list of pending Projects to table.
                 GridViewPending.DataSource = pending.ToList();
                 GridViewPending.DataBind();
 
@@ -101,6 +131,11 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Save button to save "Client Request" box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             if (chkCompleted.Checked)
@@ -128,6 +163,11 @@ namespace ProjectManagement
             rptClientRqst.DataBind();
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Ability to edit "Client Request" form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptClientRqst_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
@@ -152,6 +192,10 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Initiates the client request table with the information from the database.
+        /// </summary>
+        /// <param name="rqst"></param>
         private void BindEditModal(ClientRequest rqst)
         {
             DateTime dt;
@@ -182,6 +226,11 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Obtains "Client Request" entries based on request ID provided.
+        /// </summary>
+        /// <param name="rqstId">Referred Client Request Id.</param>
+        /// <returns></returns>
         private ClientRequest GetClientRequestById(int rqstId)
         {
             ClientRequest myRqst;
@@ -243,6 +292,10 @@ namespace ProjectManagement
             return myRqst;
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Obtains all "Client Request" entries.
+        /// </summary>
+        /// <returns></returns>
         private DataTable GetClientRqstAll()
         {
             DataTable dt = new DataTable("clientRqstTable");
@@ -353,6 +406,11 @@ namespace ProjectManagement
             return Convert.ToInt32(Math.Ceiling((double)count / 10));
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Rendering "Approved Projects" view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewProject_PreRender(object sender, EventArgs e)
         {
             GridView gv = (GridView)sender;
@@ -369,6 +427,13 @@ namespace ProjectManagement
         //    //LoadGridData();
         //}
 
+        /// <summary>
+        /// Provides control on "Edit" button. E.g., redirects users to Project form of selected row
+        /// so that the tracking team is able to click the "Reviewed" button after review.
+        /// The same functionality is true when needing to review investigators/PI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewProject_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))
@@ -384,11 +449,23 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// (Currently NOT being used). Adds ability to "add" a project to the tracking system.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/ProjectForm2?Id=" + -1);
         }
 
+        /// <summary>
+        /// Allows users to tracking team to go into the pending project, review the newly-entered project,
+        /// and check off the "Reviewed" checkbox for approval to allow users to enter hours for the specific
+        /// project.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewPending_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))
@@ -404,6 +481,13 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Through the "Edit button, allows users (mainly tracking team) to view the list of 
+        /// Investigators/PI's and click the "Reviewed" to mark that it has been viewed and
+        /// reviewed by the QHS Tracking Team for clean data entry.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewPI_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))

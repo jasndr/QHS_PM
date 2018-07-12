@@ -57,6 +57,9 @@ namespace ProjectManagement
     ///  2018MAY24 - Jason Delos Reyes  -  Replaced "Do not report" button with "Report to RMATRIX
     ///                                    (stored values remain the same: 0 is report, 1 is do not report).
     ///                                    Also made equivalent button for Ola Hawaii ("Report to Ola Hawaii").
+    ///  2018JUL11 - Jason Delos Reyes  -  Made "Report to RMATRIX" and "Report to Ola Hawaii" checkboxes pre-checked
+    ///                                    in code behind (since most project-entry is by non-admin) as this function
+    ///                                    is required for all current projects.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -79,9 +82,16 @@ namespace ProjectManagement
                 Int32.TryParse(projectId, out id);
 
                 // Auto-populate project if existing id specified.
-                if (id > 0)
-                    BindProject(id);                    
-
+                if (id > 0) { 
+                    BindProject(id);
+                }
+                else
+                {
+                    // Automatically check "Report to RMATRIX" 
+                    // and "Report to Ola Hawaii" when adding new project.
+                    chkReportToRmatrix.Checked = true;   // does not work!!!
+                    chkReportToOlaHawaii.Checked = true; // does not work!!!
+                }
                 // Second page is only available for Admin only.
                 if (!Page.User.IsInRole("Admin"))
                 {
@@ -382,7 +392,7 @@ namespace ProjectManagement
             {
                 if ((studyPopulationBitSum != 32 && studyPopulationBitSum > 0) && (!chkHealthDisparityYes.Checked && !chkHealthDisparityNo.Checked && !chkHealthDisparityNA.Checked))
                 {
-                    validateResult.Append("Study population >> Health disparity is required since study population is specifed.");
+                    validateResult.Append("Study population >> Health disparity is required since study population is specifed. \\n");
                 }
             }
 
@@ -395,7 +405,7 @@ namespace ProjectManagement
             {
                 if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked && !chkLetterOfSupportNA.Checked))
                 {
-                    validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified.");
+                    validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified. \\n");
                 }
             }
             
@@ -796,8 +806,8 @@ namespace ProjectManagement
             }
 
             //chkRmatrixReport.Checked = project.IsRmatrixReport.HasValue ? (bool)project.IsRmatrixReport : false;
-            chkReportToRmatrix.Checked = project.IsRmatrixReport == true ? false : true;
-            chkReportToOlaHawaii.Checked = project.IsReportOlaHawaii == true ? false : true;
+            chkReportToRmatrix.Checked = project.IsRmatrixReport == true || project.IsRmatrixReport == null ? false : true;
+            chkReportToOlaHawaii.Checked = project.IsReportOlaHawaii == true || project.IsReportOlaHawaii == null ? false : true;
 
             if (project.IsOlaHawaiiRequest.HasValue)
             {
@@ -1250,7 +1260,8 @@ namespace ProjectManagement
                 IsPilot = (bool?)null,
                 IsPaid = (bool?)null,
                 IsRmatrixRequest = (bool?)null,
-                IsRmatrixReport = (bool?)null,
+                IsRmatrixReport = false,   //(bool?)null,
+                IsReportOlaHawaii = false, //(bool?)null,
                 TypeOfPayment = "",
                 RmatrixNum = (Int32?)null,
                 RmatrixSubDate = (DateTime?)null,
@@ -1336,9 +1347,8 @@ namespace ProjectManagement
                 IsPilot = chkPilotYes.Checked,
                 IsPaid = chkPayingYes.Checked,
                 IsRmatrixRequest = chkIsRmatrix.Checked,
-                //IsRmatrixReport = chkRmatrixReport.Checked
-                IsRmatrixReport = chkReportToRmatrix.Checked ? false : true,
-                IsReportOlaHawaii = chkReportToOlaHawaii.Checked ? false : true,
+                IsRmatrixReport = Int32.TryParse(ddlProject.SelectedValue, out id) ? (chkReportToRmatrix.Checked ? false : true) : false,
+                IsReportOlaHawaii = Int32.TryParse(ddlProject.SelectedValue, out id) ? chkReportToOlaHawaii.Checked ? false : true : false,
                 TypeOfPayment = txtPayProject.Value,
                 RmatrixNum = Int32.TryParse(txtRmatrixNum.Value, out rmatrixNum) ? rmatrixNum : (Int32?)null,
                 RmatrixSubDate = DateTime.TryParse(txtRmatrixSubDate.Text, out dtRmatrixSubDate) ? dtRmatrixSubDate : (DateTime?)null,
@@ -1352,7 +1362,7 @@ namespace ProjectManagement
                 IsApproved = chkApproved.Checked,
                 Creator = User.Identity.Name,
                 CreationDate = DateTime.Now,
-                ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : chkBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)0 , // if biostat is checked, then biostat, otherwise bioinfo (even if also unchecked!!!)
+                ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : chkBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)0 , // if biostat is checked, then biostat, otherwise bioinfo (or 0 if unchecked).
                 CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : chkCreditToBoth.Checked ? (byte)ProjectType.Both : (byte)0 // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise if 'both', then both, otherwise nothing is checked (value of 0)
             };
 

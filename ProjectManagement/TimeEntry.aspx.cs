@@ -19,6 +19,32 @@ using Newtonsoft.Json.Linq;
 
 namespace ProjectManagement
 {
+    /// @File: TimeEntry.aspx.cs
+    /// @FrontEnd: TimeEntry.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Time Entry screen of Project Tracking System.
+    /// 
+    /// Serves as the screen in which users enter their project hours.  
+    /// 
+    /// In the "Project Phase" tab, users can select a project that
+    /// they are a part of, which will display the corresponding phases as well as estimated and spent hours for the specific project.
+    /// Users can then budget how many hours they will need to spend for the particular project based on the initial estimated hours.
+    /// 
+    /// Users will mainly enter their hours under the "Time Entry" portion of the Time entry page. Specific time entries will have its
+    /// corresponding project phase, service type, date of entry, the number of hours spent on the project, and the description of the
+    /// hours spent.
+    /// 
+    /// In the bottom-most section entitled "Time Entry Monthly Report", users will then see a list of their time entries for the 
+    /// current month. Users can traverse through time entries of previous months by selecting a month and year, then clicking on the 
+    /// "Get Report" button.
+    /// 
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018JUN20 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///              
     public partial class TimeEntry1 : System.Web.UI.Page
     {
         string _currentDate = DateTime.Now.ToShortDateString();
@@ -29,7 +55,7 @@ namespace ProjectManagement
         string strProjectId;
 
         /// <summary>
-        /// 
+        /// Loads Project Phase table with project phase and hours information if a project has been selected in the drop down.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -43,6 +69,11 @@ namespace ProjectManagement
             }
         }
         
+        /// <summary>
+        /// Populates "Time Entry Monthly Report" grid based on the user's time entry for the given month.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewTimeEntry_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -64,6 +95,11 @@ namespace ProjectManagement
 
         }
 
+        /// <summary>
+        ///  Prepares "edit time entry" view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewTimeEntry_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))
@@ -80,14 +116,20 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Loads "Edit time Entry" window.
+        /// </summary>
+        /// <param name="row">Corresponding row of specific time entry selected (by clicking on Project Id).</param>
         private void LoadEditTimeEntry(GridViewRow row)
         {
-            lblEditId.Text = ((Label)row.FindControl("lblId")).Text;
-            lblEditProjectId.Text = ((Label)row.FindControl("lblProjectId")).Text;
-            lblEditProject.Text = ((Label)row.FindControl("lblProjectName")).Text;
-            lblEditPhase.Text = ((Label)row.FindControl("lblPhase")).Text;
+            // "Time Entry Monthly Report" section
+            lblEditId.Text = ((Label)row.FindControl("lblId")).Text;               // Time Entry Id (Hidden)
+            lblEditProjectId.Text = ((Label)row.FindControl("lblProjectId")).Text; // Project Id 
+            lblEditProject.Text = ((Label)row.FindControl("lblProjectName")).Text; // Project (Title)
+            lblEditPhase.Text = ((Label)row.FindControl("lblPhase")).Text;         // Project Phase
 
             int projectId = 0;
+            //Auto-populates "Time Entry" Phase dropdown if a project was selected in the "Project Phase" dropdown.
             if (Int32.TryParse(lblEditProjectId.Text, out projectId))
             {
                 using (ProjectTrackerContainer context = new ProjectTrackerContainer())
@@ -96,6 +138,7 @@ namespace ProjectManagement
 
                     IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
 
+                    // Selects dropdown choices for the dropdown box under "Project Phase"
                     dropDownSource = context.ProjectPhase.Where(p => p.ProjectId == projectId && p.IsDeleted == false)
                                     .OrderBy(d => d.Id)
                                     .Select(x => new { x.Id, x.Name })
@@ -109,17 +152,20 @@ namespace ProjectManagement
                 }
             }
 
-            TextBoxEditDate.Text = Convert.ToDateTime(((Label)row.FindControl("lblDate")).Text).ToShortDateString();
-            TextBoxEditTime.Text = ((Label)row.FindControl("lblTime")).Text;
+            //["Edit Time Entry" pop-up window when a specific time entry needs to be edited]\\
+          //||                                                                               ||\\
+            TextBoxEditDate.Text = Convert.ToDateTime(((Label)row.FindControl("lblDate")).Text).ToShortDateString(); // Date
+            TextBoxEditTime.Text = ((Label)row.FindControl("lblTime")).Text;                    // Time (Hours to track)
 
-            TextBoxEditDesc.Text = ((Label)row.FindControl("lblDesc")).Text;
+            TextBoxEditDesc.Text = ((Label)row.FindControl("lblDesc")).Text;                    // Description 
 
             string serviceType = ((Label)row.FindControl("lblServiceType")).Text;
-            ddlEditServiceType.ClearSelection();
-            ddlEditServiceType.Items.FindByText(serviceType).Selected = true;
+            ddlEditServiceType.ClearSelection();                                                // Sets dropdown selection of 
+            ddlEditServiceType.Items.FindByText(serviceType).Selected = true;                   // "Service Type"
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
+            //Display's "Edit Time Entry" window
             sb.Append(@"<script type='text/javascript'>");
             sb.Append("$('#editModal').modal('show');");
             sb.Append(@"</script>");
@@ -317,14 +363,19 @@ namespace ProjectManagement
             //BindGridView();
         }
 
+        /// <summary>
+        /// Populates / updates "Time Entry Monthly Report" when clicking "Get Report" button, selected all time entries
+        /// for the selected month and year.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnMonthly_Click(Object sender, EventArgs e)
         {
             BindGridView();
         }
 
         /// <summary>
-        /// Populates "edit time entry" view with the previously-entered information from
-        /// from the database --or-- prepares new form for entry.
+        /// Populates "Time Entry Monthly Report" with the time entries for the current or selected month upon clicking "Get Report".
         /// </summary>
         private void BindGridView()
         {
@@ -721,9 +772,9 @@ namespace ProjectManagement
         //}        
 
         /// <summary>
-        /// 
+        /// Loads the "Project Phase" table if a project has been specified in the initial drop down.
         /// </summary>
-        /// <param name="projectId"></param>
+        /// <param name="projectId">Project being referred to.</param>
         private void BindControl(string projectId)
         {
             string userName = Page.User.Identity.Name;
@@ -916,6 +967,13 @@ namespace ProjectManagement
         //    gvPhase.DataBind();
         //}
 
+
+        /// <summary>
+        /// CURRENTLY NOT BEING USED; SEE BindGridView().  Creates Phase table under "Project Phase" section. 
+        /// </summary>
+        /// <param name="phases"></param>
+        /// <param name="hasRow"></param>
+        /// <returns></returns>
         private DataTable CreatePhaseTable(ICollection<ProjectPhase> phases, bool hasRow)
         {
             DataTable dt = new DataTable();
@@ -953,6 +1011,7 @@ namespace ProjectManagement
             return dt;
         }
 
+        // 
         protected void gvPhase_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)

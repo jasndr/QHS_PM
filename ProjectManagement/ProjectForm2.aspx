@@ -900,7 +900,7 @@
                                 <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
                             </div>--%>
                             <div class="col-sm-5">
-                                <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;Report to RMATRIX
+                                <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" checked />&nbsp;Report to RMATRIX
                             </div>
                             <div class="col-sm-5">
                                 <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;Report to Ola Hawaii
