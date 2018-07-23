@@ -76,6 +76,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtTitle;
         
         /// <summary>
+        /// txtAudience control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtAudience;
+        
+        /// <summary>
         /// txtStartDate control.
         /// </summary>
         /// <remarks>

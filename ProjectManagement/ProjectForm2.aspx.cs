@@ -60,6 +60,9 @@ namespace ProjectManagement
     ///  2018JUL11 - Jason Delos Reyes  -  Made "Report to RMATRIX" and "Report to Ola Hawaii" checkboxes pre-checked
     ///                                    in code behind (since most project-entry is by non-admin) as this function
     ///                                    is required for all current projects.
+    ///  2018JUL23 - Jason Delos Reyes  -  Added "Admin Review Email" script to allows users to be notified when their
+    ///                                    project has been reviewed by the tracking team and that they are able
+    ///                                    to start entering their hours for a project.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -82,16 +85,10 @@ namespace ProjectManagement
                 Int32.TryParse(projectId, out id);
 
                 // Auto-populate project if existing id specified.
-                if (id > 0) { 
+                if (id > 0) 
                     BindProject(id);
-                }
-                else
-                {
-                    // Automatically check "Report to RMATRIX" 
-                    // and "Report to Ola Hawaii" when adding new project.
-                    chkReportToRmatrix.Checked = true;   // does not work!!!
-                    chkReportToOlaHawaii.Checked = true; // does not work!!!
-                }
+                
+                
                 // Second page is only available for Admin only.
                 if (!Page.User.IsInRole("Admin"))
                 {
@@ -222,12 +219,25 @@ namespace ProjectManagement
                     }
                     else
                     {
-                        //sends notification of project closure if project has been newly closed
+                        //Sends notification of project closure if project has been newly closed
                         if (prevProject.ProjectCompletionDate.Equals(null) && !project.ProjectCompletionDate.Equals(null))
                         {
                             var projectCompleteDate = project.ProjectCompletionDate ?? DateTime.ParseExact("1/1/2099", "MM/dd/yyyy", CultureInfo.InvariantCulture);
 
                             SendProjectClosureEmail(id, projectCompleteDate);
+                        }
+
+                        //Sends "Admin Reviewed" email to lead QHS Faculty/Staff if admin has reviewed the project.
+                        if (prevProject.IsApproved.Equals(false) && project.IsApproved.Equals(true))
+                        {
+                            var leadBiostatId = project.LeadBiostatId;
+                            var emailToSend = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
+                            var userName = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).LogonId;
+                            var investigatorId = project.PIId;
+                            var investigatorName = db.Invests.FirstOrDefault(i => i.Id == investigatorId).FirstName + " " +
+                                                   db.Invests.FirstOrDefault(i => i.Id == investigatorId).LastName;
+
+                            SendAdminReviewEmail(id, emailToSend, userName, investigatorName);
                         }
 
                         //Updates current project with newly-entered values.
@@ -1779,6 +1789,53 @@ namespace ProjectManagement
                 Destination = sendTo,
                 Body = body.ToString()
             };
+
+            EmailService emailService = new EmailService();
+
+            emailService.Send(im);
+        }
+
+        /// <summary>
+        /// Sends admin review email to user when a user closes a project.
+        /// </summary>
+        /// <param name="projectId">Id of project reviewed.</param>
+        /// <param name="emailToSend">Email of Lead Biostatistician to send admin review email to.</param>
+        /// <param name="userName">Username of Lead Biostatistician to send admin review email to.</param>
+        /// <param name="investigatorName">Investigator of referred project.</param>
+        private void SendAdminReviewEmail(int projectId, string emailToSend, string userName, string investigatorName)
+        {
+            string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
+
+            /// Sends to lead biostatistician for confirmation email.
+             sendTo = sendTo + "," + emailToSend;
+
+            string subject = String.Format("Your project (# {0}) has been reviewed by admin", projectId);
+
+            string url = HttpContext.Current.Request.Url.AbsoluteUri;
+            //if (url.IndexOf("?Id") > 0)
+            //{
+            //    sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+            //    url = url.Substring(0, url.IndexOf("?Id"));
+            //}
+
+            StringBuilder body = new StringBuilder();
+
+            body.AppendFormat("Aloha {0},<br />", userName);
+            body.AppendFormat("<p>Your <a href='{0}' title='Project ID # {1}'>project # {1}</a> with {2} " +
+                              "has been reviewed by the QHS Tracking Team.  ", url, projectId, investigatorName);
+            body.AppendFormat("You may now start entering your hours for this project.  ");
+            body.AppendFormat("Please let us know if you have any questions.</p>");
+            body.AppendFormat("Mahalo,<br />QHS Tracking Team");
+           
+            body.AppendLine();
+
+            IdentityMessage im = new IdentityMessage()
+            {
+                Subject = subject,
+                Destination = sendTo,
+                Body = body.ToString()
+            };
+
 
             EmailService emailService = new EmailService();
 

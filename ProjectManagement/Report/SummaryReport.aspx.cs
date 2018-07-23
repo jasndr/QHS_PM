@@ -27,6 +27,9 @@ namespace ProjectManagement.Report
     ///                                    tabs so both reports can be accessed through one view.
     ///  2018MAY16 - Jason Delos Reyes  -  Revised Ola Hawaii paper pull to extract *all* papers instead.  Will not be using 
     ///                                    Rpt_Paper_Ola stored procedure.
+    ///  2018JUL20 - Jason Delos Reyes  -  Changed paper summary reports so that only pulls papers with projects that
+    ///                                    are affiliated with either RMATRIX and/or Ola Hawaii (can be expanded later with more
+    ///                                    grants).  GetPubTable now extracts from Rpt_Paper2 stored procedure.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
@@ -248,7 +251,7 @@ namespace ProjectManagement.Report
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText =  "Rpt_Paper";
+            var cmdText =  "Rpt_Paper2";
 
             try
             {
@@ -261,6 +264,20 @@ namespace ProjectManagement.Report
                         cmd.Parameters.AddWithValue("@PubFromDate", fromDate);
                         cmd.Parameters.AddWithValue("@PubToDate", toDate);
                         cmd.Parameters.AddWithValue("@IsSummary", 1);
+
+                        // With the given grantId, allows users to only pull papers
+                        // with projects that are affiliated with RMATRIX or Ola Hawaii 
+                        // (in funding source and/or acknowledgement sections)
+                        if (grantId == 1)
+                        {
+                            cmd.Parameters.AddWithValue("@ProjectGrant", "RMATRIX");
+                        }
+                        if (grantId == 2)
+                        {
+                            cmd.Parameters.AddWithValue("@ProjectGrant", "Ola Hawaii");
+                        }
+
+
 
                         if (reportId == 14)
                         {

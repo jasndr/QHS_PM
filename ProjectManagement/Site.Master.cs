@@ -23,6 +23,9 @@ namespace ProjectManagement
     ///  2018MAY21 - Jason Delos Reyes  -  Addded PI/Project Review List under "Forms" that is only accessible to "Admin"
     ///                                    accounts for easier tracking purposes (instead of just relying on emails to 
     ///                                    see a list of unreviewed PI and Project entries.).
+    ///  2018JUL20 - Jason Delos Reyes  -  Made "Data Presentation" > "RMATRIX Summary Report" and "Ola Hawaii Summary Report" 
+    ///                                    hidden as to consolidate to a unified summary report form for both grants, that can
+    ///                                    easily be expanded to more grants.
     /// </summary>
     public partial class SiteMaster : MasterPage
     {
@@ -106,9 +109,9 @@ namespace ProjectManagement
                 ProjectList.Visible = true;
                 ReportLink1.Visible = true;
                 ReportLink2.Visible = true;
-                ReportLink3.Visible = true;
+                //ReportLink3.Visible = true;
                 ReportLink4.Visible = true;
-                ReportLink5.Visible = true;
+                //ReportLink5.Visible = true;
                 ReportLink6.Visible = true;
             }
 

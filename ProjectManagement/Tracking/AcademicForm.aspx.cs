@@ -112,7 +112,8 @@ namespace ProjectManagement.Admin
                       , AcademicDesc = ae.AcademicDesc
                       , StartSemesterId = ae.StartSemesterId == null ? "" : ae.StartSemesterId.ToString()
                       , EndSemesterId = ae.EndSemesterId == null ? "" : ae.EndSemesterId.ToString()
-                      , FieldId = ae.FieldId != null ? ae.FieldId.ToString() : "";
+                      , FieldId = ae.FieldId != null ? ae.FieldId.ToString() : ""
+                      , Audience = ae.Audience;
 
                 switch (ae.AcademicTypeId)
                 {
@@ -123,6 +124,7 @@ namespace ProjectManagement.Admin
                         txtEndDate.Text = EndDate;
                         txtNumOfAttendees.Value = NumOfAttendees;
                         txtCourseNum.Value = CourseNum;
+                        txtAudience.Value = Audience;
                         break;
                     case 2:
                         ddlSemester.SelectedValue = StartSemesterId;
@@ -357,6 +359,7 @@ namespace ProjectManagement.Admin
                 BiostatBitSum = Int32.TryParse(txtBiostatBitSum.Value, out biostatBitSum) ? biostatBitSum : 0,
                 Title = "",
                 Organization = "",
+                Audience = "",
                 Comments = txtComments.Value,
                 Creator = User.Identity.Name,
                 CreationDate = DateTime.Now
@@ -367,6 +370,7 @@ namespace ProjectManagement.Admin
                 case 1:
                     a.Organization = txtOrganization.Value;
                     a.Title = txtTitle.Value;
+                    a.Audience = txtAudience.Value;
                     a.StartDate = DateTime.TryParse(txtStartDate.Text, out startDate) ? startDate : (DateTime?)null;
                     a.EndDate = DateTime.TryParse(txtEndDate.Text, out endDate) ? endDate : (DateTime?)null;
                     a.NumOfAttendees = Int32.TryParse(txtNumOfAttendees.Value, out numOfAttendees) ? numOfAttendees : (int?)null;
@@ -456,14 +460,20 @@ namespace ProjectManagement.Admin
             return a;
         }
 
-        private void SaveAcademic(int academicTpyeId, int biostatBitSum)
+        /// <summary>
+        /// (CURRENTLY NOT BEING USED.) Saves Academic Entry
+        /// </summary>
+        /// <param name="academicTypeeId"></param>
+        /// <param name="biostatBitSum"></param>
+        private void SaveAcademic(int academicTypeId, int biostatBitSum)
         {
             Academic newAca = new Academic()
             {
-                AcademicTypeId = academicTpyeId,
+                AcademicTypeId = academicTypeId,
                 BiostatBitSum = biostatBitSum,
                 Title = "",
                 Organization = "",
+                Audience = "",
                 Comments = txtComments.Value,
                 Creator = Page.User.Identity.Name,
                 CreationDate = DateTime.Now
@@ -471,11 +481,12 @@ namespace ProjectManagement.Admin
 
             DateTime dt1, dt2;
             int intOutput;
-            switch(academicTpyeId)
+            switch(academicTypeId)
             {
                 case 1:                    
                     newAca.Organization = txtOrganization.Value;
                     newAca.Title = txtTitle.Value;
+                    newAca.Audience = txtAudience.Value;
                     newAca.StartDate = DateTime.TryParse(txtStartDate.Text, out dt1) ? dt1 : (DateTime?)null;
                     newAca.EndDate = DateTime.TryParse(txtEndDate.Text, out dt2) ? dt2 : (DateTime?)null;
                     newAca.NumOfAttendees = Int32.TryParse(txtNumOfAttendees.Value, out intOutput) ? intOutput : (Int32?)null;

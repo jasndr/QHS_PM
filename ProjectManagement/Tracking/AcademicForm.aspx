@@ -160,6 +160,15 @@
                             <br />
                             <div class="row">
 
+                                <label class="col-sm-2 control-label" for="txtTitle">Audience:</label>
+
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="text" name="txtAudience" id="txtAudience" placeholder="Audience" runat="server" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+
                                 <label class="col-sm-2 control-label" for="txtStartDate">Start date:</label>
 
                                 <div class="col-sm-3">

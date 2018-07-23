@@ -34,5 +34,6 @@ namespace ProjectManagement
         public string Comments { get; set; }
         public string Creator { get; set; }
         public System.DateTime CreationDate { get; set; }
+        public string Audience { get; set; }
     }
 }

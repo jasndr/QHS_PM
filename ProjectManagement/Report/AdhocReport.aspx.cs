@@ -12,8 +12,24 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+
 namespace ProjectManagement.Report
 {
+    /// <summary>
+    /// @File: AdhocReport.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: General Report
+    /// 
+    ///           Summary reports for the list of projects for OLA Hawaii. May need to expand to extract lists of
+    ///           healthcare data and/or nonUH projects, publications, abstracts/presentations, and academic activities,
+    ///           depending on what Ola Hawaii needs to report for future deadlines.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018JUL19 - Jason Delos Reyes  -  Added documentation for readibility. Also added COBRE-Infectious Diseases, OLA Hawaii,
+    ///                                    and P30 UHCC to the list of grant choices for the Paper report.
+    /// </summary>
     public partial class AdhocReport : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
@@ -173,7 +189,7 @@ namespace ProjectManagement.Report
             {
                 GetPaperReport();
             }
-            else if (Request["optionsRadios"].ToString() == "option4") 
+            else if (Request["optionsRadios"].ToString() == "option4") //Academic
             {
                 GetAcademicReport();
             } 
@@ -246,6 +262,9 @@ namespace ProjectManagement.Report
             }
         }
         
+        /// <summary>
+        /// Presents fields for PAPER (Abstracts/Manuscripts) report type in preparation for getting report.
+        /// </summary>
         private void GetPaperReport()
         {	
             int pubType = 1, pubStatus, biostatId;
@@ -305,6 +324,21 @@ namespace ProjectManagement.Report
                 sb.Append("Mountain West");
                 sb.Append(";");
             }
+            if (chkCOBREid.Checked)
+            {
+                sb.Append("COBRE-Infectious Diseases");
+                sb.Append(";");
+            }
+            if (chkOlaHawaii.Checked)
+            {
+                sb.Append("OLA Hawaii");
+                sb.Append(";");
+            }
+            if (chkP30UHCC.Checked)
+            {
+                sb.Append("P30 UHCC");
+                sb.Append(";");
+            }
 
             grant = sb.ToString();
 
@@ -331,6 +365,20 @@ namespace ProjectManagement.Report
             ReportViewer1.LocalReport.DataSources.Add(new ReportDataSource("DataSet1", dt));
         }
 
+        /// <summary>
+        /// Obtains Paper RDLC report based on given paramaters entered in forms.
+        /// </summary>
+        /// <param name="pubType">Publication type - Paper or Abstract</param>
+        /// <param name="pubFromDate">From Date - Starting date of range</param>
+        /// <param name="pubToDate">To Date - Ending date of range</param>
+        /// <param name="pubStatus">Publication Status - Submitted, Accepted, Published, or Not Accepted</param>
+        /// <param name="biostatId">Biostatistician - QHS faculty or staff member for specific report</param>
+        /// <param name="grant">Grants affiliated on paper - RMATRIX/G12 Bridges, INBRE, and/or Mountain West</param>
+        /// <param name="hasPMCID">Has PMCID? - 0 for no PMCID, 1 for papers that contain a PMCID</param>
+        /// <param name="noPMCID">No PMCID - 1 for papers with no PMCID only, 0 otherwise (all papers w or w/o PMCID)</param>
+        /// <param name="citation">Citation Format - Check if results need to be presented in citation format</param>
+        /// <param name="authorAffil">Author Affiliation - Search for specific author affiliation based on author affilation recorded in paper entry</param>
+        /// <returns></returns>
         private DataTable GetPaper(int pubType, DateTime pubFromDate, DateTime pubToDate, int pubStatus, int biostatId, string grant, bool hasPMCID, bool noPMCID, bool citation, string authorAffil)
         {
             DataTable ResultsTable = new DataTable();
@@ -549,6 +597,7 @@ namespace ProjectManagement.Report
 
             return ResultsTable;
         }
+
 
         private DataTable GetProjectDetail(DateTime initialDate, DateTime completeDate, int leadBiostatId, string member, string piAffil, bool onGoing, bool isInternal, string grant, bool isPilot, string pilotGrant, int serviceTypeId, int threshold)
         {

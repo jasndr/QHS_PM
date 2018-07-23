@@ -29,6 +29,7 @@
           <Property Name="Comments" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Creator" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Audience" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="AcademicField">
           <Key>
@@ -3907,6 +3908,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Comments" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Creator" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CreationDate" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="Audience" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           </EntityType>
         <EntityType Name="Project2">
           <Key>
@@ -5074,6 +5076,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="Academic">
             <EntityTypeMapping TypeName="ProjectTracker.Academic">
               <MappingFragment StoreEntitySet="Academic">
+                <ScalarProperty Name="Audience" ColumnName="Audience" />
                 <ScalarProperty Name="Advisor" ColumnName="Advisor" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="FieldId" ColumnName="FieldId" />
