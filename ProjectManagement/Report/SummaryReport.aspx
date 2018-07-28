@@ -49,15 +49,18 @@
                         <asp:DropDownList ID="ddlReport" runat="server" CssClass="form-control" ></asp:DropDownList>
                     </div> 
                     <div class="col-md-1 text-right">
-                        <asp:Button ID="btnSumbit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSumbit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False"/>
+                        <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSubmit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False"/>
                     </div>
                 </div>
             </div>
             <hr/>
             <div class="row" id="divProject">
                 <div class="col-md-12">
-                    <table class="table table-striped table-hover table-bordered" id="olaHawaiiMonthly">
+                    <table class="table table-striped table-hover table-bordered" id="olaHawaiiMonthly" style="width: 30% !important">
                         <thead>
+                            <tr>
+                                <th colspan="16"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                            </tr>
                             <tr>
                                 <th class="col-sm-1">ProjectId</th>
                                 <th class="col-sm-1">First Name</th>
@@ -78,7 +81,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <asp:Repeater ID="rptOlaHawaiiSummary" runat="server">
+                            <asp:Repeater ID="rptSummaryProject" runat="server">
                                 <ItemTemplate>
                                     <tr>
                                         <td><%# Eval("ProjectId") %></td>
@@ -108,6 +111,9 @@
                 <div class="col-md-12">
                     <table class="table table-striped table-hover table-bordered" id="summaryPub">
                         <thead>
+                            <tr>
+                                <th colspan="16"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                            </tr>
                             <tr>
                                 <th>Paper Id</th>
                                 <th>Project Id</th>
@@ -157,6 +163,9 @@
                     <table class="table table-striped table-hover table-bordered" id="summaryAbstract">
                         <thead>
                             <tr>
+                                <th colspan="16"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                            </tr>
+                            <tr>
                                 <th>Paper Id</th>
                                 <th>Project Id</th>
                                 <th>Status</th>
@@ -198,6 +207,9 @@
                 <div class="col-sm-12">
                     <table class="table table-striped table-hover table-bordered" id="summaryAcademic">
                         <thead>
+                            <tr>
+                                <th colspan="16"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                            </tr>
                             <tr>
                                 <th>Id</th>
                                 <th>Type</th>

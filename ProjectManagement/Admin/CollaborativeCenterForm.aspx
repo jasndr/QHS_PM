@@ -1,9 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CollaborativeCenterForm.aspx.cs" Inherits="ProjectManagement.Admin.CollaborativeCenterForm" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
-    <script src="../Scripts/jquery.validate.min.js"></script> 
+    <script src="../Scripts/jquery.validate.min.js"></script>
     <script src="<%=Page.ResolveUrl("~/Scripts/jquery.dataTables.min.js")%>"></script>
-    <script src="<%=Page.ResolveUrl("~/Scripts/dataTables.bootstrap.min.js")%>"></script>   
+    <script src="<%=Page.ResolveUrl("~/Scripts/dataTables.bootstrap.min.js")%>"></script>
     <link href="../Content/dataTables.bootstrap.min.css" rel="stylesheet" />
     <style>
         h5 {
@@ -11,24 +12,27 @@
             text-align: center;
             font-weight: bold;
         }
-        h5:before,
-        h5:after {
-            background-color: #000;
-            content: "";
-            display: inline-block;
-            height: 1px;
-            position: relative;
-            vertical-align: middle;
-            width: 50%;
-        }
-        h5:before {
-            right: 0.5em;
-            margin-left: -50%;
-        }
-        h5:after {
-            left: 0.5em;
-            margin-right: -50%;
-        }
+
+            h5:before,
+            h5:after {
+                background-color: #000;
+                content: "";
+                display: inline-block;
+                height: 1px;
+                position: relative;
+                vertical-align: middle;
+                width: 50%;
+            }
+
+            h5:before {
+                right: 0.5em;
+                margin-left: -50%;
+            }
+
+            h5:after {
+                left: 0.5em;
+                margin-right: -50%;
+            }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -44,14 +48,14 @@
                                 <table class="table table-striped table-hover table-bordered dataTable no-footer" id="CollabCtr">
                                     <thead>
                                         <tr>
-                                            <th style="width: 5%; ">Id</th>
-                                            <th style="width: 30%; ">Name</th>
+                                            <th style="width: 5%;">Id</th>
+                                            <th style="width: 30%;">Name</th>
                                             <th style="width: 10%;">Name Abbrv</th>
-                                            <th style="width: 10%; ">Start Date</th>
-                                            <th style="width: 10%; ">End Date</th>
-                                            <th style="width: 10%; ">Billing Schedule</th>
-                                            <th style="width: 15%; ">Next schedule invoice date</th>
-                                            <th style="width: 5%; "></th>
+                                            <th style="width: 10%;">Start Date</th>
+                                            <th style="width: 10%;">End Date</th>
+                                            <th style="width: 10%;">Billing Schedule</th>
+                                            <th style="width: 15%;">Next schedule invoice date</th>
+                                            <th style="width: 5%;"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -62,9 +66,9 @@
                                                     <td><%# Eval("Name") %></td>
                                                     <td><%# Eval("NameAbbrv") %></td>
                                                     <td><%# Eval("StartDate") %></td>
-                                                    <td><%# Eval("EndDate") %></td>      
-                                                    <td><%# Eval("BillingSchedule") %></td> 
-                                                    <td><%# Eval("NextInvoiceDate") %></td>                                                 
+                                                    <td><%# Eval("EndDate") %></td>
+                                                    <td><%# Eval("BillingSchedule") %></td>
+                                                    <td><%# Eval("NextInvoiceDate") %></td>
                                                     <td>
                                                         <asp:Button ID="btnView" runat="server" Text="Edit" CssClass="btn btn-info" CommandArgument='<%# Eval("Id") %>' /></td>
                                                 </tr>
@@ -100,33 +104,40 @@
                         <div class="panel-heading">
                             <h4 class="text-center"><b>COLLABORATIVE CENTER</b></h4>
                         </div>
-                    </div>                    
+                    </div>
                     <asp:UpdatePanel ID="upEdit" runat="server">
                         <ContentTemplate>
                             <div class="modal-body">
                                 <div class="row">
-                                   <div class="col-xs-11 col-md-10"></div>
-                                   <div class="col-xs-1 col-md-2">
-                                       <b>CC ID: <asp:Label ID="lblCCId" runat="server"></asp:Label></b>
-                                   </div>
+                                    <div class="col-xs-11 col-md-10"></div>
+                                    <div class="col-xs-1 col-md-2">
+                                        <b>CC ID:
+                                            <asp:Label ID="lblCCId" runat="server"></asp:Label></b>
+                                    </div>
                                 </div>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-4 text-left"><label class="control-label" for="txtCCName">Collaborative Center name:</label></div>
+                                    <div class="col-sm-4 text-left">
+                                        <label class="control-label" for="txtCCName">Collaborative Center name:</label>
+                                    </div>
                                     <div class="col-sm-6">
                                         <input class="form-control" type="text" name="txtCCName" id="txtCCName" runat="Server" />
                                     </div>
                                 </div>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-4 text-left"><label class="control-label" for="txtCCAbbrv">Collaborative center abbreviation:</label></div>
+                                    <div class="col-sm-4 text-left">
+                                        <label class="control-label" for="txtCCAbbrv">Collaborative center abbreviation:</label>
+                                    </div>
                                     <div class="col-sm-2">
                                         <input class="form-control" type="text" name="txtCCAbbrv" id="txtCCAbbrv" runat="Server" />
                                     </div>
                                 </div>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-3 text-left"><label class="control-label" for="txtStartDate">Collaboration start:</label></div>
+                                    <div class="col-sm-3 text-left">
+                                        <label class="control-label" for="txtStartDate">Collaboration start:</label>
+                                    </div>
                                     <div class="col-sm-3">
                                         <div class='input-group date' id='dtpStartDate'>
                                             <span class="input-group-addon">
@@ -146,21 +157,38 @@
                                     </div>
                                 </div>
                                 <br />
+                                <div class="row form-group-md" id="collabCtrProjSxn" runat="server" visible="false">
+                                    <div class="col-sm-4 text-left">
+                                        <label class="control-label" for="ddlCollabCtrProjects">Projects affiliated with Collaborative Center:</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <asp:DropDownList ID="ddlCollabCtrProjects" runat="server" CssClass="form-control" AutoPostBack="True">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <br />
+
                                 <h5>Collaboration Contact Information</h5>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtName">Name:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtName">Name:</label>
+                                    </div>
                                     <div class="col-sm-6">
                                         <input class="form-control" type="text" name="txtName" id="txtName" runat="Server" />
                                     </div>
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtPhone">Phone:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtPhone">Phone:</label>
+                                    </div>
                                     <div class="col-sm-4">
                                         <input class="form-control" type="text" name="txtPhone" id="txtPhone" runat="Server" />
                                     </div>
                                 </div>
                                 <br />
-                                 <div class="row form-group-md">
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtEmail">Email:</label></div>
+                                <div class="row form-group-md">
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtEmail">Email:</label>
+                                    </div>
                                     <div class="col-sm-5">
                                         <input class="form-control" type="text" name="txtEmail" id="txtEmail" runat="Server" />
                                     </div>
@@ -169,99 +197,115 @@
                                 <h5>Fiscal Contact Information</h5>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtFiscalName">Name:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtFiscalName">Name:</label>
+                                    </div>
                                     <div class="col-sm-6">
                                         <input class="form-control" type="text" name="txtFiscalName" id="txtFiscalName" runat="Server" />
                                     </div>
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtFiscalPhone">Phone:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtFiscalPhone">Phone:</label>
+                                    </div>
                                     <div class="col-sm-4">
                                         <input class="form-control" type="text" name="txtFiscalPhone" id="txtFiscalPhone" runat="Server" />
                                     </div>
                                 </div>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtFiscalEmail">Email:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtFiscalEmail">Email:</label>
+                                    </div>
                                     <div class="col-sm-5">
                                         <input class="form-control" type="text" name="txtFiscalEmail" id="txtFiscalEmail" runat="Server" />
                                     </div>
                                 </div>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-2 text-left"><label class="control-label" for="txtFiscalMail1">Mail address 1:</label></div>
+                                    <div class="col-sm-2 text-left">
+                                        <label class="control-label" for="txtFiscalMail1">Mail address 1:</label>
+                                    </div>
                                     <div class="col-sm-4">
                                         <input class="form-control" type="text" name="txtFiscalMail1" id="txtFiscalMail1" runat="Server" />
                                     </div>
-                                    <div class="col-sm-3 text-right"><label class="control-label" for="txtFiscalMail2">Mail address 2 (Apt/Ste#):</label></div>
+                                    <div class="col-sm-3 text-right">
+                                        <label class="control-label" for="txtFiscalMail2">Mail address 2 (Apt/Ste#):</label>
+                                    </div>
                                     <div class="col-sm-3">
                                         <input class="form-control" type="text" name="txtFiscalMail2" id="txtFiscalMail2" runat="Server" />
                                     </div>
                                 </div>
                                 <br />
                                 <div class="row form-group-md">
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtFiscalCity">City:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtFiscalCity">City:</label>
+                                    </div>
                                     <div class="col-sm-3">
                                         <input class="form-control" type="text" name="txtFiscalCity" id="txtFiscalCity" runat="Server" />
                                     </div>
-                                    <div class="col-sm-1 text-left"><label class="control-label" for="txtFiscalState">State:</label></div>
+                                    <div class="col-sm-1 text-left">
+                                        <label class="control-label" for="txtFiscalState">State:</label>
+                                    </div>
                                     <div class="col-sm-3">
                                         <%--<input class="form-control" type="text" name="txtFiscalState" id="txtFiscalState"  />--%>
                                         <select class="form-control" name="ddlFiscalState" id="ddlFiscalState" runat="Server">
                                             <option value=""></option>
                                             <option value="HI">Hawaii</option>
-	                                        <option value="AL">Alabama</option>
-	                                        <option value="AK">Alaska</option>
-	                                        <option value="AZ">Arizona</option>
-	                                        <option value="AR">Arkansas</option>
-	                                        <option value="CA">California</option>
-	                                        <option value="CO">Colorado</option>
-	                                        <option value="CT">Connecticut</option>
-	                                        <option value="DE">Delaware</option>
-	                                        <option value="DC">District Of Columbia</option>
-	                                        <option value="FL">Florida</option>
-	                                        <option value="GA">Georgia</option>
-	                                        
-	                                        <option value="ID">Idaho</option>
-	                                        <option value="IL">Illinois</option>
-	                                        <option value="IN">Indiana</option>
-	                                        <option value="IA">Iowa</option>
-	                                        <option value="KS">Kansas</option>
-	                                        <option value="KY">Kentucky</option>
-	                                        <option value="LA">Louisiana</option>
-	                                        <option value="ME">Maine</option>
-	                                        <option value="MD">Maryland</option>
-	                                        <option value="MA">Massachusetts</option>
-	                                        <option value="MI">Michigan</option>
-	                                        <option value="MN">Minnesota</option>
-	                                        <option value="MS">Mississippi</option>
-	                                        <option value="MO">Missouri</option>
-	                                        <option value="MT">Montana</option>
-	                                        <option value="NE">Nebraska</option>
-	                                        <option value="NV">Nevada</option>
-	                                        <option value="NH">New Hampshire</option>
-	                                        <option value="NJ">New Jersey</option>
-	                                        <option value="NM">New Mexico</option>
-	                                        <option value="NY">New York</option>
-	                                        <option value="NC">North Carolina</option>
-	                                        <option value="ND">North Dakota</option>
-	                                        <option value="OH">Ohio</option>
-	                                        <option value="OK">Oklahoma</option>
-	                                        <option value="OR">Oregon</option>
-	                                        <option value="PA">Pennsylvania</option>
-	                                        <option value="RI">Rhode Island</option>
-	                                        <option value="SC">South Carolina</option>
-	                                        <option value="SD">South Dakota</option>
-	                                        <option value="TN">Tennessee</option>
-	                                        <option value="TX">Texas</option>
-	                                        <option value="UT">Utah</option>
-	                                        <option value="VT">Vermont</option>
-	                                        <option value="VA">Virginia</option>
-	                                        <option value="WA">Washington</option>
-	                                        <option value="WV">West Virginia</option>
-	                                        <option value="WI">Wisconsin</option>
-	                                        <option value="WY">Wyoming</option>
+                                            <option value="AL">Alabama</option>
+                                            <option value="AK">Alaska</option>
+                                            <option value="AZ">Arizona</option>
+                                            <option value="AR">Arkansas</option>
+                                            <option value="CA">California</option>
+                                            <option value="CO">Colorado</option>
+                                            <option value="CT">Connecticut</option>
+                                            <option value="DE">Delaware</option>
+                                            <option value="DC">District Of Columbia</option>
+                                            <option value="FL">Florida</option>
+                                            <option value="GA">Georgia</option>
+
+                                            <option value="ID">Idaho</option>
+                                            <option value="IL">Illinois</option>
+                                            <option value="IN">Indiana</option>
+                                            <option value="IA">Iowa</option>
+                                            <option value="KS">Kansas</option>
+                                            <option value="KY">Kentucky</option>
+                                            <option value="LA">Louisiana</option>
+                                            <option value="ME">Maine</option>
+                                            <option value="MD">Maryland</option>
+                                            <option value="MA">Massachusetts</option>
+                                            <option value="MI">Michigan</option>
+                                            <option value="MN">Minnesota</option>
+                                            <option value="MS">Mississippi</option>
+                                            <option value="MO">Missouri</option>
+                                            <option value="MT">Montana</option>
+                                            <option value="NE">Nebraska</option>
+                                            <option value="NV">Nevada</option>
+                                            <option value="NH">New Hampshire</option>
+                                            <option value="NJ">New Jersey</option>
+                                            <option value="NM">New Mexico</option>
+                                            <option value="NY">New York</option>
+                                            <option value="NC">North Carolina</option>
+                                            <option value="ND">North Dakota</option>
+                                            <option value="OH">Ohio</option>
+                                            <option value="OK">Oklahoma</option>
+                                            <option value="OR">Oregon</option>
+                                            <option value="PA">Pennsylvania</option>
+                                            <option value="RI">Rhode Island</option>
+                                            <option value="SC">South Carolina</option>
+                                            <option value="SD">South Dakota</option>
+                                            <option value="TN">Tennessee</option>
+                                            <option value="TX">Texas</option>
+                                            <option value="UT">Utah</option>
+                                            <option value="VT">Vermont</option>
+                                            <option value="VA">Virginia</option>
+                                            <option value="WA">Washington</option>
+                                            <option value="WV">West Virginia</option>
+                                            <option value="WI">Wisconsin</option>
+                                            <option value="WY">Wyoming</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-2 text-right"><label class="control-label" for="txtFiscalZip">Zip code:</label></div>
+                                    <div class="col-sm-2 text-right">
+                                        <label class="control-label" for="txtFiscalZip">Zip code:</label>
+                                    </div>
                                     <div class="col-sm-2">
                                         <input class="form-control" type="text" name="txtFiscalZip" id="txtFiscalZip" runat="Server" />
                                     </div>
@@ -269,11 +313,12 @@
                                 <hr />
                                 <div class="row form-group-md">
                                     <div class="col-sm-2 text-left">
-                                        <label class="control-label" for="ddlBillingSchedule">Billing schedule:</label></div>
+                                        <label class="control-label" for="ddlBillingSchedule">Billing schedule:</label>
+                                    </div>
                                     <div class="col-sm-3">
                                         <%--<asp:DropDownList ID="ddlBillingSchedule" runat="server" CssClass="form-control">
                                         </asp:DropDownList>--%>
-                                        <select class="form-control" name="ddlBillingSchedule" id="ddlBillingSchedule" runat="Server" onchange="toggleBillOther();" >
+                                        <select class="form-control" name="ddlBillingSchedule" id="ddlBillingSchedule" runat="Server" onchange="toggleBillOther();">
                                             <option value=""></option>
                                             <option value="Annual">Annual</option>
                                             <option value="Bi-annual">Bi-annual</option>
@@ -286,7 +331,7 @@
                                     </div>
                                     <div id="divBillOther">
                                         <div class="col-sm-1 text-left">
-                                            <label for="txtBillOther" id="lbltxtBillOther">Other:</label>                                        
+                                            <label for="txtBillOther" id="lbltxtBillOther">Other:</label>
                                         </div>
                                         <div class="col-sm-3">
                                             <asp:TextBox ID="txtBillOther" runat="server" class="form-control"></asp:TextBox>
@@ -321,21 +366,22 @@
                                     <div class="col-md-3">
                                         <asp:Button ID="btnAddInvoice" runat="server" Text="Add New Invoice" OnClick="btnAddInvoice_Click" class="btn btn-info" />
                                     </div>
-                                    
-                                </div>                                
-                                
-                            </div>                           
+
+                                </div>
+
+                            </div>
 
                             <div class="modal-footer">
                                 <%--<asp:Label ID="lblResult" Visible="false" runat="server"></asp:Label>--%>
                                 <asp:Button ID="btnSave" runat="server" Text="Update" CssClass="btn btn-info" OnClick="btnSave_Click" />
-                                <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>
+                                <asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn btn-info" OnClick="btnClose_Click" UseSubmitBehavior="false" data-dismiss="modal" aria-hidden="true" />
                             </div>
 
                         </ContentTemplate>
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID="rptCC" EventName="ItemCommand" />
                             <asp:AsyncPostBackTrigger ControlID="btnSave" EventName="Click" />
+                            <asp:AsyncPostBackTrigger ControlID="btnClose" EventName="Click" />
                         </Triggers>
                     </asp:UpdatePanel>
 
@@ -349,7 +395,7 @@
     </div>
 
     <script type="text/javascript">
-        function pageLoad(sender, args) { 
+        function pageLoad(sender, args) {
             $('#li_super').addClass('selected');
             $('#li_payment').addClass('selected');
             $('#li_ccform').addClass('selected');
@@ -377,20 +423,20 @@
                 "searching": false,
                 "order": [[0, "asc"]],
                 "aoColumns": [
-                          null,
-                          null,
-                          null,
-                          null,
-                          null,
-                          null,
-                          null,
-                          { "bSortable": false }
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    { "bSortable": false }
                 ]
             });
         }
 
         function toggleBillOther() {
-            if ($("#MainContent_ddlBillingSchedule option:selected").text() == "Other") 
+            if ($("#MainContent_ddlBillingSchedule option:selected").text() == "Other")
                 document.getElementById('divBillOther').style.display = "inherit";
             else
                 document.getElementById('divBillOther').style.display = "none";
@@ -464,7 +510,7 @@
             },
             onkeyup: false,
             onblur: true
-            
+
         });
 
     </script>

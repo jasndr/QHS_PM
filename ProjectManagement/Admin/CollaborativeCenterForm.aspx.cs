@@ -9,16 +9,58 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: CollaborativeCenterForm.aspx.cs
+    /// @FrontEnd: CollaborativeCenterForm.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Collaborative Center Form of the Admin section of the Project Tracking System.
+    /// 
+    ///           Creates and maintains a record of collaboration centers that QHS have worked with
+    ///           in faculty and staff projects.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018JUL23 - Jason Delos Reyes  -  Added dropdown of projects affiliated with collaborative centers so it would be
+    ///                                    easier for the admin team to systematically look for projects without having
+    ///                                    to go through multiple pages in the system. Also added documentation for easier
+    ///                                    readibility and clarity of the system.
+    ///  2018JUL27 - Jason Delos Reyes  -  Added dropdown list of projects associated with the collaboration center so it
+    ///                                    would be easier for the admin team to quickly glace through the list of projects
+    ///                                    connected to that specific collaboration center.
+    /// </summary>
     public partial class CollaborativeCenterForm : System.Web.UI.Page
     {
+       
+        /// <summary>
+        /// Prepares collaboration center page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
                 BindRptCC();
             }
-        }        
+        }
 
+        /// <summary>
+        /// Customized "Close" function to hide the projects list dropdown
+        /// when modal window view has been closed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnClose_Click(object sender, EventArgs e)
+        {
+            collabCtrProjSxn.Visible = false;
+        }
+
+        /// <summary>
+        /// Saves the current collaboration center form entry.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             int ccId = 0;
@@ -37,6 +79,12 @@ namespace ProjectManagement.Admin
             BindRptCC();
         }
 
+        /// <summary>
+        /// Saves current Collaboration Center form into the database by either updating the 
+        /// exisiting entry with the same name, or adding a new entry into the database.
+        /// </summary>
+        /// <param name="cc">Collaboration Center form newly entered on the web form.</param>
+        /// <returns>Referred collaboration center id (it will be a new ID if newly entered into database).</returns>
         private int SaveCC(CollabCtr cc)
         {
             int ccid = -1;
@@ -76,14 +124,22 @@ namespace ProjectManagement.Admin
             return ccid;
         }
 
+        /// <summary>
+        /// Obtains all fields necessary for the Collaboration Report page.
+        /// </summary>
         private void BindRptCC()
         {
+
             DataTable ccTable = GetCollabCtrAll();
 
             rptCC.DataSource = ccTable;
             rptCC.DataBind();
         }
 
+        /// <summary>
+        /// Obtains all Collaboration Centers from the database.
+        /// </summary>
+        /// <returns>Table of all collaboration centers that have previously been entered.</returns>
         private DataTable GetCollabCtrAll()
         {
             DataTable dt = new DataTable("collabCtrTable");
@@ -119,17 +175,46 @@ namespace ProjectManagement.Admin
             return dt;
         }        
 
+        /// <summary>
+        /// Opens the specific Collaboration Center form based on the "Edit" button row specified in the table of
+        /// Collaboration Centers listed from the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptCC_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
             {
+                
                 lblCCId.Text = ((Button)e.CommandSource).CommandArgument;
 
                 int id = 0;
                 int.TryParse(lblCCId.Text, out id);
 
                 if (id > 0)
-                {                   
+                {
+
+                    collabCtrProjSxn.Visible = true;
+
+                    var dropDownSource = new Dictionary<int, string>();
+
+                    /// Populates dropdown of projects associated with the collaboration center.
+                    using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+                    {
+                       
+                        dropDownSource = db.Project2
+                                        .Join(db.ClientAgmt, p => p.Id, ca => ca.Project2Id, (p, ca) => new { p, ca })
+                                        .Where(j => j.ca.CollabCtrId == id)
+                                        .OrderByDescending(y => y.p.Id)
+                                        .Select(x => new { x.p.Id, FullName = (x.p.Id + " " + x.p.Title).Substring(0, 150) })
+                                        .Distinct()
+                                        .ToDictionary(d => d.Id, d => d.FullName);
+
+
+                        PageUtility.BindDropDownList(ddlCollabCtrProjects, dropDownSource, "-- List of Projects for Collaborative Center --");
+                    }
+
+
                     CollabCtr cc = GetCollabCtrById(id);
 
                     if (cc != null)
@@ -143,6 +228,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Using provided collaboration center ID, obtains the collaboration center entry from the form.
+        /// </summary>
+        /// <param name="ccId">Referred collaboration center ID.</param>
+        /// <returns>New/updated collaboration center form, to be saved on the database end.</returns>
         private CollabCtr GetCollabCtr(int ccId)
         {
             DateTime dt;
@@ -175,6 +265,10 @@ namespace ProjectManagement.Admin
             return cc;
         }
 
+        /// <summary>
+        /// Prints collaboration center from the provided collaboration center to the web form for review.
+        /// </summary>
+        /// <param name="cc">Referred collaboration center instance.</param>
         private void SetCollabCtr(CollabCtr cc)
         {
             lblCCId.Text = cc.Id > 0 ? cc.Id.ToString() : "";
@@ -199,6 +293,11 @@ namespace ProjectManagement.Admin
             txtMemo.Value = cc.Memo;
         }
 
+        /// <summary>
+        /// Finds collaboration center using the ID and returns that collaboration center instance.
+        /// </summary>
+        /// <param name="id">Referred collaboration center ID.</param>
+        /// <returns>Collaboration Center record from the obtained collaboration center ID.</returns>
         private CollabCtr GetCollabCtrById(int id)
         {
             CollabCtr ctr = null;
@@ -211,6 +310,11 @@ namespace ProjectManagement.Admin
             return ctr;
         }
 
+        /// <summary>
+        /// Prepares a new form for a new Collaboration Center entry.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             ClearEditForm();
@@ -219,6 +323,9 @@ namespace ProjectManagement.Admin
                        "ModalScript", PageUtility.LoadEditScript(true), false);
         }
 
+        /// <summary>
+        /// Clears web form and prepares form for a new Collaobration Center Form entry.
+        /// </summary>
         private void ClearEditForm()
         {
             CollabCtr newCtr = new CollabCtr();
@@ -227,6 +334,13 @@ namespace ProjectManagement.Admin
             SetCollabCtr(newCtr);
         }
 
+        /// <summary>
+        /// Add an agreement that will tie to the current collaboration center.
+        /// Clicking this button will automatically go to a *new* Client Agreement Form entry page
+        /// with the pertaining collaborative center information already pre-filled and necessary ID # auto-incremented.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAddAgreement_Click(object sender, EventArgs e)
         {
             int ccId = 0;
@@ -238,6 +352,13 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Add new invoice entry that will tie to the current collaboration center.
+        /// Clicking this button will automatically go to a *new* invoice form with the 
+        /// pertinent collaborative center information already pre-filled and necessary ID # auto-incremented.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAddInvoice_Click(object sender, EventArgs e)
         {
             int ccId = 0;

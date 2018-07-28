@@ -30,9 +30,17 @@ namespace ProjectManagement.Report
     ///  2018JUL20 - Jason Delos Reyes  -  Changed paper summary reports so that only pulls papers with projects that
     ///                                    are affiliated with either RMATRIX and/or Ola Hawaii (can be expanded later with more
     ///                                    grants).  GetPubTable now extracts from Rpt_Paper2 stored procedure.
+    ///  2018JUL25 - Jason Delos Reyes  -  Utilized a new Excel function that prints the title on top of the data table sheet
+    ///                                    before being able to download the data (originally obtained from the SQL database) 
+    ///                                    into an Excel file.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
+        protected string GrantName { get; set; }
+        protected string ReportType { get; set; }
+        protected string FromDate { get; set; }
+        protected string ToDate { get; set; }
+        
         /// <summary>
         /// Loads page based on initial specifications.
         /// </summary>
@@ -40,6 +48,7 @@ namespace ProjectManagement.Report
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
+
             if (!Page.IsPostBack)
             {
                 BindControl();
@@ -83,7 +92,7 @@ namespace ProjectManagement.Report
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void btnSumbit_Click(object sender, EventArgs e)
+        protected void btnSubmit_Click(object sender, EventArgs e)
         {
             hdnRowCount.Value = "0";
             int reportId;
@@ -98,9 +107,8 @@ namespace ProjectManagement.Report
                     if (reportId >= 11 && reportId <= 13) // Projects, Healthcare Data, and NonUH
                     {
                         dt = GetProjectTable(grantId, reportId, fromDate, toDate);
-
-                        rptOlaHawaiiSummary.DataSource = dt;
-                        rptOlaHawaiiSummary.DataBind();
+                        rptSummaryProject.DataSource = dt;
+                        rptSummaryProject.DataBind();
                     }
                     else if (reportId == 14) // Publications
                     {
@@ -198,6 +206,34 @@ namespace ProjectManagement.Report
 
             var cmdText = "Rpt_Academic2"; // Calls "Rpt_Academic2" stored procedure in database
 
+            GrantName = grantId == 2 ? "Ola_Hawaii" : "RMATRIX";
+            switch (reportId)
+            {
+                case 11:
+                    ReportType = "Projects";
+                    break;
+                case 12:
+                    ReportType = "HealthData_Projects";
+                    break;
+                case 13:
+                    ReportType = "Non-UH_Projects";
+                    break;
+                case 14:
+                    ReportType = "Publications";
+                    break;
+                case 15:
+                    ReportType = "Abstracts/Presentations";
+                    break;
+                case 16:
+                    ReportType = "Academic";
+                    break;
+                default:
+                    ReportType = "";
+                    break;
+            }
+            FromDate = fromDate.ToString("MM/dd/yyyy");
+            ToDate = toDate.ToString("MM/dd/yyyy");
+
             try
             {
 
@@ -252,6 +288,34 @@ namespace ProjectManagement.Report
             SqlConnection con = new SqlConnection(constr);
 
             var cmdText =  "Rpt_Paper2";
+
+            GrantName = grantId == 2 ? "Ola_Hawaii" : "RMATRIX";
+            switch (reportId)
+            {
+                case 11:
+                    ReportType = "Projects";
+                    break;
+                case 12:
+                    ReportType = "HealthData_Projects";
+                    break;
+                case 13:
+                    ReportType = "Non-UH_Projects";
+                    break;
+                case 14:
+                    ReportType = "Publications";
+                    break;
+                case 15:
+                    ReportType = "Abstracts/Presentations";
+                    break;
+                case 16:
+                    ReportType = "Academic";
+                    break;
+                default:
+                    ReportType = "";
+                    break;
+            }
+            FromDate = fromDate.ToString("MM/dd/yyyy");
+            ToDate = toDate.ToString("MM/dd/yyyy");
 
             try
             {
@@ -332,6 +396,35 @@ namespace ProjectManagement.Report
 
             var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary" : "Rpt_Rmatrix_Summary";
 
+            GrantName = grantId == 2 ? "Ola_Hawaii" : "RMATRIX";
+            switch(reportId)
+            {
+                case 11:
+                    ReportType = "Projects";
+                    break;
+                case 12:
+                    ReportType = "HealthData_Projects";
+                    break;
+                case 13:
+                    ReportType = "Non-UH_Projects";
+                    break;
+                case 14:
+                    ReportType = "Publications";
+                    break;
+                case 15:
+                    ReportType = "Abstracts/Presentations";
+                    break;
+                case 16:
+                    ReportType = "Academic";
+                    break;
+                default:
+                    ReportType = "";
+                    break;
+            }
+            FromDate = fromDate.ToString("MM/dd/yyyy");
+            ToDate = toDate.ToString("MM/dd/yyyy");
+
+           
             try
             {
 
@@ -373,6 +466,7 @@ namespace ProjectManagement.Report
                     con.Close();
                 }
             }
+            
 
             return dt;
         }
@@ -389,6 +483,7 @@ namespace ProjectManagement.Report
             DateTime fromDate, toDate;
             string fileName = "";
             string grantName = "";
+            string titleName = "";
 
             if (Int32.TryParse(ddlGrantType.SelectedValue, out grantId) && Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
                 DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
@@ -405,21 +500,18 @@ namespace ProjectManagement.Report
                         dt.TableName = "Project";
                         dt.Columns.Remove("HealthData");
                         dt.Columns.Remove("NonUH");
-                        fileName = grantName + "Project" + toDate.ToString("yyyyMMdd");
                         break;
                     case 12: // Healthcare Data projects
                         dt = GetProjectTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "HealthData";
                         dt.Columns.Remove("HealthData");
                         dt.Columns.Remove("NonUH");
-                        fileName = grantName + "HealthData" + toDate.ToString("yyyyMMdd");
                         break;
                     case 13: // NonUH projects
                         dt = GetProjectTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "NonUH";
                         dt.Columns.Remove("HealthData");
                         dt.Columns.Remove("NonUH");
-                        fileName = grantName + "NonUH" + toDate.ToString("yyyyMMdd");
                         break;
                     case 14: // Publications
                         dt = GetPubTable(grantId, reportId, fromDate, toDate);
@@ -434,7 +526,6 @@ namespace ProjectManagement.Report
                         dt.Columns.Remove("ToDate");
                         dt.Columns.Remove("CitationFormat");
                         dt.Columns.Remove("BiostatName");
-                        fileName = grantName + "Publications" + toDate.ToString("yyyyMMdd");
                         break;
                     case 15: // AbstractsPresentations
                         dt = GetPubTable(grantId, reportId, fromDate, toDate);
@@ -454,21 +545,22 @@ namespace ProjectManagement.Report
                         dt.Columns.Remove("ToDate");
                         dt.Columns.Remove("CitationFormat");
                         dt.Columns.Remove("BiostatName");
-                        fileName = grantName + "AbstractsPresentations" + toDate.ToString("yyyyMMdd");
                         break;
                     case 16: // Academic
                         dt = GetAcademicTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "Academic";
                         dt.Columns.Remove("Column1");
                         dt.Columns.Remove("Column2");
-                        fileName = grantName + "Academic" + toDate.ToString("yyyyMMdd");
                         break;
                     default:
                         break;
                 }
 
+                titleName = GrantName + " " + ReportType + " Report from " + FromDate + " to " + ToDate;
+                fileName = GrantName + "-" + ReportType + "-" + "Report-From" + "-" + FromDate + "-" + "To" + "-" + ToDate;
+
                 FileExport fileExport = new FileExport(this.Response);
-                fileExport.ExcelExport(dt, fileName);
+                fileExport.ExcelExport2(dt, fileName, titleName);
             }
 
         }

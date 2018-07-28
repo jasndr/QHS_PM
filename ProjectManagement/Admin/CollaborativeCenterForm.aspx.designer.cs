@@ -103,6 +103,24 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.TextBox txtEndDate;
         
         /// <summary>
+        /// collabCtrProjSxn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl collabCtrProjSxn;
+        
+        /// <summary>
+        /// ddlCollabCtrProjects control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCollabCtrProjects;
+        
+        /// <summary>
         /// txtName control.
         /// </summary>
         /// <remarks>
@@ -263,5 +281,14 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
+        
+        /// <summary>
+        /// btnClose control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnClose;
     }
 }
