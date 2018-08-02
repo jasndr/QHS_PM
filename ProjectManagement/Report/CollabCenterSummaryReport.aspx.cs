@@ -12,38 +12,21 @@ using System.Web.UI.WebControls;
 namespace ProjectManagement.Report
 {
     /// <summary>
-    /// @File: SummaryReport.aspx.cs
+    /// @File: CollabCenterSummaryReport.aspx.cs
     /// @Author: Jason Delos Reyes
-    /// @Summary: RMATRIX / OLA Hawaii Summary Reports
+    /// @Summary: Collaboration Center Summary Reports
     /// 
-    ///           Summary reports for the list of projects for both RMATRIX and OLA Hawaii, combined into a single form. 
-    ///           May need to alter lists of healthcare data and/or nonUH projects, publications, abstracts/presentations, and academic activities,
-    ///           for Ola Hawaii requirements.
+    ///           Projects, Papers, and Academic Report of Collaboration Center affiliations.
     ///           
     /// @Maintenance/Revision History:
     ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
     ///  ------------------------------------------
-    ///  2018MAY14 - Jason Delos Reyes  -  Created Summary Report tab as a consolidation of RMATRIX Summary and Ola Hawaii summary
-    ///                                    tabs so both reports can be accessed through one view.
-    ///  2018MAY16 - Jason Delos Reyes  -  Revised Ola Hawaii paper pull to extract *all* papers instead.  Will not be using 
-    ///                                    Rpt_Paper_Ola stored procedure.
-    ///  2018JUL20 - Jason Delos Reyes  -  Changed paper summary reports so that only pulls papers with projects that
-    ///                                    are affiliated with either RMATRIX and/or Ola Hawaii (can be expanded later with more
-    ///                                    grants).  GetPubTable now extracts from Rpt_Paper2 stored procedure.
-    ///  2018JUL25 - Jason Delos Reyes  -  Utilized a new Excel function that prints the title on top of the data table sheet
-    ///                                    before being able to download the data (originally obtained from the SQL database) 
-    ///                                    into an Excel file.
-    ///  2018JUL31 - Jason Delos Reyes  -  Started creating Summary Report feature by adding Collaboration Center dropdown option
-    ///                                    for report.
-    ///  2018AUG01 - Jason Delos Reyes  -  Adjusted Collaboration Center report, both in input parameters and stored procedure, 
-    ///                                    so that users can also view the contact for the specific collaboration center.
-    ///  2018AUG02 - Jason Delos Reyes  -  Fixed the error that would go make the page revert to showing the "Grant" dropdown 
-    ///                                    instead of remaining fixated on the "Collaboration Center" dropdown after the "submit"
-    ///                                    button has been clicked. 
-    ///                                 -  Also fixed the error of  the report still pulling from Collaboration Center despite
-    ///                                    switching back to the Grant section to view more reports.
+    ///  2018JUL31 - Jason Delos Reyes  -  Created CollabCenterSummaryReport section of the database as a replicate
+    ///                                    of the general/grant SummaryReport page in order to be able to select
+    ///                                    a collaboration center in lieu of a grant (i.e., RMATRIX or Ola Hawaii).
+    ///   
     /// </summary>
-    public partial class SummaryReport : System.Web.UI.Page
+    public partial class CollabCenterSummaryReport : System.Web.UI.Page
     {
         protected string GrantName { get; set; }
         protected string ReportType { get; set; }
@@ -58,41 +41,11 @@ namespace ProjectManagement.Report
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            // If Page is being loaded for the first time -- populates dropdown options for review.
             if (!Page.IsPostBack)
             {
                 BindControl();
             }
-            // If Page is just being reloaded again, e.g., click option button -- loads proper form for report requested.
-            else
-            {
-                LoadStartScript();
-            }
         }
-
-
-        /// <summary>
-        /// Loads either -Grant- or -Collaboration- dropdown depending on which option was initially selected.
-        /// </summary>
-        private void LoadStartScript()
-        {
-            System.Text.StringBuilder script = new System.Text.StringBuilder();
-            script.Append("<script>");
-
-            if (Request["optionsRadios"].ToString() == "option1")
-            {
-                script.Append("if (!document.getElementById('optionsRadios1').checked){document.getElementById('optionsRadios1').checked=true;} ");
-            }
-            else
-            {
-                script.Append("if (!document.getElementById('optionsRadios2').checked){document.getElementById('optionsRadios2').checked=true;} ");
-            }
-            
-
-            script.Append("</script>");
-            ClientScript.RegisterStartupScript(GetType(), "Javascript", script.ToString());
-        }
-
 
         /// <summary>
         /// Pre-loads dropdown list based on what the type of reports there are for the Ola Hawaii Summary reports.
@@ -103,7 +56,7 @@ namespace ProjectManagement.Report
             using (ProjectTrackerContainer context = new ProjectTrackerContainer())
             {
                 IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
-                                
+
                 //11  RmatrixSummary Projects
                 //12  RmatrixSummary HealthcareData
                 //13  RmatrixSummary NonUH
@@ -114,6 +67,7 @@ namespace ProjectManagement.Report
                                 .Where(b => b.ReportType == "RmatrixSummary")
                                 .OrderBy(b => b.Id)
                                 .ToDictionary(c => c.Id, c => c.ReportName);
+
                 PageUtility.BindDropDownList(ddlReport, dropDownSource, "--- Select Report ---");
 
                 /// Populates Grant type dropdown (RMATRIX/Ola Hawaii)
@@ -121,16 +75,6 @@ namespace ProjectManagement.Report
                 grantTypeSource.Add(1, "RMATRIX");
                 grantTypeSource.Add(2, "Ola Hawaii");
                 PageUtility.BindDropDownList(ddlGrantType, grantTypeSource, null);
-
-                /// Populates Collaboration Center dropdown (e.g., OBGYN, SONDH, etc.)
-                Dictionary<int, string> collabCtrSource = new Dictionary<int, string>();
-                collabCtrSource = context.CollabCtr
-                                 .Where(d => d.Id > 0)
-                                 .OrderBy(h=>h.NameAbbrv)
-                                 .ToDictionary(x => x.Id, x => x.NameAbbrv + " (" + x.Contact + ")");
-                PageUtility.BindDropDownList(ddlCollabCenter, collabCtrSource, "--- Select Collaborative Center ---");
-                
-
 
             }
         }
@@ -145,22 +89,9 @@ namespace ProjectManagement.Report
             hdnRowCount.Value = "0";
             int reportId;
             int grantId;
-            string collabCenterText = ddlCollabCenter.SelectedItem.Text;
-
-            if (Request["optionsRadios"].ToString() == "option1")
-            {
-                grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
-            }
-            else
-            {
-                grantId = 3;
-            }
-
-            if (Int32.TryParse(ddlReport.SelectedValue, out reportId) /*&& Int32.TryParse(ddlGrantType.SelectedValue, out grantId)*/)
+            if (Int32.TryParse(ddlReport.SelectedValue, out reportId) && Int32.TryParse(ddlGrantType.SelectedValue, out grantId))
             {
                 DateTime fromDate, toDate;
-
-                grantId = (grantId == 1 || grantId == 2) ? grantId : 3;
 
                 if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
                 {
@@ -450,20 +381,14 @@ namespace ProjectManagement.Report
         /// <returns>Data table selected after SQL query.</returns>
         private DataTable GetProjectTable(int grantId, int reportId, DateTime fromDate, DateTime toDate)
         {
-            DataTable dt = grantId == 2 ? new DataTable("tblOlaHawaii") : 
-                           grantId == 1 ? new DataTable("tblRmatrix") :
-                                          new DataTable("tblCollabCtr");
+            DataTable dt = grantId == 2 ? new DataTable("tblOlaHawaii") : new DataTable("tblRmatrix");
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary" :
-                          grantId == 1 ? "Rpt_Rmatrix_Summary" :
-                                         "Rpt_CollabCtr_Summary";
+            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary" : "Rpt_Rmatrix_Summary";
 
-            GrantName = grantId == 2 ? "Ola_Hawaii" :
-                        grantId == 1 ? "RMATRIX" :
-                                        ddlCollabCenter.SelectedItem.Text;
+            GrantName = grantId == 2 ? "Ola_Hawaii" : "RMATRIX";
             switch(reportId)
             {
                 case 11:
@@ -503,11 +428,6 @@ namespace ProjectManagement.Report
                         cmd.Parameters.AddWithValue("@StartDate", fromDate);
                         cmd.Parameters.AddWithValue("@EndDate", toDate);
                         cmd.Parameters.AddWithValue("@Affiliation", "");
-
-                        if (grantId == 3) // Collaboration Center - Add to report
-                        {
-                            cmd.Parameters.AddWithValue("@CollabCtr", ddlCollabCenter.SelectedItem.Text);
-                        }
 
                         if (reportId == 12) // Healthcare Data report
                         {
@@ -557,17 +477,13 @@ namespace ProjectManagement.Report
             string grantName = "";
             string titleName = "";
 
-            string collabCenterText = ddlCollabCenter.SelectedItem.Text;
-
-            grantId = collabCenterText != "" ? grantId = 3 : grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
-
-            if (/*Int32.TryParse(ddlGrantType.SelectedValue, out grantId) &&*/ Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
+            if (Int32.TryParse(ddlGrantType.SelectedValue, out grantId) && Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
                 DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             {
                 DataTable dt = new DataTable();
                 grantName = grantId == 1 ? "Rmatrix"
                           : grantId == 2 ? "OlaHawaii"
-                                         : collabCenterText;
+                                         : "";
 
                 switch (reportId)
                 {
@@ -634,8 +550,6 @@ namespace ProjectManagement.Report
 
                 titleName = GrantName + " " + ReportType + " Report from " + FromDate + " to " + ToDate;
                 fileName = GrantName + "-" + ReportType + "-" + "Report-From" + "-" + FromDate + "-" + "To" + "-" + ToDate;
-
-                fileName = fileName.Replace(" ", "_");
 
                 FileExport fileExport = new FileExport(this.Response);
                 fileExport.ExcelExport2(dt, fileName, titleName);

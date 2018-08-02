@@ -34,10 +34,12 @@ namespace ProjectManagement.Report
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // If Page is being loaded for the first time -- populates dropdown options for review.
             if (!Page.IsPostBack)
             {
                 BindControl();                
             }
+            // If Page is just being reloaded again, e.g., click option button -- loads proper form for report requested.
             else
             {
                 LoadStartScript();

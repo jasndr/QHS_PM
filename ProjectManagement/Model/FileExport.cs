@@ -18,6 +18,8 @@ namespace ProjectManagement.Model
     ///  2018JUL25 - Jason Delos Reyes  -  Added ExportExcel2() function in order to print out the Report Title (window of dates,
     ///                                    report type, and grant) on top of the excel sheet that is to be downloaded by the user.
     ///                                    Also added initial documentation for readibility.
+    ///  2018JUL30 - Jason Delos Reyes  -  Edited ExportExcel2() function so that the project type is printed as the sheet name
+    ///                                    instead of the "Insert Table" text that was initially specified.
     /// </summary>
     public class FileExport
     {
@@ -71,8 +73,8 @@ namespace ProjectManagement.Model
 
             using (XLWorkbook wb = new XLWorkbook())
             {
-
-                var ws = wb.Worksheets.Add("Inserting Tables");
+                var workbookTitleName = dt.TableName;
+                var ws = wb.Worksheets.Add(workbookTitleName);
 
                 //Add from DataTable
                 ws.Cell(1, 1).Value = titleName;

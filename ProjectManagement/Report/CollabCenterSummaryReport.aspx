@@ -1,43 +1,21 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SummaryReport.aspx.cs" Inherits="ProjectManagement.Report.SummaryReport" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CollabCenterSummaryReport.aspx.cs" Inherits="ProjectManagement.Report.CollabCenterSummaryReport" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <b>RMATRIX / Ola Hawaiʻi / Collaboration Center Summary Report</b>
+            <b>Collaboration Center Summary Report</b>
         </div>
 
         <div class="panel-body">
-            <%--<br />--%>
+            <br/>
             <div>
-                <label>Report Type: </label>
-                &nbsp;
-                <label class="radio-inline">
-                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" class="radio-inline" checked>
-                    Grant
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" class="radio-inline">
-                    Collaboration Center
-                </label>
-            </div>
-            <br />
-            <div>
-                <div class="row" id="divGrantDropDown">
+                <div class="row">
                     <div class="col-md-1 text-right">
                         <label class="control-label">Grant:</label>
                     </div>
                     <div class="col-md-2">
-                        <asp:DropDownList ID="ddlGrantType" runat="server" CssClass="form-control"></asp:DropDownList>
-                    </div>
-                </div>
-                <div class="row" id="divCollabCtrDropDown">
-                    <div class="col-md-1 text-right">
-                        <label class="control-label">Collaboration Center:</label>
-                    </div>
-                    <div class="col-md-3">
-                        <asp:DropDownList ID="ddlCollabCenter" runat="server" CssClass="form-control"></asp:DropDownList>
+                        <asp:DropDownList ID="ddlGrantType" runat="server" CssClass="form-control" ></asp:DropDownList>
                     </div>
                 </div>
                 <br />
@@ -68,14 +46,14 @@
                         <label class="control-label">Report Type:</label>
                     </div>
                     <div class="col-md-2">
-                        <asp:DropDownList ID="ddlReport" runat="server" CssClass="form-control"></asp:DropDownList>
-                    </div>
+                        <asp:DropDownList ID="ddlReport" runat="server" CssClass="form-control" ></asp:DropDownList>
+                    </div> 
                     <div class="col-md-1 text-right">
-                        <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSubmit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
+                        <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSubmit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False"/>
                     </div>
                 </div>
             </div>
-            <hr />
+            <hr/>
             <div class="row" id="divProject">
                 <div class="col-md-12">
                     <table class="table table-striped table-hover table-bordered" id="olaHawaiiMonthly" style="width: 30% !important">
@@ -270,7 +248,7 @@
                     </table>
                 </div>
             </div>
-
+            
             <div class="row">
                 <div class="col-md-2">
                     <asp:Button ID="btnExportExcel" runat="server" Text="Download" CssClass="btn btn-info" OnClick="btnExportExcel_Click" OnClientClick="blockUIForDownload(this)" UseSubmitBehavior="False" />
@@ -278,41 +256,12 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="hdnRowCount" runat="server" />
-    <input type="hidden" id="download_token" runat="server" />
+    <input type="hidden" id="hdnRowCount" runat="server"/>
+    <input type="hidden" id="download_token" runat="server"/>
 
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
-
-        function pageLoad(sender, args) {
-
-            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
-
-            if (document.getElementById('optionsRadios1').checked) {
-                $('#divCollabCtrDropDown').hide();
-            }
-            else if (document.getElementById('optionsRadios2').checked) {
-                $('#divGrantDropDown').hide();
-            }
-            
-            $('input[type=radio][name=optionsRadios]').change(function () {
-                if (this.value == 'option1') {
-                    $('#divGrantDropDown').show();
-                    $('#divCollabCtrDropDown').hide();
-                }
-                else if (this.value == 'option2') {
-                    $('#divGrantDropDown').hide();
-                    $('#divCollabCtrDropDown').show();
-                }
-            });
-            
-            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
-
-        }
-
-         
-
         $(document).ready(function () {
             //if ($("#MainContent_txtReportDate").val() == '') {
             //    var today = new Date();
@@ -330,19 +279,19 @@
 
             var toDate = new DatePicker('dtpToDate');
             toDate.init();
-
+            
             if ($('#MainContent_hdnRowCount').val() > 0)
                 $('#MainContent_btnExportExcel').prop("disabled", false);
             else {
                 $('#MainContent_btnExportExcel').prop("disabled", true);
             }
-
+            
             divToggle();
         });
 
         var DatePicker = function (ctrlId) {
             var ctl = ctrlId;
-
+           
             return {
                 init: function (e) {
                     $('#' + ctl).datepicker({
@@ -357,8 +306,6 @@
                 }
             }
         }
-
-       
 
         function divToggle() {
             if ($('#MainContent_ddlReport').val() == '') {

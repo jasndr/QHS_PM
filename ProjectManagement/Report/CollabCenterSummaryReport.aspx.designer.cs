@@ -10,7 +10,7 @@
 namespace ProjectManagement.Report {
     
     
-    public partial class SummaryReport {
+    public partial class CollabCenterSummaryReport {
         
         /// <summary>
         /// ddlGrantType control.
@@ -20,15 +20,6 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGrantType;
-        
-        /// <summary>
-        /// ddlCollabCenter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCollabCenter;
         
         /// <summary>
         /// txtFromDate control.
