@@ -162,7 +162,7 @@
                                         <label class="control-label" for="ddlCollabCtrProjects">Projects affiliated with Collaborative Center:</label>
                                     </div>
                                     <div class="col-sm-6">
-                                        <asp:DropDownList ID="ddlCollabCtrProjects" runat="server" CssClass="form-control" AutoPostBack="True">
+                                        <asp:DropDownList ID="ddlCollabCtrProjects" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCollabCtrProjects_Changed" AutoPostBack="True">
                                         </asp:DropDownList>
                                     </div>
                                 </div>

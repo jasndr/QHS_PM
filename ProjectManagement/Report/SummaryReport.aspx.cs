@@ -42,6 +42,10 @@ namespace ProjectManagement.Report
     ///                                    button has been clicked. 
     ///                                 -  Also fixed the error of  the report still pulling from Collaboration Center despite
     ///                                    switching back to the Grant section to view more reports.
+    ///                                 -  Updated Rpt_Paper2 stored procedure so that papers affiliated with projects connected
+    ///                                    with the specified collaboration center could be pulled into the report.
+    ///  2018AUG03 - Jason Delos Reyes  -  Made "Collaboration Center" Report section of the Summary Report page to not be accessible 
+    ///                                    to non-admin users.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
@@ -103,7 +107,7 @@ namespace ProjectManagement.Report
             using (ProjectTrackerContainer context = new ProjectTrackerContainer())
             {
                 IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
-                                
+
                 //11  RmatrixSummary Projects
                 //12  RmatrixSummary HealthcareData
                 //13  RmatrixSummary NonUH
@@ -126,11 +130,24 @@ namespace ProjectManagement.Report
                 Dictionary<int, string> collabCtrSource = new Dictionary<int, string>();
                 collabCtrSource = context.CollabCtr
                                  .Where(d => d.Id > 0)
-                                 .OrderBy(h=>h.NameAbbrv)
+                                 .OrderBy(h => h.NameAbbrv)
                                  .ToDictionary(x => x.Id, x => x.NameAbbrv + " (" + x.Contact + ")");
                 PageUtility.BindDropDownList(ddlCollabCenter, collabCtrSource, "--- Select Collaborative Center ---");
-                
 
+
+                /// Only Admin are allowed to view collaborative center report option.
+                if (!Page.User.IsInRole("Admin"))
+                {
+                    collabCtrSectionTitle.Visible = false;
+                    collabCtrButtonSection.Visible = false;
+
+                }
+                else
+                {
+                    collabCtrSectionTitle.Visible = true;
+                    collabCtrButtonSection.Visible = true;
+
+                }
 
             }
         }
@@ -260,6 +277,7 @@ namespace ProjectManagement.Report
         {
             DataTable dt = grantId == 1 ? new DataTable("tblRmatrixAcademic") 
                          : grantId == 2 ? new DataTable("tblOlaHawaiiAcademic") 
+                         : grantId == 3 ? new DataTable ("tblCollabCtrAcademic")
                                         : new DataTable ("tblSummaryAcademic");
             
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -267,7 +285,7 @@ namespace ProjectManagement.Report
 
             var cmdText = "Rpt_Academic2"; // Calls "Rpt_Academic2" stored procedure in database
 
-            GrantName = grantId == 2 ? "Ola_Hawaii" : "RMATRIX";
+            GrantName = grantId == 2 ? "Ola_Hawaii" : grantId == 1 ? "RMATRIX" : ddlCollabCenter.SelectedItem.Text;
             switch (reportId)
             {
                 case 11:
@@ -343,6 +361,7 @@ namespace ProjectManagement.Report
         {
             DataTable dt = grantId == 1 ? new DataTable("tblRmatrixPub")
                          : grantId == 2 ? new DataTable("tblOlaHawaiiPub")
+                         : grantId == 3 ? new DataTable("tblCollabCtrPub")
                                         : new DataTable("tblSummaryPub");
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -350,7 +369,7 @@ namespace ProjectManagement.Report
 
             var cmdText =  "Rpt_Paper2";
 
-            GrantName = grantId == 2 ? "Ola_Hawaii" : "RMATRIX";
+            GrantName = grantId == 2 ? "Ola_Hawaii" : grantId == 1 ? "RMATRIX" : ddlCollabCenter.SelectedItem.Text;
             switch (reportId)
             {
                 case 11:
@@ -400,6 +419,10 @@ namespace ProjectManagement.Report
                         if (grantId == 2)
                         {
                             cmd.Parameters.AddWithValue("@ProjectGrant", "Ola Hawaii");
+                        }
+                        if (grantId == 3)
+                        {
+                            cmd.Parameters.AddWithValue("@ProjectGrant", ddlCollabCenter.SelectedItem.Text);
                         }
 
 

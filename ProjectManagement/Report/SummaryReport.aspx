@@ -5,22 +5,26 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <b>RMATRIX / Ola Hawaiʻi / Collaboration Center Summary Report</b>
+            <b>RMATRIX / Ola Hawaiʻi <span id="collabCtrSectionTitle" runat="server">/ Collaboration Center </span>Summary Report</b>
         </div>
 
         <div class="panel-body">
             <%--<br />--%>
-            <div>
-                <label>Report Type: </label>
-                &nbsp;
-                <label class="radio-inline">
-                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" class="radio-inline" checked>
-                    Grant
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" class="radio-inline">
-                    Collaboration Center
-                </label>
+            <div class="row">
+                <div class="col-md-1"><label>Report Type: </label></div>
+                <%--&nbsp;--%>
+                <div id="grantButtonSection" class="col-md-1" runat="server">
+                    <label class="radio-inline">
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" class="radio-inline" checked>
+                        Grant
+                    </label>
+                </div>
+                <div id="collabCtrButtonSection" class="col-md-2" runat="server">
+                    <label class="radio-inline">
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" class="radio-inline">
+                        Collaboration Center
+                    </label>
+                </div>
             </div>
             <br />
             <div>
@@ -295,7 +299,7 @@
             else if (document.getElementById('optionsRadios2').checked) {
                 $('#divGrantDropDown').hide();
             }
-            
+
             $('input[type=radio][name=optionsRadios]').change(function () {
                 if (this.value == 'option1') {
                     $('#divGrantDropDown').show();
@@ -306,12 +310,12 @@
                     $('#divCollabCtrDropDown').show();
                 }
             });
-            
+
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         }
 
-         
+
 
         $(document).ready(function () {
             //if ($("#MainContent_txtReportDate").val() == '') {
@@ -358,7 +362,7 @@
             }
         }
 
-       
+
 
         function divToggle() {
             if ($('#MainContent_ddlReport').val() == '') {

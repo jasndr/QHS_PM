@@ -427,9 +427,9 @@ namespace ProjectManagement.Report
             DateTime initialDate = Convert.ToDateTime("2000-01-01");
             DateTime completeDate = Convert.ToDateTime("2099-01-01");
 
-            string leadBiostat="", member="", piAffil="", grant="", pilotGrant="";
+            string /*leadBiostat="",*/ member="", piAffil="", grant="", pilotGrant="";
             bool onGoing = false, isInternal = false, isPilot = false;
-            int serviceType = 0;
+            //int serviceType = 0;
 
             DateTime tempDate;
             if (DateTime.TryParse(TextBoxInitialDate.Text, out tempDate))

@@ -196,7 +196,6 @@
     <Content Include="images\sort_desc.png" />
     <Content Include="images\sort_desc_disabled.png" />
     <Content Include="ProjectForm2.aspx" />
-    <Content Include="Report\CollabCenterSummaryReport.aspx" />
     <Content Include="Report\SummaryReport.aspx" />
     <Content Include="Report\Project.aspx" />
     <Content Include="Report\RmatrixMonthly.aspx" />
@@ -711,13 +710,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DSAcademic.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Report\CollabCenterSummaryReport.aspx.cs">
-      <DependentUpon>CollabCenterSummaryReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Report\CollabCenterSummaryReport.aspx.designer.cs">
-      <DependentUpon>CollabCenterSummaryReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Report\SummaryReport.aspx.cs">
       <DependentUpon>SummaryReport.aspx</DependentUpon>

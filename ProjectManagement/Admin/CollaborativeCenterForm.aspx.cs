@@ -28,6 +28,9 @@ namespace ProjectManagement.Admin
     ///  2018JUL27 - Jason Delos Reyes  -  Added dropdown list of projects associated with the collaboration center so it
     ///                                    would be easier for the admin team to quickly glace through the list of projects
     ///                                    connected to that specific collaboration center.
+    ///  2018AUG02 - Jason Delos Reyes  -  Added functionality so that the page will automatically go to the Project page being
+    ///                                    referred to when selecting the specific project from the recently-added projects
+    ///                                    dropdown page affiliated with the selected Collaborative Center.
     /// </summary>
     public partial class CollaborativeCenterForm : System.Web.UI.Page
     {
@@ -369,5 +372,27 @@ namespace ProjectManagement.Admin
                 Response.Redirect(String.Format("InvoiceForm?CCId={0}&CCName={1}",ccId, txtCCAbbrv.Value));
             }
         }
+
+
+        /// <summary>
+        /// When "Project" dropdown is changed, the system will automatically redirect to the project form of the project
+        /// being referred to.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void ddlCollabCtrProjects_Changed(Object sender, EventArgs e)
+        {
+
+            int projectId = 0;
+            projectId = Int32.TryParse(ddlCollabCtrProjects.SelectedValue, out projectId) ? projectId: -1;
+
+            if (projectId > 0)
+            {
+                Response.Redirect(String.Format("~/ProjectForm2?Id={0}", projectId));
+            }
+
+
+        }
+
     }
 }

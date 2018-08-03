@@ -639,8 +639,8 @@ namespace ProjectManagement.Admin
             decimal phdTotal = 0.0m,
                     msTotal = 0.0m,
                     subTotal = 0.0m,
-                    discount = 0.0m,
-                    grandTotal = 0.0m;
+                    discount = 0.0m/*,
+                    grandTotal = 0.0m*/;
 
             if (!fileExport)
             {
