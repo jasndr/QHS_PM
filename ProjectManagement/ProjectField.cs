@@ -28,5 +28,7 @@ namespace ProjectManagement
         public string Creator { get; set; }
         public System.DateTime CreationDate { get; set; }
         public Nullable<bool> isPhase { get; set; }
+        public Nullable<bool> IsFundingSource { get; set; }
+        public Nullable<bool> IsAcknowledgment { get; set; }
     }
 }

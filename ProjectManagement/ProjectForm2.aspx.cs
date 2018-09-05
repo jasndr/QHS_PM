@@ -63,6 +63,13 @@ namespace ProjectManagement
     ///  2018JUL23 - Jason Delos Reyes  -  Added "Admin Review Email" script to allows users to be notified when their
     ///                                    project has been reviewed by the tracking team and that they are able
     ///                                    to start entering their hours for a project.
+    ///  2018SEP04 - Jason Delos Reyes  -  Added Javascript code on front end to make the "RMATRIX" and "Ola Hawaii" options 
+    ///                                    checked by default on the Acknowledgement section.
+    ///                                 -  Removed G12, AHRQ, and Center for Native and Pacific Islands Health Disparities Research
+    ///                                    from Funding Source; added P30 UHCC grant.
+    ///                                 -  Removed G12, AHRQ, Center for Native and Pacific Islands Health Disparities Research,
+    ///                                    RTRN, No (no funding), and State/County Government options from Acknowledgements;
+    ///                                    added P30 UHCC option.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -85,9 +92,8 @@ namespace ProjectManagement
                 Int32.TryParse(projectId, out id);
 
                 // Auto-populate project if existing id specified.
-                if (id > 0) 
+                if (id > 0)
                     BindProject(id);
-                
                 
                 // Second page is only available for Admin only.
                 if (!Page.User.IsInRole("Admin"))
@@ -413,7 +419,7 @@ namespace ProjectManagement
                 validateResult.Append("Service is required. \\n");
             } else
             {
-                if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked && !chkLetterOfSupportNA.Checked))
+                if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked))
                 {
                     validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified. \\n");
                 }
@@ -559,12 +565,19 @@ namespace ProjectManagement
 
                 /// Populates "Grant" (Changed to "Funding Source") checkbox grid. 
                 dropDownSource = db.ProjectField
-                                .Where(f => f.IsGrant == true)
+                                .Where(f => f.IsGrant == true && f.IsFundingSource == true)
                                 .OrderBy(b => b.Id)
                                 .ToDictionary(c => c.BitValue, c => c.Name);
                 
                 BindTable2(dropDownSource, rptGrant);
-                BindTable2(dropDownSource, rptAkn); // Duplicate for acknowledgements 
+
+                /// Populates "Acknowledgements" checkbox grid.
+                dropDownSource = db.ProjectField
+                                .Where(f => f.IsGrant == true && f.IsAcknowledgment == true)
+                                .OrderBy(b => b.Id)
+                                .ToDictionary(c => c.BitValue, c => c.Name);
+
+                BindTable2(dropDownSource, rptAkn); 
 
                 /// Populates Funding Source > Department Funding dropdown.
                 dropDownSource = db.JabsomAffils
@@ -847,7 +860,6 @@ namespace ProjectManagement
             {
                 chkLetterOfSupportYes.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.Yes;
                 chkLetterOfSupportNo.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.No;
-                chkLetterOfSupportNA.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.NA;
             }
            
             
@@ -1338,7 +1350,7 @@ namespace ProjectManagement
                 IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)HealthDisparityType.Yes : chkHealthDisparityNo.Checked ? (byte)HealthDisparityType.No : chkHealthDisparityNA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
-                IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : chkLetterOfSupportNA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
+                IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
                 GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,
@@ -1894,7 +1906,7 @@ namespace ProjectManagement
             body.AppendLine(@"<p>Quantitative Health Sciences (QHS)<br />
                                 Department of Complementary & Integrative Medicine<br />
                                 University of Hawaii John A. Burns School of Medicine<br />
-                                651 Ilalo Street, Biosciences Building, Suite 211<br />
+                                651 Ilalo Street, Medical Education Building, Suite 411<br />
                                 Honolulu, HI 96813<br />
                                 Phone: (808) 692-1840<br />
                                 Fax: (808) 692-1966<br />

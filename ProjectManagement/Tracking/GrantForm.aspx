@@ -47,7 +47,7 @@
                         </ucc:DropDownListChosen>
                     </div>
                     <div class="col-xs-6 col-md-3">
-                        BQHS Staff
+                        QHS Faculty/Staff
                         <asp:DropDownList ID="ddlBiostat" runat="server" CssClass="form-control">
                         </asp:DropDownList>
                     </div>

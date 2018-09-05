@@ -10,9 +10,25 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: GrantForm.aspx.cs
+    /// @Author: Yang Rui
+    /// @Summary: Grant Form to keep internal tracking information for grants.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018AUG06 - Jason Delos Reyes  -  Added documentation for easier readibility and maintainability.
+    /// </summary>
     public partial class GrantForm : System.Web.UI.Page
     {
         GrantManager mgr = GrantManager.Mgr;
+
+        /// <summary>
+        /// Binds the page in preparation for view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             //int projectId = 0;
@@ -32,6 +48,9 @@ namespace ProjectManagement.Admin
 
         }
 
+        /// <summary>
+        /// Binds the dropdown options on page load.
+        /// </summary>
         private void BindControl()
         {
             if (!Creator.Equals(string.Empty))
@@ -59,11 +78,21 @@ namespace ProjectManagement.Admin
             }
         }        
 
+        /// <summary>
+        /// Gets data form database upon clicking the "Submit" button to 
+        /// extract a data table of grants, with the appropriate
+        /// parameters specified.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSumbit_Click(object sender, EventArgs e)
         {
             BindGridViewGrantAll();
         }
 
+        /// <summary>
+        /// Obtains data table information from the database.
+        /// </summary>
         private void BindGridViewGrantAll()
         {
             //int piId = -1, biostatId = -1;
@@ -80,6 +109,11 @@ namespace ProjectManagement.Admin
             GridViewGrant.DataBind();
         }
 
+        /// <summary>
+        /// Obtains grant table based on what has been specified from the
+        /// dropdown selections.
+        /// </summary>
+        /// <returns></returns>
         private DataTable GetGrantTable()
         {
             int piId = -1, biostatId = -1;
@@ -93,6 +127,13 @@ namespace ProjectManagement.Admin
             return mgr.GetGrantAll(piId, biostatId, fundStatusId, exinternal);
         }
 
+        /// <summary>
+        /// If the id number has been clicked on the data table of grants presented,
+        /// the program loads the grant form associated with the grant ID and 
+        /// the corresponding row.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewGrant_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))
@@ -110,6 +151,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Loads "Add/Edit" Grant form with originally/previously entered 
+        /// grant information.
+        /// </summary>
+        /// <param name="grantId">Referred grant</param>
         private void LoadEditGrant(int grantId)
         {
             Grant grant = mgr.GetGrantById(grantId);            
@@ -121,15 +167,29 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Populates Grant form from information obtained from
+        /// grant instance.
+        /// </summary>
+        /// <param name="grant">Referred grant.</param>
         private void BindEditModal(Grant grant)
         {
+            // Sets grant form with grant information provided.
             SetGrant(grant);
 
+            // Sets Principal Investigator text box for grant form.
             SetGrantPI(grant.GrantPIs);
 
+            // Populates Biostatistician section of grant form.
             BindGridViewBiostat(grant.GrantBiostats);
         }        
 
+        /// <summary>
+        /// Given the list of QHS faculty, populates the "Biostatistician" form
+        /// on the botton, with their associated percentage, fee, how many 
+        /// years of grant, and note/commentary.
+        /// </summary>
+        /// <param name="grantBiostat"></param>
         private void BindGridViewBiostat(ICollection<GrantBiostat> grantBiostat)
         {
             DataTable dt = CreateBiostatTable(grantBiostat, true);
@@ -137,6 +197,11 @@ namespace ProjectManagement.Admin
             GridViewBiostat.DataBind();
         }
 
+        /// <summary>
+        /// Deletes Biostatistician row on Grant Form if trash icon/delete button selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewBiostat_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = GridViewBiostat.Rows[e.RowIndex];
@@ -156,11 +221,22 @@ namespace ProjectManagement.Admin
             BindGridViewBiostat(e.RowIndex);
         }
 
+        /// <summary>
+        /// Adds row for "Biostatistician" row to add person for the current grant form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAddBiostat_Click(object sender, EventArgs e)
         {
             BindGridViewBiostat(-1);
         }
 
+        /// <summary>
+        /// Deletes "Biostatistician" (QHS Faculty/Staff) section row based on row selected to delete.
+        /// Actually deletes all rows and regenerates entire "Biostatistician" section besides the 
+        /// index that was specifed to delete.
+        /// </summary>
+        /// <param name="deleteRowIndex">Row to delete.</param>
         private void BindGridViewBiostat(int deleteRowIndex)
         {
             DataTable dt = CreateBiostatTable(null, false);
@@ -200,6 +276,14 @@ namespace ProjectManagement.Admin
             GridViewBiostat.DataBind();
         }
 
+        /// <summary>
+        /// Creates "Biostatistician" (QHS Faculty/Staff) table with the given GrantBiostat (Biostatiscians assoicated with
+        /// the instance of the grant) information and creates the grid with pre-filled information from the database.
+        /// </summary>
+        /// <param name="grantBiostat">Biostatisticians (QHS faculty/staff members) associated with the instance of the grant.</param>
+        /// <param name="hasRow">Indicates whether or not to add an empty row to the "Biostatistician" table if no QHS/Faculty
+        ///                      have already beeen associated with the referred grant.</param>
+        /// <returns></returns>
         private DataTable CreateBiostatTable(ICollection<GrantBiostat> grantBiostat, bool hasRow)
         {
             DataTable dt = new DataTable();
@@ -233,6 +317,12 @@ namespace ProjectManagement.Admin
             return dt;
         }        
         
+        /// <summary>
+        /// Prepopulates data table for "Biostatistician" section of the grant form;
+        /// notably the Biostat (QHS Faculty/Staff) dropdown to select a member for grant information.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void GridViewBiostat_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -273,7 +363,11 @@ namespace ProjectManagement.Admin
             }
         }      
                
-
+        /// <summary>
+        /// Creates a new form for a new Grant entry form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             ClearEditForm();
@@ -282,7 +376,12 @@ namespace ProjectManagement.Admin
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
                        "ModalScript", PageUtility.LoadEditScript(true), false);
         }
-
+        /// <summary>
+        /// Saves current grant entry form.
+        /// - If the grant was previously saved >> save the current grant into the referred grant instance form the grant ID given.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             int grantId = 0;
@@ -316,6 +415,12 @@ namespace ProjectManagement.Admin
             BindGridViewGrantAll();
         }
 
+        /// <summary>
+        /// Obtains list of Biostatisticians (QHS faculty/staff) corresponding to the grant based on the
+        /// grant ID specified.
+        /// </summary>
+        /// <param name="grantId">Referred Grant ID.</param>
+        /// <returns>List of Biostatisticians (QHS faculty/staff) corresponding to grant.</returns>
         private List<GrantBiostat> GetGrantBiostat(int grantId)
         {
             List<GrantBiostat> lstBiostat = new List<GrantBiostat>();
@@ -401,6 +506,11 @@ namespace ProjectManagement.Admin
         //    }
         //}
 
+
+        /// <summary>
+        /// Fundamentally clears the current grant web form to create a fresh new
+        /// grant form for entry.
+        /// </summary>
         private void ClearEditForm()
         {
             Grant grant = new Grant();
@@ -414,6 +524,10 @@ namespace ProjectManagement.Admin
             BindGridViewBiostat(new List<GrantBiostat>());
         }       
         
+        /// <summary>
+        /// Obtains user information and records this information as the user who created
+        /// the grant record.
+        /// </summary>
         public string Creator
         {
             get
@@ -422,6 +536,9 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Obtains current grant information of the current instance of a grant.
+        /// </summary>
         public object MyGrant
         {
             get
@@ -434,6 +551,12 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Given a grant ID, creates an instance of a Grant from the values 
+        /// entered through the grant form and returns this instance.
+        /// </summary>
+        /// <param name="grantId">Referred Grant ID.</param>
+        /// <returns>Instance of Grant obtained from grant form entered on web interface.</returns>
         private Grant GetGrant(int grantId)
         {
             DateTime dt;
@@ -471,6 +594,10 @@ namespace ProjectManagement.Admin
             return grant;
         }
 
+        /// <summary>
+        /// Sets the Grant Form with the instance of the grant provided (and presumably obtained from the database.)
+        /// </summary>
+        /// <param name="grant">Referred instance of a grant.</param>
         private void SetGrant(Grant grant)
         {
             if (grant != null)
@@ -527,6 +654,12 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Sets the grant project's PI based on the list given.
+        /// Most likely obtained from list of PI's corresponding
+        /// to the project that the grant is affiliated with.
+        /// </summary>
+        /// <param name="piList">The given list of investigators.</param>
         private void SetGrantPI(ICollection<GrantPI> piList)
         {
             bool disabled = false;
@@ -551,6 +684,12 @@ namespace ProjectManagement.Admin
             TextBoxPI.ReadOnly = disabled;
         }
 
+        /// <summary>
+        /// Creates an excel file of the list of grants (based on the available, optional parameters of Principal Investigator,
+        /// QHS Faculty/Staff, Fund Status, and/or Internal/External grants) that have been displayed on the Tracking > Grant main page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
             DataTable dt = GetGrantTable();

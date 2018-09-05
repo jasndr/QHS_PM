@@ -76,6 +76,15 @@ namespace ProjectManagement.Model
             return controlSource;
         }
 
+        /// <summary>
+        ///  Pulls the grant table based on whether or not a principal investigator, 
+        ///  QHS staff, fund status, or internal/external dropdown value was specified.
+        /// </summary>
+        /// <param name="piId">Referred Principal Investigator.</param>
+        /// <param name="biostatId">Referred QHS Faculty/Staff.</param>
+        /// <param name="fundStatusId">Fund status (unknown, funded, not funded, pending).</param>
+        /// <param name="exinternal">Specify whether grant is internal or external.</param>
+        /// <returns></returns>
         internal DataTable GetGrantAll(int piId, int biostatId, int fundStatusId, int exinternal)
         {
             DataTable dt = new DataTable("grantTable");
@@ -156,6 +165,12 @@ namespace ProjectManagement.Model
             return dt;
         }
 
+        /// <summary>
+        /// Given the provided grant ID, finds the corresponding Grant in the database
+        /// and returns the instance of the grant.
+        /// </summary>
+        /// <param name="grantId">Referred grant ID.</param>
+        /// <returns>Grant corresponding to given grand ID.</returns>
         internal Grant GetGrantById(int grantId)
         {
             Grant grant;
@@ -209,6 +224,10 @@ namespace ProjectManagement.Model
             return grant;
         }
 
+        /// <summary>
+        /// Deletes a "Biostatistician" (QHS Faculty/Staff) row with percentage/fee/year/note information.
+        /// </summary>
+        /// <param name="grantBiostatId">Given Biostat (QHS Faculty/Staff) ID.</param>
         internal void DeleteGrantBiostatById(int grantBiostatId)
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())

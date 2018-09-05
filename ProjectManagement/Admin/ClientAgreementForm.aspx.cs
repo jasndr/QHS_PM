@@ -14,8 +14,33 @@ using System.Data.Entity;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: ClientAgreementForm.aspx.cs
+    /// @Front End : ClientAgreementForm.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Form to keep track of information in the signed client agreement form. Also links a project and a phase
+    ///           to the corresponding Collaboration Center to keep track of approved PhD and MS hours for a project.
+    ///           The agreement is also uploaded for records into the database.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018AUG08 - Jason Delos Reyes  -  Added documentation for easier readibility and maintainability.
+    ///                                 -  Reordered the dropdown of Collaboration Centers from in order by
+    ///                                    Collaboration Center ID number to the alphabetical order of the
+    ///                                    Collaboration Center name abbreviation.
+    ///  2018AUG09 - Jason Delos Reyes  -  Made Projects dropdown typeable and searchable to make it easier
+    ///                                    to look for projects with new client agreements.  Also able to
+    ///                                    make custom size for dropdown through overriding its CSS code.
+    /// </summary>
     public partial class ClientAgreementForm : System.Web.UI.Page
     {
+        /// <summary>
+        /// Loads page with fields with the correct information
+        /// in preparation for data entry and/or interaction.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -24,7 +49,10 @@ namespace ProjectManagement.Admin
             }           
         }
                 
-
+        /// <summary>
+        /// Binds the necessary drop down sources from the database and
+        /// binds the proper client agreement form if necessary.
+        /// </summary>
         private void BindControl()
         {
             IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
@@ -32,7 +60,7 @@ namespace ProjectManagement.Admin
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
                 dropDownSource = db.CollabCtr
-                                .OrderBy(c => c.Id)
+                                .OrderBy(c=>c.NameAbbrv)//.OrderBy(c => c.Id)
                                 .Where(c => c.Id > 0)
                                 .Select(x => new { x.Id, FullName = (x.NameAbbrv + " | " + x.Name) })
                                 .ToDictionary(c => c.Id, c => c.FullName);
@@ -61,11 +89,22 @@ namespace ProjectManagement.Admin
             BindRptClientAgmt();
         }
 
+        /// <summary>
+        /// Display a list of Client Agreements on the data table if the collaboration center
+        /// choice has been changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlCollab_Changed(Object sender, EventArgs e)
         {
             BindRptClientAgmt();
         }
 
+        /// <summary>
+        /// Saves the current project form into the database when the "Save" button has been selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             int id = 0;
@@ -127,6 +166,9 @@ namespace ProjectManagement.Admin
             BindRptClientAgmt();
         }
 
+        /// <summary>
+        /// Binds the Client Agreement from the database to the web form.
+        /// </summary>
         private void BindRptClientAgmt()
         {
             var dt = CreateAgreementDataTable(true);
@@ -135,6 +177,13 @@ namespace ProjectManagement.Admin
             rptClientAgmt.DataBind();
         }
 
+        /// <summary>
+        /// Populates Client Agreement Form based on what has been recorded
+        /// in the database and/or obtains values from textboxes on the web form.
+        /// </summary>
+        /// <param name="isFromDb">Specifies if current client agreement form should be pulled
+        ///                        from the database or not.</param>
+        /// <returns></returns>
         private DataTable CreateAgreementDataTable(bool isFromDb)
         {
             int collabId = 0;
@@ -283,6 +332,11 @@ namespace ProjectManagement.Admin
             return dt;
         }
 
+        /// <summary>
+        /// Saves current client agreement instance into the database.
+        /// </summary>
+        /// <param name="ca">Referred Client Agreement</param>
+        /// <returns>Integer</returns>
         private int SaveClientAgmt(ClientAgmt ca)
         {
             int caid = -1;
@@ -334,6 +388,15 @@ namespace ProjectManagement.Admin
             return caid;
         }
 
+        /// <summary>
+        /// With the given client agreement information, extracts the client agreement information
+        /// from the web form into a new client agreement instance and returns this client
+        /// agreement instance.
+        /// </summary>
+        /// <param name="id">Client Agreement Id.</param>
+        /// <param name="strFilename">Name of uploaded Client Agreement file.</param>
+        /// <param name="myData">Uploaded client agreement file.</param>
+        /// <returns>Instance of client agreement.</returns>
         private ClientAgmt GetClientAgmt(int id, string strFilename, byte[] myData)
         {
             int intOutput;
@@ -465,6 +528,11 @@ namespace ProjectManagement.Admin
         }
 
 
+        /// <summary>
+        /// With the given client agreement, sets the web form from the provided
+        /// instance of the client agreement.
+        /// </summary>
+        /// <param name="ca">Provided instance of the client agreement.</param>
         private void SetClientAgmt(ClientAgmt ca)
         {
             txtId.Value = ca.Id.ToString();
@@ -501,6 +569,12 @@ namespace ProjectManagement.Admin
             txtComments.Value = ca.Comments;
         }
 
+        /// <summary>
+        /// Based on the given Client Agreement ID, returns the instance of a client
+        /// agreement instance.
+        /// </summary>
+        /// <param name="id">Given Client Agreement ID.</param>
+        /// <returns>Instance of the Client Agreement matched to given ID.</returns>
         private ClientAgmt GetClientAgmtById(int id)
         {
             ClientAgmt ca = null;
@@ -555,6 +629,15 @@ namespace ProjectManagement.Admin
             return ca;
         }
 
+        /// <summary>
+        /// Prepares a clean new Client Agreement form when "Add Client Agreement" button 
+        /// is clicked from the Collaboration Center.
+        /// 
+        /// Note: There is no way of adding a new client agreement form from the 
+        /// Admin > Billing > Client Agreement section of the tracking database at the moment.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             ClearEditForm();
@@ -563,6 +646,9 @@ namespace ProjectManagement.Admin
                        "ModalScript", PageUtility.LoadEditScript(true), false);
         }
 
+        /// <summary>
+        /// Clearns Client Agreement form by clearing otu the choices of the Project Phase and Status dropdown boxes.
+        /// </summary>
         private void ClearEditForm()
         {
             ddlProjectPhase.Items.Clear();
@@ -589,6 +675,11 @@ namespace ProjectManagement.Admin
             return isValid;
         }
 
+        /// <summary>
+        /// Exports the list of Client Agreements that have been listed in the main collabration center data table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
             DataTable dt = CreateAgreementDataTable(false);

@@ -31,6 +31,9 @@ namespace ProjectManagement.Admin
     ///  2018AUG02 - Jason Delos Reyes  -  Added functionality so that the page will automatically go to the Project page being
     ///                                    referred to when selecting the specific project from the recently-added projects
     ///                                    dropdown page affiliated with the selected Collaborative Center.
+    ///  2018AUG16 - Jason Delos Reyes  -  Formulated the "list of projects associated with collaborative center" dropdown to
+    ///                                    temporarily force the School of Nursing & Dental Hygiene to generate its own 
+    ///                                    associated list of students until a more universal solution can be implemented.
     /// </summary>
     public partial class CollaborativeCenterForm : System.Web.UI.Page
     {
@@ -204,15 +207,24 @@ namespace ProjectManagement.Admin
                     /// Populates dropdown of projects associated with the collaboration center.
                     using (ProjectTrackerContainer db = new ProjectTrackerContainer())
                     {
-                       
-                        dropDownSource = db.Project2
-                                        .Join(db.ClientAgmt, p => p.Id, ca => ca.Project2Id, (p, ca) => new { p, ca })
-                                        .Where(j => j.ca.CollabCtrId == id)
-                                        .OrderByDescending(y => y.p.Id)
-                                        .Select(x => new { x.p.Id, FullName = (x.p.Id + " " + x.p.Title).Substring(0, 150) })
-                                        .Distinct()
-                                        .ToDictionary(d => d.Id, d => d.FullName);
-
+                         /// Pulls list of projects associated with collaborative center OR
+                         /// if collaborative center is SONDH, pulls the projects with 
+                         /// "MOU" listed as the grant payment.
+                         dropDownSource = db.Project2
+                                               .GroupJoin(
+                                                  db.JabsomAffils,
+                                                  p=>p.GrantDepartmentFundingType,
+                                                  ja=>ja.Id,
+                                                  (p, ja) => new { p, ja })
+                                               .Where(y => y.p.ClientAgmt.FirstOrDefault().CollabCtrId == id
+                                                      || (id == 116
+                                                           && y.ja.FirstOrDefault().Name == "School of Nursing & Dental Hygiene")
+                                                           && (y.p.GrantOther.Contains("MOU") || (y.p.AknOther.Contains("MOU"))))
+                                               .OrderByDescending(y => y.p.Id)
+                                               .Select(x => new { x.p.Id, FullName = (x.p.Id + " " + x.p.Title).Substring(0, 150) })
+                                               .Distinct()
+                                               .ToDictionary(d => d.Id, d => d.FullName);
+                        
 
                         PageUtility.BindDropDownList(ddlCollabCtrProjects, dropDownSource, "-- List of Projects for Collaborative Center --");
                     }

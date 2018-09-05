@@ -512,6 +512,8 @@
           <Property Name="Creator" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="isPhase" Type="bit" />
+          <Property Name="IsFundingSource" Type="bit" />
+          <Property Name="IsAcknowledgment" Type="bit" />
         </EntityType>
         <EntityType Name="ProjectGrants">
           <Key>
@@ -3993,6 +3995,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Creator" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="isPhase" Type="Boolean" />
+          <Property Name="IsFundingSource" Type="Boolean" />
+          <Property Name="IsAcknowledgment" Type="Boolean" />
         </EntityType>
         <Association Name="FK_InvestProject2">
           <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
@@ -5163,6 +5167,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="ProjectField">
             <EntityTypeMapping TypeName="ProjectTracker.ProjectField">
               <MappingFragment StoreEntitySet="ProjectField">
+                <ScalarProperty Name="IsAcknowledgment" ColumnName="IsAcknowledgment" />
+                <ScalarProperty Name="IsFundingSource" ColumnName="IsFundingSource" />
                 <ScalarProperty Name="isPhase" ColumnName="isPhase" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="Creator" ColumnName="Creator" />

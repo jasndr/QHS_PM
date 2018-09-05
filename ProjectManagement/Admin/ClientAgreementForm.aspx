@@ -1,4 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClientAgreementForm.aspx.cs" Inherits="ProjectManagement.Admin.ClientAgreementForm" %>
+
+<%@ Register Assembly="DropDownChosen" Namespace="CustomDropDown" TagPrefix="ucc" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="../Content/fileinput.css" rel="stylesheet" />
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
@@ -6,7 +8,9 @@
     <script src="../Scripts/fileinput.js"></script>   
     <script src="<%=Page.ResolveUrl("~/Scripts/jquery.dataTables.min.js")%>"></script>
     <script src="<%=Page.ResolveUrl("~/Scripts/dataTables.bootstrap.min.js")%>"></script>
+    <script src="../Scripts/chosen.jquery.js"></script>
     <link href="../Content/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/chosen.css" rel="stylesheet" />
     <style>
        .rightAlign {
             text-align: right;
@@ -20,7 +24,13 @@
        }
        .file-footer-buttons {
             display : none;
-        }
+       }
+       #projectsSelect .chosen-container .chosen-drop {
+           width: 200% !important;
+       }
+       #projectsSelect .chosen-single {
+           width: 100% !important;
+       }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -158,8 +168,18 @@
                                 <div class="row form-group-md">
                                     <div class="col-sm-2 text-left"><label class="control-label" for="txtFirstName">Project ID:</label></div>
                                     <div class="col-sm-5">
-                                        <asp:DropDownList ID="ddlProject" runat="server" CssClass="form-control">
-                                        </asp:DropDownList>
+
+                                        <%--<asp:DropDownList ID="ddlProject" runat="server" CssClass="form-control">
+                                        </asp:DropDownList>--%>
+
+                                        <div id="projectsSelect">
+                                            <ucc:DropDownListChosen ID="ddlProject" runat="server" 
+                                                CssClass="form-control" Width="100px"
+                                                NoResultsText="No results match."
+                                                DataPlaceHolder="Search Projects" AllowSingleDeselect="true">
+                                            </ucc:DropDownListChosen>
+                                        </div>
+
                                     </div>
                                     <label class="col-sm-1 control-label" for="txtPI">PI:</label>
                                     <div class="col-sm-4">
@@ -463,6 +483,8 @@
             $('#li_super').addClass('selected');
             $('#li_payment').addClass('selected');
             $('#li_clientagmtform').addClass('selected');
+
+            //$('#MainContent_ddlProject').css("width", "100%");
 
             $('#editModal').on('shown.bs.modal', function () {
                 $('#editModal').scrollTop(5);

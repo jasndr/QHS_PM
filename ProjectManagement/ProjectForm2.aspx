@@ -430,16 +430,13 @@
                         <div class="row">
                             <div class="col-sm-6" id="divLetterOfSupport">
                                 <div class="col-sm-3">
-                                    <label for="chkLetterOfSupportYes">Letter of Support submitted with grant?</label>
+                                    <label for="chkLetterOfSupportYes">Letter of Support only?</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <asp:CheckBox ID="chkLetterOfSupportYes" runat="server" Text="Yes"></asp:CheckBox>
                                 </div>
                                 <div class="col-sm-3">
                                     <asp:CheckBox ID="chkLetterOfSupportNo" runat="server" Text="No"></asp:CheckBox>
-                                </div>
-                                <div class="col-sm-3">
-                                    <asp:CheckBox ID="chkLetterOfSupportNA" runat="server" Text="N/A"></asp:CheckBox>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -1106,6 +1103,26 @@
 
             });
 
+            // Makes "RMATRIX" and "Ola Hawaii" checkboxes checked by default
+            // if there is no ID already tied to the project form.
+            var projectId = $("#MainContent_lblProjectId").text();
+                if (projectId == null || projectId == 0) {
+                    $('#tblAkn').find('td').each(function () {
+                    var _aknCheckBox = $(this).find(":input[name$='chkId']"),
+                        //_aknBitValue = $(this).find(":input[name$='BitValue']").val(),
+                        _aknName = $(this).eq(0).text().trim();
+
+                    if (_aknName == 'RMATRIX' || _aknName == 'Ola Hawaii') {
+                        _aknCheckBox.prop("checked", true);
+                    }
+
+
+                });
+            }
+
+            
+
+
             // Initializes date for date fields.
             var initDate = new biostatNS.DatePicker('dtpInitialDate');
             initDate.init();
@@ -1211,7 +1228,7 @@
                 $('#divHealthDisparity'));
 
             ToggleDiv($('#MainContent_rptService_chkId_3'), $('#divLetterOfSupport'));
-            
+
 
             // -- Hides/shows certain sections if certain selections are made -- \\
             $('#MainContent_chkIsRmatrix').change(function () {
@@ -1256,8 +1273,8 @@
                 'input[type="checkbox"]',
                 function () {
                     if ($(this).is($('#MainContent_rptStudyPopulation_chkId_0')) // Native Hawaiians,
-                                                                                 //--- Pacific Islanders,
-                                                                                 //--- and Filipinos
+                        //--- Pacific Islanders,
+                        //--- and Filipinos
                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_1')) // Hawaii Populations
                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_2')) // U.S. Populations
                         || $(this).is($('#MainContent_rptStudyPopulation_chkId_3')) // International Populations
@@ -1318,7 +1335,7 @@
                 _textOther = _table.next().find(":input[name$='Other']"),
                 _textBitSum = _table.next().find(":input[name$='BitSum']"),
                 _id = _table.attr('id');
-                
+
 
             // If the "Other" checkbox is checked, then then the "other" field is displayed.
             // The bit sum total is added from the bit value of the checkbox.
@@ -1334,12 +1351,11 @@
                         if (_name == 'Other' || _name == 'International Populations') {
 
                             //alert(_id + ' is the table id');
-                            
+
                             if (_checkBox.is(':checked')) {
                                 _textOther.show();
 
-                                if (_id == 'tblGrant' || _id == 'tblAkn')
-                                {
+                                if (_id == 'tblGrant' || _id == 'tblAkn') {
                                     _textOther.parent().find('label').show();
                                 }
                             }
@@ -1347,11 +1363,10 @@
                                 _textOther.hide();
                                 $(_textOther).val('');
 
-                                if (_id == 'tblGrant' || _id == 'tblAkn')
-                                {
+                                if (_id == 'tblGrant' || _id == 'tblAkn') {
                                     _textOther.parent().find('label').hide();
                                 }
-                                
+
                             }
                         }
 
@@ -1362,8 +1377,8 @@
                                 _aknBitSum = 0;
                             // if _checkbox is checked
                             _checkBox.change(function () {
-                                if (_checkBox.is(':checked')){
-                                // find checkbox where _name is tblAkn.checkbox.name
+                                if (_checkBox.is(':checked')) {
+                                    // find checkbox where _name is tblAkn.checkbox.name
                                     _tableAkn.find('td').each(function () {
                                         var _aknCheckBox = $(this).find(":input[name$='chkId']"),
                                             _aknBitValue = $(this).find(":input[name$='BitValue']").val(),
@@ -1384,7 +1399,7 @@
                                         }
                                         // update bitsum for calculation
                                         if (_aknCheckBox.is(':checked'))
-                                           _aknBitSum += parseInt(_aknBitValue, 10);
+                                            _aknBitSum += parseInt(_aknBitValue, 10);
 
                                         if (_aknName == 'N/A' && _aknCheckBox.is(':checked')) {
                                             ToggleTable(_tableAkn, true);
@@ -1396,13 +1411,13 @@
                                     });
                                 }
                             });
-                            
-                                
+
+
                             // for each checkbox, if _checkbox is checked and if tblGrant.Name = tblAkn.name
                         }
 
                         if (_name == 'Department Funding' && _id == 'tblGrant') {
-                            
+
 
                             if (_checkBox.is(':checked')) {
                                 //ddldropdown show
@@ -1412,14 +1427,12 @@
 
                                 $('#MainContent_ddlDepartmentFunding').change(function () {
                                     var selectedVal = this.value;
-                                    
-                                    if (selectedVal == 96)
-                                    {
+
+                                    if (selectedVal == 96) {
                                         $('#MainContent_txtDeptFundOth').show();
                                         $('#MainContent_txtDeptFundOth').parent().find('label').show();
                                     }
-                                    else
-                                    {
+                                    else {
                                         $('#MainContent_txtDeptFundOth').val('');
                                         $('#MainContent_txtDeptFundOth').hide();
                                         $('#MainContent_txtDeptFundOth').parent().find('label').hide();
@@ -1430,8 +1443,7 @@
                                     $('#MainContent_txtDeptFundOth').show();
                                     $('#MainContent_txtDeptFundOth').parent().find('label').show();
                                 }
-                                else
-                                {
+                                else {
                                     $('#MainContent_txtDeptFundOth').val('');
                                     $('#MainContent_txtDeptFundOth').hide();
                                     $('#MainContent_txtDeptFundOth').parent().find('label').hide();
@@ -1453,7 +1465,7 @@
                         }
 
                         if (_name == 'Department Funding' && _id == 'tblAkn') {
-                            
+
 
                             if (_checkBox.is(':checked')) {
                                 //ddldropdown show
@@ -1463,14 +1475,12 @@
 
                                 $('#MainContent_ddlAknDepartmentFunding').change(function () {
                                     var selectedVal = this.value;
-                                    
-                                    if (selectedVal == 96)
-                                    {
+
+                                    if (selectedVal == 96) {
                                         $('#MainContent_txtAknDeptFundOth').show();
                                         $('#MainContent_txtAknDeptFundOth').parent().find('label').show();
                                     }
-                                    else
-                                    {
+                                    else {
                                         $('#MainContent_txtAknDeptFundOth').val('');
                                         $('#MainContent_txtAknDeptFundOth').hide();
                                         $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();

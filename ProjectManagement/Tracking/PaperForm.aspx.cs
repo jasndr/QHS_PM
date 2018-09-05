@@ -1537,11 +1537,11 @@ namespace ProjectManagement.Admin
         //    }
         //}
 
-            /// <summary>
-            /// Action taken when row is being deleted in the affiliations section of the paper form.
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
+        /// <summary>
+        /// Action taken when row is being deleted in the affiliations section of the paper form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void gvAffil_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvAffil.Rows[e.RowIndex];
