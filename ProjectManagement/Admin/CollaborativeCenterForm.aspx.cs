@@ -34,6 +34,12 @@ namespace ProjectManagement.Admin
     ///  2018AUG16 - Jason Delos Reyes  -  Formulated the "list of projects associated with collaborative center" dropdown to
     ///                                    temporarily force the School of Nursing & Dental Hygiene to generate its own 
     ///                                    associated list of students until a more universal solution can be implemented.
+    ///  2018SEP13 - Jason Delos Reyes  -  Added a "list of client agreements associated with collaborative center" dropdown
+    ///                                    but did not yet add "go to page" functionality for client agreements.
+    ///  2018SEP18 - Jason Delos Reyes  -  Added "go to page" functionality for client agreement dropdown. Also added drop down 
+    ///                                    for Collaborative Centers on the front page with the "go to page" functionality also
+    ///                                    included, despite the fact that users can already easily click the "edit" button
+    ///                                    in the grid of listed Collaborative Centers.
     /// </summary>
     public partial class CollaborativeCenterForm : System.Web.UI.Page
     {
@@ -60,6 +66,7 @@ namespace ProjectManagement.Admin
         protected void btnClose_Click(object sender, EventArgs e)
         {
             collabCtrProjSxn.Visible = false;
+            collabCtrClientAgmtSxn.Visible = false;
         }
 
         /// <summary>
@@ -140,6 +147,9 @@ namespace ProjectManagement.Admin
 
             rptCC.DataSource = ccTable;
             rptCC.DataBind();
+
+            LoadCCForm(-1);
+
         }
 
         /// <summary>
@@ -199,47 +209,76 @@ namespace ProjectManagement.Admin
 
                 if (id > 0)
                 {
-
-                    collabCtrProjSxn.Visible = true;
-
-                    var dropDownSource = new Dictionary<int, string>();
-
-                    /// Populates dropdown of projects associated with the collaboration center.
-                    using (ProjectTrackerContainer db = new ProjectTrackerContainer())
-                    {
-                         /// Pulls list of projects associated with collaborative center OR
-                         /// if collaborative center is SONDH, pulls the projects with 
-                         /// "MOU" listed as the grant payment.
-                         dropDownSource = db.Project2
-                                               .GroupJoin(
-                                                  db.JabsomAffils,
-                                                  p=>p.GrantDepartmentFundingType,
-                                                  ja=>ja.Id,
-                                                  (p, ja) => new { p, ja })
-                                               .Where(y => y.p.ClientAgmt.FirstOrDefault().CollabCtrId == id
-                                                      || (id == 116
-                                                           && y.ja.FirstOrDefault().Name == "School of Nursing & Dental Hygiene")
-                                                           && (y.p.GrantOther.Contains("MOU") || (y.p.AknOther.Contains("MOU"))))
-                                               .OrderByDescending(y => y.p.Id)
-                                               .Select(x => new { x.p.Id, FullName = (x.p.Id + " " + x.p.Title).Substring(0, 150) })
-                                               .Distinct()
-                                               .ToDictionary(d => d.Id, d => d.FullName);
-                        
-
-                        PageUtility.BindDropDownList(ddlCollabCtrProjects, dropDownSource, "-- List of Projects for Collaborative Center --");
-                    }
-
-
-                    CollabCtr cc = GetCollabCtrById(id);
-
-                    if (cc != null)
-                    {
-                        SetCollabCtr(cc);
-
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                                   "ModalScript", PageUtility.LoadEditScript(true), false);
-                    }
+                    LoadCCForm(id);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Loads Collaborative Center form given id.
+        /// </summary>
+        /// <param name="id">Referred collab center id.</param>
+        private void LoadCCForm(int id)
+        {
+            collabCtrProjSxn.Visible = true;
+            collabCtrClientAgmtSxn.Visible = true;
+
+            var dropDownSource = new Dictionary<int, string>();
+
+            /// Populates dropdowns of projects and client agreements associated with the collaboration center.
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                /// List of Collab Centers
+                dropDownSource = db.CollabCtr
+                                   .OrderBy(c => c.Id)
+                                   .Where(c => c.Id > 0)
+                                   .Select(x => new { x.Id, FullName = (x.NameAbbrv + " | " + x.Name) })
+                                   .ToDictionary(c => c.Id, c => c.FullName);
+                PageUtility.BindDropDownList(ddlCollab, dropDownSource, string.Empty);
+
+                /// Pulls list of projects associated with collaborative center OR
+                /// if collaborative center is SONDH, pulls the projects with 
+                /// "MOU" listed as the grant payment.
+                dropDownSource = db.Project2
+                                      .GroupJoin(
+                                         db.JabsomAffils,
+                                         p => p.GrantDepartmentFundingType,
+                                         ja => ja.Id,
+                                         (p, ja) => new { p, ja })
+                                      .Where(y => y.p.ClientAgmt.FirstOrDefault().CollabCtrId == id
+                                             || (id == 116
+                                                  && y.ja.FirstOrDefault().Name == "School of Nursing & Dental Hygiene")
+                                                  && (y.p.IsMOU == 1 || y.p.GrantOther.Contains("MOU") || (y.p.AknOther.Contains("MOU"))))
+                                      .OrderByDescending(y => y.p.Id)
+                                      .Select(x => new { x.p.Id, FullName = (x.p.Id + " " + x.p.Title).Substring(0, 150) })
+                                      .Distinct()
+                                      .ToDictionary(d => d.Id, d => d.FullName);
+
+
+                PageUtility.BindDropDownList(ddlCollabCtrProjects, dropDownSource, "-- List of Projects for Collaborative Center --");
+
+                /// Pulls list of Client Agreements associated with collaborative center.
+                dropDownSource = db.ClientAgmt
+                                     .Join(db.CollabCtr, ca => ca.CollabCtrId, cct => cct.Id, (ca, cct) => new { ca, cct })
+                                     .Where(z => z.ca.CollabCtrId == id)
+                                     .OrderByDescending(y => y.ca.Id)
+                                     .Select(x => new { x.ca.Id, FullName = (x.ca.Id + " - " + x.ca.AgmtId + " - " + x.ca.ProjectPhase + " - Project ID " + x.ca.Project2Id).Substring(0, 150) })
+                                     .Distinct()
+                                     .ToDictionary(d => d.Id, d => d.FullName);
+
+                PageUtility.BindDropDownList(ddlCollabCtrClientAgmts, dropDownSource, "-- List of Client Agreements for Collaborative Center --");
+                
+            }
+
+
+            CollabCtr cc = GetCollabCtrById(id);
+
+            if (cc != null)
+            {
+                SetCollabCtr(cc);
+
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                           "ModalScript", PageUtility.LoadEditScript(true), false);
             }
         }
 
@@ -385,6 +424,35 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// On the main page with the list of Collaborative Centers, if the dropdown is changed,
+        /// the program will redirect to the one selected in the dropdown.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void ddlCollab_Changed(Object sender, EventArgs e)
+        {
+
+            int ccId = 0;
+            ccId = Int32.TryParse(ddlCollab.SelectedValue, out ccId) ? ccId : -1;
+
+            if (ccId > 0)
+            {
+                // Open Collab Center form with information loaded from extracted Collab Ctr Id.
+                //CollabCtr cc = GetCollabCtrById(ccId);
+
+                //if (cc != null)
+                //{
+                //    SetCollabCtr(cc);
+
+                //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                //               "ModalScript", PageUtility.LoadEditScript(true), false);
+                //}
+                LoadCCForm(ccId);
+            }
+
+
+        }
 
         /// <summary>
         /// When "Project" dropdown is changed, the system will automatically redirect to the project form of the project
@@ -401,6 +469,26 @@ namespace ProjectManagement.Admin
             if (projectId > 0)
             {
                 Response.Redirect(String.Format("~/ProjectForm2?Id={0}", projectId));
+            }
+
+
+        }
+
+        /// <summary>
+        /// When "Client Agreements" dropdown is changed, the system will automatically redirect to the client agreement form
+        /// being referred to.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void ddlCollabCtrClientAgmts_Changed(Object sender, EventArgs e)
+        {
+
+            int clientAgmtId = 0;
+            clientAgmtId = Int32.TryParse(ddlCollabCtrClientAgmts.SelectedValue, out clientAgmtId) ? clientAgmtId : -1;
+
+            if (clientAgmtId > 0)
+            {
+                Response.Redirect(String.Format("~/Admin/ClientAgreementForm?ClientAgmtId={0}", clientAgmtId));
             }
 
 

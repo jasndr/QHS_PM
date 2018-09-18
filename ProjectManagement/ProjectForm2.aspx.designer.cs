@@ -526,6 +526,24 @@ namespace ProjectManagement {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtGrantBitSum;
         
         /// <summary>
+        /// chkDeptFundMouYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDeptFundMouYes;
+        
+        /// <summary>
+        /// chkDeptFundMouNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDeptFundMouNo;
+        
+        /// <summary>
         /// rptAkn control.
         /// </summary>
         /// <remarks>

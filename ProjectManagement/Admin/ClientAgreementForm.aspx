@@ -490,7 +490,8 @@
                 $('#editModal').scrollTop(5);
             });
 
-            var ccAbbrv = GetURLParameter('Name');            
+            var ccAbbrv = GetURLParameter('Name');
+            var caId = GetURLParameter('ClientAgmtId');
 
             if (typeof(ccAbbrv)!='undefined' && ccAbbrv.length > 0) {
                 $("#editModal").modal('show');
@@ -503,13 +504,32 @@
 
                 bindAgmtId(ccAbbrv);
             }
+            else if (typeof(caId)!='undefined' && caId.length > 0){ //opens modal with valid Client Agreement Id
+                $("#editModal").modal('show');
+            }
             
         });
 
+        /// NAME: bindAgmtId(ccAbbrv)
+        ///
+        /// FUNCTION: Adds the newly created Agreement ID number corresponding 
+        ///           to a Collaborative Center into a new instance of the 
+        ///           Client Agreement form for sequential ordering.
+        /// 
+        /// PARAMETERS: ccAbbrv - The given Collaborative Center abbreviation.
         function bindAgmtId(ccAbbrv) {
             var uri = getBaseUrl() + '../api/Project/GetClientAgreementId/?ccAbbrv=' + ccAbbrv;
 
             $.getJSON(uri).done(function (data) {
+
+                // If data is a number AND > 10,
+                // Adds a "0" in front of the number. 
+                if ($.isNumeric(data)) {
+                    if (data < 10) {
+                        data = 0 + "" + data;
+                    }
+                }
+
                 $("#MainContent_txtAgmtId").val('A-' + ccAbbrv + '-' + data);
             });
         }
@@ -585,6 +605,16 @@
             }
         }
 
+
+        /// NAME: GetURLParameter(sParam)
+        ///
+        /// FUNCTION: Grabs URL after ampersand (&) symbol, checks
+        ///           the parameter before the equals (=) symbol is the same as given
+        ///           given parameter, and returns the value after the "=".
+        ///
+        /// PARAMETERS: sParam - given parameter.
+        ///
+        /// RETURNS: Value after the equals (=) sign (the Collaborative Center abbreviation).
         function GetURLParameter(sParam) {
             var sPageURL = window.location.search.substring(1);
             var sURLVariables = sPageURL.split('&');
@@ -596,6 +626,12 @@
             }
         }
 
+        /// NAME: getBaseUrl()
+        ///
+        /// FUNCTION: Creates a regular expression out of
+        ///           the current window URL.
+        ///
+        /// RETURNS: Base URL (aka main URL site, e.g., example.com vs. example.com/help).
         function getBaseUrl() {
             var re = new RegExp(/^.*\//);
             return re.exec(window.location.href);
@@ -624,6 +660,15 @@
             }
         }
 
+
+        /// NAME: validateControl()
+        ///
+        /// FUNCTION: Runs AJAX/Javascript code that assures that the pre-filled
+        ///           fields for the client agreement form runs.
+        ///
+        /// RETURNS: isValid - Returns boolean value whether or not the comment form
+        ///                    is valid.  Not used as pseudo-JS class is being used
+        ///                    to run the AJAX/Javascript code.
         function validateControl() {
             //$("#MainContent_ddlProject").addClass("required");
             //$("#MainContent_txtRequestDate").addClass("required");

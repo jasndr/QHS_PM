@@ -32,6 +32,16 @@ namespace ProjectManagement.Admin
     ///  2018AUG09 - Jason Delos Reyes  -  Made Projects dropdown typeable and searchable to make it easier
     ///                                    to look for projects with new client agreements.  Also able to
     ///                                    make custom size for dropdown through overriding its CSS code.
+    ///  2018SEP11 - Jason Delos Reyes  -  Edited bindAgmtId() to add a leading "0" before writing the name
+    ///                                    of the new agreement Id to conform to new naming convention.
+    ///                                 -  Added documentation to the Javascript code on the front-end
+    ///                                    code for code readability for some of the functions that play
+    ///                                    a role in display features of the page (e.g., auto-creation of
+    ///                                    agreement number for new Client Agreement forms).
+    ///  2018SEP13 - Jason Delos Reyes  -  Created functionality for dropdown of client agreement form on
+    ///                                    Collaborative Center page.  URL now allows "ClientAgmtId" value,
+    ///                                    which should open edit modal with corresponding client agmt
+    ///                                    information, to be linked from dropdown in Collab Ctr form.
     /// </summary>
     public partial class ClientAgreementForm : System.Web.UI.Page
     {
@@ -46,6 +56,16 @@ namespace ProjectManagement.Admin
             if (!Page.IsPostBack)
             {
                 BindControl();
+
+                //var parameter =
+
+                int id = 0;
+                string clientAgmtId = Request.QueryString["ClientAgmtId"];
+                Int32.TryParse(clientAgmtId, out id);
+                if (id > 0)
+                {
+                    OpenClientAgmt(id);
+                }
             }           
         }
                 
@@ -56,6 +76,7 @@ namespace ProjectManagement.Admin
         private void BindControl()
         {
             IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
+            
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
@@ -87,6 +108,8 @@ namespace ProjectManagement.Admin
             PageUtility.BindDropDownList(ddlProjectPhase, dropDownSource, "");
 
             BindRptClientAgmt();
+            
+
         }
 
         /// <summary>
@@ -162,7 +185,7 @@ namespace ProjectManagement.Admin
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
                        "ModalScript", PageUtility.LoadEditScript(false), false);
-            
+
             BindRptClientAgmt();
         }
 
@@ -430,6 +453,12 @@ namespace ProjectManagement.Admin
             return ca;
         }
 
+        /// <summary>
+        /// When "Edit" command is clicked, an existing form corresponding to the one referred to
+        /// is populated into the web form for review and editing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptClientAgmt_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
@@ -439,28 +468,37 @@ namespace ProjectManagement.Admin
 
                 //txtAgmtId.Value = ((Button)e.CommandSource).CommandArgument;
 
-                if (id > 0)
+                OpenClientAgmt(id);
+            }
+        }
+
+        /// <summary>
+        /// Opens the pop-up page of the client agreement form.
+        /// </summary>
+        /// <param name="id">Referred Client Agreement Id.</param>
+        protected void OpenClientAgmt(int id)
+        {
+            if (id > 0)
+            {
+                ClientAgmt ca = GetClientAgmtById(id);
+
+                if (ca != null)
                 {
-                    ClientAgmt ca = GetClientAgmtById(id);
+                    SetClientAgmt(ca);
 
-                    if (ca != null)
-                    {
-                        SetClientAgmt(ca);
+                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                    //           "ModalScript", PageUtility.LoadEditScript(true), false);
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(@"<script type='text/javascript'>");
+                    sb.Append("$('#editModal').modal('show');");
+                    sb.Append("$('#MainContent_fileUpload').fileinput('enable');");
+                    //sb.Append("var projectId = $('#MainContent_ddlProject').val(); ");
+                    //sb.Append("bindPI(projectId);");
+                    sb.Append("calcTotal();");
+                    sb.Append(@"</script>");
 
-                        //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                        //           "ModalScript", PageUtility.LoadEditScript(true), false);
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append(@"<script type='text/javascript'>");
-                        sb.Append("$('#editModal').modal('show');");
-                        sb.Append("$('#MainContent_fileUpload').fileinput('enable');");
-                        //sb.Append("var projectId = $('#MainContent_ddlProject').val(); ");
-                        //sb.Append("bindPI(projectId);");
-                        sb.Append("calcTotal();");
-                        sb.Append(@"</script>");
-
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                                   "ModalScript", sb.ToString(), false);
-                    }
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                               "ModalScript", sb.ToString(), false);
                 }
             }
         }
@@ -647,14 +685,22 @@ namespace ProjectManagement.Admin
         }
 
         /// <summary>
-        /// Clearns Client Agreement form by clearing otu the choices of the Project Phase and Status dropdown boxes.
+        /// Clears Client Agreement form by clearing otu the choices of the Project Phase and Status dropdown boxes.
         /// </summary>
         private void ClearEditForm()
         {
             ddlProjectPhase.Items.Clear();
             ddlStatus.Items.Clear();
         }
-
+        
+        /// <summary>
+        /// Generates JSON response to verify that a valid Client Agreement ID 
+        /// has been generated in the system.
+        /// </summary>
+        /// <param name="agmtId">Referred Client Agreement ID.</param>
+        /// <param name="id">Client Agreement ID number (NOT abbreviated AgmtId).</param>
+        /// <returns>isValid - Boolean value on whether or not a matching Agreement ID
+        ///                    has already been found in the database.</returns>
         [WebMethod(EnableSession = true)]
         [ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
         public static bool IsAgmtIdValid(string agmtId, string id)
@@ -663,7 +709,7 @@ namespace ProjectManagement.Admin
 
             using (var db = new ProjectTrackerContainer())
             {
-                var agmt = db.ClientAgmt.FirstOrDefault(a => a.AgmtId == agmtId);
+                var agmt = db.ClientAgmt.FirstOrDefault(a => a.AgmtId == agmtId); 
 
                 if (agmt == null || agmt.Id.ToString() == id)
                 {

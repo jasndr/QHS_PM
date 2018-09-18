@@ -77,6 +77,7 @@ namespace ProjectManagement
         public string AknDepartmentFundingOther { get; set; }
         public Nullable<byte> IsLetterOfSupport { get; set; }
         public Nullable<bool> IsReportOlaHawaii { get; set; }
+        public Nullable<byte> IsMOU { get; set; }
     
         public virtual Invest Invests { get; set; }
         public virtual ICollection<ProjectPhase> ProjectPhase { get; set; }

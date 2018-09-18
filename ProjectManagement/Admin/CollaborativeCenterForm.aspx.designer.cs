@@ -22,6 +22,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
         
         /// <summary>
+        /// ddlCollab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCollab;
+        
+        /// <summary>
         /// rptCC control.
         /// </summary>
         /// <remarks>
@@ -119,6 +128,24 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCollabCtrProjects;
+        
+        /// <summary>
+        /// collabCtrClientAgmtSxn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl collabCtrClientAgmtSxn;
+        
+        /// <summary>
+        /// ddlCollabCtrClientAgmts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCollabCtrClientAgmts;
         
         /// <summary>
         /// txtName control.

@@ -482,6 +482,7 @@
           <Property Name="AknDepartmentFundingOther" Type="nvarchar" MaxLength="255" />
           <Property Name="IsLetterOfSupport" Type="tinyint" />
           <Property Name="IsReportOlaHawaii" Type="bit" />
+          <Property Name="IsMOU" Type="tinyint" />
         </EntityType>
         <EntityType Name="ProjectBioStat">
           <Key>
@@ -879,7 +880,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.ViewGrant' does not have a p
             
             
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PI" Type="nvarchar(max)" />
           <Property Name="Biostat" Type="nvarchar(max)" Nullable="false" />
           <Property Name="GrantTitle" Type="nvarchar" MaxLength="100" />
@@ -3976,6 +3977,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="AknDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="IsLetterOfSupport" Type="Byte" />
           <Property Name="IsReportOlaHawaii" Type="Boolean" />
+          <Property Name="IsMOU" Type="Byte" />
         </EntityType>
         <EntityType Name="ProjectField">
           <Key>
@@ -5107,6 +5109,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="Project2">
             <EntityTypeMapping TypeName="ProjectTracker.Project2">
               <MappingFragment StoreEntitySet="Project2">
+                <ScalarProperty Name="IsMOU" ColumnName="IsMOU" />
                 <ScalarProperty Name="IsReportOlaHawaii" ColumnName="IsReportOlaHawaii" />
                 <ScalarProperty Name="IsLetterOfSupport" ColumnName="IsLetterOfSupport" />
                 <ScalarProperty Name="AknDepartmentFundingOther" ColumnName="AknDepartmentFundingOther" />

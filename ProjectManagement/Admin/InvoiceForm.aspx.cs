@@ -11,6 +11,24 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: Invoice.aspx.cs
+    /// @Front End : Invoice.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Form to keep track of invoice information that has been sent to clients for payments.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///                                 
+    ///  2018SEP11 - Jason Delos Reyes  -  Added documentation for easier readibility and maintainability.
+    ///                                 -  Edited bindInvoiceId() to add a leading "0" before writing the name
+    ///                                    of the new agreement Id to conform to new naming convention.
+    ///                                 -  Added documentation to the Javascript code on the front-end
+    ///                                    code for code readability for some of the functions that play
+    ///                                    a role in display features of the page (e.g., auto-creation of
+    ///                                    agreement number for new Client Agreement forms).
+    /// </summary>
     public partial class InvoiceForm : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)

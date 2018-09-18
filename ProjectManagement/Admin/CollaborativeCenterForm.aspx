@@ -44,6 +44,16 @@
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
                         <div class="row">
+                            <div class="col-sm-5"></div>
+                            <div class="col-sm-2 text-right">
+                                <label class="control-label" for="txtTitle">Collab Center:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <asp:DropDownList ID="ddlCollab" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-striped table-hover table-bordered dataTable no-footer" id="CollabCtr">
                                     <thead>
@@ -163,6 +173,16 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <asp:DropDownList ID="ddlCollabCtrProjects" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCollabCtrProjects_Changed" AutoPostBack="True">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row form-group-md" id="collabCtrClientAgmtSxn" runat="server" visible="false">
+                                    <div class="col-sm-4 text-left">
+                                        <label class="control-label" for="ddlCollabCtrClientAgmts">Client Agreements affiliated with Collaborative Center:</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <asp:DropDownList ID="ddlCollabCtrClientAgmts" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCollabCtrClientAgmts_Changed" AutoPostBack="True">
                                         </asp:DropDownList>
                                     </div>
                                 </div>

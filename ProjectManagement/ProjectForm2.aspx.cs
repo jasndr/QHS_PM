@@ -70,6 +70,9 @@ namespace ProjectManagement
     ///                                 -  Removed G12, AHRQ, Center for Native and Pacific Islands Health Disparities Research,
     ///                                    RTRN, No (no funding), and State/County Government options from Acknowledgements;
     ///                                    added P30 UHCC option.
+    ///  2018SEP12 - Jason Delos Reyes  -  Added "MOU, Y/N" question in "Funding Source" section as a way to switch the general
+    ///                                    "MOU" option to just corresponding to School of Nursing and Dental Hygiene (or
+    ///                                    Department Funding in general) instead.  Removed "MOU" grant option in "Funding source".
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -583,7 +586,7 @@ namespace ProjectManagement
                 dropDownSource = db.JabsomAffils
                                  .Where(f => f.Name == "Obstetrics, Gynecology, and Women's Health"
                                           || f.Name == "School of Nursing & Dental Hygiene"
-                                          || f.Id == 96)
+                                          || f.Id == 96 /*"Other"*/)
                                  .OrderBy(b => b.Id)
                                  .ToDictionary(c => c.Id, c => c.Name);
 
@@ -861,8 +864,13 @@ namespace ProjectManagement
                 chkLetterOfSupportYes.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.Yes;
                 chkLetterOfSupportNo.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.No;
             }
-           
-            
+
+            if (project.IsMOU.HasValue)
+            {
+                chkDeptFundMouYes.Checked = project.IsMOU == (byte)HealthDisparityType.Yes;
+                chkDeptFundMouNo.Checked = project.IsMOU == (byte)HealthDisparityType.No;
+            }
+
 
             txtProjectStatus.Value = project.ProjectStatus;
             txtCompletionDate.Text = project.ProjectCompletionDate != null ? Convert.ToDateTime(project.ProjectCompletionDate).ToShortDateString() : string.Empty;
@@ -1351,6 +1359,7 @@ namespace ProjectManagement
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
                 IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
+                IsMOU = chkDeptFundMouYes.Checked? (byte)HealthDisparityType.Yes : chkDeptFundMouNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
                 GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,

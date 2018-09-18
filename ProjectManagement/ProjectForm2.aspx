@@ -620,24 +620,43 @@
                                 </asp:Repeater>
                             </tbody>
                         </table>
-                        <div class="row" id="divDeptFund">
-                            <div class="col-sm-3 col-sm-offset-1">
-                                <label class="control-label" for="ddlDepartmentFunding">Department Funding</label>
-                                <asp:DropDownList ID="ddlDepartmentFunding" runat="server" CssClass="form-control">
-                                </asp:DropDownList>
+                        <div id="divDeptFund">
+                            <div class="row">
+                                <div class="col-sm-3 col-sm-offset-1">
+                                    <label class="control-label" for="ddlDepartmentFunding">Department Funding</label>
+                                    <asp:DropDownList ID="ddlDepartmentFunding" runat="server" CssClass="form-control">
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-3">
+                                    <label class="control-label" for="txtDeptFundOth">Department Funding - Other</label>
+                                    <input class="form-control" type="text" name="txtDeptFundOth" id="txtDeptFundOth" runat="Server" />
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-3">
+                                    <label class="control-label" for="txtGrantOther">Other:</label>
+                                    <input class="form-control" type="text" name="txtGrantOther" id="txtGrantOther" runat="Server" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control hidden" type="text" name="txtGrantBitSum" id="txtGrantBitSum" runat="Server" />
+                                </div>
                             </div>
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-3">
-                                <label class="control-label" for="txtDeptFundOth">Department Funding - Other</label>
-                                <input class="form-control" type="text" name="txtDeptFundOth" id="txtDeptFundOth" runat="Server" />
-                            </div>
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-3">
-                                <label class="control-label" for="txtGrantOther">Other:</label>
-                                <input class="form-control" type="text" name="txtGrantOther" id="txtGrantOther" runat="Server" />
-                            </div>
-                            <div class="col-sm-2">
-                                <input class="form-control hidden" type="text" name="txtGrantBitSum" id="txtGrantBitSum" runat="Server" />
+                            <br />
+                            <div class="row">
+                                <div id="divDeptFundMou">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-6">
+                                        <div class="col-sm-4">
+                                            <label for="chkDeptFundMouYes">Is this project supported by an MOU?</label>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <asp:CheckBox ID="chkDeptFundMouYes" runat="server" Text="Yes"></asp:CheckBox>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <asp:CheckBox ID="chkDeptFundMouNo" runat="server" Text="No"></asp:CheckBox>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <br />
@@ -1106,8 +1125,8 @@
             // Makes "RMATRIX" and "Ola Hawaii" checkboxes checked by default
             // if there is no ID already tied to the project form.
             var projectId = $("#MainContent_lblProjectId").text();
-                if (projectId == null || projectId == 0) {
-                    $('#tblAkn').find('td').each(function () {
+            if (projectId == null || projectId == 0) {
+                $('#tblAkn').find('td').each(function () {
                     var _aknCheckBox = $(this).find(":input[name$='chkId']"),
                         //_aknBitValue = $(this).find(":input[name$='BitValue']").val(),
                         _aknName = $(this).eq(0).text().trim();
@@ -1120,7 +1139,7 @@
                 });
             }
 
-            
+
 
 
             // Initializes date for date fields.
@@ -1428,25 +1447,52 @@
                                 $('#MainContent_ddlDepartmentFunding').change(function () {
                                     var selectedVal = this.value;
 
-                                    if (selectedVal == 96) {
+                                    if (selectedVal == 96 /*(Other)*/) {
                                         $('#MainContent_txtDeptFundOth').show();
                                         $('#MainContent_txtDeptFundOth').parent().find('label').show();
+
+                                        $('#MainContent_chkDeptFundMouYes').prop('checked', false);
+                                        $('#MainContent_chkDeptFundMouNo').prop('checked', false);
+                                        $('#divDeptFundMou').hide();
+                                    } 
+                                    else if (selectedVal == 62 /*(School of Nursing & Dental Hygiene)*/) {
+                                        $('#divDeptFundMou').show();
+
+                                        $('#MainContent_txtDeptFundOth').val('');
+                                        $('#MainContent_txtDeptFundOth').hide();
+                                        $('#MainContent_txtDeptFundOth').parent().find('label').hide();
                                     }
                                     else {
                                         $('#MainContent_txtDeptFundOth').val('');
                                         $('#MainContent_txtDeptFundOth').hide();
                                         $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+
+                                        $('#MainContent_chkDeptFundMouYes').prop('checked', false);
+                                        $('#MainContent_chkDeptFundMouNo').prop('checked', false);
+                                        $('#divDeptFundMou').hide();
                                     }
                                 });
 
-                                if ($('#MainContent_ddlDepartmentFunding').val() == 96) {
+                                if ($('#MainContent_ddlDepartmentFunding').val() == 96 /*(Other)*/) {
                                     $('#MainContent_txtDeptFundOth').show();
                                     $('#MainContent_txtDeptFundOth').parent().find('label').show();
+                                }
+                                else if ($('#MainContent_ddlDepartmentFunding').val() == 62 /*(School of Nursing & Dental Hygiene)*/) {
+                                         $('#divDeptFundMou').show();
+
+                                         $('#MainContent_txtDeptFundOth').val('');
+                                         $('#MainContent_txtDeptFundOth').hide();
+                                         $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+
                                 }
                                 else {
                                     $('#MainContent_txtDeptFundOth').val('');
                                     $('#MainContent_txtDeptFundOth').hide();
                                     $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+
+                                    $('#MainContent_chkDeptFundMouYes').prop('checked', false);
+                                    $('#MainContent_chkDeptFundMouNo').prop('checked', false);
+                                    $('#divDeptFundMou').hide();
                                 }
 
 
@@ -1460,6 +1506,10 @@
                                 $('#MainContent_txtDeptFundOth').val('');
                                 $('#MainContent_txtDeptFundOth').hide();
                                 $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+
+                                $('#MainContent_chkDeptFundMouYes').prop('checked', false);
+                                $('#MainContent_chkDeptFundMouNo').prop('checked', false);
+                                $('#divDeptFundMou').hide();
                             }
 
                         }
@@ -1651,6 +1701,10 @@
                 $('#MainContent_txtDeptFundOth').hide();
                 $('#MainContent_txtDeptFundOth').parent().find('label').hide();
 
+                $('#MainContent_chkDeptFundMouYes').prop('checked', false);
+                $('#MainContent_chkDeptFundMouNo').prop('checked', false);
+                $('#divDeptFundMou').hide();
+
                 $('#tblAkn').find('td').each(function () {
                     $(this).find(":input[name$='chkId']").prop('checked', false);
                 });
@@ -1687,6 +1741,7 @@
                         chkbox.prop('checked', false);
                     }
                 });
+                
 
                 $('#divLetterOfSupport > div').each(function () {
                     var chkBox = $(this).find('input[type="checkbox"]');
@@ -1738,6 +1793,7 @@
             else
                 theDiv.hide();
         }
+
 
         function ClientSideClick(myButton) {
             // Client side validation
@@ -1839,6 +1895,19 @@
             if (this.checked) {
                 $('#MainContent_chkLetterOfSupportYes').prop('checked', false);
                 $('#MainContent_chkLetterOfSupportNo').prop('checked', false);
+            }
+        });
+
+        //-----------------------------------------------------------------
+        $("#MainContent_chkDeptFundMouYes").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkDeptFundMouNo').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkDeptFundMouNo").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkDeptFundMouYes').prop('checked', false);
             }
         });
 

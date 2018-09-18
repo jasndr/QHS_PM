@@ -696,10 +696,26 @@
             $("#MainContent_rptNewInvoice_txtGrandTotalNew").val(subtotal.toFixed(2));  //val((subtotal + discounttotal).toFixed(2));
         }
 
+        /// NAME: bindInvoiceId(ccAbbrv)
+        ///
+        /// FUNCTION: Adds the newly created Agreement ID number corresponding 
+        ///           to a Collaborative Center into a new instance of the 
+        ///           Invoice form for sequential ordering.
+        /// 
+        /// PARAMETERS: ccAbbrv - The given Collaborative Center abbreviation.
         function bindInvoiceId(ccAbbrv) {
             var uri = getBaseUrl() + '../api/Project/GetInvoiceId/?ccAbbrv=' + ccAbbrv;
 
             $.getJSON(uri).done(function (data) {
+
+                // If data is a number AND > 10,
+                // Adds a "0" in front of the number. 
+                if ($.isNumeric(data)) {
+                    if (data < 10) {
+                        data = 0 + "" + data;
+                    }
+                }
+
                 $("#MainContent_txtInvoiceId").val('I-' + ccAbbrv + '-' + data);
             });
         }

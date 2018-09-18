@@ -9,8 +9,31 @@ using System.Web.Http;
 
 namespace ProjectManagement.App_Code
 {
+
+    /// <summary>
+    /// @File: ProjectController.cs
+    /// @Author: Yang Rui
+    /// @Summary: Controller that manages API calls.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018SEP10 - Jason Delos Reyes  -  Added documentation for easier readibility and maintainability.
+    ///  2018SEP11 - Jason Delos Reyes  -  Changed string split in GetClientAgreementId() and GetInvoiceId() functions in order
+    ///                                    to account for names with multiple dashes (-).  The previous functionality
+    ///                                    only obtained the value after the second dash, though there are many
+    ///                                    Collaborative Centers with dashes in their abbreviation name that
+    ///                                    contradicted this rule, thus not being able to increment the number 
+    ///                                    for a new Client Agreement ID.  This does not, however, account for
+    ///                                    numbers with letters in them (e.g., H7, H10-cont, etc.) and will need
+    ///                                    to be discussed on how to address these types of agreement IDs.
+    ///                                 -  Also changed invoice start number from 1000 to 0.  It seems arbitrary to have a number
+    ///                                    in the thousands, unless it was intentional in the first place.
+    ///                                
+    /// </summary>
     public class ProjectController : ApiController
     {
+
         // GET api/<controller>
         public IEnumerable<string> Get()
         {
@@ -63,19 +86,31 @@ namespace ProjectManagement.App_Code
             return projectHours;
         }
 
+        /// <summary>
+        /// Finds the highest number and returns number higher than the highest number
+        /// of the invoice cycle for the given collab center
+        /// to be used for creating a new Invoice ID number.
+        /// </summary>
+        /// <param name="ccAbbrv">Referred Collaborative Center abbreviation.</param>
+        /// <returns>Number to be used in new Invoice instance.</returns>
         public int GetInvoiceId(string ccAbbrv)
         {
-            int lastInvoiceId = 1000;
+            int lastInvoiceId = 0/*1000*/;
 
             using (ProjectTrackerContainer context = new ProjectTrackerContainer())
             {
+                /// Obtains list of Invoices under provided Collaborative Center.
                 var invoices = context.Invoice1Set
                                 .Join(context.CollabCtr, a => a.CollabCtrId, c => c.Id, (a, c) => new { a.Id, a.InvoiceId, c.NameAbbrv })
                                 .Where(m => m.NameAbbrv == ccAbbrv).ToList();
 
+
+                /// Goes through the list of invoice instancess under provided collab center.
+                /// Increments lastInvoiceId if it is greater than already stored int there.
+                /// Returns the number above lastAgmtId at the end of loop.
                 foreach (var invoice in invoices)
                 {
-                    string strId = invoice.InvoiceId.Split('-')[2];
+                    string strId = invoice.InvoiceId.Split('-').Last()/*[2]*/; // Obtains value after *last* dash in InvoiceId (e.g., 02 from I-LGao-02)
                     int id = 0;
                     Int32.TryParse(strId, out id);
 
@@ -88,28 +123,39 @@ namespace ProjectManagement.App_Code
 
         }
 
+        /// <summary>
+        /// Finds the highest number and returns number higher than the highest number
+        /// of the client agreement cycle for the given collab center
+        /// to be used for creating a new ClientAgreement Id number.
+        /// </summary>
+        /// <param name="ccAbbrv">Referred Collaborative Center abbreviation.</param>
+        /// <returns>Number to be used in new Client Agreement.</returns>
         public int GetClientAgreementId(string ccAbbrv)
         {
             int lastAgmtId = 0;
 
             using (ProjectTrackerContainer context = new ProjectTrackerContainer())
             {
+                /// Obtains list of Client Agreements under provided Collaborative Center.
                 var clientAgmts = context.ClientAgmt
                                 .Join(context.CollabCtr, a => a.CollabCtrId, c => c.Id, (a, c) => new { a.Id, a.AgmtId, c.NameAbbrv })
                                 .Where(m => m.NameAbbrv == ccAbbrv).ToList();
 
+                /// Goes through the list of client agreements under provided collab center.
+                /// Increments lastAgmtId if it is greater than already stored int there.
+                /// Returns the number above lastAgmtId at the end of loop.
                 foreach(var clientAgmt in clientAgmts)
                 {
-                    string strAgmtId = clientAgmt.AgmtId.Split('-')[2];
+                    string strAgmtId = clientAgmt.AgmtId.Split('-').Last()/*[2]*/; // Obtains value after *last* dash in AgmtId (e.g., 02 from A-OBGYN-02)
                     int tempId = 0;
-                    Int32.TryParse(strAgmtId, out tempId);
+                    Int32.TryParse(strAgmtId, out tempId); // Puts strAgmtId -> temp if it's an integer value. 
 
                     if (tempId > lastAgmtId)
                         lastAgmtId = tempId;
                 }
             }
 
-            return ++lastAgmtId;
+            return ++lastAgmtId; // Increment, then return value.
 
         }
 
