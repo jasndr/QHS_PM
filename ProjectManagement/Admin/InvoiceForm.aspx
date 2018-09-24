@@ -122,7 +122,7 @@
                                         <input class="form-control" type="text" name="txtCCAbbrv" id="txtCCAbbrv" runat="Server" readonly />
                                         <input class="form-control hidden" type="text" name="txtCCId" id="txtCCId" runat="Server" readonly />
                                     </div>
-                                    <label class="col-sm-2 control-label" for="txtLastName">Invoice date:</label>
+                                    <label class="col-sm-2 control-label" for="txtInvoiceDate">Invoice date:</label>
                                     <div class="col-sm-2">
                                         <div class='input-group date' id='dtpInvoiceDate'>
                                             <span class="input-group-addon">
@@ -139,7 +139,7 @@
                                 </div>                                
                                 <br />
                                 <div class="row form-group-md">
-                                    <label class="col-sm-2 text-left" for="txtLastName">Invoice Start date:</label>
+                                    <label class="col-sm-2 text-left" for="txtStartDate">Invoice Start date:</label>
                                     <div class="col-sm-2">
                                         <div class='input-group date' id='dtpStartDate'>
                                             <span class="input-group-addon">
@@ -148,7 +148,7 @@
                                             <asp:TextBox ID="txtStartDate" runat="server" class="form-control"></asp:TextBox>
                                         </div>
                                     </div>
-                                    <label class="col-sm-2 control-label" for="txtLastName">Invoice End date:</label>
+                                    <label class="col-sm-2 control-label" for="txtEndDate">Invoice End date:</label>
                                     <div class="col-sm-2">
                                         <div class='input-group date' id='dtpEndDate'>
                                             <span class="input-group-addon">

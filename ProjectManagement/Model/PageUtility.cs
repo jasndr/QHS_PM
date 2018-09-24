@@ -53,13 +53,13 @@ namespace ProjectManagement.Model
                     CheckBox chkRow = (row.Cells[0].FindControl("chkRow") as CheckBox);
                     Label lblId = row.FindControl("lblId") as Label;
 
-                    int id;                   
+                    int id;
                     if (chkRow == null || chkRow.Checked == true)
                     {
                         if (Int32.TryParse(lblId.Text, out id))
                         {
                             list.Add(id);
-                        }                        
+                        }
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace ProjectManagement.Model
             object obj = Activator.CreateInstance(type);
             var dataSource = new List<object>();
             dataSource.Add(obj);
-        
+
             // Bind the DataTable which contain a blank row to the GridView
             gridView.DataSource = dataSource;
             gridView.DataBind();
@@ -108,8 +108,8 @@ namespace ProjectManagement.Model
             //gridView.Rows[0].Cells[0].Font.Bold = true;
             ////set No Results found to the new added cell
             //gridView.Rows[0].Cells[0].Text = "NO RESULT FOUND!";
-        }    
-              
+        }
+
         internal static string LoadEditScript(bool isOpen)
         {
             StringBuilder sb = new StringBuilder();
@@ -127,8 +127,24 @@ namespace ProjectManagement.Model
                 sb.Append("alert('Record Saved Successfully');");
                 sb.Append("if (window.location.href.indexOf('?') > 0) window.location.href = window.location.href.split('?')[0];");
                 sb.Append("$('#editModal').modal('hide');");
-                
+
             }
+            sb.Append(@"</script>");
+
+            return sb.ToString();
+        }
+
+        internal static string LoadEditScript(string update)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(@"<script type='text/javascript'>");
+            //sb.Append("$('.pdsa-submit-progress').addClass('hidden');");
+
+            //sb.Append("var url = window.location.href;");
+            //sb.Append("window.location.href = url.split('?')[0];");
+            sb.Append("alert('Record Saved Successfully');");
+            //sb.Append("if (window.location.href.indexOf('?') > 0) window.location.href = window.location.href.split('?')[0];");
+
             sb.Append(@"</script>");
 
             return sb.ToString();
@@ -154,7 +170,7 @@ namespace ProjectManagement.Model
             return table;
         }
 
-        
+
     }
 
 

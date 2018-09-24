@@ -184,9 +184,12 @@ namespace ProjectManagement.Admin
             SaveClientAgmt(agmt);
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript(false), false);
+                       "ModalScript", PageUtility.LoadEditScript("update"), false);
 
-            BindRptClientAgmt();
+            ScriptManager.RegisterClientScriptBlock(this, GetType(), "showalert", "alert('Record Saved Successfully;');", true);
+
+
+            BindRptClientAgmt(id);
         }
 
         /// <summary>
@@ -198,6 +201,19 @@ namespace ProjectManagement.Admin
 
             rptClientAgmt.DataSource = dt;
             rptClientAgmt.DataBind();
+        }
+
+        private void BindRptClientAgmt(int id)
+        {
+            if (id > 0)
+            {
+
+                string url = Request.Url.AbsolutePath;
+                string updatedQueryString = "?ClientAgmtId=" + id;
+
+                Response.Redirect(url + updatedQueryString);
+                
+            }
         }
 
         /// <summary>

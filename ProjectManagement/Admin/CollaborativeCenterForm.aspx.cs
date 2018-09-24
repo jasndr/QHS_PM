@@ -40,6 +40,8 @@ namespace ProjectManagement.Admin
     ///                                    for Collaborative Centers on the front page with the "go to page" functionality also
     ///                                    included, despite the fact that users can already easily click the "edit" button
     ///                                    in the grid of listed Collaborative Centers.
+    ///  2018SEP21 - Jason Delos Reyes  -  Configured the "update" button so that when the user clicks on it, the system 
+    ///                                    updates the information in the database but doesn't close the window.
     /// </summary>
     public partial class CollaborativeCenterForm : System.Web.UI.Page
     {
@@ -87,9 +89,9 @@ namespace ProjectManagement.Admin
             }
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript(false), false);
+                       "ModalScript", PageUtility.LoadEditScript("update"), false);
 
-            BindRptCC();
+            BindRptCC(ccId);
         }
 
         /// <summary>
@@ -149,6 +151,22 @@ namespace ProjectManagement.Admin
             rptCC.DataBind();
 
             LoadCCForm(-1);
+
+        }
+
+        /// <summary>
+        /// Refreshes and loads page based on current collab center report.
+        /// </summary>
+        /// <param name="id">Referred collab center id.</param>
+        private void BindRptCC(int collabCtrId)
+        {
+
+            DataTable ccTable = GetCollabCtrAll();
+
+            rptCC.DataSource = ccTable;
+            rptCC.DataBind();
+
+            LoadCCForm(collabCtrId);
 
         }
 
@@ -230,7 +248,7 @@ namespace ProjectManagement.Admin
             {
                 /// List of Collab Centers
                 dropDownSource = db.CollabCtr
-                                   .OrderBy(c => c.Id)
+                                   .OrderBy(c => c.NameAbbrv)
                                    .Where(c => c.Id > 0)
                                    .Select(x => new { x.Id, FullName = (x.NameAbbrv + " | " + x.Name) })
                                    .ToDictionary(c => c.Id, c => c.FullName);

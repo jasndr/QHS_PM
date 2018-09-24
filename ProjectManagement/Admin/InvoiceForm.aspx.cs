@@ -28,9 +28,17 @@ namespace ProjectManagement.Admin
     ///                                    code for code readability for some of the functions that play
     ///                                    a role in display features of the page (e.g., auto-creation of
     ///                                    agreement number for new Client Agreement forms).
+    ///  2018SEP21 - Jason Delos Reyes  -  Configured excel file to be able to add a header file with
+    ///                                    the invoice id and dates of invoice, which has also been added
+    ///                                    to the file name for reference.
     /// </summary>
     public partial class InvoiceForm : System.Web.UI.Page
     {
+        /// <summary>
+        /// Loads page with information from database according to information available.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -419,6 +427,11 @@ namespace ProjectManagement.Admin
         //    //BindgvInvoiceItem(e.RowIndex);
         //}
 
+        /// <summary>
+        /// Prepares invoice report if user selects a specific invoice.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptInvoice_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
@@ -442,6 +455,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Prepares invoice form based on the information available form
+        /// the database.
+        /// </summary>
+        /// <param name="invoice">Instance of the invoice.</param>
         private void SetInvoice(Invoice1 invoice)
         {
             txtId.Value = invoice.Id.ToString();
@@ -473,6 +491,12 @@ namespace ProjectManagement.Admin
         //    gvInvoiceItem.DataBind();
         //}
 
+        /// <summary>
+        /// Returns the instance of the invoice from the database 
+        /// based on the invoice Id specified.
+        /// </summary>
+        /// <param name="id">Invoice Id specified.</param>
+        /// <returns>Instance of invoice from database.</returns>
         private Invoice1 GetInvoiceById(int id)
         {
             Invoice1 invoice1 = null;
@@ -507,6 +531,11 @@ namespace ProjectManagement.Admin
                        "ModalScript", PageUtility.LoadEditScript(true), false);
         }
         
+        /// <summary>
+        /// Loads page based on information available (Ex: If there is a collab center id available,
+        /// the collabortive center is stored in the front end web page).  Also loads the list
+        /// of collaborative centers in the main list page alphabetically by collab center abbreviation.
+        /// </summary>
         private void BindControl()
         {
             IDictionary<int, string> dropDownSource = new Dictionary<int, string>();
@@ -531,7 +560,7 @@ namespace ProjectManagement.Admin
                 //PageUtility.BindDropDownList(ddlAgreementHdn, dropDownSource, "--- Select ---");
 
                 dropDownSource = db.CollabCtr
-                                .OrderBy(c => c.Id)
+                                .OrderBy(c => c.NameAbbrv)
                                 .Where(c => c.Id > 0)
                                 .Select(x => new { x.Id, FullName = (x.NameAbbrv + " | " + x.Name) })
                                 .ToDictionary(c => c.Id, c => c.FullName);
@@ -547,6 +576,12 @@ namespace ProjectManagement.Admin
             //    BindRptNewInvoice(ccid);
         }
 
+        /// <summary>
+        /// Fetches a new invoice report with list of projects as well as estimated hours based 
+        /// on the start and end dates specified.  
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnFetchInvoice_Click(object sender, EventArgs e)
         {
             //var ccAbbrv = txtCCAbbrv.Value;
@@ -565,6 +600,10 @@ namespace ProjectManagement.Admin
                       
         }
 
+        /// <summary>
+        /// Produces new invoice report with just the invoice id specifed.  
+        /// </summary>
+        /// <param name="invoiceId">Invoice Id specified.</param>
         private void BindRptNewInvoice(int invoiceId)
         {
             if (invoiceId > 0)
@@ -586,6 +625,20 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Produces a list of projects and estimated and invoice hours for the time period specified
+        /// to be displayed onto a web-based grid form.
+        /// 
+        /// NOTE: You are only permitted to press this once.  If you have made a mistake (e.g., entered
+        /// the wrong time period), please exit out of the page and re-open the invoice form again.
+        /// *Do not* save the form without being certain that you are content with this invoice form.
+        /// You will need to create another invoice if you have previously saved an invoice form with
+        /// a mistake.
+        /// </summary>
+        /// <param name="ccId">Referred/current collaborative center.</param>
+        /// <param name="invoiceId">Invoice ID of current form.</param>
+        /// <param name="startdate">Invoice Start Date specified.</param>
+        /// <param name="enddate">Invoice End Date specified.</param>
         private void BindRptNewInvoice(int ccId, int invoiceId, DateTime startdate, DateTime enddate)
         {
             if (ccId > 0)
@@ -618,6 +671,11 @@ namespace ProjectManagement.Admin
             
         //}
 
+        /// <summary>
+        /// Provides an option to delete an invoice instance if payment hasn't been scheduled yet.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         protected void rptNewInvoice_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Delete")
@@ -632,6 +690,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Rebinds invoice list by excluding the invoice specified,
+        /// giving the illusion of "deleting" an invoice.
+        /// </summary>
+        /// <param name="index">Index of invoice entry to be deleted.</param>
         private void BindRptNewInvoiceByRow(int index)
         {
             DataTable dt = CreateInvoiceTable(index, false);
@@ -640,16 +703,35 @@ namespace ProjectManagement.Admin
             rptNewInvoice.DataBind();
         }        
 
+        /// <summary>
+        /// Creates the Excel sheet of the invoice form based on the report 
+        /// that has been created in the excel sheet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
             DataTable dt = CreateInvoiceTable(-1, true);
 
             string fileValue = String.Format("Invoice-{0}.xlsx", txtInvoiceId.Value);
+            
+            string fileName = String.Format("Invoice-{0}-From-{1}-To-{2}.xlsx", txtInvoiceId.Value, txtStartDate.Text, txtEndDate.Text);
+            string titleName = String.Format("Invoice {0} from {1} to {2}", txtInvoiceId.Value, txtStartDate.Text, txtEndDate.Text);
 
             FileExport fileExport = new FileExport(this.Response);
-            fileExport.ExcelExport(dt, fileValue);
+            //fileExport.ExcelExport(dt, fileValue);
+            fileExport.ExcelExport2(dt, fileName, titleName);
         }
 
+        /// <summary>
+        /// Binds invoice report for download and/or deletion, depending whether or not
+        /// index is specified.
+        /// </summary>
+        /// <param name="index">Index of selected invoice if specified to delete.</param>
+        /// <param name="fileExport">Boolean value to determine whether or not
+        ///                          the data table being requested will be exported
+        ///                          as an excel file.</param>
+        /// <returns></returns>
         private DataTable CreateInvoiceTable(int index, bool fileExport)
         {
             DataTable dt = new DataTable("tblRptInvoice");
@@ -770,11 +852,21 @@ namespace ProjectManagement.Admin
             return dt;
         }
 
+        /// <summary>
+        /// Changes the list of invoices to the one restricted to the collaborative center
+        /// specified in the drop down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlCollab_Changed(Object sender, EventArgs e)
         {
             BindRptInvoice();
         }
 
+
+        /// <summary>
+        /// Binds the list of invoices based on the collaborative center selected.
+        /// </summary>
         private void BindRptInvoice()
         {
             int collabId = 0;
