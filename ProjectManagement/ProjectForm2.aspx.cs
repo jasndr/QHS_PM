@@ -81,6 +81,7 @@ namespace ProjectManagement
     ///                                    "Department Funding".
     ///  2018OCT23 - Jason Delos Reyes  -  Sends "reviewed by admin" email to both Lead Biostat Member and creator, if they are
     ///                                    not the same person.
+    ///  2018OCT31 - Jason Delos Reyes  -  Added a "pop-up modal" for errors instead of standalone Javascript alert.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -145,25 +146,18 @@ namespace ProjectManagement
             }
             else
             {
-                Response.Write("<script>alert('" + str + "');</script>");
-                //---ADD EDIT MODAL HERE!!!
+                //Response.Write("<script>alert('" + str + "');</script>");
+               
+                string err = str.Replace("\\n", "<br />");
 
+                StringBuilder sb2 = new StringBuilder();
+                sb2.Append(@"<script type='text/javascript'>");
+                sb2.Append("$('#textWarning').append('<span>" + err + "</span>');");
+                sb2.Append("ShowWarningModal();");
+                sb2.Append(@"</script>");
 
-
-                //string err = str.Replace("\\n", "<br />");
-
-                //StringBuilder sb = new StringBuilder();
-                //sb.Append(@"<script type='text/javascript'>");
-                //sb.Append("$('#textWarning').append('<span>" + err + "</span>');");
-                //sb.Append("$('#warningModal').modal('show');");
-
-                //// Change the button so that it says "Submit" and NOT "Processing . . ."
-                ////sb.Append("$(\".submitBtn[value='Processing......']\").prop(\"disabled\", false);");
-                ////sb.Append("$(\".submitBtn[value='Processing......']\").prop(\"value\", \"Submit\");");
-
-                //sb.Append(@"</script>");
-                //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                //       "ShowModalScript", sb.ToString(), false);
+                Page.ClientScript.RegisterStartupScript(this.GetType(),
+                    "ShowModalScript", sb2.ToString());
             }
 
         }

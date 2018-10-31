@@ -1059,6 +1059,8 @@
                             </div>
                             <div class="col-sm-2">
                                 <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
+                                <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
+            data-toggle="modal" data-target="#warningModal">Warning Modal</button>
                             </div>
                         </div>
                         <br />
@@ -1115,33 +1117,34 @@
         </div>
     </div>
 
-    <%--<div id="warningModal2" class="modal fade">
+    <div id="warningModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 id="formIncomplete2" class="modal-title">Form Incomplete</h3>
+                    <h3 id="formIncomplete" class="modal-title">Form Incomplete</h3>
                 </div>
                 <div class="modal-body">
-                    <asp:Label ID="lblWarning2" runat="server">Please review the following <u>incomplete</u> form items and try to submit again:</asp:Label><br />
+                    <asp:Label ID="lblWarning" runat="server">Please review the following <u>incomplete</u> form items and try to submit again:</asp:Label><br />
                     <br />
-                    <p class="text-warning" id="textWarning2"></p>
+                    <p class="text-warning" id="textWarning"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </div>--%>
+    </div>
+   
 
-    <div id="warningModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <%--<div id="warningModal" class="modal fade">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3 id="formIncomplete" class="modal-title">Form Incomplete</h3>
                 </div>
-                <asp:UpdatePanel ID="upWarning" runat="server" UpdateMode="Conditional">
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
                         <div class="modal-body">
                             <label id="lblWarning">Please review the following <u>incomplete</u> form items and try to submit again:</label>
@@ -1152,10 +1155,14 @@
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="btnSubmit1" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnAdminSubmit" EventName="Click" />
+                    </Triggers>
                 </asp:UpdatePanel>
             </div>
         </div>
-    </div>
+    </div>--%>
 
     <div class="clearfix"></div>
 
@@ -1399,6 +1406,10 @@
 
 
         });
+
+        function ShowWarningModal() {
+            $('#btnShowWarningModal').click();
+        }
 
         var biostatNS = biostatNS || {};
 
@@ -1873,7 +1884,7 @@
         //    thisButton.prop("disabled", false);
         //    thisButton.prop("value", "Submit");
         //}
-
+        
 
         // -- Unchecks other choices if choice is selected in specific section -- \\
         $("#MainContent_chkBiostat").change(function () {
