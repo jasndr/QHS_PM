@@ -242,6 +242,7 @@ namespace ProjectManagement.Admin
             collabCtrClientAgmtSxn.Visible = true;
 
             var dropDownSource = new Dictionary<int, string>();
+            var dropDownSourcewString = new Dictionary<string, string>();
 
             /// Populates dropdowns of projects and client agreements associated with the collaboration center.
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -276,15 +277,15 @@ namespace ProjectManagement.Admin
                 PageUtility.BindDropDownList(ddlCollabCtrProjects, dropDownSource, "-- List of Projects for Collaborative Center --");
 
                 /// Pulls list of Client Agreements associated with collaborative center.
-                dropDownSource = db.ClientAgmt
+                dropDownSourcewString = db.ClientAgmt
                                      .Join(db.CollabCtr, ca => ca.CollabCtrId, cct => cct.Id, (ca, cct) => new { ca, cct })
                                      .Where(z => z.ca.CollabCtrId == id)
                                      .OrderByDescending(y => y.ca.Id)
-                                     .Select(x => new { x.ca.Id, FullName = (x.ca.Id + " - " + x.ca.AgmtId + " - " + x.ca.ProjectPhase + " - Project ID " + x.ca.Project2Id).Substring(0, 150) })
+                                     .Select(x => new { /*x.ca.Id*/x.ca.AgmtId, FullName = (x.ca.Id + " - " + x.ca.AgmtId + " - " + x.ca.ProjectPhase + " - Project ID " + x.ca.Project2Id).Substring(0, 150) })
                                      .Distinct()
-                                     .ToDictionary(d => d.Id, d => d.FullName);
+                                     .ToDictionary(d => d.AgmtId, d => d.FullName);
 
-                PageUtility.BindDropDownList(ddlCollabCtrClientAgmts, dropDownSource, "-- List of Client Agreements for Collaborative Center --");
+                PageUtility.BindDropDownList(ddlCollabCtrClientAgmts, dropDownSourcewString, "-- List of Client Agreements for Collaborative Center --");
                 
             }
 
@@ -501,13 +502,14 @@ namespace ProjectManagement.Admin
         protected void ddlCollabCtrClientAgmts_Changed(Object sender, EventArgs e)
         {
 
-            int clientAgmtId = 0;
-            clientAgmtId = Int32.TryParse(ddlCollabCtrClientAgmts.SelectedValue, out clientAgmtId) ? clientAgmtId : -1;
+            //int clientAgmtId = 0;
+            //clientAgmtId = Int32.TryParse(ddlCollabCtrClientAgmts.SelectedValue, out clientAgmtId) ? clientAgmtId : -1;
 
-            if (clientAgmtId > 0)
-            {
-                Response.Redirect(String.Format("~/Admin/ClientAgreementForm?ClientAgmtId={0}", clientAgmtId));
-            }
+            //if (clientAgmtId > 0)
+            //{
+            string clientAgmtId = ddlCollabCtrClientAgmts.SelectedValue;
+            Response.Redirect(String.Format("~/Admin/ClientAgreementForm?ClientAgmtId={0}", clientAgmtId));
+            //}
 
 
         }

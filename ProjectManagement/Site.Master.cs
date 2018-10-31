@@ -106,13 +106,20 @@ namespace ProjectManagement
                 //PaperLink.Visible = true;
                 //AdminLink.Visible = true;
                 TimeEntryLink.Visible = true;
-                ProjectList.Visible = true;
+                
                 ReportLink1.Visible = true;
                 ReportLink2.Visible = true;
                 //ReportLink3.Visible = true;
                 ReportLink4.Visible = true;
                 //ReportLink5.Visible = true;
                 ReportLink6.Visible = true;
+
+                if (HttpContext.Current.User.IsInRole("Admin"))
+                {
+                    ProjectList.Visible = true;
+                    ImportRequestLink.Visible = true;
+                }
+
             }
 
             //if (HttpContext.Current.User.IsInRole("Super"))

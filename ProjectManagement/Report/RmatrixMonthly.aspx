@@ -1,5 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RmatrixMonthly.aspx.cs" Inherits="ProjectManagement.Report.RmatrixMonthly" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .innerContainer {
+            max-height: 75vh;
+            overflow: auto;
+        }
+
+        table thead {
+            background: white;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-default">
@@ -8,7 +19,7 @@
         </div>
 
         <div class="panel-body">
-            <br/>
+            <br />
             <div>
                 <div class="row">
                     <div class="col-md-1 text-right">
@@ -37,7 +48,7 @@
                         <asp:CheckBox ID="chkRmatrix" runat="server" Text="RMATRIX request"></asp:CheckBox>
                     </div>
                     <div class="col-md-1 text-right">
-                        <asp:Button ID="btnSumbit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSumbit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False"/>
+                        <asp:Button ID="btnSumbit" runat="server" Text="Submit" CssClass="btn btn-info" OnClick="btnSumbit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
                     </div>
                 </div>
                 <%--<div class="row">
@@ -54,56 +65,58 @@
                     </div>
                 </div>--%>
             </div>
-            <hr/>
-            
-            <div class="row">
+            <hr />
+
+            <div class="row" id="divReport" runat="server" visible="false">
                 <div class="col-md-12">
-                    <table class="table table-striped table-hover table-bordered" id="rmatrixMonthly">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-1">Id</th>
-                                <th>PI Name</th>
-                                <th>Title</th>
-                                <th>Grant</th>
-                                <th>Lead</th>
-                                <th>Member</th>
-                                <th>Service Category</th>
-                                <th>Initial Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <asp:Repeater ID="rptRmatrixMonthly" runat="server">
-                                <ItemTemplate>
-                                    <tr>
-                                        <td><%# Eval("Id") %></td>
-                                        <td><%# Eval("PIName") %></td>
-                                        <td><%# Eval("Title") %></td>
-                                        <td><%# Eval("GrantName") %></td>
-                                        <td><%# Eval("LeadBio") %></td>
-                                        <td><%# Eval("Member") %></td>
-                                        <td><%# Eval("ServiceCategory") %></td>
-                                        <td><%# Eval("Initialdate") %></td>
-                                    </tr>
-                                </ItemTemplate>
-                                <FooterTemplate>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td>
-                                            <asp:Label ID="lblTotal" runat="server" /></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </FooterTemplate>
-                            </asp:Repeater>
-                        </tbody>
-                    </table>
+                    <div class="innerContainer">
+                        <table class="table table-striped table-hover table-bordered" id="rmatrixMonthly">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-1">Id</th>
+                                    <th>PI Name</th>
+                                    <th>Title</th>
+                                    <th>Grant</th>
+                                    <th>Lead</th>
+                                    <th>Member</th>
+                                    <th>Service Category</th>
+                                    <th>Initial Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <asp:Repeater ID="rptRmatrixMonthly" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td><%# Eval("Id") %></td>
+                                            <td><%# Eval("PIName") %></td>
+                                            <td><%# Eval("Title") %></td>
+                                            <td><%# Eval("GrantName") %></td>
+                                            <td><%# Eval("LeadBio") %></td>
+                                            <td><%# Eval("Member") %></td>
+                                            <td><%# Eval("ServiceCategory") %></td>
+                                            <td><%# Eval("Initialdate") %></td>
+                                        </tr>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        <tr>
+                                            <td>Total</td>
+                                            <td>
+                                                <asp:Label ID="lblTotal" runat="server" /></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </FooterTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
+            <br />
             <div class="row">
                 <div class="col-md-2">
                     <asp:Button ID="btnExportExcel" runat="server" Text="Download" CssClass="btn btn-info" OnClick="btnExportExcel_Click" OnClientClick="blockUIForDownload(this)" UseSubmitBehavior="False" />
@@ -111,11 +124,12 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="hdnRowCount" runat="server"/>
-    <input type="hidden" id="download_token" runat="server"/>
+    <input type="hidden" id="hdnRowCount" runat="server" />
+    <input type="hidden" id="download_token" runat="server" />
 
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
     <script src="../Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery.floatThead.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             //if ($("#MainContent_txtReportDate").val() == '') {
@@ -134,17 +148,25 @@
 
             var toDate = new DatePicker('dtpToDate');
             toDate.init();
-            
+
             if ($('#MainContent_hdnRowCount').val() > 0)
                 $('#MainContent_btnExportExcel').prop("disabled", false);
             else {
                 $('#MainContent_btnExportExcel').prop("disabled", true);
             }
+
+            var $table = $('table');
+            $table.floatThead({
+                scrollContainer: function ($table) {
+                    return $table.closest('.innerContainer');
+                }
+            });
+
         });
 
         var DatePicker = function (ctrlId) {
             var ctl = ctrlId;
-           
+
             return {
                 init: function (e) {
                     $('#' + ctl).datepicker({

@@ -41,6 +41,22 @@ namespace ProjectManagement.Model
             }
         }
 
+        public static void BindDropDownList(DropDownList ddl, IDictionary<string, string> dataSource, string firstItemText)
+        {
+            if (ddl != null)
+            {
+                ddl.DataSource = dataSource;
+                ddl.DataValueField = "Key";
+                ddl.DataTextField = "Value";
+                ddl.DataBind();
+
+                if (firstItemText != null)  //(dataSource.Count > 1)
+                {
+                    ddl.Items.Insert(0, new ListItem(firstItemText, String.Empty));
+                }
+            }
+        }
+
 
         public static List<int> GetSelectedRow_GridView(GridView gv)
         {
@@ -138,12 +154,9 @@ namespace ProjectManagement.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(@"<script type='text/javascript'>");
-            //sb.Append("$('.pdsa-submit-progress').addClass('hidden');");
 
-            //sb.Append("var url = window.location.href;");
-            //sb.Append("window.location.href = url.split('?')[0];");
             sb.Append("alert('Record Saved Successfully');");
-            //sb.Append("if (window.location.href.indexOf('?') > 0) window.location.href = window.location.href.split('?')[0];");
+            
 
             sb.Append(@"</script>");
 

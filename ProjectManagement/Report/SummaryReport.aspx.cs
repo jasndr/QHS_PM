@@ -46,6 +46,8 @@ namespace ProjectManagement.Report
     ///                                    with the specified collaboration center could be pulled into the report.
     ///  2018AUG03 - Jason Delos Reyes  -  Made "Collaboration Center" Report section of the Summary Report page to not be accessible 
     ///                                    to non-admin users.
+    ///  2018OCT30 - Jason Delos Reyes  -  Fixed the styling report section that allows users to view the results in a scrollable
+    ///                                    window, with a fixed header to keep column labels visible while scrolling.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {

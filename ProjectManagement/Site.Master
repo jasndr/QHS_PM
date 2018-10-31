@@ -92,6 +92,11 @@
                                             <li>
                                                 <a runat="server" href="~/TimeEntry" visible="false" id="TimeEntryLink" data-toggle="menu">TimeEntry</a>
                                             </li>
+                                            
+                                            <li id="li_importrequest1">
+                                                <a runat="server" href="~/ImportRequest" 
+                                                   visible="false" id="ImportRequestLink">Import Request</a>
+                                            </li>
                                             <li><a runat="server" href="~/ProjectList" visible="false" id="ProjectList">PI / Project Review List</a></li>
                                         </ul>
                                     </li>
@@ -109,7 +114,6 @@
                                             <li id="li_taskform1">
                                                 <a runat="server" href="~/Tracking/TaskForm">Task</a>
                                             </li>
-
                                         </ul>
                                     </li>
                                     <li><a><i class="fa fa-bar-chart-o"></i>Data Presentation <span class="fa fa-chevron-down"></span></a>
@@ -266,6 +270,6 @@
 
     </form>
 
-    <script src="<%=Page.ResolveUrl("~/Scripts/custom.min.js")%>"></script>
+        <script src="<%=Page.ResolveUrl("~/Scripts/custom.min.js")%>"></script>
 </body>
 </html>

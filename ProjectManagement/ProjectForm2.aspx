@@ -37,6 +37,19 @@
         .table-borderless tbody tr td, .table-borderless tbody tr th, .table-borderless thead tr th {
             border: none;
         }
+
+        #formIncomplete {
+            color: darkred;
+        }
+
+        #MainContent_lblWarning {
+            font-size: 16pt;
+        }
+
+        #textWarning {
+            font-size: 12pt;
+            font-weight: bold;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -874,7 +887,7 @@
                             <div class="col-sm-6">
                             </div>
                             <div class="col-sm-2">
-                                <asp:Button ID="btnSubmit1" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
+                                <asp:Button ID="btnSubmit1" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
                             </div>
                         </div>
 
@@ -1045,7 +1058,7 @@
                                 <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
                             </div>
                             <div class="col-sm-2">
-                                <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
+                                <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
                             </div>
                         </div>
                         <br />
@@ -1097,6 +1110,48 @@
                         <asp:AsyncPostBackTrigger ControlID="btnSurvey" EventName="Click" />
                         <asp:AsyncPostBackTrigger ControlID="btnSendSurvey" EventName="Click" />
                     </Triggers>
+                </asp:UpdatePanel>
+            </div>
+        </div>
+    </div>
+
+    <%--<div id="warningModal2" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="formIncomplete2" class="modal-title">Form Incomplete</h3>
+                </div>
+                <div class="modal-body">
+                    <asp:Label ID="lblWarning2" runat="server">Please review the following <u>incomplete</u> form items and try to submit again:</asp:Label><br />
+                    <br />
+                    <p class="text-warning" id="textWarning2"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>--%>
+
+    <div id="warningModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="formIncomplete" class="modal-title">Form Incomplete</h3>
+                </div>
+                <asp:UpdatePanel ID="upWarning" runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <div class="modal-body">
+                            <label id="lblWarning">Please review the following <u>incomplete</u> form items and try to submit again:</label>
+                            <br />
+                            <p class="text-warning" id="textWarning"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
         </div>
@@ -1454,7 +1509,7 @@
                                         $('#MainContent_chkDeptFundMouYes').prop('checked', false);
                                         $('#MainContent_chkDeptFundMouNo').prop('checked', false);
                                         $('#divDeptFundMou').hide();
-                                    } 
+                                    }
                                     else if (selectedVal == 62 /*(School of Nursing & Dental Hygiene)*/) {
                                         $('#divDeptFundMou').show();
 
@@ -1478,11 +1533,11 @@
                                     $('#MainContent_txtDeptFundOth').parent().find('label').show();
                                 }
                                 else if ($('#MainContent_ddlDepartmentFunding').val() == 62 /*(School of Nursing & Dental Hygiene)*/) {
-                                         $('#divDeptFundMou').show();
+                                    $('#divDeptFundMou').show();
 
-                                         $('#MainContent_txtDeptFundOth').val('');
-                                         $('#MainContent_txtDeptFundOth').hide();
-                                         $('#MainContent_txtDeptFundOth').parent().find('label').hide();
+                                    $('#MainContent_txtDeptFundOth').val('');
+                                    $('#MainContent_txtDeptFundOth').hide();
+                                    $('#MainContent_txtDeptFundOth').parent().find('label').hide();
 
                                 }
                                 else {
@@ -1741,7 +1796,7 @@
                         chkbox.prop('checked', false);
                     }
                 });
-                
+
 
                 $('#divLetterOfSupport > div').each(function () {
                     var chkBox = $(this).find('input[type="checkbox"]');
@@ -1811,6 +1866,13 @@
             }
             return true;
         }
+
+        //function MakeSubmitClickableAgain() {
+        //    var thisButton = $(".submitBtn[value='Processing......']");
+
+        //    thisButton.prop("disabled", false);
+        //    thisButton.prop("value", "Submit");
+        //}
 
 
         // -- Unchecks other choices if choice is selected in specific section -- \\

@@ -49,6 +49,15 @@ namespace ProjectManagement.Report {
         protected global::System.Web.UI.WebControls.Button btnSumbit;
         
         /// <summary>
+        /// divReport control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divReport;
+        
+        /// <summary>
         /// rptRmatrixMonthly control.
         /// </summary>
         /// <remarks>

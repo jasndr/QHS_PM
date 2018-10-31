@@ -42,9 +42,23 @@ namespace ProjectManagement.Admin
     ///                                    Collaborative Center page.  URL now allows "ClientAgmtId" value,
     ///                                    which should open edit modal with corresponding client agmt
     ///                                    information, to be linked from dropdown in Collab Ctr form.
+    ///  2018SEP24 - Jason Delos Reyes  -  Fixed "update button" functionality so that the program would save
+    ///                                    the newly-entered information upon clicking "update", display a
+    ///                                    success message, and reopen the same page.
+    ///  2018OCT03 - Jason Delos Reyes  -  Updated the "update" button so that the internal client agreement id 
+    ///                                    number is not exposed, while keeping the same page open.  Will still
+    ///                                    need to address for dropdown link to client agreement form in 
+    ///                                    collaborative center form.
+    ///  2018OCT04 - Jason Delos Reyes  -  The Collab Center dropdown - to - Client Agreement form feature no
+    ///                                    longer reveals the internal Client Agreement ID number.  It now
+    ///                                    just uses abbreviation agreement ID number, which is already
+    ///                                    known by the user and can not be altered (unless to enter an external
+    ///                                    pseudo-client record, which is highly unlikely since the page can
+    ///                                    only be used by an admin account).
     /// </summary>
     public partial class ClientAgreementForm : System.Web.UI.Page
     {
+
         /// <summary>
         /// Loads page with fields with the correct information
         /// in preparation for data entry and/or interaction.
@@ -57,16 +71,29 @@ namespace ProjectManagement.Admin
             {
                 BindControl();
 
-                //var parameter =
-
                 int id = 0;
                 string clientAgmtId = Request.QueryString["ClientAgmtId"];
-                Int32.TryParse(clientAgmtId, out id);
+                if (clientAgmtId != null)
+                {
+                    ClientAgmt ca = GetClientAgmtByAgmtAbbrv(clientAgmtId);
+                    if (ca != null)
+                        id = ca.Id;
+                }
+                //Int32.TryParse(ca.Id, out id);
                 if (id > 0)
                 {
                     OpenClientAgmt(id);
                 }
-            }           
+
+            }
+            else
+            {
+                
+                //Reopens modal after page postback.
+                ClientScript.RegisterStartupScript(GetType(), "ModalScript", "$('#editModal').modal('show');", true);
+                 
+            }
+           
         }
                 
         /// <summary>
@@ -185,11 +212,9 @@ namespace ProjectManagement.Admin
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
                        "ModalScript", PageUtility.LoadEditScript("update"), false);
-
-            ScriptManager.RegisterClientScriptBlock(this, GetType(), "showalert", "alert('Record Saved Successfully;');", true);
-
-
+           
             BindRptClientAgmt(id);
+
         }
 
         /// <summary>
@@ -201,17 +226,27 @@ namespace ProjectManagement.Admin
 
             rptClientAgmt.DataSource = dt;
             rptClientAgmt.DataBind();
+
         }
 
+        /// <summary>
+        /// Takes the value of the client agreement id in order to 
+        /// save the newly entered values, display a success message, and 
+        /// refresh to the same page.
+        /// </summary>
+        /// <param name="id">Client Agreement ID.</param>
         private void BindRptClientAgmt(int id)
         {
+
+            var dt = CreateAgreementDataTable(true);
+
+            rptClientAgmt.DataSource = dt;
+            rptClientAgmt.DataBind();
+
             if (id > 0)
             {
-
-                string url = Request.Url.AbsolutePath;
-                string updatedQueryString = "?ClientAgmtId=" + id;
-
-                Response.Redirect(url + updatedQueryString);
+               
+                OpenClientAgmt(id);
                 
             }
         }
@@ -678,6 +713,28 @@ namespace ProjectManagement.Admin
                 //        //remove item if not in query
                 //    }
                 //}
+            }
+
+            return ca;
+        }
+
+        /// <summary>
+        /// Based on the given Client Agreement abbreviation, returns the instance of a client
+        /// agreement instance.
+        /// </summary>
+        /// <param name="agmtAbbrv">Given Client Agreement Name Abbreviation.</param>
+        /// <returns>Instance of the Client Agreement matched with its name abbrevation.</returns>
+        private ClientAgmt GetClientAgmtByAgmtAbbrv(string agmtAbbrv)
+        {
+            ClientAgmt ca = null;
+
+            using (var db = new ProjectTrackerContainer())
+            {
+                ca = db.ClientAgmt
+                    .Include(a => a.Project2.Invests)
+                    .Include(a => a.CollabCtr)
+                    .FirstOrDefault(a => a.AgmtId == agmtAbbrv);
+                
             }
 
             return ca;

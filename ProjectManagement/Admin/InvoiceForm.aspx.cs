@@ -31,6 +31,9 @@ namespace ProjectManagement.Admin
     ///  2018SEP21 - Jason Delos Reyes  -  Configured excel file to be able to add a header file with
     ///                                    the invoice id and dates of invoice, which has also been added
     ///                                    to the file name for reference.
+    ///  2018OCT03 - Jason Delos Reyes  -  Configured the invoice form so that the window does not 
+    ///                                    close after the user clicks the "update" button by writing
+    ///                                    an "modal open" script after postback.
     /// </summary>
     public partial class InvoiceForm : System.Web.UI.Page
     {
@@ -44,6 +47,11 @@ namespace ProjectManagement.Admin
             if (!Page.IsPostBack)
             {
                 BindControl();
+            }
+            else
+            {
+                //Reopens the modal after page postback.
+                ClientScript.RegisterStartupScript(GetType(), "ModalScript", "$('#editModal').modal('show');", true);
             }
         }        
 
@@ -106,6 +114,11 @@ namespace ProjectManagement.Admin
         //    }
         //}
 
+        /// <summary>
+        /// Updates the invoice entry when "update" button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             int id = 0;
@@ -164,9 +177,9 @@ namespace ProjectManagement.Admin
             }
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript(false), false);
+                       "ModalScript", PageUtility.LoadEditScript("update"/*false*/), false);
 
-            BindRptInvoice();
+            BindRptInvoice(savedInvoiceId);
 
             //foreach (GridViewRow row in gvInvoiceItem.Rows)
             //{
@@ -177,6 +190,11 @@ namespace ProjectManagement.Admin
             //}
         }
 
+        /// <summary>
+        /// Saves the INVOICE ITEM into the database with values from the web form and associates
+        /// it with the current invoice instance.
+        /// </summary>
+        /// <param name="invoice">Instance of an invoice.</param>
         private void SaveInvoiceItem(Invoice1 invoice)
         {
             //List<InvoiceItem> lstInvoiceItem = GetInvoiceItem(invoiceId);
@@ -248,6 +266,12 @@ namespace ProjectManagement.Admin
 
         }
 
+        /// <summary>
+        /// Given the invoice, generates a list of projects associated with the invoice period
+        /// and prints out the estimated and invoice hours for that project and phase instance.
+        /// </summary>
+        /// <param name="invoice">Instance of the invoice.</param>
+        /// <returns>List of invoice items for the invoice report.</returns>
         private List<InvoiceItem2> GetInvoiceItem2(Invoice1 invoice)
         {
             var lstInvoiceItem = new List<InvoiceItem2>();
@@ -341,6 +365,15 @@ namespace ProjectManagement.Admin
         //    return lstInvoiceItem;
         //}
 
+        /// <summary>
+        /// Saves the INVOICE entry based on the Invoice Form web fields
+        /// into the database.  The current values are overridden with the
+        /// fields typed from the webform (in the given invoice instance).
+        /// Otherwise, if there is no previous invoice associated with this
+        /// form, a new invoice entry is created in the database.
+        /// </summary>
+        /// <param name="invoice">Instance of invoice.</param>
+        /// <returns>Invoice ID.</returns>
         private int SaveInvoice(Invoice1 invoice)
         {
             int invoiceId = -1;
@@ -392,6 +425,14 @@ namespace ProjectManagement.Admin
             return invoiceId;
         }
 
+        /// <summary>
+        /// Creates an intance of an invoice with the given
+        /// values from the web form.
+        /// </summary>
+        /// <param name="id">Invoice ID.</param>
+        /// <param name="fileName">Name of uploaded file.</param>
+        /// <param name="fileData">Uploaded file information stored in byte[] format.</param>
+        /// <returns>Instance of the invoice.</returns>
         private Invoice1 GetInvoice(int id, string fileName, byte[] fileData)
         {
             int ccid = 0;
@@ -731,7 +772,7 @@ namespace ProjectManagement.Admin
         /// <param name="fileExport">Boolean value to determine whether or not
         ///                          the data table being requested will be exported
         ///                          as an excel file.</param>
-        /// <returns></returns>
+        /// <returns>Data Tabke of invoice report.</returns>
         private DataTable CreateInvoiceTable(int index, bool fileExport)
         {
             DataTable dt = new DataTable("tblRptInvoice");
@@ -920,7 +961,39 @@ namespace ProjectManagement.Admin
 
             rptInvoice.DataSource = dt;
             rptInvoice.DataBind();
+
+            
+
         }
+
+        /// <summary>
+        /// Given the invoice Id, binds invoice instance
+        /// into the given web form.
+        /// </summary>
+        /// <param name="id"></param>
+        private void BindRptInvoice(int id)
+        {
+           // int invoiceId = id;
+            //Int32.TryParse(txtId.Value, out invoiceId);
+            if (id > 0)
+            {
+                //string updatedQueryString = "?InvoiceId=" + invoiceId;
+
+                Invoice1 invoice = GetInvoiceById(id);
+
+                if (invoice != null)
+                {
+                    SetInvoice(invoice);
+
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                               "ModalScript", PageUtility.LoadEditScript("update"), false);
+                }
+
+
+
+            }
+        }
+
 
         protected void ddlAgreement_SelectedIndexChanged(object sender, EventArgs e)
         {

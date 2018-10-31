@@ -885,7 +885,7 @@
             }
         }
 
-        function validateControl() {
+        function validateControl(e) {
             var validator = $("#commentForm").validate({
                 //only works with js in page
                 rules: {                    
@@ -953,7 +953,9 @@
                 firstElement.focus();
             }
 
-            return isValid;
+        return isValid;
+
+        e.preventDefault();
         }
 
         $.validator.setDefaults({

@@ -229,6 +229,15 @@ namespace ProjectManagement.Report {
         protected global::System.Web.UI.HtmlControls.HtmlInputText download_token;
         
         /// <summary>
+        /// divProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divProject;
+        
+        /// <summary>
         /// rptProjectSummary control.
         /// </summary>
         /// <remarks>

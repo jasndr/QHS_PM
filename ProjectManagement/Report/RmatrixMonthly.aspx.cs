@@ -11,15 +11,45 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Report
 {
+    /// <summary>
+    /// @File: RmatrixMonthly.aspx.cs
+    /// @Frontend: RmatrixMonthly.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Project Report
+    /// 
+    ///           Report of projects from a specified time period, optionally closing in by specific PI information,
+    ///           affiliation, use of HealthData, and/or specific grants.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018OCT30 - Jason Delos Reyes  -  Begin adding documentation to form.
+    ///                                 -  Added report viewing formatting to be used
+    ///                                    with a large list.
+
+    /// </summary>
     public partial class RmatrixMonthly : System.Web.UI.Page
     {
+        /// <summary>
+        /// Load page on page visit/reload.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             hdnRowCount.Value = "0";
         }
 
+        /// <summary>
+        /// Obtains RMATRIX summary report from database as long as there is no Request for Resources
+        /// form specified.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSumbit_Click(object sender, EventArgs e)
         {
+            divReport.Visible = true;
+
             rptRmatrixMonthly.DataSource = GetRmatrixTable();
             rptRmatrixMonthly.DataBind();
 
@@ -69,6 +99,11 @@ namespace ProjectManagement.Report
             //}
         }
 
+        /// <summary>
+        /// Call ExportTable() function when the "Download" (to Excel) button has been selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
             if (chkRmatrix.Checked)
@@ -81,6 +116,10 @@ namespace ProjectManagement.Report
             }
         }
 
+        /// <summary>
+        /// Obtains the RMATRIX report table from the database with the dates specified.
+        /// </summary>
+        /// <returns>Table of project to report monthly to RMATRIX (Ms. Grace Matsuura, GDO Data Coordinator).</returns>
         private DataTable GetRmatrixTable()
         {
             DateTime fromDate, toDate;
@@ -121,6 +160,10 @@ namespace ProjectManagement.Report
             return dt;
         }
 
+        /// <summary>
+        /// Obtains the list of projects and exports it into excel format
+        /// for the purposes of RMATRIX (probably obsolete; refer to "Summary Reports" section instead).
+        /// </summary>
         private void ExportTable()
         {
             DataTable dt = GetRmatrixTable();
@@ -143,6 +186,10 @@ namespace ProjectManagement.Report
             fileExport.ExcelExport(dt, "RMATRIXRequest");
         }
         
+        /// <summary>
+        /// Exports the report in CSV format in which can be imported back
+        /// into REDCap for RMATRIX's records (Point person: Ms. Grace Matsuura, GDO Data Coordinator).
+        /// </summary>
         private void ExportCsv()
         {
             DateTime fromDate, toDate;

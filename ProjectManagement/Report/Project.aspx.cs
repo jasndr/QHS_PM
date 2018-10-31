@@ -15,8 +15,38 @@ using System.Data.SqlClient;
 
 namespace ProjectManagement.Report
 {
+
+    /// <summary>
+    /// @File: Project.aspx.cs
+    /// @Frontend: Project.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Project Report
+    /// 
+    ///           Report of projects from a specified time period, optionally closing in by specific PI information,
+    ///           affiliation, use of HealthData, and/or specific grants.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018OCT26 - Jason Delos Reyes  -  Begin adding documentation to form.
+    ///                                 -  Edit file export to display headers.
+    ///  2018OCT29 - Jason Delos Reyes  -  Updated stored procedure to add department affiliation in
+    ///                                    the Project2 Form in addition to pulling from 
+    ///                                    PI affiliation.
+    ///  2018OCT30 - Jason Delos Reyes  -  Added style to "project report" view to be able to see the entire report
+    ///                                    using a scrollable window instead of the unsightly overlap of tables.
+    /// </summary>
     public partial class Project : System.Web.UI.Page
     {
+        protected string ReportType { get; set; }
+        protected string FromDate { get; set; }
+        protected string ToDate { get; set; }
+
+        /// <summary>
+        /// Prepares initial page load for use.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -77,10 +107,18 @@ namespace ProjectManagement.Report
                     textAreaPI.Value = Newtonsoft.Json.JsonConvert.SerializeObject(piName);
                 }
             }
+            
         }
 
+        /// <summary>
+        /// Produces the report in the web form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSumbit_Click(object sender, EventArgs e)
         {
+            divProject.Visible = true;
+
             DataTable dt = GetProjectTable();
 
             rptProjectSummary.DataSource = dt;
@@ -106,8 +144,14 @@ namespace ProjectManagement.Report
             lblMsHrs.Text = msHrs.ToString();
         }
 
+        /// <summary>
+        /// Produces the Excel file of the report for download into Excel format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
+            
             DataTable dt = GetProjectTable();
             dt.TableName = "Project";
 
@@ -128,21 +172,37 @@ namespace ProjectManagement.Report
 
             dt.Rows.Add(dr);
 
+            string reportHeader = "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate;
+            string fileName = "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;
+
             FileExport fileExport = new FileExport(this.Response);
-            fileExport.ExcelExport(dt, "Project");
+            fileExport.ExcelExport2(dt, fileName, reportHeader);
+            //fileExport.ExcelExport(dt, "Project");
         }
 
+        /// <summary>
+        /// Obtains the project information for the table.
+        /// </summary>
+        /// <returns></returns>
         private DataTable GetProjectTable()
         {
             DataTable dt = new DataTable("tblProject");
 
             int piId = 0, affilId = 0, piStatusId = 0;
 
-            if(txtPIName.Value != string.Empty)
+            if (txtPIName.Value != string.Empty)
+            {
                 Int32.TryParse(txtPIId.Value, out piId);
+                ReportType = ReportType + " " + txtPIName.Value;
+            }
 
             if (txtAffiliation.Value != string.Empty)
+            {
                 Int32.TryParse(txtAffilId.Value, out affilId);
+                ReportType = ReportType + " " + txtAffiliation.Value;
+            }
+
+
 
             Int32.TryParse(ddlPIStatus.SelectedValue, out piStatusId);
 
@@ -152,6 +212,9 @@ namespace ProjectManagement.Report
             Int32.TryParse(ddlMs.SelectedValue, out msId);
             Int32.TryParse(ddlHealthData.SelectedValue, out healthValue);
             Int32.TryParse(ddlGrant.SelectedValue, out grantValue);
+
+            if (healthValue > 0) ReportType = ReportType + " " + ddlHealthData.SelectedItem.Text;
+            if (grantValue > 0) ReportType = ReportType + " " + ddlGrant.SelectedItem.Text;
 
             isProject = chkProject.Checked ? 1 : 0;
 
@@ -174,11 +237,30 @@ namespace ProjectManagement.Report
             if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             {
                 dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
+
+                FromDate = fromDate.ToString("MM/dd/yyyy");
+                ToDate = toDate.ToString("MM/dd/yyyy");
             }
 
             return dt;
         }
 
+        /// <summary>
+        /// Parses the database for the table information with the given information.
+        /// </summary>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <param name="phdId"></param>
+        /// <param name="msId"></param>
+        /// <param name="isProject"></param>
+        /// <param name="isBiostat"></param>
+        /// <param name="creditTo"></param>
+        /// <param name="piId"></param>
+        /// <param name="piStatusId"></param>
+        /// <param name="affilId"></param>
+        /// <param name="healthValue"></param>
+        /// <param name="grantValue"></param>
+        /// <returns></returns>
         private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, int phdId, int msId, int isProject, int isBiostat, 
             int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
         {

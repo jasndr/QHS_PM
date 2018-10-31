@@ -73,6 +73,14 @@ namespace ProjectManagement
     ///  2018SEP12 - Jason Delos Reyes  -  Added "MOU, Y/N" question in "Funding Source" section as a way to switch the general
     ///                                    "MOU" option to just corresponding to School of Nursing and Dental Hygiene (or
     ///                                    Department Funding in general) instead.  Removed "MOU" grant option in "Funding source".
+    ///  2018OCT01 - Jason Delos Reyes  -  Reordered project phases numerically (instead of alphanumerically, which orders the phase as
+    ///                                    1, 10, 11, 2, 3, etc.).
+    ///                                 -  Fixed minor bug that displays "Is project supported by MOU" question, even though the 
+    ///                                    "Other" had been previously selected.  It was only appearing in page load.  The question
+    ///                                    is supposed to only appear if "School of Nursing & Dental Hygiene" is selected for 
+    ///                                    "Department Funding".
+    ///  2018OCT23 - Jason Delos Reyes  -  Sends "reviewed by admin" email to both Lead Biostat Member and creator, if they are
+    ///                                    not the same person.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -97,14 +105,14 @@ namespace ProjectManagement
                 // Auto-populate project if existing id specified.
                 if (id > 0)
                     BindProject(id);
-                
+
                 // Second page is only available for Admin only.
                 if (!Page.User.IsInRole("Admin"))
                 {
                     tabAdmin.Style["display"] = "none";
                 }
-            }    
-        }        
+            }
+        }
 
         /// <summary>
         /// Saves project into database when user clicks "submit" button.
@@ -112,7 +120,7 @@ namespace ProjectManagement
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void btnSubmit1_Click(object sender, EventArgs e)
-        {          
+        {
             /// Produces error message if fields are blank. 
             string str = ValidateResult();
 
@@ -138,8 +146,26 @@ namespace ProjectManagement
             else
             {
                 Response.Write("<script>alert('" + str + "');</script>");
+                //---ADD EDIT MODAL HERE!!!
+
+
+
+                //string err = str.Replace("\\n", "<br />");
+
+                //StringBuilder sb = new StringBuilder();
+                //sb.Append(@"<script type='text/javascript'>");
+                //sb.Append("$('#textWarning').append('<span>" + err + "</span>');");
+                //sb.Append("$('#warningModal').modal('show');");
+
+                //// Change the button so that it says "Submit" and NOT "Processing . . ."
+                ////sb.Append("$(\".submitBtn[value='Processing......']\").prop(\"disabled\", false);");
+                ////sb.Append("$(\".submitBtn[value='Processing......']\").prop(\"value\", \"Submit\");");
+
+                //sb.Append(@"</script>");
+                //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                //       "ShowModalScript", sb.ToString(), false);
             }
-            
+
         }
 
         /// <summary>
@@ -165,51 +191,51 @@ namespace ProjectManagement
                 {
                     //using (var dbTrans = db.Database.BeginTransaction())
                     //{
-                        try
+                    try
+                    {
+                        db.Project2.Add(project);
+                        db.SaveChanges();
+
+                        id = project.Id;
+                        foreach (var phase in newPhases)
                         {
-                            db.Project2.Add(project);
-                            db.SaveChanges();
-
-                            id = project.Id;
-                            foreach (var phase in newPhases)
-                            {
-                                phase.ProjectId = id;
-                                db.ProjectPhase.Add(phase);
-                            }
-                            db.SaveChanges();
-
-                            //dbTrans.Commit();
-                            
-                            //BindProject(id);
-                            ddlProject.Items.Add(new ListItem(project.Id + " " + project.Title, project.Id.ToString()));
-                            ddlProject.SelectedValue = project.Id.ToString();
-
-                            var naBitValue = db.ProjectField
-                                               .Where(f => f.IsGrant == true && f.Name == "N/A")
-                                               .Select(g => g.BitValue)
-                                               .FirstOrDefault();
-                            var noFundingBV = db.ProjectField
-                                                .Where(f => f.IsGrant == true && f.Name == "No (no funding)")
-                                                .Select(g=>g.BitValue)
-                                                .FirstOrDefault();
-
-                            // Checks if "N/A" is checked for grant section of Project Form.
-                            bool hasNA = (project.GrantBitSum & naBitValue) == naBitValue;
-
-                            // Checks if "No Funding" is checked for grant section of Project Form.
-                            bool hasNoFunding = (project.GrantBitSum & noFundingBV) == noFundingBV;
-
-                            //Sends to fiscal team if its either a paying project and/or funded by a grant (with neither N/A nor "No Funding" unchecked).
-                            bool sendToFiscal =  (project.GrantBitSum > 0 && !hasNA && !hasNoFunding && (project.IsPaid == true)) ?  true : false; //&& project.IsApproved = 1 ?? 1 : 0;
-
-                            //send email
-                            SendNotificationEmail(id, sendToFiscal);
+                            phase.ProjectId = id;
+                            db.ProjectPhase.Add(phase);
                         }
-                        catch (Exception ex)
-                        {
-                            //dbTrans.Rollback();
-                            return ex.InnerException.Message;
-                        }
+                        db.SaveChanges();
+
+                        //dbTrans.Commit();
+
+                        //BindProject(id);
+                        ddlProject.Items.Add(new ListItem(project.Id + " " + project.Title, project.Id.ToString()));
+                        ddlProject.SelectedValue = project.Id.ToString();
+
+                        var naBitValue = db.ProjectField
+                                           .Where(f => f.IsGrant == true && f.Name == "N/A")
+                                           .Select(g => g.BitValue)
+                                           .FirstOrDefault();
+                        var noFundingBV = db.ProjectField
+                                            .Where(f => f.IsGrant == true && f.Name == "No (no funding)")
+                                            .Select(g => g.BitValue)
+                                            .FirstOrDefault();
+
+                        // Checks if "N/A" is checked for grant section of Project Form.
+                        bool hasNA = (project.GrantBitSum & naBitValue) == naBitValue;
+
+                        // Checks if "No Funding" is checked for grant section of Project Form.
+                        bool hasNoFunding = (project.GrantBitSum & noFundingBV) == noFundingBV;
+
+                        //Sends to fiscal team if its either a paying project and/or funded by a grant (with neither N/A nor "No Funding" unchecked).
+                        bool sendToFiscal = (project.GrantBitSum > 0 && !hasNA && !hasNoFunding && (project.IsPaid == true)) ? true : false; //&& project.IsApproved = 1 ?? 1 : 0;
+
+                        //send email
+                        SendNotificationEmail(id, sendToFiscal);
+                    }
+                    catch (Exception ex)
+                    {
+                        //dbTrans.Rollback();
+                        return ex.InnerException.Message;
+                    }
                     //}
                 }
                 /// If current user is not admin,
@@ -240,8 +266,21 @@ namespace ProjectManagement
                         if (prevProject.IsApproved.Equals(false) && project.IsApproved.Equals(true))
                         {
                             var leadBiostatId = project.LeadBiostatId;
-                            var emailToSend = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
-                            var userName = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).LogonId;
+                            var leadBiostatUserName = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).LogonId;
+                            var leadBiostatEmail = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
+
+                            //var emailToSend = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
+                            var emailToSend = db.BioStats.FirstOrDefault(b => b.LogonId == prevProject.Creator).Email;
+
+                            //var userName = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).LogonId;
+                            var userName = db.BioStats.FirstOrDefault(b => b.LogonId == prevProject.Creator).LogonId;
+
+                            if (leadBiostatUserName != userName)
+                            {
+                                emailToSend = emailToSend + ";" + leadBiostatEmail;
+                                userName = userName + " , " + leadBiostatUserName;
+                            }
+
                             var investigatorId = project.PIId;
                             var investigatorName = db.Invests.FirstOrDefault(i => i.Id == investigatorId).FirstName + " " +
                                                    db.Invests.FirstOrDefault(i => i.Id == investigatorId).LastName;
@@ -252,7 +291,7 @@ namespace ProjectManagement
                         //Updates current project with newly-entered values.
                         db.Entry(prevProject).CurrentValues.SetValues(project);
                     }
-                   
+
                     isAdmin = isAdmin || Page.User.IsInRole("Biostat");
                     var prevPhases = db.ProjectPhase.Where(p => p.ProjectId == id);
                     if (isAdmin)
@@ -291,7 +330,7 @@ namespace ProjectManagement
                             if (isAdmin)
                             {
                                 if (phaseInDB.StartDate != phase.StartDate
-                                    || phaseInDB.CompletionDate != phase.CompletionDate                                
+                                    || phaseInDB.CompletionDate != phase.CompletionDate
                                     || phaseInDB.Title != phase.Title
                                     || phaseInDB.MsHrs != phase.MsHrs
                                     || phaseInDB.PhdHrs != phase.PhdHrs
@@ -299,7 +338,7 @@ namespace ProjectManagement
                                     )
                                 {
                                     phaseInDB.StartDate = phase.StartDate;
-                                    phaseInDB.CompletionDate = phase.CompletionDate  ;                              
+                                    phaseInDB.CompletionDate = phase.CompletionDate;
                                     phaseInDB.Title = phase.Title;
                                     phaseInDB.MsHrs = phase.MsHrs;
                                     phaseInDB.PhdHrs = phase.PhdHrs;
@@ -307,7 +346,7 @@ namespace ProjectManagement
                                     phaseInDB.Creator = Page.User.Identity.Name;
                                     phaseInDB.CreateDate = DateTime.Now;
                                 }
-                                    
+
 
                             }
                             else if (project.IsApproved)
@@ -321,11 +360,11 @@ namespace ProjectManagement
                             db.ProjectPhase.Add(phase);
                             errorMsg = string.Empty;
                         }
-                    } 
-                                  
+                    }
+
                     db.SaveChanges();
-                }              
-                                
+                }
+
             }
 
             return errorMsg;
@@ -407,7 +446,8 @@ namespace ProjectManagement
             if (studyPopulationBitSum <= 0)
             {
                 validateResult.Append("Study population is required. \\n");
-            } else
+            }
+            else
             {
                 if ((studyPopulationBitSum != 32 && studyPopulationBitSum > 0) && (!chkHealthDisparityYes.Checked && !chkHealthDisparityNo.Checked && !chkHealthDisparityNA.Checked))
                 {
@@ -420,19 +460,20 @@ namespace ProjectManagement
             if (serviceBitSum <= 0)
             {
                 validateResult.Append("Service is required. \\n");
-            } else
+            }
+            else
             {
                 if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked))
                 {
                     validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified. \\n");
                 }
             }
-            
+
             if (!chkBiostat.Checked && !chkBioinfo.Checked)
             {
                 validateResult.Append("Please indicate if this is a Biostat or Bioinfo project. \\n");
             }
-            
+
             if (!chkCreditToBiostat.Checked && !chkCreditToBioinfo.Checked && !chkCreditToBoth.Checked)
             {
                 validateResult.Append("Please indicate \"Credit To\" field. \\n");
@@ -468,7 +509,7 @@ namespace ProjectManagement
 
             return isValid;
         }
-        
+
 
         #region Bind UI
         /// <summary>
@@ -525,10 +566,10 @@ namespace ProjectManagement
                 /// Populates dropdown of checkbox grid of other members.
                 dropDownSource = query
                                 .Where(b => b.Id > 0)
-                                .OrderBy(b => b.Id == 99 ? 2:1)
+                                .OrderBy(b => b.Id == 99 ? 2 : 1)
                                 .ToDictionary(c => (int)c.BitValue, c => c.Name);
 
-                BindTable2(dropDownSource, rptBiostat);                
+                BindTable2(dropDownSource, rptBiostat);
 
                 /// Populates "Study Area" checkbox grid.
                 var qProjectField = db.ProjectField.Where(f => f.IsStudyArea == true).ToList();
@@ -571,7 +612,7 @@ namespace ProjectManagement
                                 .Where(f => f.IsGrant == true && f.IsFundingSource == true)
                                 .OrderBy(b => b.Id)
                                 .ToDictionary(c => c.BitValue, c => c.Name);
-                
+
                 BindTable2(dropDownSource, rptGrant);
 
                 /// Populates "Acknowledgements" checkbox grid.
@@ -580,7 +621,7 @@ namespace ProjectManagement
                                 .OrderBy(b => b.Id)
                                 .ToDictionary(c => c.BitValue, c => c.Name);
 
-                BindTable2(dropDownSource, rptAkn); 
+                BindTable2(dropDownSource, rptAkn);
 
                 /// Populates Funding Source > Department Funding dropdown.
                 dropDownSource = db.JabsomAffils
@@ -602,8 +643,8 @@ namespace ProjectManagement
                 else
                     chkApproved.Disabled = false;
             }
-            
-        }        
+
+        }
 
         /// <summary>
         /// Finds the project based on the parameter 'projectId' and
@@ -627,7 +668,7 @@ namespace ProjectManagement
                     Project2 project = db.Project2.FirstOrDefault(x => x.Id == projectId);
 
                     if (project != null)
-                    {                     
+                    {
                         var query = db.BioStats
                                     .Where(b => b.EndDate >= project.InitialDate);
 
@@ -643,7 +684,7 @@ namespace ProjectManagement
                                         .OrderBy(b => b.Id)
                                         .ToDictionary(c => (int)c.BitValue, c => c.Name);
 
-                        BindTable2(dropDownSource, rptBiostat);   
+                        BindTable2(dropDownSource, rptBiostat);
 
                         SetProject(project);
                     }
@@ -671,7 +712,7 @@ namespace ProjectManagement
         private void SetProject(Project2 project)
         {
             lnkPI.CommandArgument = project.PIId.ToString();
-            lblPI.Text = project.Invests != null ? project.Invests.FirstName + " " + project.Invests.LastName : string.Empty;            
+            lblPI.Text = project.Invests != null ? project.Invests.FirstName + " " + project.Invests.LastName : string.Empty;
             lblProjectId.Text = project.Id > 0 ? project.Id.ToString() : string.Empty;
 
             ddlPI.SelectedValue = project.PIId > 0 ? project.PIId.ToString() : "";
@@ -687,7 +728,7 @@ namespace ProjectManagement
             //{
             //    BindTable(rptBiostat, (int)project.OtherMemberBitSum);                    
             //}
-            BindTable(rptBiostat, (int)project.OtherMemberBitSum); 
+            BindTable(rptBiostat, (int)project.OtherMemberBitSum);
 
             //if (project.StudyAreaBitSum > 0)
             //{
@@ -736,7 +777,7 @@ namespace ProjectManagement
             //}
             BindTable(rptGrant, (int)project.GrantBitSum);
             txtGrantOther.Value = project.GrantOther;
-            ddlDepartmentFunding.SelectedValue = project.GrantDepartmentFundingType > 0 ? project.GrantDepartmentFundingType.ToString() 
+            ddlDepartmentFunding.SelectedValue = project.GrantDepartmentFundingType > 0 ? project.GrantDepartmentFundingType.ToString()
                                                                                         : string.Empty;
             txtDeptFundOth.Value = project.GrantDepartmentFundingOther;
 
@@ -885,7 +926,7 @@ namespace ProjectManagement
             else
                 chkApproved.Disabled = false;
 
-            chkBiostat.Checked = project.ProjectType == (byte) ProjectType.Biostat;
+            chkBiostat.Checked = project.ProjectType == (byte)ProjectType.Biostat;
             chkBioinfo.Checked = project.ProjectType == (byte)ProjectType.Bioinfo;
 
             chkCreditToBiostat.Checked = project.CreditTo == (byte)ProjectType.Biostat;
@@ -900,7 +941,7 @@ namespace ProjectManagement
         private void BindPhaseByProject(int projectId)
         {
             DataTable dt = CreatePhaseTable(projectId);
-            
+
             gvPhase.DataSource = dt;
             gvPhase.DataBind();
 
@@ -946,7 +987,7 @@ namespace ProjectManagement
                     string[] sPhase = lblPhase.Text.Split('-');
                     Int32.TryParse(sPhase[1], out lastPhase);
                 }
-            }  
+            }
 
             if (rowIndex < 0 || dt.Rows.Count == 0)
             {
@@ -954,7 +995,7 @@ namespace ProjectManagement
                 dr = dt.NewRow();
                 dr[1] = "Phase-" + lastPhase;
                 dt.Rows.Add(dr);
-            }           
+            }
 
             gvPhase.DataSource = dt;
             gvPhase.DataBind();
@@ -973,7 +1014,7 @@ namespace ProjectManagement
         protected void gvPhase_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
-            {               
+            {
                 Label lblAgmtId = e.Row.FindControl("lblAgmtId") as Label;
                 Label lblPhase = e.Row.FindControl("lblPhase") as Label;
 
@@ -1002,8 +1043,8 @@ namespace ProjectManagement
 
             if (row != null)
             {
-                BindPhaseByIndex(e.RowIndex);                    
-            }            
+                BindPhaseByIndex(e.RowIndex);
+            }
         }
 
         /// <summary>
@@ -1043,7 +1084,7 @@ namespace ProjectManagement
         /// <param name="e"></param>
         protected void ddlPI_Changed(Object sender, EventArgs e)
         {
-            BindProject(-1);       
+            BindProject(-1);
         }
 
         /// <summary>
@@ -1084,7 +1125,7 @@ namespace ProjectManagement
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("Id");
-            dt.Columns.Add("Name");           
+            dt.Columns.Add("Name");
             dt.Columns.Add("Title");
             dt.Columns.Add("MsHrs");
             dt.Columns.Add("PhdHrs");
@@ -1096,7 +1137,11 @@ namespace ProjectManagement
             {
                 using (ProjectTrackerContainer db = new ProjectTrackerContainer())
                 {
-                    var phases = db.ProjectPhase.Where(p => p.ProjectId == projectId && p.IsDeleted == false).ToList();
+                    var phases = db.ProjectPhase
+                                   .Where(p => p.ProjectId == projectId && p.IsDeleted == false)
+                                   //.OrderBy(p=>p.Name.Substring(p.Name.IndexOf("-")+1, p.Name.Length))
+                                   .OrderBy(p => p.Name.Length).ThenBy(p => p.Name)
+                                   .ToList();
 
                     if (phases == null || phases.Count == 0)
                     {
@@ -1172,7 +1217,7 @@ namespace ProjectManagement
 
                 if (cb != null && hdnBitValue != null)
                 {
-                    cb.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue) : false;                    
+                    cb.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue) : false;
                 }
 
                 if (cb == null)
@@ -1333,7 +1378,7 @@ namespace ProjectManagement
                 aknDepartmentFundingType = 0,
                 rmatrixNum = 0,
                 olaHawaiiNum = 0;
-                
+
 
             DateTime dtInitialDate, dtDeadline, dtRmatrixSubDate, dtOlaHawaiiSubDate, dtCompletionDate;
 
@@ -1359,7 +1404,7 @@ namespace ProjectManagement
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
                 IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
-                IsMOU = chkDeptFundMouYes.Checked? (byte)HealthDisparityType.Yes : chkDeptFundMouNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
+                IsMOU = chkDeptFundMouYes.Checked ? (byte)HealthDisparityType.Yes : chkDeptFundMouNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
                 GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,
@@ -1393,7 +1438,7 @@ namespace ProjectManagement
                 IsApproved = chkApproved.Checked,
                 Creator = User.Identity.Name,
                 CreationDate = DateTime.Now,
-                ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : chkBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)0 , // if biostat is checked, then biostat, otherwise bioinfo (or 0 if unchecked).
+                ProjectType = chkBiostat.Checked ? (byte)ProjectType.Biostat : chkBioinfo.Checked ? (byte)ProjectType.Bioinfo : (byte)0, // if biostat is checked, then biostat, otherwise bioinfo (or 0 if unchecked).
                 CreditTo = chkCreditToBiostat.Checked ? (byte)ProjectType.Biostat : chkCreditToBioinfo.Checked ? (byte)ProjectType.Bioinfo : chkCreditToBoth.Checked ? (byte)ProjectType.Both : (byte)0 // if biostat is checked, then biostat; otherwise if bioinfo is checked, then bioinfo; otherwise if 'both', then both, otherwise nothing is checked (value of 0)
             };
 
@@ -1420,7 +1465,7 @@ namespace ProjectManagement
                     TextBox txtPhdHrs = row.FindControl("txtPhdHrs") as TextBox;
                     TextBox txtStartDate = row.FindControl("txtStartDate") as TextBox;
                     TextBox txtCompletionDate = row.FindControl("txtCompletionDate") as TextBox;
-                                        
+
                     int output = 0;
                     decimal dMsOutput = 0.0m, dPhdOutput = 0.0m;
                     DateTime dtStart, dtEnd;
@@ -1434,7 +1479,7 @@ namespace ProjectManagement
                             Name = lblPhase.Text,
                             Title = txtTitle.Text,
                             MsHrs = decimal.TryParse(txtMsHrs.Text, out dMsOutput) ? dMsOutput : default(decimal?),
-                            PhdHrs = decimal.TryParse(txtPhdHrs.Text, out dPhdOutput) ? dPhdOutput : default(decimal?),                            
+                            PhdHrs = decimal.TryParse(txtPhdHrs.Text, out dPhdOutput) ? dPhdOutput : default(decimal?),
                             StartDate = DateTime.TryParse(txtStartDate.Text, out dtStart) ? dtStart : (DateTime?)null,
                             CompletionDate = DateTime.TryParse(txtCompletionDate.Text, out dtEnd) ? dtEnd : (DateTime?)null,
                             Creator = Page.User.Identity.Name,
@@ -1449,12 +1494,12 @@ namespace ProjectManagement
             return phases;
         }
 
-     /// <summary>
-     /// Prepares the survey form for the client corresponding to the current project.
-     /// Opens a pop-up (divProjectInfo) that will be shown before sending the actual survey.
-     /// </summary>
-     /// <param name="sender"></param>
-     /// <param name="e"></param>
+        /// <summary>
+        /// Prepares the survey form for the client corresponding to the current project.
+        /// Opens a pop-up (divProjectInfo) that will be shown before sending the actual survey.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSurvey_Click(object sender, EventArgs e)
         {
             int projectId = 0;
@@ -1488,8 +1533,9 @@ namespace ProjectManagement
                         ///                      AND request count less than 2. 
                         //UpdateSurvey(sf.Id);
                     }
-                /// Sends an error message if there is no time entry hours for the project.
-                } else if (string.IsNullOrEmpty(sf.LeadBiostat))
+                    /// Sends an error message if there is no time entry hours for the project.
+                }
+                else if (string.IsNullOrEmpty(sf.LeadBiostat))
                 {
                     lblSurveyMsg.Text = "<strong><h3>There have been <u>no</u> hours entered for this *closed* project.</h3><br />Please check the time entry hours for this project and try again.</strong>";
                     divProjectInfo.Visible = false;
@@ -1531,7 +1577,7 @@ namespace ProjectManagement
                        "ShowModalScript", sb.ToString(), false);
 
             //Response.Redirect("Guest/PISurveyForm");
-        }              
+        }
 
         /// <summary>
         /// Final button that needs to be pressed in order to send out the client survey.
@@ -1744,15 +1790,16 @@ namespace ProjectManagement
             string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
 
             /// Sends to fiscal team if a project has been indicated as a paying project.
-            if (sendToFiscal == true) sendTo = sendTo + "," 
+            if (sendToFiscal == true) sendTo = sendTo + ","
                     + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
-            
+
 
             string subject = String.Format("A new project is pending approval, id {0}", projectId);
 
             string url = HttpContext.Current.Request.Url.AbsoluteUri;
             if (url.IndexOf("?Id") > 0)
-            {sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];    
+            {
+                sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
                 url = url.Substring(0, url.IndexOf("?Id"));
             }
 
@@ -1761,7 +1808,7 @@ namespace ProjectManagement
             body.AppendFormat("Please approve new project created by {0} at {1}", User.Identity.Name, url);
             body.AppendFormat("?Id={0}</p>", projectId);
             if (sendToFiscal == true) body.AppendFormat("<br /><strong>QHS Fiscal Team:  This project " +
-                                                        "has been marked as either a paid project and/or " + 
+                                                        "has been marked as either a paid project and/or " +
                                                         "supported by a grant.  Please verify with admin " +
                                                         "before proceeding.  Mahalo!</strong>");
             body.AppendLine();
@@ -1828,7 +1875,7 @@ namespace ProjectManagement
             string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
 
             /// Sends to lead biostatistician for confirmation email.
-             sendTo = sendTo + "," + emailToSend;
+            sendTo = sendTo + "," + emailToSend;
 
             string subject = String.Format("Your project (# {0}) has been reviewed by admin", projectId);
 
@@ -1847,7 +1894,7 @@ namespace ProjectManagement
             body.AppendFormat("You may now start entering your hours for this project.  ");
             body.AppendFormat("Please let us know if you have any questions.</p>");
             body.AppendFormat("Mahalo,<br />QHS Tracking Team");
-           
+
             body.AppendLine();
 
             IdentityMessage im = new IdentityMessage()
