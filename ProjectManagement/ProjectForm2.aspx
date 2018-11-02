@@ -49,6 +49,7 @@
         #textWarning {
             font-size: 12pt;
             font-weight: bold;
+            color: red;
         }
     </style>
 </asp:Content>
@@ -1060,7 +1061,8 @@
                             <div class="col-sm-2">
                                 <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
                                 <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
-            data-toggle="modal" data-target="#warningModal">Warning Modal</button>
+                                    data-toggle="modal" data-target="#warningModal">
+                                    Warning Modal</button>
                             </div>
                         </div>
                         <br />
@@ -1122,10 +1124,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 id="formIncomplete" class="modal-title">Form Incomplete</h3>
+                    <img style="height: 100px; width: 100px; display: block; margin-left: auto; margin-right: auto;" src="images/Stop_sign.png" />
+                    <br />
+                    <div id="formIncomplete" class="modal-title">
+                        <h1>Form Incomplete</h1>
+                        <h4 style="font-family: 'Times New Roman'"><em>Project has <u><strong>not</strong></u> been saved!!!</em></h4>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <asp:Label ID="lblWarning" runat="server">Please review the following <u>incomplete</u> form items and try to submit again:</asp:Label><br />
+                    <asp:Label ID="lblWarning" runat="server">Please review the following <u>incomplete</u> fields and resubmit:</asp:Label><br />
                     <br />
                     <p class="text-warning" id="textWarning"></p>
                 </div>
@@ -1135,7 +1142,7 @@
             </div>
         </div>
     </div>
-   
+
 
     <%--<div id="warningModal" class="modal fade">
         <div class="modal-dialog">
@@ -1884,7 +1891,7 @@
         //    thisButton.prop("disabled", false);
         //    thisButton.prop("value", "Submit");
         //}
-        
+
 
         // -- Unchecks other choices if choice is selected in specific section -- \\
         $("#MainContent_chkBiostat").change(function () {

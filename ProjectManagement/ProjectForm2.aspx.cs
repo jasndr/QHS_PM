@@ -82,6 +82,7 @@ namespace ProjectManagement
     ///  2018OCT23 - Jason Delos Reyes  -  Sends "reviewed by admin" email to both Lead Biostat Member and creator, if they are
     ///                                    not the same person.
     ///  2018OCT31 - Jason Delos Reyes  -  Added a "pop-up modal" for errors instead of standalone Javascript alert.
+    ///                                 -  Changed pop-up modal to have an image of a stop sign, as well as rewording error message.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -141,7 +142,17 @@ namespace ProjectManagement
                 }
                 else
                 {
-                    Response.Write("<script>alert('" + errorMsg + "');</script>");
+                    //Response.Write("<script>alert('" + errorMsg + "');</script>");
+
+                    StringBuilder sb2 = new StringBuilder();
+                    sb2.Append(@"<script type='text/javascript'>");
+                    sb2.Append("$('#MainContent_lblWarning').text('Please review the following error message:');");
+                    sb2.Append("$('#textWarning').append('<span>" + errorMsg + "</span>');");
+                    sb2.Append("ShowWarningModal();");
+                    sb2.Append(@"</script>");
+
+                    Page.ClientScript.RegisterStartupScript(this.GetType(),
+                        "ShowModalScript", sb2.ToString());
                 }
             }
             else

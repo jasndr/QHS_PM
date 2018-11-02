@@ -8,7 +8,33 @@
     <%--<script src="Scripts/bootstrap.min.js"></script>--%>
     <script src="Scripts/bootstrap-datepicker.min.js"></script>
     <script src="Scripts/jquery.validate.min.js"></script>
-    <script src="Scripts/WebForms/jquerymousewheel.js"></script>    
+    <script src="Scripts/WebForms/jquerymousewheel.js"></script>
+    <style>
+        .validateError{
+            color: red;
+            font-weight: bold;
+        }
+        #formIncomplete {
+            color: darkred;
+        }
+
+        #MainContent_lblWarning {
+            font-size: 16pt;
+            font-weight: bold;
+            color: red;
+        }
+
+        #textWarning{
+            font-size: 14pt;
+            font-weight: bold;
+            color: blue;
+        }
+
+        #textConclusion {
+            font-size: 12pt;
+            color: darkolivegreen;
+        }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -345,6 +371,14 @@
                                             </td>
                                             <td class="col-md-1">
                                                 <asp:TextBox ID="TextBoxTime" runat="server" class="form-control" Text="0.5" EnableViewState="true"></asp:TextBox>
+                                                <asp:CustomValidator ID="TextBoxTimeValidator"
+                                                    runat="server"
+                                                    OnServerValidate="TextBoxTimeValidate"
+                                                    ControlToValidate="TextBoxTime"
+                                                    ErrorMessage="Over Estimated Hours!!!"
+                                                    CssClass="validateError"
+                                                    display="Dynamic">
+                                                </asp:CustomValidator>
                                             </td>
                                             <td class="col-md-5">
                                                 <asp:TextBox ID="TextBoxDesc" runat="server" class="form-control"></asp:TextBox>
@@ -383,12 +417,40 @@
                     <div class="col-xs-6 col-md-10"></div>
                     <div class="col-xs-6 col-md-2">
                         <asp:Button ID="btnSubmit" runat="server" Text="Submit" class="btn btn-info" OnClientClick="return validateControl();" OnClick="btnSubmit_Click" />
+                        <button type="button" style="display: none;" id="btnShowWarningModal" class="btn btn-primary btn-lg"
+                                                    data-toggle="modal" data-target="#overspentWarningModal">
+                                                    Warning Modal</button>
                     </div>
                 </div>
                 <asp:HiddenField ID="HiddenFieldCurrentDate" Value="" runat="server" />
 
             </div>
         </div>
+
+        <div id="overspentWarningModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <img style="height: 100px; width: 100px; display: block; margin-left: auto; margin-right: auto;" src="images/Stop_sign.png" />
+                    <br />
+                    <h3 id="formIncomplete" class="modal-title">Estimated Hours Exceeded</h3>
+                </div>
+                <div class="modal-body">
+                    <asp:Label ID="lblWarning" runat="server">WARNING: Your time entry hours <u><strong>have not</strong></u> been saved!!!</asp:Label><br />
+                    <br />
+                    <p class="text-warning" id="textWarning"></p>
+                    <br />
+                    <p class="text-conclusion" id="textConclusion">For additional assistance, including inquiries about adding more 
+                                                                   hours to the estimate, please contact Admin.  Mahalo!
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="panel panel-info">
             <div class="panel-heading">Time Entry Monthly Report</div>
@@ -763,8 +825,31 @@
                     }
                 }
             });         
-        }              
-               
+        }     
+
+        function ShowWarningModal() {
+            $('#btnShowWarningModal').click();
+        }
+
+        <%--//https://msdn.microsoft.com/en-us/library/f5db6z8k.aspx
+        /// Not being used, but client-side alternative to validation error 
+        ///////////////////////////////////////////////////////////////////
+        function textBoxTimeValidate(oSrc, args) {
+
+            var projectId = $("#<%=ddlProject.ClientID%>").val();
+            var currPhase = $("#<%=ddlPhase.ClientID%> :selected").text();
+            // get current user phase type - currUserType
+            // get hours of project for current user type - hoursInProject
+            // get estimated hours for current user - estimatedHOurs
+
+            // args.IsValid if (args.Value + hoursInProject) <= estimatedHours
+
+            // if args.IsNotValid >> print error message (should already be done)
+
+            args.IsValid = (args.Value < 8);
+        }--%>
+
+
         $('#btnSubmit').click(function () {
             $("#commentForm").validate().cancelSubmit = true;
             $("#commentForm").submit();

@@ -270,6 +270,9 @@
     <Content Include="images\sort_both.png" />
     <Content Include="images\sort_desc.png" />
     <Content Include="images\sort_desc_disabled.png" />
+    <Content Include="images\Stop_sign.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ImportRequest.aspx" />
     <Content Include="ProjectForm2.aspx" />
     <Content Include="Report\SummaryReport.aspx" />

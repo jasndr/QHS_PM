@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
 
 //using System.IO;
 //using System.Data;
@@ -44,6 +45,9 @@ namespace ProjectManagement
     ///  ------------------------------------------
     ///  2018JUN20 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
     ///                                    easier data structure view and management.
+    ///  2018NOV01 - Jason Delos Reyes  -  Added validation to time entry page so that users will know
+    ///                                    how many hours they have entered over the amount of estimated
+    ///                                    hours for that specific project.
     ///              
     public partial class TimeEntry1 : System.Web.UI.Page
     {
@@ -283,6 +287,7 @@ namespace ProjectManagement
                         //check if time spent total exceeds phase hour
                         var biostat = context.BioStats.FirstOrDefault(b => b.Id == timeEntry.BioStatId);
                         var phase = ddlPhase.SelectedItem.Text;
+                        decimal dh = 0.0m, ds = 0.0m;
 
                         var ja = JArray.Parse(textAreaPhase.Value);
 
@@ -291,8 +296,7 @@ namespace ProjectManagement
                         {
                             var hours = biostat.Type == "phd" ? "PhdHrs" : "MsHrs";
                             var spent = biostat.Type == "phd" ? "PhdSpt" : "MsSpt";
-
-                            decimal dh = 0.0m, ds = 0.0m;
+                            
                             if (decimal.TryParse(jo[hours].ToString(), out dh) &&
                                 decimal.TryParse(jo[spent].ToString(), out ds))
                             {
@@ -303,7 +307,16 @@ namespace ProjectManagement
 
                         if (timeOverspend)
                         {
-                            Response.Write("<script>alert('Spent hours can not exceed estimated hours for this phase, please create new phase.');</script>");
+                            //Response.Write("<script>alert('Spent hours can not exceed estimated hours for this phase, please create new phase.');</script>");
+
+                            StringBuilder sb2 = new StringBuilder();
+                            sb2.Append(@"<script type='text/javascript'>");
+                            sb2.Append("$('#textWarning').append('Please add hours to be able to fit into " + dh + " hours.');");
+                            sb2.Append("ShowWarningModal();");
+                            sb2.Append(@"</script>");
+
+                            Page.ClientScript.RegisterStartupScript(this.GetType(),
+                                "ShowModalScript", sb2.ToString());
                         }
                         else
                         {
@@ -1228,7 +1241,64 @@ namespace ProjectManagement
             var dateDiff = (int)(Convert.ToDateTime(_currentDate) - lastDay).TotalDays;
 
             return (dateDiff - _leadTime < 0);
-        }    
+        }
+
+        /// <summary>
+        /// Uses server-side validation to stop users from entering
+        /// more hours for the project as necessary.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="args"></param>
+        protected void TextBoxTimeValidate(object source, ServerValidateEventArgs args)
+        {
+            decimal timeHours = 0;
+            decimal.TryParse(args.Value, out timeHours);
+
+            // projectId
+            var projectIdString = ddlProject.SelectedValue;
+            int projectId = 0;
+            Int32.TryParse(projectIdString, out projectId);
+                
+            // currentPhase
+            string currPhase = ddlPhase.SelectedItem.Text;
+
+            // obtain information from database
+            string userName = Page.User.Identity.Name;
+            string currUserType = "";
+            decimal hoursInProject = 0;
+            decimal p = 0.5m, m = 0.5m;
+            decimal estimatedHours = 0;
+
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                //get current user phase type - currUserType
+                currUserType = db.BioStats.Where(x => x.LogonId == userName).FirstOrDefault().Type;
+
+                // get hours of project for current user type - hoursInProject
+                DateTime startDate = new DateTime(2000, 1, 1), endDate = new DateTime(2099, 1, 1);
+                ObjectParameter phdHours = new ObjectParameter("PhdHours", typeof(decimal));
+                ObjectParameter msHours = new ObjectParameter("MSHours", typeof(decimal));
+                var i = db.P_PROJECTPHASE_HOURS(projectId, currPhase, startDate, endDate, phdHours, msHours);
+                Decimal.TryParse(phdHours.Value.ToString(), out p);
+                Decimal.TryParse(msHours.Value.ToString(), out m);
+
+                hoursInProject = currUserType == "phd" ? p : m;
+
+                // get estimated hours for current user - estimatedHours
+                var currentProj = db.ProjectPhase
+                    .Where(x => x.ProjectId == projectId && x.Name == currPhase).FirstOrDefault();
+
+                estimatedHours = currUserType == "phd" ? (decimal)currentProj.PhdHrs : (decimal)currentProj.MsHrs;
+
+            }
+
+            // Activate error if hoursInProject + timeHours is greater than estimated hours
+            args.IsValid = ((hoursInProject + timeHours) <= estimatedHours);
+
+            // Print customized error message
+            if (!args.IsValid) TextBoxTimeValidator.ErrorMessage = hoursInProject+timeHours-estimatedHours + " Hours Over Estimate!!!";
+
+        }
 
         //protected void ExportExcel(object sender, EventArgs e)
         //{
