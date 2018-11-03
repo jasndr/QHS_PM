@@ -584,7 +584,11 @@ namespace ProjectManagement.Report
 
             string collabCenterText = ddlCollabCenter.SelectedItem.Text;
 
-            grantId = collabCenterText != "" ? grantId = 3 : grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
+            grantId = collabCenterText != "--- Select Collaborative Center ---" ? grantId = 3 : grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
+
+            GrantName = grantId == 2 ? "Ola_Hawaii" :
+                        grantId == 1 ? "RMATRIX" :
+                                        ddlCollabCenter.SelectedItem.Text;
 
             if (/*Int32.TryParse(ddlGrantType.SelectedValue, out grantId) &&*/ Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
                 DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))

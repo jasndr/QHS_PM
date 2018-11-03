@@ -48,6 +48,8 @@ namespace ProjectManagement
     ///  2018NOV01 - Jason Delos Reyes  -  Added validation to time entry page so that users will know
     ///                                    how many hours they have entered over the amount of estimated
     ///                                    hours for that specific project.
+    ///  2018NOV02 - Jason Delos Reyes  -  Fixed the issue that prevents users from entering *any* hours
+    ///                                    if there are no estimated hours present.
     ///              
     public partial class TimeEntry1 : System.Web.UI.Page
     {
@@ -1263,7 +1265,7 @@ namespace ProjectManagement
             string currPhase = ddlPhase.SelectedItem.Text;
 
             // obtain information from database
-            string userName = Page.User.Identity.Name;
+            string userName = "";//Page.User.Identity.Name;
             string currUserType = "";
             decimal hoursInProject = 0;
             decimal p = 0.5m, m = 0.5m;
@@ -1271,8 +1273,12 @@ namespace ProjectManagement
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
+                //get current user
+                var currUser = db.BioStats.Where(x => x.Name == ddlBioStat.SelectedItem.Text).FirstOrDefault();
+                userName = currUser.LogonId;
+
                 //get current user phase type - currUserType
-                currUserType = db.BioStats.Where(x => x.LogonId == userName).FirstOrDefault().Type;
+                currUserType = currUser.Type;
 
                 // get hours of project for current user type - hoursInProject
                 DateTime startDate = new DateTime(2000, 1, 1), endDate = new DateTime(2099, 1, 1);
@@ -1287,13 +1293,22 @@ namespace ProjectManagement
                 // get estimated hours for current user - estimatedHours
                 var currentProj = db.ProjectPhase
                     .Where(x => x.ProjectId == projectId && x.Name == currPhase).FirstOrDefault();
+                decimal phdHrs = currentProj.PhdHrs != null ? (decimal)currentProj.PhdHrs : -1;
+                decimal msHrs = currentProj.MsHrs != null ? (decimal)currentProj.MsHrs : -1;
 
-                estimatedHours = currUserType == "phd" ? (decimal)currentProj.PhdHrs : (decimal)currentProj.MsHrs;
+                estimatedHours = currUserType == "phd" ? phdHrs : msHrs;
 
             }
 
             // Activate error if hoursInProject + timeHours is greater than estimated hours
-            args.IsValid = ((hoursInProject + timeHours) <= estimatedHours);
+            if (estimatedHours > -1)
+            {
+                args.IsValid = ((hoursInProject + timeHours) <= estimatedHours);
+            } else
+            {
+                args.IsValid = true;
+            }
+            
 
             // Print customized error message
             if (!args.IsValid) TextBoxTimeValidator.ErrorMessage = hoursInProject+timeHours-estimatedHours + " Hours Over Estimate!!!";
