@@ -83,6 +83,8 @@ namespace ProjectManagement
     ///                                    not the same person.
     ///  2018OCT31 - Jason Delos Reyes  -  Added a "pop-up modal" for errors instead of standalone Javascript alert.
     ///                                 -  Changed pop-up modal to have an image of a stop sign, as well as rewording error message.
+    ///  2018NOV07 - Jason Delos Reyes  -  Added a reference to the Admin person who reviewed the project to record the person who
+    ///                                    "approved" the project.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -282,15 +284,17 @@ namespace ProjectManagement
 
                             if (leadBiostatUserName != userName)
                             {
-                                emailToSend = emailToSend + ";" + leadBiostatEmail;
-                                userName = userName + " , " + leadBiostatUserName;
+                                emailToSend = emailToSend + "," + leadBiostatEmail;
+                                userName = userName + ", " + leadBiostatUserName;
                             }
 
                             var investigatorId = project.PIId;
                             var investigatorName = db.Invests.FirstOrDefault(i => i.Id == investigatorId).FirstName + " " +
                                                    db.Invests.FirstOrDefault(i => i.Id == investigatorId).LastName;
 
-                            SendAdminReviewEmail(id, emailToSend, userName, investigatorName);
+                            var reviewedBy = User.Identity.Name;
+
+                            SendAdminReviewEmail(id, emailToSend, userName, investigatorName, reviewedBy);
                         }
 
                         //Updates current project with newly-entered values.
@@ -1875,7 +1879,8 @@ namespace ProjectManagement
         /// <param name="emailToSend">Email of Lead Biostatistician to send admin review email to.</param>
         /// <param name="userName">Username of Lead Biostatistician to send admin review email to.</param>
         /// <param name="investigatorName">Investigator of referred project.</param>
-        private void SendAdminReviewEmail(int projectId, string emailToSend, string userName, string investigatorName)
+        /// <param name="reviewedBy">Admin person to review project.</param>
+        private void SendAdminReviewEmail(int projectId, string emailToSend, string userName, string investigatorName, string reviewedBy)
         {
             string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
 
@@ -1895,7 +1900,7 @@ namespace ProjectManagement
 
             body.AppendFormat("Aloha {0},<br />", userName);
             body.AppendFormat("<p>Your <a href='{0}' title='Project ID # {1}'>project # {1}</a> with {2} " +
-                              "has been reviewed by the QHS Tracking Team.  ", url, projectId, investigatorName);
+                              "has been reviewed by {3} of the QHS Tracking Team.  ", url, projectId, investigatorName, reviewedBy);
             body.AppendFormat("You may now start entering your hours for this project.  ");
             body.AppendFormat("Please let us know if you have any questions.</p>");
             body.AppendFormat("Mahalo,<br />QHS Tracking Team");

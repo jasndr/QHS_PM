@@ -48,6 +48,8 @@ namespace ProjectManagement.Report
     ///                                    to non-admin users.
     ///  2018OCT30 - Jason Delos Reyes  -  Fixed the styling report section that allows users to view the results in a scrollable
     ///                                    window, with a fixed header to keep column labels visible while scrolling.
+    ///  2018NOV05 - Jason Delos Reyes  -  Fixed bug that prints the headers for the Collboration Center if that one was selected first
+    ///                                    but user went back to the Grant section to download that report instead.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
@@ -582,13 +584,22 @@ namespace ProjectManagement.Report
             string grantName = "";
             string titleName = "";
 
+            if (Request["optionsRadios"].ToString() == "option1")
+            {
+                grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
+            }
+            else
+            {
+                grantId = 3;
+            }
+
             string collabCenterText = ddlCollabCenter.SelectedItem.Text;
 
-            grantId = collabCenterText != "--- Select Collaborative Center ---" ? grantId = 3 : grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
+            //grantId = collabCenterText != "--- Select Collaborative Center ---" ? grantId = 3 : grantId = Convert.ToInt32(ddlGrantType.SelectedValue);
 
-            GrantName = grantId == 2 ? "Ola_Hawaii" :
-                        grantId == 1 ? "RMATRIX" :
-                                        ddlCollabCenter.SelectedItem.Text;
+            //GrantName = grantId == 2 ? "Ola_Hawaii" :
+            //            grantId == 1 ? "RMATRIX" :
+            //                            ddlCollabCenter.SelectedItem.Text;
 
             if (/*Int32.TryParse(ddlGrantType.SelectedValue, out grantId) &&*/ Int32.TryParse(ddlReport.SelectedValue, out reportId) &&
                 DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))

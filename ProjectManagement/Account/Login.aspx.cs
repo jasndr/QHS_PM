@@ -12,6 +12,23 @@ using System.Text;
 
 namespace ProjectManagement.Account
 {
+    /// <summary>
+    /// @File: Login.aspx.cs
+    /// @FrontEnd: Login.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Login page of Project Tracking System.
+    /// 
+    ///           Login page controls that serves as a locking mechanism for the to provide authorize
+    ///           and appropriate access to individuals through individual accounts in the tracking system.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2018NOV08 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///                                 -  Added requirement of a "confirmed" email account before
+    ///                                    accessing your account.
+    ///  </summary>
     public partial class Login : Page
     {
         protected void Page_Load(object sender, EventArgs e)
@@ -48,35 +65,49 @@ namespace ProjectManagement.Account
                 var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 var signinManager = Context.GetOwinContext().GetUserManager<ApplicationSignInManager>();
 
-                // This doen't count login failures towards account lockout
-                // To enable password failures to trigger lockout, change to shouldLockout: true
-                var result = signinManager.PasswordSignIn(UserName.Text, Password.Text, RememberMe.Checked, shouldLockout: true);
-
-                ////todo create a user log file saved to \logs
-                //StringBuilder logBuilder = new StringBuilder();
-                //logBuilder.Append(UserName.Text);
-                //logBuilder.AppendLine();
-                //logBuilder.AppendLine(Context.GetOwinContext().Response.ToString());
-
-                switch (result)
+                // Require the user to have a confirmed email before they can log on.
+                var user = manager.FindByName(UserName.Text);
+                if (user != null)
                 {
-                    case SignInStatus.Success:
-                        IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
-                        break;
-                    case SignInStatus.LockedOut:
-                        Response.Redirect("/Account/Lockout");
-                        break;
-                    case SignInStatus.RequiresVerification:
-                        Response.Redirect(String.Format("/Account/TwoFactorAuthenticationSignIn?ReturnUrl={0}&RememberMe={1}",
-                                                        Request.QueryString["ReturnUrl"],
-                                                        RememberMe.Checked),
-                                          true);
-                        break;
-                    case SignInStatus.Failure:
-                    default:
-                        FailureText.Text = "Invalid login attempt";
+                    if (!user.EmailConfirmed)
+                    {
+                        FailureText.Text = "Invalid login attempt.  You must have a confirmed email account.";
                         ErrorMessage.Visible = true;
-                        break;
+                    }
+                    else
+                    {
+
+                        // This doen't count login failures towards account lockout
+                        // To enable password failures to trigger lockout, change to shouldLockout: true
+                        var result = signinManager.PasswordSignIn(UserName.Text, Password.Text, RememberMe.Checked, shouldLockout: true);
+
+                        ////todo create a user log file saved to \logs
+                        //StringBuilder logBuilder = new StringBuilder();
+                        //logBuilder.Append(UserName.Text);
+                        //logBuilder.AppendLine();
+                        //logBuilder.AppendLine(Context.GetOwinContext().Response.ToString());
+
+                        switch (result)
+                        {
+                            case SignInStatus.Success:
+                                IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
+                                break;
+                            case SignInStatus.LockedOut:
+                                Response.Redirect("/Account/Lockout");
+                                break;
+                            case SignInStatus.RequiresVerification:
+                                Response.Redirect(String.Format("/Account/TwoFactorAuthenticationSignIn?ReturnUrl={0}&RememberMe={1}",
+                                                                Request.QueryString["ReturnUrl"],
+                                                                RememberMe.Checked),
+                                                  true);
+                                break;
+                            case SignInStatus.Failure:
+                            default:
+                                FailureText.Text = "Invalid login attempt";
+                                ErrorMessage.Visible = true;
+                                break;
+                        }
+                    }
                 }
             }
         }
