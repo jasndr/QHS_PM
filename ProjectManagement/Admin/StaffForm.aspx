@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StaffForm.aspx.cs" Inherits="ProjectManagement.Admin.StaffForm" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script type="text/javascript">
         function pageLoad(sender, args) {
@@ -7,29 +8,28 @@
         }
     </script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">  
-      <br />  
-    <hr />    
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <br />
+    <hr />
     <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
     <div class="panel panel-default">
-    <div class="panel-heading">QHS Faculty and Staff</div>
+        <div class="panel-heading">QHS Faculty and Staff</div>
         <div class="panel-body">
             <div>
                 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"
                     OnRowCommand="GridView1_RowCommand"
                     OnRowEditing="GridView1_RowEditing"
                     OnRowCancelingEdit="GridView1_RowCancelingEdit"
-                    onrowdatabound="GridView1_RowDataBound"
+                    OnRowDataBound="GridView1_RowDataBound"
                     OnRowUpdating="GridView1_RowUpdating" ShowFooter="True"
-                    class="table table-striped table-bordered table-hover btn-group-justified"
-                    >                  
-                    <Columns>            
-                        <asp:TemplateField HeaderText="Id"  HeaderStyle-Width="5%">
+                    class="table table-striped table-bordered table-hover btn-group-justified">
+                    <Columns>
+                        <asp:TemplateField HeaderText="Id" HeaderStyle-Width="5%">
                             <ItemTemplate>
                                 <asp:Label ID="lblId" runat="server" Text='<%# Bind("Id") %>'></asp:Label>
                             </ItemTemplate>
-                        </asp:TemplateField>             
-                        <asp:TemplateField HeaderText="Name" HeaderStyle-Width="20%">
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Name" HeaderStyle-Width="17%">
                             <EditItemTemplate>
                                 <asp:TextBox ID="txtName" runat="server" Text='<%# Bind("Name") %>' CssClass="" MaxLength="50"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="valName" runat="server" ControlToValidate="txtName"
@@ -45,8 +45,8 @@
                                     Display="Dynamic" ErrorMessage="Name is required." ForeColor="Red" SetFocusOnError="True"
                                     ValidationGroup="newGrp">*</asp:RequiredFieldValidator>
                             </FooterTemplate>
-                        </asp:TemplateField>       
-                        <asp:TemplateField HeaderText="Type"  HeaderStyle-Width="15%">
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Type" HeaderStyle-Width="10%">
                             <EditItemTemplate>
                                 <asp:TextBox ID="txtType" runat="server" Text='<%# Bind("Type") %>' CssClass="" MaxLength="10"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="valType" runat="server" ControlToValidate="txtType"
@@ -62,8 +62,8 @@
                                     Display="Dynamic" ErrorMessage="Type is required." ForeColor="Red" SetFocusOnError="True"
                                     ValidationGroup="newGrp">*</asp:RequiredFieldValidator>
                             </FooterTemplate>
-                        </asp:TemplateField>   
-                        <asp:TemplateField HeaderText="Email"  HeaderStyle-Width="30%">
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Email" HeaderStyle-Width="15%">
                             <EditItemTemplate>
                                 <asp:TextBox ID="txtEmail" runat="server" Text='<%# Bind("Email") %>' CssClass="" MaxLength="50"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="valEmail" runat="server" ControlToValidate="txtEmail"
@@ -88,27 +88,27 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="LogonId" HeaderStyle-Width="10%">
                             <EditItemTemplate>
-                                <asp:TextBox ID="txtLogonId" runat="server" Text='<%# Bind("LogonId") %>' CssClass="" MaxLength="10"></asp:TextBox>                    
+                                <asp:TextBox ID="txtLogonId" runat="server" Text='<%# Bind("LogonId") %>' CssClass="" MaxLength="10"></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblLogonId" runat="server" Text='<%# Bind("LogonId") %>'></asp:Label>
                             </ItemTemplate>
                             <FooterTemplate>
-                                <asp:TextBox ID="txtLogonIdNew" runat="server" CssClass="" MaxLength="10"></asp:TextBox>                    
+                                <asp:TextBox ID="txtLogonIdNew" runat="server" CssClass="" MaxLength="10"></asp:TextBox>
                             </FooterTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="EndDate" HeaderStyle-Width="10%">
                             <EditItemTemplate>
-                                <asp:TextBox ID="txtEndDate" runat="server" Text='<%# Convert.ToDateTime(Eval("EndDate")).ToShortDateString() %>' CssClass="" MaxLength="10"></asp:TextBox>                    
+                                <asp:TextBox ID="txtEndDate" runat="server" Text='<%# Convert.ToDateTime(Eval("EndDate")).ToShortDateString() %>' CssClass="" MaxLength="10"></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblEndDate" runat="server" Text='<%# String.Format("{0:MM/dd/yyyy}", Eval("EndDate"))%>'></asp:Label>
                             </ItemTemplate>
                             <FooterTemplate>
-                                <asp:TextBox ID="txtEndDateNew" runat="server" CssClass="" MaxLength="10"></asp:TextBox>                    
+                                <asp:TextBox ID="txtEndDateNew" runat="server" CssClass="" MaxLength="10"></asp:TextBox>
                             </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Edit"  HeaderStyle-Width="10%">
+                        <asp:TemplateField HeaderText="Edit" HeaderStyle-Width="5%">
                             <ItemTemplate>
                                 <asp:LinkButton ID="lnkEdit" runat="server" Text="" CommandName="Edit" ToolTip="Edit"
                                     CommandArgument=''><img src="../images/icon-edit.gif" /></asp:LinkButton>
@@ -128,10 +128,25 @@
                                 <asp:LinkButton ID="lnkCancel" runat="server" Text="" CommandName="CancelNew" ToolTip="Cancel"
                                     CommandArgument=''><img src="../images/icon-cancel.gif" /></asp:LinkButton>
                             </FooterTemplate>
-                        </asp:TemplateField>             
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UserRights" HeaderStyle-Width="25%">
+                            <EditItemTemplate><%--Nothing to Edit--%></EditItemTemplate>
+                            <ItemTemplate>
+                                <asp:Repeater ID="rptUserRights" runat="server" EnableViewState="true">
+                                    <ItemTemplate>
+                                        <div style="display: inline-block;">
+                                            <asp:CheckBox ID="chkId" runat="server" Text='<%# Eval("Name") %>'></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <%--<%# Eval("Name") %>--%>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </ItemTemplate>
+                            <FooterTemplate><%--Nothing to Add--%></FooterTemplate>
+                        </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
-                </div>
             </div>
-        </div>    
+        </div>
+    </div>
 </asp:Content>

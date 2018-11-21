@@ -50,6 +50,7 @@ namespace ProjectManagement.Report
     ///                                    window, with a fixed header to keep column labels visible while scrolling.
     ///  2018NOV05 - Jason Delos Reyes  -  Fixed bug that prints the headers for the Collboration Center if that one was selected first
     ///                                    but user went back to the Grant section to download that report instead.
+    ///  2018NOV14 - Jason Delos Reyes  -  Fixed Rpt_Academic2 procedure to pull the right academic events within the specified range.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {

@@ -20,15 +20,17 @@ namespace ProjectManagement.Report
     /// @Author: Yang Rui
     /// @Summary: General Report
     /// 
-    ///           Summary reports for the list of projects for OLA Hawaii. May need to expand to extract lists of
-    ///           healthcare data and/or nonUH projects, publications, abstracts/presentations, and academic activities,
-    ///           depending on what Ola Hawaii needs to report for future deadlines.
+    ///           General report for time entry, project, paper, and academic entries on the tracking system.
+    ///           Users are able to create a report, in this section, for items entered in the "forms" section
+    ///           of the Project Tracking System.
     ///           
     /// @Maintenance/Revision History:
     ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
     ///  ------------------------------------------
     ///  2018JUL19 - Jason Delos Reyes  -  Added documentation for readibility. Also added COBRE-Infectious Diseases, OLA Hawaii,
     ///                                    and P30 UHCC to the list of grant choices for the Paper report.
+    ///  2018NOV14 - Jason Delos Reyes  -  Edited Rpt_Academic stored procedure to  pull the right academic events for the
+    ///                                    specified window of dates.
     /// </summary>
     public partial class AdhocReport : System.Web.UI.Page
     {
