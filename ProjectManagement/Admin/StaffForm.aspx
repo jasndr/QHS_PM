@@ -130,12 +130,22 @@
                             </FooterTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="UserRights" HeaderStyle-Width="25%">
-                            <EditItemTemplate><%--Nothing to Edit--%></EditItemTemplate>
-                            <ItemTemplate>
+                            <EditItemTemplate><%--Edit Checkbox user rights for user--%>
                                 <asp:Repeater ID="rptUserRights" runat="server" EnableViewState="true">
                                     <ItemTemplate>
                                         <div style="display: inline-block;">
                                             <asp:CheckBox ID="chkId" runat="server" Text='<%# Eval("Name") %>'></asp:CheckBox>
+                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                            <%--<%# Eval("Name") %>--%>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </EditItemTemplate>
+                            <ItemTemplate>
+                                <asp:Repeater ID="rptUserRights" runat="server" EnableViewState="true">
+                                    <ItemTemplate>
+                                        <div style="display: inline-block;">
+                                            <asp:CheckBox ID="chkId" runat="server" Text='<%# Eval("Name") %>' Enabled="false" ></asp:CheckBox>
                                             <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
                                             <%--<%# Eval("Name") %>--%>
                                         </div>
