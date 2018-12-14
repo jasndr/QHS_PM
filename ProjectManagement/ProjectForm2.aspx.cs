@@ -85,6 +85,7 @@ namespace ProjectManagement
     ///                                 -  Changed pop-up modal to have an image of a stop sign, as well as rewording error message.
     ///  2018NOV07 - Jason Delos Reyes  -  Added a reference to the Admin person who reviewed the project to record the person who
     ///                                    "approved" the project.
+    ///  2018DEC05 - Jason Delos Reyes  -  Changed "Project Closure" email recipients from admin to tracking team.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -1842,7 +1843,7 @@ namespace ProjectManagement
         /// <param name="closureDate">Date of project closure.</param>
         private void SendProjectClosureEmail(int projectId, DateTime closureDate)
         {
-            string sendTo = System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+            string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
 
             string subject = String.Format("Project # {0} has been closed.", projectId);
 

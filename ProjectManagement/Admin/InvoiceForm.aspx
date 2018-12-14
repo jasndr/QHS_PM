@@ -157,7 +157,10 @@
                                             <asp:TextBox ID="txtEndDate" runat="server" class="form-control"></asp:TextBox>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-1">
+                                        <asp:CheckBox ID="chkRemoveZeros" runat="server" Text="Remove 0 hours?"></asp:CheckBox>
+                                    </div>
                                     <div class="col-sm-2">
                                         <asp:Button ID="btnFetchInvoice" runat="server" Text="Fetch Invoice" CssClass="btn btn-info" OnClick="btnFetchInvoice_Click" />
                                     </div>

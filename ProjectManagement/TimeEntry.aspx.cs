@@ -50,6 +50,8 @@ namespace ProjectManagement
     ///                                    hours for that specific project.
     ///  2018NOV02 - Jason Delos Reyes  -  Fixed the issue that prevents users from entering *any* hours
     ///                                    if there are no estimated hours present.
+    ///  2018DEC06 - Jason Delos Reyes  -  Fixed Time Entry page issue that originally rounded to the nearest
+    ///                                    nearest integer for MS and PhD spent hours.  Now shows true decimal value.
     ///              
     public partial class TimeEntry1 : System.Web.UI.Page
     {
@@ -605,8 +607,12 @@ namespace ProjectManagement
                         //ObjectParameter endDate = new ObjectParameter("EndDate", typeof(DateTime?));
                         ObjectParameter phdHours = new ObjectParameter("PhdHours", typeof(decimal));
                         ObjectParameter msHours = new ObjectParameter("MSHours", typeof(decimal));
+                        
                         var i = context.P_PROJECTPHASE_HOURS(projectId, phase.Name, startDate, endDate, phdHours, msHours);
                         context.SaveChanges();
+
+                        //phdHours.Value = 0.76;
+                        //msHours.Value = 0.55;
 
                         Decimal.TryParse(phdHours.Value.ToString(), out p);
                         Decimal.TryParse(msHours.Value.ToString(), out m);

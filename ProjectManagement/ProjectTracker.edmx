@@ -1723,6 +1723,21 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Parameter Name="EndDate" Type="datetime" Mode="In" />
           <Parameter Name="Refresh" Type="bit" Mode="In" />
         </Function>
+        <Function Name="P_INVOICE_HOURS2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CollabCtrId" Type="int" Mode="In" />
+          <Parameter Name="InvoiceId" Type="int" Mode="In" />
+          <Parameter Name="StartDate" Type="datetime" Mode="In" />
+          <Parameter Name="EndDate" Type="datetime" Mode="In" />
+          <Parameter Name="Refresh" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="P_INVOICE_HOURS2a" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CollabCtrId" Type="int" Mode="In" />
+          <Parameter Name="InvoiceId" Type="int" Mode="In" />
+          <Parameter Name="StartDate" Type="datetime" Mode="In" />
+          <Parameter Name="EndDate" Type="datetime" Mode="In" />
+          <Parameter Name="Refresh" Type="bit" Mode="In" />
+          <Parameter Name="RemoveZeros" Type="bit" Mode="In" />
+        </Function>
         <Function Name="P_PROJECT_HOURS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="StartDate" Type="datetime" Mode="In" />
           <Parameter Name="EndDate" Type="datetime" Mode="In" />
@@ -2453,6 +2468,21 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <End Role="ClientAgmt" EntitySet="ClientAgmt" />
           </AssociationSet>
           <EntitySet Name="vwProject" EntityType="ProjectTracker.vwProject" />
+          <FunctionImport Name="P_INVOICE_HOURS2" ReturnType="Collection(ProjectTracker.P_INVOICE_HOURS2_Result)">
+            <Parameter Name="CollabCtrId" Mode="In" Type="Int32" />
+            <Parameter Name="InvoiceId" Mode="In" Type="Int32" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="Refresh" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="P_INVOICE_HOURS2a" ReturnType="Collection(ProjectTracker.P_INVOICE_HOURS2a_Result)">
+            <Parameter Name="CollabCtrId" Mode="In" Type="Int32" />
+            <Parameter Name="InvoiceId" Mode="In" Type="Int32" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="Refresh" Mode="In" Type="Boolean" />
+            <Parameter Name="RemoveZeros" Mode="In" Type="Boolean" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="Project">
           <Key>
@@ -4237,6 +4267,42 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="ProjectType" Type="Byte" Nullable="false" />
           <Property Name="CreditTo" Type="Byte" Nullable="false" />
         </EntityType>
+        <ComplexType Name="P_INVOICE_HOURS2_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="ProjectId" Nullable="false" />
+          <Property Type="String" Name="PI" Nullable="false" MaxLength="511" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="Agreement" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Type" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Approved" Nullable="true" Precision="8" Scale="5" />
+          <Property Type="Decimal" Name="Invoiced" Nullable="false" Precision="38" Scale="5" />
+          <Property Type="Decimal" Name="Remain" Nullable="true" Precision="8" Scale="2" />
+          <Property Type="Decimal" Name="TimeTracking" Nullable="false" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="TobeBilled" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="Rate" Nullable="true" Precision="18" Scale="1" />
+          <Property Type="Decimal" Name="SubTotal" Nullable="true" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="Discount" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="RemainAfter" Nullable="true" Precision="8" Scale="2" />
+          <Property Type="Int32" Name="ranking" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="P_INVOICE_HOURS2a_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="ProjectId" Nullable="false" />
+          <Property Type="String" Name="PI" Nullable="false" MaxLength="511" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="Agreement" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Type" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Approved" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="Invoiced" Nullable="false" Precision="38" Scale="5" />
+          <Property Type="Decimal" Name="Remain" Nullable="true" Precision="8" Scale="2" />
+          <Property Type="Decimal" Name="TimeTracking" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="TobeBilled" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="Rate" Nullable="true" Precision="18" Scale="1" />
+          <Property Type="Decimal" Name="SubTotal" Nullable="true" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="Discount" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="RemainAfter" Nullable="true" Precision="8" Scale="2" />
+          <Property Type="Int32" Name="ranking" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5308,6 +5374,50 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="P_INVOICE_HOURS2" FunctionName="ProjectTracker.Store.P_INVOICE_HOURS2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ProjectTracker.P_INVOICE_HOURS2_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="PI" ColumnName="PI" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Agreement" ColumnName="Agreement" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Approved" ColumnName="Approved" />
+                <ScalarProperty Name="Invoiced" ColumnName="Invoiced" />
+                <ScalarProperty Name="Remain" ColumnName="Remain" />
+                <ScalarProperty Name="TimeTracking" ColumnName="TimeTracking" />
+                <ScalarProperty Name="TobeBilled" ColumnName="TobeBilled" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="RemainAfter" ColumnName="RemainAfter" />
+                <ScalarProperty Name="ranking" ColumnName="ranking" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="P_INVOICE_HOURS2a" FunctionName="ProjectTracker.Store.P_INVOICE_HOURS2a">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ProjectTracker.P_INVOICE_HOURS2a_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="PI" ColumnName="PI" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Agreement" ColumnName="Agreement" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Approved" ColumnName="Approved" />
+                <ScalarProperty Name="Invoiced" ColumnName="Invoiced" />
+                <ScalarProperty Name="Remain" ColumnName="Remain" />
+                <ScalarProperty Name="TimeTracking" ColumnName="TimeTracking" />
+                <ScalarProperty Name="TobeBilled" ColumnName="TobeBilled" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="RemainAfter" ColumnName="RemainAfter" />
+                <ScalarProperty Name="ranking" ColumnName="ranking" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

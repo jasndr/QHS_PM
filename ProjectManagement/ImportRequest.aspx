@@ -85,7 +85,9 @@
                     OnClick="DownloadFile"
                 </div>--%>
                 <div>
-                    <asp:Button ID="btnImport" runat="server" Text="Import" CssClass="btn btn-info" OnClientClick="return validateControl(); return false;" OnClick="btnImport_Click" /> <%--OnClientClick="return validateControl(); return false;"--%>
+                    <asp:Button ID="btnImport" runat="server" Text="Import" CssClass="btn btn-info" OnClientClick="return validateControl(); return false;" OnClick="btnImport_Click" />
+                    <asp:Button ID="btnImport2" runat="server" Text="Import2" CssClass="btn btn-info" OnClientClick="return validateControl(); return false;" OnClick="btnImport2_Click" />
+                    <%--OnClientClick="return validateControl(); return false;"--%>
                 </div>
             </div>
         </div>
@@ -97,7 +99,7 @@
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <button type="button" class="close btnClose" data-dismiss="modal" aria-hidden="true">×</button>
                         <%--<h5 style="font-weight: normal;"><strong><em>Please edit/review the following PI/Project pages before importing.
                         </em></strong></h5>--%>
                         <p style="font-size: 11pt; font-weight: 500">
@@ -1102,7 +1104,8 @@
                                                 <asp:Label ID="lblResult" Visible="false" runat="server"></asp:Label>
                                                 <asp:Button ID="btnSave" runat="server" Text="Upload" CssClass="btn btn-info" OnClick="btnUpload_Click" OnClientClick="return ClientSideClick(this);" />
                                                 <%--OnClick="btnSave_Click"--%>
-                                                <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                <button class="btn btn-info btnClose" data-dismiss="modal" aria-hidden="true" type="reset">Close</button>
+                                                <%--<asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn btn-info" OnClick="btnClose_Click" />--%>
                                             </div>
                                         </div>
 
@@ -1138,6 +1141,21 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+
+
+            // Pre-selects Biostat by default (since 90% of projects = Biostat)
+            $('#MainContent_chkBiostat').prop('checked', true);
+            $('#MainContent_chkCreditToBiostat').prop('checked', true);
+
+            // Clear field when closing modal.
+            $('.btnClose').click(function () {
+                $('[type="text"]').val("");
+                $('textarea').val("");
+
+              
+
+                $('select option:selected').prop('selected', false);
+            });
 
             $('.loader').fadeOut("slow");
 

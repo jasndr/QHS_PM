@@ -157,5 +157,59 @@ namespace ProjectManagement
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<P_INVOICE_HOURS_Result>("P_INVOICE_HOURS", collabCtrIdParameter, invoiceIdParameter, startDateParameter, endDateParameter, refreshParameter);
         }
+    
+        public virtual ObjectResult<P_INVOICE_HOURS2_Result> P_INVOICE_HOURS2(Nullable<int> collabCtrId, Nullable<int> invoiceId, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> refresh)
+        {
+            var collabCtrIdParameter = collabCtrId.HasValue ?
+                new ObjectParameter("CollabCtrId", collabCtrId) :
+                new ObjectParameter("CollabCtrId", typeof(int));
+    
+            var invoiceIdParameter = invoiceId.HasValue ?
+                new ObjectParameter("InvoiceId", invoiceId) :
+                new ObjectParameter("InvoiceId", typeof(int));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var refreshParameter = refresh.HasValue ?
+                new ObjectParameter("Refresh", refresh) :
+                new ObjectParameter("Refresh", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<P_INVOICE_HOURS2_Result>("P_INVOICE_HOURS2", collabCtrIdParameter, invoiceIdParameter, startDateParameter, endDateParameter, refreshParameter);
+        }
+    
+        public virtual ObjectResult<P_INVOICE_HOURS2a_Result> P_INVOICE_HOURS2a(Nullable<int> collabCtrId, Nullable<int> invoiceId, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> refresh, Nullable<bool> removeZeros)
+        {
+            var collabCtrIdParameter = collabCtrId.HasValue ?
+                new ObjectParameter("CollabCtrId", collabCtrId) :
+                new ObjectParameter("CollabCtrId", typeof(int));
+    
+            var invoiceIdParameter = invoiceId.HasValue ?
+                new ObjectParameter("InvoiceId", invoiceId) :
+                new ObjectParameter("InvoiceId", typeof(int));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var refreshParameter = refresh.HasValue ?
+                new ObjectParameter("Refresh", refresh) :
+                new ObjectParameter("Refresh", typeof(bool));
+    
+            var removeZerosParameter = removeZeros.HasValue ?
+                new ObjectParameter("RemoveZeros", removeZeros) :
+                new ObjectParameter("RemoveZeros", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<P_INVOICE_HOURS2a_Result>("P_INVOICE_HOURS2a", collabCtrIdParameter, invoiceIdParameter, startDateParameter, endDateParameter, refreshParameter, removeZerosParameter);
+        }
     }
 }

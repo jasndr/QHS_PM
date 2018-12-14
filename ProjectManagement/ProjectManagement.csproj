@@ -798,6 +798,12 @@
     <Compile Include="ProjectForm2.aspx.designer.cs">
       <DependentUpon>ProjectForm2.aspx</DependentUpon>
     </Compile>
+    <Compile Include="P_INVOICE_HOURS2a_Result.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="P_INVOICE_HOURS2_Result.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
     <Compile Include="P_INVOICE_HOURS_Result.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>

@@ -10,6 +10,9 @@ using org.apache.pdfbox.util;
 using System.Text.RegularExpressions;
 using ProjectManagement.Model;
 using System.Data;
+using System.Text;
+using System.Drawing;
+using System.Threading;
 
 namespace ProjectManagement
 {
@@ -51,7 +54,7 @@ namespace ProjectManagement
             {
                 //Initialize form
                 BindControl();
-                
+
             }
             else
             {
@@ -164,14 +167,18 @@ namespace ProjectManagement
                     strFilename = System.IO.Path.GetFileName(myFile.FileName);
 
                     // Creates "UploadFiles" folder if does not exist yet.
-                    if (!(System.IO.Directory.Exists(Server.MapPath("~/UploadFiles/"))))
-                        System.IO.Directory.CreateDirectory(Server.MapPath("~/UploadFiles/"));
+                    if (!(Directory.Exists(Path.GetTempPath()/*System.IO.Directory.Exists(Server.MapPath("~/UploadFiles/")*/)))
+                        System.IO.Directory.CreateDirectory(Path.GetTempPath()/*Server.MapPath("~/UploadFiles/")*/);
+
+                    //if (!(Directory.Exists(Path.GetTempFileName())))
+                    //    Directory.CreateDirectory(Path.GetTempFileName());
+
 
                     //Write data into a file
-                    WriteToFile(Server.MapPath("~/UploadFiles/" + strFilename), ref myData);
+                    WriteToFile(Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename*/, ref myData);
 
-                    filePathName = Server.MapPath("~/UploadFiles/" + strFilename);//myFile.FileName; // Equivalent to --> System.IO.Path.GetFullPath(myFile.FileName);
-                                                                                  // Not working --> Server.MapPath(myFile.FileName);
+                    filePathName = Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename)*/;//myFile.FileName; // Equivalent to --> System.IO.Path.GetFullPath(myFile.FileName);
+                                                                                                                      // Not working --> Server.MapPath(myFile.FileName);
 
 
                     // Read file into string sections*.
@@ -179,11 +186,11 @@ namespace ProjectManagement
                     Dictionary<string, string> data = ExtractTextFromPdf(filePathName);
 
                     //Open modal, displaying PI/Project forms before saving into database.
-                    
+
                     //--- Place into stored data into webform
                     PlaceToWebForm(data);
 
-                    
+
                     //System.Text.StringBuilder sb = new System.Text.StringBuilder();
                     //sb.Append(@"<script type='text/javascript'>");
                     //sb.Append("$('#editModal').modal('show');");
@@ -192,6 +199,85 @@ namespace ProjectManagement
 
                 }
             }
+        }
+
+        /// <summary>
+        /// /////////////////////////////////////////////////////////////////
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnImport2_Click(object sender, EventArgs e)
+        {
+            
+
+            /// Obtain the PDF from the upload field.
+            string strFilename = "";
+            string filePathName = "";
+            byte[] myData = new byte[0];
+            if (fileUpload.PostedFile != null)
+            {
+                // Get a reference to PostedFile object.
+                HttpPostedFile myFile = fileUpload.PostedFile;
+
+                // Get size of uploaded file.
+                int nFileLen = myFile.ContentLength;
+
+                // Make sure the size of the file is > 0.
+                if (nFileLen > 0)
+                {
+                    // Allocate a buffer for reading of the file.
+                    myData = new byte[nFileLen];
+
+                    // Read uploaded file from the Stream.
+                    myFile.InputStream.Read(myData, 0, nFileLen);
+
+                    // Create name for the file to store.
+                    strFilename = System.IO.Path.GetFileName(myFile.FileName);
+
+                    // Creates "UploadFiles" folder if does not exist yet.
+                    if (!(Directory.Exists(Path.GetTempPath()/*System.IO.Directory.Exists(Server.MapPath("~/UploadFiles/")*/)))
+                        System.IO.Directory.CreateDirectory(Path.GetTempPath()/*Server.MapPath("~/UploadFiles/")*/);
+
+                    //if (!(Directory.Exists(Path.GetTempFileName())))
+                    //    Directory.CreateDirectory(Path.GetTempFileName());
+
+
+                    //Write data into a file
+                    WriteToFile(Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename*/, ref myData);
+
+                    filePathName = Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename)*/;//myFile.FileName; // Equivalent to --> System.IO.Path.GetFullPath(myFile.FileName);
+                                                                                                                      // Not working --> Server.MapPath(myFile.FileName);
+
+
+                    // Read file into string sections*.
+                    //string fileData = ExtractTextFromPdf(filePathName);
+                   // Dictionary<string, string> data = ExtractTextFromPdf(filePathName);
+
+
+               //     Bitmap image = new Bitmap(filePathName);
+               //     tessnet2.Tesseract ocr = new tessnet2.Tesseract();
+               ////     ocr.SetVariable("tessedit_char_whitelist", "0123456789"); // If digit only
+               //     //ocr.Init(@"c:\temp", "fra", false); // To use correct tessdata
+               //     List<tessnet2.Word> result = ocr.DoOCR(image, Rectangle.Empty);
+               //     foreach (tessnet2.Word word in result)
+               //         Console.WriteLine("{0} : {1}", word.Confidence, word.Text);
+
+                    //Open modal, displaying PI/Project forms before saving into database.
+
+                    //--- Place into stored data into webform
+                    //PlaceToWebForm(data);
+
+
+                    //System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    //sb.Append(@"<script type='text/javascript'>");
+                    //sb.Append("$('#editModal').modal('show');");
+                    //sb.Append(@"</script>");
+                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "ModalScript", sb.ToString(), false);
+
+                }
+            }
+
+
         }
 
         /// <summary>
@@ -209,10 +295,13 @@ namespace ProjectManagement
 
                 string entirePdfText = stripper.getText(doc);
                 var dict = new Dictionary<string, string>();
-                
+
+
+               //File
+
                 //Obtain fields to enter into the database (only readable characters for now, looking
                 //                                          into solution that reads checks in the future).
-                var requestType= Regex.Match(entirePdfText, @"(?<=5).+?(?= Request for Resources)").ToString();
+                var requestType = Regex.Match(entirePdfText, @"(?<=5).+?(?= Request for Resources)").ToString();
                 dict.Add("requestType", requestType);
 
                 var lastName = Regex.Match(entirePdfText, @"(?<=1a.\s+Last Name\s+).+(?=\r)").ToString();
@@ -229,8 +318,8 @@ namespace ProjectManagement
 
                 int ptFrom = entirePdfText.IndexOf("8a.  Project Title ") + "8a.  Project Title ".Length;
                 int ptTo = entirePdfText.IndexOf("(If no current project please type ");
-                var projectTitle = entirePdfText.Substring(ptFrom, ptTo-ptFrom);
-                    projectTitle.Replace(System.Environment.NewLine, " ");
+                var projectTitle = entirePdfText.Substring(ptFrom, ptTo - ptFrom);
+                projectTitle.Replace(System.Environment.NewLine, " ");
                 dict.Add("projectTitle", projectTitle);
 
                 int psFrom = entirePdfText.IndexOf("8b.  Project Summary ") + "8b.  Project Summary ".Length;
@@ -258,21 +347,181 @@ namespace ProjectManagement
         /// <param name="data">Dictionary of obtain fields from PDF form.</param>
         private void PlaceToWebForm(Dictionary<string, string> data)
         {
-            if (data.ContainsKey("firstName")) TextBoxFirstName.Text = data["firstName"];
+            // Pre-populate PI Form if username already exists in the database.
 
-            if (data.ContainsKey("lastName")) TextBoxLastName.Text = data["lastName"];
-            TxtPI.Text = data["firstName"] + " " + data["lastName"]; TxtPI.ReadOnly = true;
+            Invest currPI;
+            ICollection<JabsomAffil> jabsomAffilList;
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                string piNameFromForm = "";
 
-            if (data.ContainsKey("email")) TextBoxEmail.Text = data["email"];
+                if (!string.IsNullOrEmpty(data["firstName"]) && !string.IsNullOrEmpty(data["lastName"]))
+                    piNameFromForm = Convert.ToString(data["firstName"]) + " " + Convert.ToString(data["lastName"]);
 
-            if (data.ContainsKey("phoneNumber")) TextBoxPhone.Text = data["phoneNumber"];
+                currPI = db.Invests.Where(x => (x.FirstName + " " + x.LastName)
+                                           .Contains(piNameFromForm)).FirstOrDefault();
 
+
+                if (currPI != null)
+                {
+                    // PI Information - from request form  
+                    TextBoxFirstName.Text = data.ContainsKey("firstName") ? data["firstName"] : currPI.FirstName;
+                    TextBoxLastName.Text = data.ContainsKey("lastName") ? data["lastName"] : currPI.LastName;
+                    TxtPI.Text = data["firstName"] + " " + data["lastName"]; TxtPI.ReadOnly = true;
+
+                    TextBoxEmail.Text = data.ContainsKey("email") && data["email"] != "__________________________________" ? data["email"] : currPI.Email;
+                    TextBoxPhone.Text = data.ContainsKey("phoneNumber") && data["phoneNumber"] != "__________________________________" ? data["phoneNumber"] : currPI.Phone;
+
+                    //if (data.ContainsKey("firstName")) TextBoxFirstName.Text = data["firstName"];
+                    //if (data.ContainsKey("lastName")) TextBoxLastName.Text = data["lastName"];
+                    //if (data.ContainsKey("email")) TextBoxEmail.Text = data["email"];
+                    //if (data.ContainsKey("phoneNumber")) TextBoxPhone.Text = data["phoneNumber"];
+
+                    // PI Information - from database
+                    chkPilot.Checked = currPI.IsPilot;
+                    ddlStatus.SelectedIndex = currPI.InvestStatusId;
+                    TextBoxNonHawaii.Text = currPI.NonHawaiiClient;
+
+                    TextBox txtNonUHOther = GridViewNonUH.FooterRow.FindControl("txtNonUHOther") as TextBox;
+                    if (currPI.NonUHClient != null)
+                    {
+                        txtNonUHOther.Text = currPI.NonUHClient;
+                    }
+                    else
+                    {
+                        txtNonUHOther.Text = string.Empty;
+                    }
+
+                    TextBox txtDegreeOther = GridViewDegree.FooterRow.FindControl("txtDegreeOther") as TextBox;
+                    if (currPI.OtherDegree != null)
+                    {
+                        txtDegreeOther.Text = currPI.OtherDegree;
+                    }
+                    else
+                    {
+                        txtDegreeOther.Text = string.Empty;
+                    }
+
+                    TextBox txtCommunityPartnerOther = GridViewCommunityPartner.FooterRow.FindControl("txtCommunityPartnerOther") as TextBox;
+                    if (currPI.OtherCommunityPartner != null)
+                    {
+                        txtCommunityPartnerOther.Text = currPI.OtherCommunityPartner;
+                    }
+                    else
+                    {
+                        txtCommunityPartnerOther.Text = string.Empty;
+                    }
+
+
+                    jabsomAffilList = currPI.JabsomAffils;
+                    Bind_JabsomAffil(jabsomAffilList);
+
+
+                }
+                else
+                {
+                    // PI Information - from request form
+                    if (data.ContainsKey("firstName")) TextBoxFirstName.Text = data["firstName"];
+
+                    if (data.ContainsKey("lastName")) TextBoxLastName.Text = data["lastName"];
+                    TxtPI.Text = data["firstName"] + " " + data["lastName"]; TxtPI.ReadOnly = true;
+
+                    if (data.ContainsKey("email")) TextBoxEmail.Text = data["email"];
+
+                    if (data.ContainsKey("phoneNumber")) TextBoxPhone.Text = data["phoneNumber"];
+                }
+            }
+
+
+            // Project Information - from request form
             TxtProject.Text = "Add new project"; TxtProject.ReadOnly = true;
 
             if (data.ContainsKey("projectTitle")) TxtTitle.Text = data["projectTitle"].Replace(Environment.NewLine, " ");
 
             if (data.ContainsKey("projectSummary")) TxtSummary.Value = data["projectSummary"].Replace(Environment.NewLine, " ");
+
+
         }
+
+        /// <summary>
+        /// Populates PI affiliation grid with affiliations from the database
+        /// onto the PI Form.
+        /// </summary>
+        /// <param name="jabsomAffilList">List of PI Affiliations</param>
+        private void Bind_JabsomAffil(ICollection<JabsomAffil> jabsomAffilList)
+        {
+            List<int> idList = new List<int>();
+
+            foreach (JabsomAffil jaf in jabsomAffilList)
+            {
+                idList.Add(jaf.Id);
+            }
+
+            // Check correct PI affiliations (mult. sections, e.g., Degree Checkbox List) 
+            PageUtility.SelectRow_GridView(GridViewDept, idList);
+
+            PageUtility.SelectRow_GridView(GridViewOffice, idList);
+
+            PageUtility.SelectRow_GridView(GridViewNonUH, idList);
+
+            PageUtility.SelectRow_GridView(GridViewDegree, idList);
+
+            PageUtility.SelectRow_GridView(GridViewCommunityCollege, idList);
+
+            PageUtility.SelectRow_GridView(GridViewCommunityPartner, idList);
+
+            int selectedJabsomId = 0;
+
+            GridViewUHDept.Style["display"] = "none";
+            foreach (ListItem item in ddlJabsomOther.Items)
+            {
+                int index;
+                bool result = Int32.TryParse(item.Value, out index);
+                if (result)
+                {
+                    if (idList.Contains(index))
+                    {
+                        selectedJabsomId = index;
+
+                        if (item.Text.Contains("UH School"))
+                        {
+                            GridViewUHDept.Style["display"] = "inherit";
+                        }
+
+                    }
+                }
+            }
+
+
+            if (selectedJabsomId > 0)
+            {
+                ddlJabsomOther.SelectedValue = selectedJabsomId.ToString();
+                PageUtility.SelectRow_GridView(GridViewUHDept, idList);
+            }
+            else
+            {
+                ddlJabsomOther.ClearSelection();
+            }
+
+            ddlUHFaculty.ClearSelection();
+            if (ddlStatus.SelectedItem.Text == "UH Faculty")
+            {
+                foreach (ListItem item in ddlUHFaculty.Items)
+                {
+                    int index;
+                    bool result = Int32.TryParse(item.Value, out index);
+                    if (result)
+                    {
+                        if (idList.Contains(index))
+                        {
+                            ddlUHFaculty.SelectedValue = index.ToString();
+                        }
+                    }
+                }
+            }
+
+        }
+
 
         /// <summary>
         /// Intializes from dropdown, checkmark choices, and file upload fields.
@@ -328,7 +577,7 @@ namespace ProjectManagement
                 // "College" Dropdown
                 dropDownSource = db.JabsomAffils
                                    .Where(d => d.Type == "College")
-                                   .ToDictionary(c=>c.Id, c=>c.Name);
+                                   .ToDictionary(c => c.Id, c => c.Name);
 
                 PageUtility.BindDropDownList(ddlJabsomOther, dropDownSource, string.Empty);
 
@@ -374,7 +623,7 @@ namespace ProjectManagement
                 // Populates dropdown of checkbox grid of other members.
                 dropDownSource2 = query
                                     .Where(b => b.Id > 0)
-                                    .OrderBy(b => b.Id == 99 ? 2:1)
+                                    .OrderBy(b => b.Id == 99 ? 2 : 1)
                                     .ToDictionary(c => (int)c.BitValue, c => c.Name);
 
                 BindTable2(dropDownSource2, rptBiostat);
@@ -420,7 +669,7 @@ namespace ProjectManagement
                 dropDownSource2 = db.ProjectField
                                    .Where(f => f.IsGrant == true && f.IsAcknowledgment == true)
                                    .OrderBy(b => b.Id)
-                                   .ToDictionary(c=>c.BitValue, c=>c.Name);
+                                   .ToDictionary(c => c.BitValue, c => c.Name);
 
                 BindTable2(dropDownSource2, rptAkn);
 
@@ -469,7 +718,7 @@ namespace ProjectManagement
         {
             // Create a file
             FileStream newFile = new FileStream(strPath, FileMode.Create);
-            
+
 
 
             // Write data to the file
@@ -738,7 +987,8 @@ namespace ProjectManagement
 
 
         ///////////////////////////////////
-        protected void btnUpload_Click(object sender, EventArgs e) {
+        protected void btnUpload_Click(object sender, EventArgs e)
+        {
             // Post PI and Project Forms into database.
         }
 

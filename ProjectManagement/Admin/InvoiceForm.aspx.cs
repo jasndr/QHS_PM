@@ -34,6 +34,14 @@ namespace ProjectManagement.Admin
     ///  2018OCT03 - Jason Delos Reyes  -  Configured the invoice form so that the window does not 
     ///                                    close after the user clicks the "update" button by writing
     ///                                    an "modal open" script after postback.
+    ///  2018DEC12 - Jason Delos Reyes  -  Added "Excess Consultation Hours" for overage.  However, the feature
+    ///                                    is still not being sorted correctly.
+    ///  2018DEC13 - Jason Delos Reyes  -  Edited "Excess Consultation Hours" (via means of P_INVOICE_HOURS2 stored procedure)
+    ///                                    to prevent duplicating hours with multiple entries.  However, still need to 
+    ///                                    account for multiple users AND removing of 0 billable hours.
+    ///  2018DEC14 - Jason Delos Reyes  -  Added accounting for multiple users and provided removing 0 billable option
+    ///                                    upon the creation of a new invoice (since creating an invoice makes 
+    ///                                    form semi-permanent).
     /// </summary>
     public partial class InvoiceForm : System.Web.UI.Page
     {
@@ -477,6 +485,8 @@ namespace ProjectManagement.Admin
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
             {
+                chkRemoveZeros.Visible = false; // Hide "remove zeros" as it doesn't work for saved invoices.
+
                 int id = 0;
                 int.TryParse(((Button)e.CommandSource).CommandArgument, out id);
 
@@ -655,8 +665,12 @@ namespace ProjectManagement.Admin
 
                     if (invoice != null)
                     {
-                        var query = db.P_INVOICE_HOURS(invoice.CollabCtrId, invoice.Id, invoice.StartDate, invoice.EndDate, false);
-                       
+                        //var query = db.P_INVOICE_HOURS(invoice.CollabCtrId, invoice.Id, invoice.StartDate, invoice.EndDate, false);
+                        //var query = db.P_INVOICE_HOURS2(invoice.CollabCtrId, invoice.Id, invoice.StartDate, invoice.EndDate, false);
+
+                        bool removeZeros = chkRemoveZeros.Checked ? true : false;
+                        var query = db.P_INVOICE_HOURS2a(invoice.CollabCtrId, invoice.Id, invoice.StartDate, invoice.EndDate, false, removeZeros);
+
                         db.SaveChanges();
 
                         rptNewInvoice.DataSource = query;
@@ -686,7 +700,9 @@ namespace ProjectManagement.Admin
             {
                 using (ProjectTrackerContainer db = new ProjectTrackerContainer())
                 {
-                    var query = db.P_INVOICE_HOURS(ccId, invoiceId, startdate, enddate, true);
+                    //var query = db.P_INVOICE_HOURS2(ccId, invoiceId, startdate, enddate, true);
+                    bool removeZeros = chkRemoveZeros.Checked ? true : false;
+                    var query = db.P_INVOICE_HOURS2a(ccId, invoiceId, startdate, enddate, true, removeZeros);
                     db.SaveChanges();
 
                     rptNewInvoice.DataSource = query;
