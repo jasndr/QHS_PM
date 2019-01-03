@@ -29,8 +29,11 @@ namespace ProjectManagement.Report
     ///  ------------------------------------------
     ///  2018JUL19 - Jason Delos Reyes  -  Added documentation for readibility. Also added COBRE-Infectious Diseases, OLA Hawaii,
     ///                                    and P30 UHCC to the list of grant choices for the Paper report.
-    ///  2018NOV14 - Jason Delos Reyes  -  Edited Rpt_Academic stored procedure to  pull the right academic events for the
+    ///  2018NOV14 - Jason Delos Reyes  -  Edited Rpt_Academic stored procedure to pull the right academic events for the
     ///                                    specified window of dates.
+    ///  2019JAN02 - Jason Delos Reyes  -  Added more documentation for readability.
+    ///                                 -  Edited "Academic" General Report to display additional details not found in
+    ///                                    the reports that Yang created.
     /// </summary>
     public partial class AdhocReport : System.Web.UI.Page
     {
@@ -49,6 +52,9 @@ namespace ProjectManagement.Report
             
         }
 
+        /// <summary>
+        /// Displays the right fields depending on which type of report selected. 
+        /// </summary>
         private void LoadStartScript()
         {
             System.Text.StringBuilder script = new System.Text.StringBuilder();
@@ -80,6 +86,9 @@ namespace ProjectManagement.Report
             ClientScript.RegisterStartupScript(GetType(), "Javascript", script.ToString());
         }
 
+        /// <summary>
+        /// Populates dropdown fields with corresponding selections.
+        /// </summary>
         private void BindControl()
         {
             using (ProjectTrackerContainer context = new ProjectTrackerContainer())
@@ -179,6 +188,11 @@ namespace ProjectManagement.Report
             }
         }
 
+        /// <summary>
+        /// Pulls reports based on selected option when the "Get Report" button is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
             if (Request["optionsRadios"].ToString() == "option1") //Time Entry
@@ -199,6 +213,11 @@ namespace ProjectManagement.Report
             } 
         }
 
+        /// <summary>
+        /// NOT BEING USED. (Pulls separate report for RMATRIX Montly Reports; now uses independent report.)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnRmatrixMonthly_Click(object sender, EventArgs e)
         {
             //create csv file for download
@@ -424,6 +443,9 @@ namespace ProjectManagement.Report
             return ResultsTable;
         }              
 
+        /// <summary>
+        /// Pulls PROJECT report based on the fields specified.
+        /// </summary>
         private void GetProjectReport()
         {
             DateTime initialDate = Convert.ToDateTime("2000-01-01");
@@ -494,6 +516,9 @@ namespace ProjectManagement.Report
             ReportViewer1.LocalReport.DataSources.Add(new ReportDataSource("DataSet1", dt));
         }
 
+        /// <summary>
+        /// Pulls TIME ENTRY reports based on fields specified, differs type of time entry report specified.
+        /// </summary>
         private void GetTimeEntryReport()
         {
             DateTime dtFrom, dtTo;
@@ -565,6 +590,16 @@ namespace ProjectManagement.Report
             
         }
 
+        /// <summary>
+        /// Obtains Time Entry Report from stored procedure.
+        /// </summary>
+        /// <param name="startDate">Specified earliest date possible for pulled time entry hours.</param>
+        /// <param name="endDate">Specified latest date possible for pulled time entry hours.</param>
+        /// <param name="reportId">Type of time entry report need to be pulled (Individual Daily Hours, etc.)/ </param>
+        /// <param name="biostatId">QHS Faculty/Staff, if specified.</param>
+        /// <param name="projectId">Project ID, if specified.</param>
+        /// <param name="hasInternal">Internal Projects Included (excluded by default).</param>
+        /// <returns></returns>
         private DataTable GetTimeEntry(DateTime startDate, DateTime endDate, int reportId, int biostatId, int projectId, bool hasInternal)
         {
             DataTable ResultsTable = new DataTable();
@@ -603,6 +638,22 @@ namespace ProjectManagement.Report
         }
 
 
+        /// <summary>
+        /// Obtains Project report from stored procedure based on specified fields.
+        /// </summary>
+        /// <param name="initialDate">Earliest possible date of entry.</param>
+        /// <param name="completeDate">Latest possible date of entry.</param>
+        /// <param name="leadBiostatId">Lead QHS Faculty/Staff, if specified.</param>
+        /// <param name="member">Additional Member(s), if specified.</param>
+        /// <param name="piAffil">PI Affiliation, if specified.</param>
+        /// <param name="onGoing">Determines whether or not to pull ongoing projects.</param>
+        /// <param name="isInternal">Pulls internal projects as well if specified.</param>
+        /// <param name="grant">NOT BEING USED. (Determines if pilot grants are needed to be pulled).</param>
+        /// <param name="isPilot">Pulls pilot grants, if specified.</param>
+        /// <param name="pilotGrant">NOT BEING USED. (Pulls name of pilot grant specified).</param>
+        /// <param name="serviceTypeId">Scope (Large vs. small).</param>
+        /// <param name="threshold">Threshold parameter as specified.</param>
+        /// <returns></returns>
         private DataTable GetProjectDetail(DateTime initialDate, DateTime completeDate, int leadBiostatId, string member, string piAffil, bool onGoing, bool isInternal, string grant, bool isPilot, string pilotGrant, int serviceTypeId, int threshold)
         {
             DataTable ResultsTable = new DataTable();
@@ -651,6 +702,9 @@ namespace ProjectManagement.Report
             return ResultsTable;
         }
 
+        /// <summary>
+        /// Obtains Academic report with otpional start/end dates and academic type specified.
+        /// </summary>
         private void GetAcademicReport()
         {
             DateTime dtFrom, dtTo;
@@ -679,6 +733,14 @@ namespace ProjectManagement.Report
             }
         }
 
+        /// <summary>
+        /// Obtains ACADEMIC report from stored procedure.
+        /// </summary>
+        /// <param name="dtFrom">Earliest possible academic entry.</param>
+        /// <param name="dtTo">Latest possible academic entry.</param>
+        /// <param name="academicType">Academic Event Type (Seminar, Teaching, etc.).</param>
+        /// <param name="biostatId">QHS Faculty/Staff member involved, if specified.</param>
+        /// <returns></returns>
         private DataTable GetAcademic(DateTime dtFrom, DateTime dtTo, int academicType, int biostatId)
         {
             DataTable dt = new DataTable();
@@ -688,7 +750,7 @@ namespace ProjectManagement.Report
 
             try
             {
-                SqlCommand cmd = new SqlCommand("Rpt_Academic", conn);
+                SqlCommand cmd = new SqlCommand("Rpt_Academic2", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@FromDate", dtFrom);
                 cmd.Parameters.AddWithValue("@ToDate", dtTo);
