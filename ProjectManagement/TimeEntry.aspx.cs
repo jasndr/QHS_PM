@@ -20,6 +20,7 @@ using System.Text;
 
 namespace ProjectManagement
 {
+    /// <summary>
     /// @File: TimeEntry.aspx.cs
     /// @FrontEnd: TimeEntry.aspx
     /// @Author: Yang Rui
@@ -52,7 +53,10 @@ namespace ProjectManagement
     ///                                    if there are no estimated hours present.
     ///  2018DEC06 - Jason Delos Reyes  -  Fixed Time Entry page issue that originally rounded to the nearest
     ///                                    nearest integer for MS and PhD spent hours.  Now shows true decimal value.
-    ///              
+    ///  2019JAN03 - Jason Delos Reyes  -  Added Project-Specific Time Entry report.
+    ///  2019JAN09 - Jason Delos Reyes  -  Fixed the rounding issue fixed in December 2018 since previous solution
+    ///                                    was only temporary.
+    /// </summary>
     public partial class TimeEntry1 : System.Web.UI.Page
     {
         string _currentDate = DateTime.Now.ToShortDateString();
@@ -75,7 +79,19 @@ namespace ProjectManagement
             {
                 BindControl(strProjectId);
             }
+            //else
+            //{
+            //    LoadStartScript();
+            //}
         }
+
+        /// <summary>
+        /// Pre-populated options on page reload.
+        /// </summary>
+        //private void LoadStartScript()
+        //{
+            
+        //}
         
         /// <summary>
         /// Populates "Time Entry Monthly Report" grid based on the user's time entry for the given month.
@@ -247,7 +263,9 @@ namespace ProjectManagement
                     }
                 }
 
-                BindGridView();
+                //monthly vs. project time entry report
+                var reportType = timeEntryReportType.SelectedValue == "option_Monthly" ? true : false; 
+                BindGridView(reportType);
 
                 BindrptPhase(timeEntry.ProjectId); 
             }
@@ -329,7 +347,9 @@ namespace ProjectManagement
 
                             Response.Write("<script>alert('Time Entry Saved.');</script>");
 
-                            BindGridView();
+                            //monthly vs. project time entry report
+                            var reportType = timeEntryReportType.SelectedValue == "option_Monthly" ? true : false;
+                            BindGridView(reportType);
 
                             int projectId;
                             bool result = Int32.TryParse(ddlProject.SelectedValue, out projectId);
@@ -388,63 +408,129 @@ namespace ProjectManagement
         /// <param name="e"></param>
         protected void btnMonthly_Click(Object sender, EventArgs e)
         {
-            BindGridView();
+            //BindGridView();
+
+            // If "Monthly" time entry report was selected, create SQL query and bind to grid (BindGridView)
+            var reportType = timeEntryReportType.SelectedValue;
+
+            if (reportType == "option_Monthly")
+            {
+                BindGridView(true);
+            }
+            // If "Project" time entry reprot was selected, created SQL query and bind to grid, using project ID number.
+            else
+            {
+                BindGridView(false);
+            }
+            
+
         }
 
         /// <summary>
         /// Populates "Time Entry Monthly Report" with the time entries for the current or selected month upon clicking "Get Report".
         /// </summary>
-        private void BindGridView()
+        private void BindGridView(bool isMonthly)
         {
-            int bioStatId, monthId, yearId;
+            int bioStatId, monthId, yearId, projectId;
             Int32.TryParse(ddlBioStat.SelectedValue, out bioStatId);
             Int32.TryParse(ddlMonth.SelectedValue, out monthId);
             Int32.TryParse(ddlYear.SelectedValue, out yearId);
+            Int32.TryParse(ddlProject.SelectedValue, out projectId);
 
             if (bioStatId > 0 && monthId > 0)
             {
                 using (ProjectTrackerContainer context = new ProjectTrackerContainer())
                 {
-                    var query = context.TimeEntries
-                                .Join(context.Project2
-                                    , t => t.ProjectId
-                                    , p => p.Id
-                                    , (t, p) => new { t, p.Title, phase = t.ProjectPhase.Name }
-                                    )
-                                .Join(context.ServiceTypes
-                                    , tt => tt.t.ServiceTypeId
-                                    , s => s.Id
-                                    , (tt, s) => new { tt, s.Name }
-                                    )
-                                .Join(context.Date1
-                                    , ttt => ttt.tt.t.DateKey
-                                    , d => d.DateKey
-                                    , (ttt, d) => new
-                                    {
-                                        ttt.tt.t.Id
-                                        ,
-                                        ttt.tt.t.ProjectId
-                                        ,
-                                        ttt.tt.phase
-                                        ,
-                                        ttt.tt.Title
-                                        ,                                      
-                                        ttt.Name
-                                        ,
-                                        d.Date
-                                        ,
-                                        ttt.tt.t.Duration
-                                        ,
-                                        ttt.tt.t.BioStatId
-                                        ,
-                                        ttt.tt.t.Description
-                                    }
-                                )
-                                .Where(a => a.BioStatId == bioStatId && a.Date.Year == yearId && a.Date.Month == monthId)
-                                .OrderByDescending(t => t.Id);
 
-                    GridViewTimeEntry.DataSource = query.ToList();
-                    GridViewTimeEntry.DataBind();
+                    if (isMonthly == true)
+                    {
+                        var query = context.TimeEntries
+                                    .Join(context.Project2
+                                        , t => t.ProjectId
+                                        , p => p.Id
+                                        , (t, p) => new { t, p.Title, phase = t.ProjectPhase.Name }
+                                        )
+                                    .Join(context.ServiceTypes
+                                        , tt => tt.t.ServiceTypeId
+                                        , s => s.Id
+                                        , (tt, s) => new { tt, s.Name }
+                                        )
+                                    .Join(context.Date1
+                                        , ttt => ttt.tt.t.DateKey
+                                        , d => d.DateKey
+                                        , (ttt, d) => new
+                                        {
+                                            ttt.tt.t.Id
+                                            ,
+                                            ttt.tt.t.ProjectId
+                                            ,
+                                            ttt.tt.phase
+                                            ,
+                                            ttt.tt.Title
+                                            ,
+                                            ttt.Name
+                                            ,
+                                            d.Date
+                                            ,
+                                            ttt.tt.t.Duration
+                                            ,
+                                            ttt.tt.t.BioStatId
+                                            ,
+                                            ttt.tt.t.Description
+                                        }
+                                    )
+                                    .Where(a => a.BioStatId == bioStatId && a.Date.Year == yearId && a.Date.Month == monthId)
+                                    .OrderByDescending(t => t.Id);
+
+                        GridViewTimeEntry.DataSource = query.ToList();
+                        GridViewTimeEntry.DataBind();
+
+                    }
+                    else
+                    {
+                        var query = context.TimeEntries
+                                    .Join(context.Project2
+                                        , t => t.ProjectId
+                                        , p => p.Id
+                                        , (t, p) => new { t, p.Title, phase = t.ProjectPhase.Name }
+                                        )
+                                    .Join(context.ServiceTypes
+                                        , tt => tt.t.ServiceTypeId
+                                        , s => s.Id
+                                        , (tt, s) => new { tt, s.Name }
+                                        )
+                                    .Join(context.Date1
+                                        , ttt => ttt.tt.t.DateKey
+                                        , d => d.DateKey
+                                        , (ttt, d) => new
+                                        {
+                                            ttt.tt.t.Id
+                                            ,
+                                            ttt.tt.t.ProjectId
+                                            ,
+                                            ttt.tt.phase
+                                            ,
+                                            ttt.tt.Title
+                                            ,
+                                            ttt.Name
+                                            ,
+                                            d.Date
+                                            ,
+                                            ttt.tt.t.Duration
+                                            ,
+                                            ttt.tt.t.BioStatId
+                                            ,
+                                            ttt.tt.t.Description
+                                        }
+                                    )
+                                    .Where(a => a.BioStatId == bioStatId && a.ProjectId == projectId)
+                                    .OrderByDescending(t => t.Id);
+
+                        GridViewTimeEntry.DataSource = query.ToList();
+                        GridViewTimeEntry.DataBind();
+                    }
+
+                    
                 }
             }
         }
@@ -533,7 +619,10 @@ namespace ProjectManagement
                             PageUtility.BindDropDownList(ddlProject, dropDownSource, string.Empty);
 
                             //BindGrid(context, GridViewTimeEntry);
-                            BindGridView();
+
+                            //monthly vs. project time entry report
+                            var reportType = timeEntryReportType.SelectedValue == "option_Monthly" ? true : false;
+                            BindGridView(reportType);
 
                         }
 
@@ -605,8 +694,8 @@ namespace ProjectManagement
                         DateTime startDate = new DateTime(2000, 1, 1), endDate = new DateTime(2099, 1, 1);
                         //ObjectParameter startDate = new ObjectParameter("StartDate", typeof(DateTime?));
                         //ObjectParameter endDate = new ObjectParameter("EndDate", typeof(DateTime?));
-                        ObjectParameter phdHours = new ObjectParameter("PhdHours", typeof(decimal));
-                        ObjectParameter msHours = new ObjectParameter("MSHours", typeof(decimal));
+                        ObjectParameter phdHours = new ObjectParameter("PhdHours", 7.3/*typeof(decimal)*/);
+                        ObjectParameter msHours = new ObjectParameter("MSHours", 7.3/*typeof(decimal)*/);
                         
                         var i = context.P_PROJECTPHASE_HOURS(projectId, phase.Name, startDate, endDate, phdHours, msHours);
                         context.SaveChanges();
@@ -927,9 +1016,10 @@ namespace ProjectManagement
                     PageUtility.BindDropDownList(ddlMonth, dropDownSource, null);
                     ddlMonth.SelectedValue = currentMonth;
 
-                   
 
-                    BindGridView();
+                    //monthly vs. project time entry report
+                    var reportType = timeEntryReportType.SelectedValue == "option_Monthly" ? true : false;
+                    BindGridView(reportType);
                 }
 
                 //BindGridViewProjectEffort(-1);
@@ -1115,8 +1205,9 @@ namespace ProjectManagement
                         context.SaveChanges();
 
                     }
-
-                    BindGridView();
+                    //monthly vs. project time entry report
+                    var reportType = timeEntryReportType.SelectedValue == "option_Monthly" ? true : false;
+                    BindGridView(reportType);
 
                     if (GridViewTimeEntry.Rows.Count > 0)
                     {
@@ -1139,6 +1230,12 @@ namespace ProjectManagement
             }
         }
 
+        /// <summary>
+        /// Converts given date in string format to a date in numeric format.
+        /// E.g., "10/23/2016" >> 20161023
+        /// </summary>
+        /// <param name="dateEntered">Date in string format, e.g., "10/23/2016"</param>
+        /// <returns>Date in numeric format, e.g., 20161023</returns>
         private int GetDateKey(string dateEntered)
         {
             int dateKey = -1;
@@ -1268,7 +1365,7 @@ namespace ProjectManagement
             Int32.TryParse(projectIdString, out projectId);
                 
             // currentPhase
-            string currPhase = ddlPhase.SelectedItem.Text;
+            string currPhase = ddlPhase.SelectedItem == null ? "" : ddlPhase.SelectedItem.Text;
 
             // obtain information from database
             string userName = "";//Page.User.Identity.Name;
@@ -1299,8 +1396,8 @@ namespace ProjectManagement
                 // get estimated hours for current user - estimatedHours
                 var currentProj = db.ProjectPhase
                     .Where(x => x.ProjectId == projectId && x.Name == currPhase).FirstOrDefault();
-                decimal phdHrs = currentProj.PhdHrs != null ? (decimal)currentProj.PhdHrs : -1;
-                decimal msHrs = currentProj.MsHrs != null ? (decimal)currentProj.MsHrs : -1;
+                decimal phdHrs = currentProj == null ? -1 : currentProj.PhdHrs != null ? (decimal)currentProj.PhdHrs : -1;
+                decimal msHrs = currentProj == null ? -1 : currentProj.MsHrs != null ? (decimal)currentProj.MsHrs : -1;
 
                 estimatedHours = currUserType == "phd" ? phdHrs : msHrs;
 

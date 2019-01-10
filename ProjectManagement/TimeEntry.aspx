@@ -10,10 +10,11 @@
     <script src="Scripts/jquery.validate.min.js"></script>
     <script src="Scripts/WebForms/jquerymousewheel.js"></script>
     <style>
-        .validateError{
+        .validateError {
             color: red;
             font-weight: bold;
         }
+
         #formIncomplete {
             color: darkred;
         }
@@ -24,7 +25,7 @@
             color: red;
         }
 
-        #textWarning{
+        #textWarning {
             font-size: 14pt;
             font-weight: bold;
             color: blue;
@@ -60,22 +61,23 @@
     <div id="rootwizard" class="">
         <div class="panel panel-default">
             <div class="panel-heading">Add Time</div>
-            <div class="panel-body">               
+            <div class="panel-body">
                 <div class="row form-group-md">
-                                    <div class="col-sm-2 text-left"><label class="control-label" for="txtCCAbbrv">QHS Faculty/Staff:</label></div>
-                                    <div class="col-sm-3">
-                                        <asp:DropDownList ID="ddlBioStat" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlBioStat_Changed" AutoPostBack="True">
-                                        </asp:DropDownList>
-                                    </div>
-                                    <label class="col-sm-3 control-label" for="txtAgreementId">PI:</label>
-                                    <div class="col-sm-4">
-                                        <ucc:DropDownListChosen ID="ddlBiostatChosen" runat="server"
-                                            NoResultsText="No results match."
-                                            DataPlaceHolder="Search PI" AllowSingleDeselect="true">
-                                        </ucc:DropDownListChosen>
-                                    </div>
-                                </div>
-                
+                    <div class="col-sm-2 text-left">
+                        <label class="control-label" for="txtCCAbbrv">QHS Faculty/Staff:</label></div>
+                    <div class="col-sm-3">
+                        <asp:DropDownList ID="ddlBioStat" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlBioStat_Changed" AutoPostBack="True">
+                        </asp:DropDownList>
+                    </div>
+                    <label class="col-sm-3 control-label" for="txtAgreementId">PI:</label>
+                    <div class="col-sm-4">
+                        <ucc:DropDownListChosen ID="ddlBiostatChosen" runat="server"
+                            NoResultsText="No results match."
+                            DataPlaceHolder="Search PI" AllowSingleDeselect="true">
+                        </ucc:DropDownListChosen>
+                    </div>
+                </div>
+
                 <%--<div class="row">                   
                     <div class="col-xs-6 col-md-3">
                         <asp:DropDownList ID="ddlPI" runat="server" CssClass="chosen-select" OnSelectedIndexChanged="ddlPI_Changed" AutoPostBack="True" AllowSingleDeselect="true" Visible="false">
@@ -224,7 +226,7 @@
                                     </div>--%>
                                 </div>
                                 <%--</div>--%>
-                                
+
                                 <%--<div class="panel panel-success">
                                     <div class="panel-heading">
                                         <a data-toggle="collapse" data-target="#collapseTwo"
@@ -330,10 +332,9 @@
                                         </div>
                                     </div>
                                 </div>--%>
-
                             </div>
                         </div>
-                            
+
                         <div class="hidden">
                             <textarea id="textAreaPhase" cols="30" rows="3" runat="server"></textarea>
                         </div>
@@ -377,7 +378,7 @@
                                                     ControlToValidate="TextBoxTime"
                                                     ErrorMessage="Over Estimated Hours!!!"
                                                     CssClass="validateError"
-                                                    display="Dynamic">
+                                                    Display="Dynamic">
                                                 </asp:CustomValidator>
                                             </td>
                                             <td class="col-md-5">
@@ -418,8 +419,8 @@
                     <div class="col-xs-6 col-md-2">
                         <asp:Button ID="btnSubmit" runat="server" Text="Submit" class="btn btn-info" OnClientClick="return validateControl();" OnClick="btnSubmit_Click" />
                         <button type="button" style="display: none;" id="btnShowWarningModal" class="btn btn-primary btn-lg"
-                                                    data-toggle="modal" data-target="#overspentWarningModal">
-                                                    Warning Modal</button>
+                            data-toggle="modal" data-target="#overspentWarningModal">
+                            Warning Modal</button>
                     </div>
                 </div>
                 <asp:HiddenField ID="HiddenFieldCurrentDate" Value="" runat="server" />
@@ -428,36 +429,50 @@
         </div>
 
         <div id="overspentWarningModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <img style="height: 100px; width: 100px; display: block; margin-left: auto; margin-right: auto;" src="images/Stop_sign.png" />
-                    <br />
-                    <h3 id="formIncomplete" class="modal-title">Estimated Hours Exceeded</h3>
-                </div>
-                <div class="modal-body">
-                    <asp:Label ID="lblWarning" runat="server">WARNING: Your time entry hours <u><strong>have not</strong></u> been saved!!!</asp:Label><br />
-                    <br />
-                    <p class="text-warning" id="textWarning"></p>
-                    <br />
-                    <p class="text-conclusion" id="textConclusion">For additional assistance, including inquiries about adding more 
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <img style="height: 100px; width: 100px; display: block; margin-left: auto; margin-right: auto;" src="images/Stop_sign.png" />
+                        <br />
+                        <h3 id="formIncomplete" class="modal-title">Estimated Hours Exceeded</h3>
+                    </div>
+                    <div class="modal-body">
+                        <asp:Label ID="lblWarning" runat="server">WARNING: Your time entry hours <u><strong>have not</strong></u> been saved!!!</asp:Label><br />
+                        <br />
+                        <p class="text-warning" id="textWarning"></p>
+                        <br />
+                        <p class="text-conclusion" id="textConclusion">
+                            For additional assistance, including inquiries about adding more 
                                                                    hours to the estimate, please contact Admin.  Mahalo!
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
         <div class="panel panel-info">
             <div class="panel-heading">Time Entry Monthly Report</div>
             <div class="panel-body">
                 <div class="row">
+                    <div class="col-md-4 col-xs-12">
+                            <label>Report Type: </label>
+                            <asp:RadioButtonList ID="timeEntryReportType" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow">
+                                <asp:ListItem Text="Monthly" Value="option_Monthly" />
+                                <asp:ListItem Text="Project" Value="option_Project" />
+                            </asp:RadioButtonList>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <asp:Button ID="btnMonthly" runat="server" Text="Get Report" class="btn btn-info" OnClick="btnMonthly_Click" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
                     <div class="col-xs-6 col-md-2">
-                        <div class='input-group date'>
+                        <div class='input-group date dateDropdown'>
                             <span class="input-group-addon">
                                 <span class="glyphicon">Year</span>
                             </span>
@@ -467,18 +482,16 @@
                     </div>
 
                     <div class="col-xs-6 col-md-2">
-                        <div class='input-group date'>
+                        <div class='input-group date dateDropdown'>
                             <span class="input-group-addon">
                                 <span class="glyphicon">Month</span>
                             </span>
-                            <asp:DropDownList ID="ddlMonth" runat="server" CssClass="form-control" Caption="" >
+                            <asp:DropDownList ID="ddlMonth" runat="server" CssClass="form-control" Caption="">
                             </asp:DropDownList>
                         </div>
                     </div>
+
                     
-                    <div class="col-xs-6 col-md-2">
-                        <asp:Button ID="btnMonthly" runat="server" Text="Get Report" class="btn btn-info" OnClick="btnMonthly_Click" />
-                    </div>
 
                 </div>
                 <br />
@@ -613,7 +626,7 @@
                                     </div>
 
                                 </div>
-                                <br/>
+                                <br />
                                 <div class="row">
                                     <div class="col-xs-2 col-md-2 hidden">
                                         <%--<b>Phase: </b>--%>
@@ -680,16 +693,41 @@
 
     <script type="text/javascript"> 
         function pageLoad(sender, args) {
+
+            // Display or hide Month/Year based on Time Entry Report type.
+            var selectedValue = $('#<%= timeEntryReportType.ClientID %> input:checked');
+            if (selectedValue == 'option_Project') {
+                $('.dateDropdown').hide()
+            }
+
+            if ($("#MainContent_timeEntryReportType_0").is(':checked')) {
+                    $('.dateDropdown').show();
+                } else if ($("#MainContent_timeEntryReportType_1").is(':checked')) {
+                    $('.dateDropdown').hide();
+                }
+
+            $('#<%= timeEntryReportType.ClientID %>').click(function () {
+                if ($("#MainContent_timeEntryReportType_0").is(':checked')) {
+                    $('.dateDropdown').show();
+                } else if ($("#MainContent_timeEntryReportType_1").is(':checked')) {
+                    $('.dateDropdown').hide();
+                }
+            });
+
+            
+
+
+
             $('#li_timeentry').addClass('selected');
 
             //$("#MainContent_TextBoxTime").val(0.5);
-          
+
             //$(document).ready(function () {
-               
+
             //$(function(){
             //    $("#MainContent_ddlPI").chosen();
             //});
-               
+
             $(function () {
                 $('#datetimepicker1').datepicker({
                     format: "mm/dd/yyyy",
@@ -702,7 +740,7 @@
                     autoclose: true,
                     orientation: "top"
                 });
-          
+
                 $('#idTourDateDetails').datepicker({
                     dateFormat: 'dd-mm-yy',
                     minDate: '+5d',
@@ -727,8 +765,8 @@
                 });
             });
 
-            $(function() {
-                $("#MainContent_TextBoxTime").bind("mousewheel", function(event, delta) {
+            $(function () {
+                $("#MainContent_TextBoxTime").bind("mousewheel", function (event, delta) {
                     if (delta > 0) {
                         this.value = parseFloat(this.value) + 0.5;
                     } else {
@@ -738,14 +776,14 @@
                     }
                     return false;
                 });
-     
-            }); 
-                              
-            $("#MainContent_ddlBiostatChosen").change(function(e) {
-                $('#MainContent_ddlProject').val(''); 
+
+            });
+
+            $("#MainContent_ddlBiostatChosen").change(function (e) {
+                $('#MainContent_ddlProject').val('');
                 bindProjects();
-            });  
-            
+            });
+
             //$("#MainContent_ddlProject").change(function(e) {
 
             //    bindProjects();
@@ -754,20 +792,18 @@
             bindProjects();
         }
 
-        function bindProjects()
-        {
+        function bindProjects() {
             var biostatId = $("#MainContent_ddlBioStat").val();
             var piId = $("#MainContent_ddlBiostatChosen").val();
             var filterPI = $("#MainContent_ddlBiostatChosen :selected").text();
             var currentProjectId = $("#MainContent_ddlProject").val();
-            
+
             if (!piId) piId = 0;
-            if (biostatId > 0)
-            {
+            if (biostatId > 0) {
                 //$("#MainContent_ddlProject").val(0);
-               
-                $("#MainContent_ddlProject > option").each(function() {
-                    if ( this.text.indexOf(filterPI) > 0 || filterPI.length == 0 || filterPI.indexOf('Search') >= 0) {             
+
+                $("#MainContent_ddlProject > option").each(function () {
+                    if (this.text.indexOf(filterPI) > 0 || filterPI.length == 0 || filterPI.indexOf('Search') >= 0) {
                         $("#MainContent_ddlProject").children("option[value=" + this.value + "]").show();
                     }
                     else {
@@ -777,7 +813,7 @@
                     //if (this.value == currentProjectId) {
                     //    $("#MainContent_ddlProject").val(this.value);
                     //}
-                }); 
+                });
 
                 //$.ajax({
                 //    type: "POST",
@@ -811,21 +847,19 @@
             }
 
             $("#MainContent_ddlProject").val(0);
-                   
-            $("#MainContent_ddlProject > option").each(function() {                
-                       
-                if (this.value > 0){                           
-                    if ( $.inArray(parseInt(this.value), selectedArray) != -1)                        
-                    {
+
+            $("#MainContent_ddlProject > option").each(function () {
+
+                if (this.value > 0) {
+                    if ($.inArray(parseInt(this.value), selectedArray) != -1) {
                         $("#MainContent_ddlProject").children("option[value=" + this.value + "]").show();
                     }
-                    else
-                    {
+                    else {
                         $("#MainContent_ddlProject").children("option[value=" + this.value + "]").hide();
                     }
                 }
-            });         
-        }     
+            });
+        }
 
         function ShowWarningModal() {
             $('#btnShowWarningModal').click();
@@ -855,20 +889,20 @@
             $("#commentForm").submit();
             return false;
         })
-               
+
         //});
 
         //$("input[name='MainContent_TextBoxTime']").TouchSpin({
         //    verticalbuttons: true
         //});
-           
+
         $("#<%=ddlProject.ClientID%>").change(function () {
             //LoadProjectEffort();
             ////getProjectTime();
             //bindProjectHours([0, 0]);
 
             //divPhaseToggle();
-            
+
             $("#<%=ddlProject.ClientID%>").append(new Option("option text", "value"));
         });
 
@@ -972,7 +1006,7 @@
             }
         }--%>
 
-                    
+
         <%--$("#MainContent_ddlProject").change(function () {
                //var piId = $("#MainContent_ddlPI").val();
                var projectId = $("#MainContent_ddlProject").val();
@@ -1000,8 +1034,8 @@
                            $("#<%=ddlPI.ClientID%>").val(1);
                }
            });           --%>
-            
-        
+
+
 
         function ValidateEntry(sender, args) {
             if (document.getElementById("<%=TextBoxSubmitDate.ClientID %>").innerText != "") {
@@ -1011,8 +1045,8 @@
             }
         }
 
-                                 
-    
+
+
         <%--function RadioCheck(rb) {
                var gv = document.getElementById("<%=gvPhase.ClientID%>");
                var rbs = gv.getElementsByTagName("input");
@@ -1044,12 +1078,12 @@
                         required:true
                     },
                     <%=TextBoxTime.UniqueID %>: {
-                        required:true,
-                        number:true
-                    }
+                    required: true,
+                    number: true
+                }
                 }
             });
         }
-    
+
     </script>
 </asp:Content>

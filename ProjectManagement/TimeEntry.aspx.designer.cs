@@ -157,6 +157,24 @@ namespace ProjectManagement {
         protected global::System.Web.UI.WebControls.Label lblWarning;
         
         /// <summary>
+        /// timeEntryReportType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList timeEntryReportType;
+        
+        /// <summary>
+        /// btnMonthly control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMonthly;
+        
+        /// <summary>
         /// ddlYear control.
         /// </summary>
         /// <remarks>
@@ -173,15 +191,6 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMonth;
-        
-        /// <summary>
-        /// btnMonthly control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnMonthly;
         
         /// <summary>
         /// UpdatePanel1 control.

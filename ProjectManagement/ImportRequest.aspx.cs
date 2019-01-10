@@ -10,9 +10,8 @@ using org.apache.pdfbox.util;
 using System.Text.RegularExpressions;
 using ProjectManagement.Model;
 using System.Data;
-using System.Text;
-using System.Drawing;
-using System.Threading;
+using iTextSharp.text.pdf;
+using System.Xml;
 
 namespace ProjectManagement
 {
@@ -251,21 +250,12 @@ namespace ProjectManagement
 
                     // Read file into string sections*.
                     //string fileData = ExtractTextFromPdf(filePathName);
-                   // Dictionary<string, string> data = ExtractTextFromPdf(filePathName);
-
-
-               //     Bitmap image = new Bitmap(filePathName);
-               //     tessnet2.Tesseract ocr = new tessnet2.Tesseract();
-               ////     ocr.SetVariable("tessedit_char_whitelist", "0123456789"); // If digit only
-               //     //ocr.Init(@"c:\temp", "fra", false); // To use correct tessdata
-               //     List<tessnet2.Word> result = ocr.DoOCR(image, Rectangle.Empty);
-               //     foreach (tessnet2.Word word in result)
-               //         Console.WriteLine("{0} : {1}", word.Confidence, word.Text);
+                    Dictionary<string, string> data = ExtractTextFromPdf2(filePathName);
 
                     //Open modal, displaying PI/Project forms before saving into database.
 
                     //--- Place into stored data into webform
-                    //PlaceToWebForm(data);
+                    PlaceToWebForm(data);
 
 
                     //System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -297,7 +287,81 @@ namespace ProjectManagement
                 var dict = new Dictionary<string, string>();
 
 
+        
+
                //File
+
+                //Obtain fields to enter into the database (only readable characters for now, looking
+                //                                          into solution that reads checks in the future).
+                var requestType = Regex.Match(entirePdfText, @"(?<=5).+?(?= Request for Resources)").ToString();
+                dict.Add("requestType", requestType);
+
+                var lastName = Regex.Match(entirePdfText, @"(?<=1a.\s+Last Name\s+).+(?=\r)").ToString();
+                dict.Add("lastName", lastName);
+
+                var firstName = Regex.Match(entirePdfText, @"(?<=1b.\s+First Name\s+).+(?=\r)").ToString();
+                dict.Add("firstName", firstName);
+
+                var email = Regex.Match(entirePdfText, @"(?<=5\.\s+Email:\s+).+(?=\r)").ToString();
+                dict.Add("email", email);
+
+                var phoneNumber = Regex.Match(entirePdfText, @"(?<=6.\s+Phone number:\s+).+(?=\r)").ToString();
+                dict.Add("phoneNumber", phoneNumber);
+
+                int ptFrom = entirePdfText.IndexOf("8a.  Project Title ") + "8a.  Project Title ".Length;
+                int ptTo = entirePdfText.IndexOf("(If no current project please type ");
+                var projectTitle = entirePdfText.Substring(ptFrom, ptTo - ptFrom);
+                projectTitle.Replace(System.Environment.NewLine, " ");
+                dict.Add("projectTitle", projectTitle);
+
+                int psFrom = entirePdfText.IndexOf("8b.  Project Summary ") + "8b.  Project Summary ".Length;
+                int psTo = entirePdfText.IndexOf("(If no current project type");
+                var projectSummary = entirePdfText.Substring(psFrom, psTo - psFrom);
+                projectSummary.Replace(System.Environment.NewLine, " ");
+                dict.Add("projectSummary", projectSummary);
+
+                return dict;//requestType; //entirePdfText;
+                //return stripper.getText(doc); 
+            }
+            finally
+            {
+                if (doc != null)
+                {
+                    doc.close();
+                }
+            }
+        }
+
+        private static Dictionary<string, string> ExtractTextFromPdf2(string path)
+        {
+            PDDocument doc = null;
+            try
+            {
+                doc = PDDocument.load(path);
+                PDFTextStripper stripper = new PDFTextStripper();
+
+                string entirePdfText = stripper.getText(doc);
+                var dict = new Dictionary<string, string>();
+
+
+                
+
+                //iTextSharpExample ------------------------------------------------------------------------------------------
+                PdfReader reader = new PdfReader(path);
+                AcroFields af = reader.AcroFields;
+
+                foreach (var field in af.Fields)
+                {
+                    bool isRadio = 3 == (af.GetFieldType(field.Key));
+                }
+                    
+
+                https://stackoverflow.com/questions/10651671/read-check-box-radio-button-name-and-values-from-pdf-using-itext-sharp
+
+                //------------------------------------------------------------------------------------------------------------
+
+
+                //File
 
                 //Obtain fields to enter into the database (only readable characters for now, looking
                 //                                          into solution that reads checks in the future).
