@@ -117,7 +117,7 @@ namespace ProjectManagement
                 if (HttpContext.Current.User.IsInRole("Admin"))
                 {
                     ProjectList.Visible = true;
-                    ImportRequestLink.Visible = true;
+                    //ImportRequestLink.Visible = true;
                 }
 
             }

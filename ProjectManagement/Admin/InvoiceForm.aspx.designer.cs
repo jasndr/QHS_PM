@@ -22,13 +22,22 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
         
         /// <summary>
+        /// collabCenterType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList collabCenterType;
+        
+        /// <summary>
         /// ddlCollab control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCollab;
+        protected global::CustomDropDown.DropDownListChosen ddlCollab;
         
         /// <summary>
         /// rptInvoice control.

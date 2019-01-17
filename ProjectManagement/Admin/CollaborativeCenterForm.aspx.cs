@@ -42,6 +42,14 @@ namespace ProjectManagement.Admin
     ///                                    in the grid of listed Collaborative Centers.
     ///  2018SEP21 - Jason Delos Reyes  -  Configured the "update" button so that when the user clicks on it, the system 
     ///                                    updates the information in the database but doesn't close the window.
+    ///  2019JAN11 - Jason Delos Reyes  -  Added functionality to partition Collaborative Centers between all, active, 
+    ///                                    and inactive collaborative centers.
+    ///  2019JAN14 - Jason Delos Reyes  -  Fixed errors that prevented page fron switching between all, active, and inactive
+    ///                                    collaborative centers.
+    ///                                 -  Fixed the issue that would open an empty form when switching between all, active, and 
+    ///                                    inactive collaborative centers using the radio button options.
+    ///  2019JAN15 - Jason Delos Reyes  -  Replaced ordinary dropdown to a searchable one for on the main
+    ///                                    page with the list of collaborative centers.
     /// </summary>
     public partial class CollaborativeCenterForm : System.Web.UI.Page
     {
@@ -188,7 +196,25 @@ namespace ProjectManagement.Admin
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
-                var query = db.CollabCtr;
+                var query = db.CollabCtr.Where(x=>x.Id > 0);
+
+                //if (collabCenterType.SelectedValue == "active")
+                //{
+                //    // Shows active Collaborative Centers (with expiration date OR)
+                //    query = db.CollabCtr.Where(x => x.EndDate != null);
+                //}
+
+                switch (collabCenterType.SelectedValue)
+                {
+                    case "active": // Shows active Collaborative Centers (with no end date OR end date > today)
+                        query = query.Where(x => x.EndDate == null || (x.EndDate != null && x.EndDate >= DateTime.Today));
+                        break;
+                    case "inactive":
+                        query = query.Where(x=>x.EndDate != null && x.EndDate < DateTime.Today);
+                        break;
+                    default:
+                        break;
+                }
 
                 foreach (var cc in query.Where(t => t.Id  > 0).OrderBy(c => c.Id).ToList())
                 {
@@ -296,8 +322,11 @@ namespace ProjectManagement.Admin
             {
                 SetCollabCtr(cc);
 
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                           "ModalScript", PageUtility.LoadEditScript(true), false);
+                if (cc.Id > 0)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                               "ModalScript", PageUtility.LoadEditScript(true), false);
+                }
             }
         }
 
@@ -441,6 +470,19 @@ namespace ProjectManagement.Admin
             {
                 Response.Redirect(String.Format("InvoiceForm?CCId={0}&CCName={1}",ccId, txtCCAbbrv.Value));
             }
+        }
+
+        /// <summary>
+        /// Updates list of collaborative centers between
+        ///     - currently active (no end date noted or have not approched end date),
+        ///     - currently inactive (end date surpassed),
+        ///     - or all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void collabCenterType_Changed(Object sender, EventArgs e)
+        {
+            BindRptCC();
         }
 
         /// <summary>

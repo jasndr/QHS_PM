@@ -42,6 +42,9 @@ namespace ProjectManagement.Admin
     ///  2018DEC14 - Jason Delos Reyes  -  Added accounting for multiple users and provided removing 0 billable option
     ///                                    upon the creation of a new invoice (since creating an invoice makes 
     ///                                    form semi-permanent).
+    ///  2019JAN17 - Jason Delos Reyes  -  Added radio button partioning between active and inactive collaborative centers as well as
+    ///                                    making the collaborative center dropdown a searchable dropdown to be able to quickly 
+    ///                                    narrow down to the specific center.
     /// </summary>
     public partial class InvoiceForm : System.Web.UI.Page
     {
@@ -910,6 +913,16 @@ namespace ProjectManagement.Admin
         }
 
         /// <summary>
+        /// Partitions between active, inactive, or all collaborative centers for display.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void collabCenterType_Changed(Object sender, EventArgs e)
+        {
+            BindRptInvoice();
+        }
+
+        /// <summary>
         /// Changes the list of invoices to the one restricted to the collaborative center
         /// specified in the drop down.
         /// </summary>
@@ -955,6 +968,20 @@ namespace ProjectManagement.Admin
                     query = query.Where(c => c.CollabCtrId == collabId);
                 }
 
+                switch (collabCenterType.SelectedValue)
+                {
+                    case "active":
+                        //query = query.Where(x => x.i.EndDate == null || (x.i.EndDate != null && x.i.EndDate >= DateTime.Today));
+                        query = query.Where(y => y.i.CollabCtr.EndDate == null || (y.i.CollabCtr.EndDate != null && y.i.CollabCtr.EndDate >= DateTime.Today));
+                        break;
+                    case "inactive":
+                        //query = query.Where(x => x.i.EndDate != null && x.i.EndDate < DateTime.Today);
+                        query = query.Where(y => y.i.CollabCtr.EndDate != null && y.i.CollabCtr.EndDate < DateTime.Today);
+                        break;
+                    default:
+                        break;
+                }
+
                 foreach (var ic in query.OrderBy(c => c.i.InvoiceId).ToList())
                 {
                     DataRow dr = dt.NewRow();
@@ -977,7 +1004,6 @@ namespace ProjectManagement.Admin
 
             rptInvoice.DataSource = dt;
             rptInvoice.DataBind();
-
             
 
         }

@@ -55,6 +55,10 @@ namespace ProjectManagement.Admin
     ///                                    known by the user and can not be altered (unless to enter an external
     ///                                    pseudo-client record, which is highly unlikely since the page can
     ///                                    only be used by an admin account).
+    ///  2019JAN16 - Jason Delos Reyes  -  Added feature to be able to partition between client agreemnts
+    ///                                    with currently active and/or inactive collaborative centers.
+    ///  2019JAN17 - Jason Delos Reyes  -  Added "searchable dropdown" so users are able to search the 
+    ///                                    dropdown a specific collaborative center in mind.
     /// </summary>
     public partial class ClientAgreementForm : System.Web.UI.Page
     {
@@ -137,6 +141,19 @@ namespace ProjectManagement.Admin
             BindRptClientAgmt();
             
 
+        }
+
+        /// <summary>
+        /// Updates list of client agreements with collaborative centers between
+        ///     - currently active (no end date specified or not approached end date specified)
+        ///     - currently inactive (end date specified and passed)
+        ///     - or all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void collabCenterType_Changed(Object sender, EventArgs e)
+        {
+            BindRptClientAgmt();
         }
 
         /// <summary>
@@ -323,38 +340,50 @@ namespace ProjectManagement.Admin
                     //                        MsInvoiceHr = (i.MsInvoiceHr == null ? 0 : i.MsInvoiceHr),
                     //                        a.AgmtStatus, a.CollabCtrId };                            
 
-                    var query = db.vwAgreement.Where(a => a.CollabCtrId > 0);
+                    var query = db.vwAgreement.Where(a => a.CollabCtrId > 0).Join(db.CollabCtr, a => a.CollabCtrId, c => c.Id, (a, c) => new { a, c });
 
                     //foreach (var q in query.OrderBy(a => a.ca.a.CollabCtr.NameAbbrv).ThenByDescending(a => a.ca.a.Id).ToList())
                     if (collabId > 0)
                     {
-                        query = query.Where(c => c.CollabCtrId == collabId);
+                        query = query.Where(c => c.a.CollabCtrId == collabId);
+                    }
+
+                    switch (collabCenterType.SelectedValue)
+                    {
+                        case "active":
+                            query = query.Where(y=>y.c.EndDate == null || (y.c.EndDate != null && y.c.EndDate >= DateTime.Today));
+                            break;
+                        case "inactive":
+                            query = query.Where(y=>y.c.EndDate != null && y.c.EndDate < DateTime.Today);
+                            break;
+                        default:
+                            break;
                     }
 
                     foreach (var q in query.Distinct().ToList())
                     {
                         DataRow dr = dt.NewRow();
 
-                        dr["Id"] = q.Id;
-                        dr["AgmtId"] = q.AgmtId;
-                        dr["PIName"] = q.PIName;
-                        dr["ProjectId"] = q.ProjectId;
-                        dr["ProjectPhase"] = q.ProjectPhase;
-                        dr["ProjectTitle"] = q.Title;
-                        dr["ClientRefNum"] = q.ClientRefNum;
-                        dr["ApprovedPhdRate"] = q.ApprovedPhdRate;
-                        dr["ApprovedPhdHr"] = q.ApprovedPhdHr;
-                        dr["InvoicedPhdHr"] = q.PhdInvoiceHr;
-                        dr["RemainingPhdHr"] = q.PhdRemaining;
-                        dr["ApprovedMsRate"] = q.ApprovedMsRate;
-                        dr["ApprovedMsHr"] = q.ApprovedMsHr;
-                        dr["InvoicedMsHr"] = q.MsInvoiceHr;
-                        dr["RemainingMsHr"] = q.MsRemaining;
-                        dr["RequestDate"] = q.RequestDate;
-                        dr["ApprovalDate"] = q.ApprovalDate;
-                        dr["ClientApprovalDate"] = q.ClientApprovalDate;
-                        dr["CompletionDate"] = q.CompletionDate;
-                        dr["Status"] = q.AgmtStatus;
+                        dr["Id"] = q.a.Id;
+                        dr["AgmtId"] = q.a.AgmtId;
+                        dr["PIName"] = q.a.PIName;
+                        dr["ProjectId"] = q.a.ProjectId;
+                        dr["ProjectPhase"] = q.a.ProjectPhase;
+                        dr["ProjectTitle"] = q.a.Title;
+                        dr["ClientRefNum"] = q.a.ClientRefNum;
+                        dr["ApprovedPhdRate"] = q.a.ApprovedPhdRate;
+                        dr["ApprovedPhdHr"] = q.a.ApprovedPhdHr;
+                        dr["InvoicedPhdHr"] = q.a.PhdInvoiceHr;
+                        dr["RemainingPhdHr"] = q.a.PhdRemaining;
+                        dr["ApprovedMsRate"] = q.a.ApprovedMsRate;
+                        dr["ApprovedMsHr"] = q.a.ApprovedMsHr;
+                        dr["InvoicedMsHr"] = q.a.MsInvoiceHr;
+                        dr["RemainingMsHr"] = q.a.MsRemaining;
+                        dr["RequestDate"] = q.a.RequestDate;
+                        dr["ApprovalDate"] = q.a.ApprovalDate;
+                        dr["ClientApprovalDate"] = q.a.ClientApprovalDate;
+                        dr["CompletionDate"] = q.a.CompletionDate;
+                        dr["Status"] = q.a.AgmtStatus;
 
                         dt.Rows.Add(dr);
                     }

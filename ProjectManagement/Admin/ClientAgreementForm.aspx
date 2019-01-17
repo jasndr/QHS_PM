@@ -25,12 +25,22 @@
        .file-footer-buttons {
             display : none;
        }
+       #MainContent_collabCenterType label{
+                font-weight: normal;
+       }
        #projectsSelect .chosen-container .chosen-drop {
            width: 200% !important;
        }
        #projectsSelect .chosen-single {
            width: 100% !important;
        }
+       #collabCentersSelect .chosen-container .chosen-drop{
+           width: 100% !important;
+        }
+
+        #collabCentersSelect .chosen-single{
+            width: 90% !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -46,14 +56,32 @@
                         </div>--%>
                         <%--<br />--%>
                         <div class="row">
+                            <div class="col-sm-5">
+                                <label class="control-label">Collab Center Type:</label>
+                                <asp:RadioButtonList ID="collabCenterType" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" OnSelectedIndexChanged="collabCenterType_Changed" AutoPostBack="true">
+                                    <asp:ListItem Text="All" Value="all" Selected="True" />
+                                    <asp:ListItem Text="Active" Value="active" />
+                                    <asp:ListItem Text="Inactive" Value="inactive" />
+                                </asp:RadioButtonList>
+                            </div>
                             <div class="col-sm-1">
                                 <label class="control-label">Collab Center:</label>
                             </div>
                             <div class="col-sm-5">
-                                <asp:DropDownList ID="ddlCollab" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
-                                </asp:DropDownList>
+                                <%--<asp:DropDownList ID="ddlCollab" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
+                                </asp:DropDownList>--%>
+                                <div id="collabCentersSelect">
+                                    <ucc:DropDownListChosen ID="ddlCollab" runat="server"
+                                        CssClass="form-control"
+                                        NoResultsText="No results match."
+                                        DataPlaceHolder="Search Projects" AllowSingleDeselect="true"
+                                        OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="true"
+                                        >
+                                      
+                                    </ucc:DropDownListChosen>
+                                </div>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-sm-1">
                                 <asp:Button ID="btnExportExcel" runat="server" Text="Export" CssClass="btn btn-info" OnClick="btnExportExcel_Click" />
                                 <asp:TextBox ID="hdnSortOrder" runat="server" CssClass="hidden" />
                             </div>

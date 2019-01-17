@@ -35,6 +35,9 @@
             font-size: 12pt;
             color: darkolivegreen;
         }
+        #MainContent_timeEntryReportType label{
+                font-weight: normal;
+        }
     </style>
 </asp:Content>
 

@@ -1,11 +1,14 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CollaborativeCenterForm.aspx.cs" Inherits="ProjectManagement.Admin.CollaborativeCenterForm" %>
 
+<%@ Register Assembly="DropDownChosen" Namespace="CustomDropDown" TagPrefix="ucc" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
     <script src="../Scripts/jquery.validate.min.js"></script>
     <script src="<%=Page.ResolveUrl("~/Scripts/jquery.dataTables.min.js")%>"></script>
     <script src="<%=Page.ResolveUrl("~/Scripts/dataTables.bootstrap.min.js")%>"></script>
+    <script src="../Scripts/chosen.jquery.js"></script>
     <link href="../Content/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/chosen.css" rel="stylesheet" />
     <style>
         h5 {
             overflow: hidden;
@@ -33,6 +36,19 @@
                 left: 0.5em;
                 margin-right: -50%;
             }
+
+            #MainContent_collabCenterType label{
+                font-weight: normal;
+            }
+
+            #collabCentersSelect .chosen-container .chosen-drop{
+                width: 100% !important;
+            }
+
+            #collabCentersSelect .chosen-single{
+                width: 90% !important;
+            }
+
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -44,17 +60,37 @@
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
                         <div class="row">
-                            <div class="col-sm-5"></div>
+                            <div class="col-sm-5">
+                                <label class="control-label">Collab Center Type:</label>
+                                <asp:RadioButtonList ID="collabCenterType" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" OnSelectedIndexChanged="collabCenterType_Changed" AutoPostBack="true">
+                                    <asp:ListItem Text="All" Value="all" Selected="True" />
+                                    <asp:ListItem Text="Active" Value="active" />
+                                    <asp:ListItem Text="Inactive" Value="inactive" />
+                                </asp:RadioButtonList>
+                            </div>
                             <div class="col-sm-2 text-right">
                                 <label class="control-label" for="txtTitle">Collab Center:</label>
                             </div>
                             <div class="col-sm-5">
-                                <asp:DropDownList ID="ddlCollab" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
-                                </asp:DropDownList>
+                                <%--<asp:DropDownList ID="ddlCollab_old" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
+                                </asp:DropDownList>--%>
+
+                                <div id="collabCentersSelect">
+                                    <ucc:DropDownListChosen ID="ddlCollab" runat="server"
+                                        CssClass="form-control"
+                                        NoResultsText="No results match."
+                                        DataPlaceHolder="Search Projects" AllowSingleDeselect="true"
+                                        OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="true"
+                                        >
+                                      
+                                    </ucc:DropDownListChosen>
+                                </div>
+
                             </div>
                         </div>
+                        <br />
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12" >
                                 <table class="table table-striped table-hover table-bordered dataTable no-footer" id="CollabCtr">
                                     <thead>
                                         <tr>
@@ -84,6 +120,22 @@
                                                 </tr>
                                             </ItemTemplate>
                                         </asp:Repeater>
+                                        <asp:Repeater ID="rptCC_inactive" runat="server" OnItemCommand="rptCC_ItemCommand">
+                                            <ItemTemplate>
+                                                <tr>
+                                                    <td><%# Eval("Id") %></td>
+                                                    <td><%# Eval("Name") %></td>
+                                                    <td><%# Eval("NameAbbrv") %></td>
+                                                    <td><%# Eval("StartDate") %></td>
+                                                    <td><%# Eval("EndDate") %></td>
+                                                    <td><%# Eval("BillingSchedule") %></td>
+                                                    <td><%# Eval("NextInvoiceDate") %></td>
+                                                    <td>
+                                                        <asp:Button ID="btnView" runat="server" Text="Edit" CssClass="btn btn-info" CommandArgument='<%# Eval("Id") %>' /></td>
+                                                </tr>
+                                            </ItemTemplate>
+                                        </asp:Repeater>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -416,6 +468,7 @@
 
     <script type="text/javascript">
         function pageLoad(sender, args) {
+
             $('#li_super').addClass('selected');
             $('#li_payment').addClass('selected');
             $('#li_ccform').addClass('selected');

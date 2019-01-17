@@ -1,12 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InvoiceForm.aspx.cs" Inherits="ProjectManagement.Admin.InvoiceForm" %>
+
+<%@ Register Assembly="DropDownChosen" Namespace="CustomDropDown" TagPrefix="ucc" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">    
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
     <script src="../Scripts/jquery.validate.min.js"></script> 
     <script src="../Scripts/fileinput.js"></script>
     <script src="<%=Page.ResolveUrl("~/Scripts/jquery.dataTables.min.js")%>"></script>
     <script src="<%=Page.ResolveUrl("~/Scripts/dataTables.bootstrap.min.js")%>"></script>
+    <script src="../Scripts/chosen.jquery.js"></script>
     <link href="../Content/dataTables.bootstrap.min.css" rel="stylesheet" />
     <link href="../Content/fileinput.css" rel="stylesheet" />
+    <link href="../Content/chosen.css" rel="stylesheet" />
     <style>
        .rightAlign {
             text-align: right;
@@ -26,7 +30,16 @@
             width: 90em;
             /* must be half of the width, minus scrollbar on the left (30px) */
             /*margin-left: -280px;*/
-        }
+       }
+       #MainContent_collabCenterType label{
+           font-weight: normal;
+       }
+       #collabCentersSelect .chosen-container .chosen-drop{
+           width: 100% !important;
+       }
+       #collabCentersSelect .chosen-single{
+            width: 90% !important;
+       }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -38,15 +51,33 @@
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
                         <div class="row">
-                            <div class="col-sm-5"></div>
+                            <div class="col-sm-5">
+                                <label class="control-label">Collab Center Type:</label>
+                                <asp:RadioButtonList ID="collabCenterType" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" OnSelectedIndexChanged="collabCenterType_Changed" AutoPostBack="true">
+                                    <asp:ListItem Text="All" Value="all" Selected="True" />
+                                    <asp:ListItem Text="Active" Value="active" />
+                                    <asp:ListItem Text="Inactive" Value="inactive" />
+                                </asp:RadioButtonList>
+                            </div>
                             <div class="col-sm-2 text-right">
                                 <label class="control-label" for="txtTitle">Collab Center:</label>
                             </div>
                             <div class="col-sm-5">
-                                <asp:DropDownList ID="ddlCollab" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
-                                </asp:DropDownList>
+                                <%--<asp:DropDownList ID="ddlCollab" runat="server" CssClass="form-control"  OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="True">
+                                </asp:DropDownList>--%>
+                                <div id="collabCentersSelect">
+                                    <ucc:DropDownListChosen ID="ddlCollab" runat="server"
+                                        CssClass="form-control"
+                                        NoResultsText="No results match."
+                                        DataPlaceHolder="Search Projects" AllowSingleDeselect="true"
+                                        OnSelectedIndexChanged="ddlCollab_Changed" AutoPostBack="true"
+                                        >
+                                      
+                                    </ucc:DropDownListChosen>
+                                </div>
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             <div class="col-md-12">   
                                         <asp:Repeater ID="rptInvoice" runat="server" OnItemCommand="rptInvoice_ItemCommand">
