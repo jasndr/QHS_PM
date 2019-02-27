@@ -54,8 +54,10 @@ namespace ProjectManagement
     ///  2018DEC06 - Jason Delos Reyes  -  Fixed Time Entry page issue that originally rounded to the nearest
     ///                                    nearest integer for MS and PhD spent hours.  Now shows true decimal value.
     ///  2019JAN03 - Jason Delos Reyes  -  Added Project-Specific Time Entry report.
-    ///  2019JAN09 - Jason Delos Reyes  -  Fixed the rounding issue fixed in December 2018 since previous solution
+    ///  2019JAN09 - Jason Delos Reyes  -  Fixed the rounding issue fixed in 2018DEC06 since previous solution
     ///                                    was only temporary.
+    ///  2019JAN18 - Jason Delos Reyes  -  Restored rounding that was originally fixed in 2019JAN09.  An page view error
+    ///                                    appeared during publish. Will need to revisit issue.
     /// </summary>
     public partial class TimeEntry1 : System.Web.UI.Page
     {
@@ -694,8 +696,8 @@ namespace ProjectManagement
                         DateTime startDate = new DateTime(2000, 1, 1), endDate = new DateTime(2099, 1, 1);
                         //ObjectParameter startDate = new ObjectParameter("StartDate", typeof(DateTime?));
                         //ObjectParameter endDate = new ObjectParameter("EndDate", typeof(DateTime?));
-                        ObjectParameter phdHours = new ObjectParameter("PhdHours", 7.3/*typeof(decimal)*/);
-                        ObjectParameter msHours = new ObjectParameter("MSHours", 7.3/*typeof(decimal)*/);
+                        ObjectParameter phdHours = new ObjectParameter("PhdHours", /*7.3*/typeof(decimal));
+                        ObjectParameter msHours = new ObjectParameter("MSHours", /*7.3*/typeof(decimal));
                         
                         var i = context.P_PROJECTPHASE_HOURS(projectId, phase.Name, startDate, endDate, phdHours, msHours);
                         context.SaveChanges();

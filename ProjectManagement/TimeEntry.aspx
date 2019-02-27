@@ -464,7 +464,7 @@
                     <div class="col-md-4 col-xs-12">
                             <label>Report Type: </label>
                             <asp:RadioButtonList ID="timeEntryReportType" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow">
-                                <asp:ListItem Text="Monthly" Value="option_Monthly" />
+                                <asp:ListItem Text="Monthly" Value="option_Monthly" Selected="True" />
                                 <asp:ListItem Text="Project" Value="option_Project" />
                             </asp:RadioButtonList>
                     </div>

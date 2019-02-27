@@ -8,6 +8,7 @@
 
         .tt-menu {
             width: 100%;
+            z-index: 1002 !important;
         }
         
         .innerContainer{
@@ -37,6 +38,21 @@
                 </div>
                 <div class="col-md-1 offset2">
                     <asp:CheckBox ID="chkConsult" runat="server" Text="Consult"></asp:CheckBox>
+                </div>
+                <div class="col-md-1 text-right">
+                    <label class="control-label">Request for Resources:</label>
+                </div>
+                <div class="col-md-1 offset2">
+                    <asp:CheckBox ID="chkRmatrixRequest" runat="server" Text="RMATRIX" ></asp:CheckBox>
+                </div>
+                <div class="col-md-2 offset2">
+                    <asp:CheckBox ID="chkOlaRequest" runat="server" Text="Ola HAWAII"></asp:CheckBox>
+                </div>
+                <div class="col-md-2 text-right">
+                    <label class="control-label">Letter of Support only?</label>
+                </div>
+                <div class="col-md-1 offset2">
+                    <asp:CheckBox ID="chkLetterOfSupportOnly" runat="server" Text="Yes" ></asp:CheckBox>
                 </div>
             </div>
             <div class="row offset2">
@@ -146,7 +162,7 @@
                     </asp:DropDownList>
                 </div>
                 <div class="col-md-1 text-right">
-                    <label class="control-label">Grant:</label>
+                    <label class="control-label">Funding Source:</label>
                 </div>
                 <div class="col-xs-6 col-md-3">
                     <asp:DropDownList ID="ddlGrant" runat="server" CssClass="form-control">

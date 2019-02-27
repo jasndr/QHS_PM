@@ -34,6 +34,11 @@ namespace ProjectManagement.Report
     ///  2019JAN02 - Jason Delos Reyes  -  Added more documentation for readability.
     ///                                 -  Edited "Academic" General Report to display additional details not found in
     ///                                    the reports that Yang created.
+    ///  2019FEB20 - Jason Delos Reyes  -  Edited Paper Report to pull from Rpt_Paper2a, a new stored procedure that
+    ///                                    accepts another parameter "funding source" to link papers with grants
+    ///                                    that have supported the paper (in contrast to just acknowledgement).
+    ///                                 -  Made changes to Rpt_Paper2a stored procedure to make "Not Accepted" papers
+    ///                                    appear in the query.
     /// </summary>
     public partial class AdhocReport : System.Web.UI.Page
     {
@@ -164,6 +169,12 @@ namespace ProjectManagement.Report
                                 .ToDictionary(c => c.Id, c => c.Name);
                 PageUtility.BindDropDownList(ddlPaperStatus, dropDownSource, string.Empty);
 
+                /*Added "Funding Source" dropdown*/
+                dropDownSource = context.ProjectField
+                                    .Where(p => p.IsFundingSource == true)
+                                    .ToDictionary(c => c.Id, c => c.Name);
+                PageUtility.BindDropDownList(ddlFundingSource, dropDownSource, string.Empty);
+
                 dropDownSource.Clear();
                 dropDownSource.Add(new KeyValuePair<int, string>(1, "Small"));
                 dropDownSource.Add(new KeyValuePair<int, string>(2, "Large"));
@@ -290,7 +301,7 @@ namespace ProjectManagement.Report
         /// </summary>
         private void GetPaperReport()
         {	
-            int pubType = 1, pubStatus, biostatId;
+            int pubType = 1, pubStatus, biostatId, fundingSource;
             DateTime pubFromDate = Convert.ToDateTime("2000-01-01");
             DateTime pubToDate = Convert.ToDateTime("2099-01-01");
             bool hasPMCID = false, noPMCID = false, citation = false;
@@ -298,6 +309,7 @@ namespace ProjectManagement.Report
 
             Int32.TryParse(ddlPaperStatus.SelectedValue, out pubStatus);
             Int32.TryParse(ddlBiostat.SelectedValue, out biostatId);
+            Int32.TryParse(ddlFundingSource.SelectedValue, out fundingSource);
 
             DateTime tempDate;
             if (DateTime.TryParse(TextBoxPaperFromDate.Text, out tempDate))
@@ -381,7 +393,7 @@ namespace ProjectManagement.Report
                 rdlPath = Server.MapPath("~/Report/" + rdlc);
             }
 
-            DataTable dt = GetPaper(pubType, pubFromDate, pubToDate, pubStatus, biostatId, grant, hasPMCID, noPMCID, citation, authorAffil);
+            DataTable dt = GetPaper(pubType, pubFromDate, pubToDate, pubStatus, fundingSource, biostatId, grant, hasPMCID, noPMCID, citation, authorAffil);
             ReportViewer1.Visible = true;
             ReportViewer1.LocalReport.ReportPath = rdlPath;
             ReportViewer1.LocalReport.DataSources.Clear();
@@ -395,6 +407,7 @@ namespace ProjectManagement.Report
         /// <param name="pubFromDate">From Date - Starting date of range</param>
         /// <param name="pubToDate">To Date - Ending date of range</param>
         /// <param name="pubStatus">Publication Status - Submitted, Accepted, Published, or Not Accepted</param>
+        /// <param name="fundingSource">Funding Source - Funding source of project tied to paper</param>
         /// <param name="biostatId">Biostatistician - QHS faculty or staff member for specific report</param>
         /// <param name="grant">Grants affiliated on paper - RMATRIX/G12 Bridges, INBRE, and/or Mountain West</param>
         /// <param name="hasPMCID">Has PMCID? - 0 for no PMCID, 1 for papers that contain a PMCID</param>
@@ -402,7 +415,7 @@ namespace ProjectManagement.Report
         /// <param name="citation">Citation Format - Check if results need to be presented in citation format</param>
         /// <param name="authorAffil">Author Affiliation - Search for specific author affiliation based on author affilation recorded in paper entry</param>
         /// <returns></returns>
-        private DataTable GetPaper(int pubType, DateTime pubFromDate, DateTime pubToDate, int pubStatus, int biostatId, string grant, bool hasPMCID, bool noPMCID, bool citation, string authorAffil)
+        private DataTable GetPaper(int pubType, DateTime pubFromDate, DateTime pubToDate, int pubStatus, int fundingSource, int biostatId, string grant, bool hasPMCID, bool noPMCID, bool citation, string authorAffil)
         {
             DataTable ResultsTable = new DataTable();
 
@@ -411,7 +424,7 @@ namespace ProjectManagement.Report
 
             try
             {
-                SqlCommand cmd = new SqlCommand("Rpt_Paper", conn);
+                SqlCommand cmd = new SqlCommand("Rpt_Paper2a", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@PubType", pubType);
                 cmd.Parameters.AddWithValue("@PubFromDate", pubFromDate);
@@ -419,6 +432,7 @@ namespace ProjectManagement.Report
                 cmd.Parameters.AddWithValue("@PubStatus", pubStatus);
                 cmd.Parameters.AddWithValue("@BiostatId", biostatId);
                 cmd.Parameters.AddWithValue("@Grant", grant);
+                cmd.Parameters.AddWithValue("@FundingSource", fundingSource);
                 cmd.Parameters.AddWithValue("@HasPMCID", hasPMCID);
                 cmd.Parameters.AddWithValue("@NoPMCID", noPMCID);
                 cmd.Parameters.AddWithValue("@Citation", citation);

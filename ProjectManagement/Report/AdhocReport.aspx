@@ -236,8 +236,8 @@
                     <br />
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="row">
-                                Grant:&nbsp;                   
+                            Paper Acknowlegement:<br />      
+                            <div class="row" style="margin-left: 33px;">
                                 <asp:CheckBox ID="chkRMATRIX" runat="server" class="checkbox-inline" Text="RMATRIX"></asp:CheckBox>
                                 <asp:CheckBox ID="chkG12" runat="server" class="checkbox-inline" Text="G12 BRIDGES"></asp:CheckBox>
                                 <asp:CheckBox ID="chkINBRE" runat="server" class="checkbox-inline" Text="INBRE"></asp:CheckBox>
@@ -260,6 +260,13 @@
                         <div class="col-md-2">
                             Citation Format:
                         <asp:CheckBox ID="chkCitation" runat="server"></asp:CheckBox>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-3">
+                            Funding Source:&nbsp;
+                        <asp:DropDownList ID="ddlFundingSource" runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                     </div>
                     <br />

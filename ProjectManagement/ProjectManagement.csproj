@@ -217,6 +217,9 @@
     <Reference Include="pdfbox-1.8.2, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Pdfbox.1.1.1\lib\pdfbox-1.8.2.dll</HintPath>
     </Reference>
+    <Reference Include="Recaptcha">
+      <HintPath>..\..\..\..\Downloads\recaptcha-dotnet-1.0.5.0-binary\Recaptcha.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -303,6 +306,7 @@
     </Content>
     <Content Include="ImportRequest.aspx" />
     <Content Include="ProjectForm2.aspx" />
+    <Content Include="Report\FilteredReport.aspx" />
     <Content Include="Report\SummaryReport.aspx" />
     <Content Include="Report\Project.aspx" />
     <Content Include="Report\RmatrixMonthly.aspx" />
@@ -856,6 +860,13 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DSAcademic.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Report\FilteredReport.aspx.cs">
+      <DependentUpon>FilteredReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\FilteredReport.aspx.designer.cs">
+      <DependentUpon>FilteredReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Report\SummaryReport.aspx.cs">
       <DependentUpon>SummaryReport.aspx</DependentUpon>

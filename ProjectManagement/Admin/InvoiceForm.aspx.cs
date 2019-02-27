@@ -1036,7 +1036,11 @@ namespace ProjectManagement.Admin
             }
         }
 
-
+        /// <summary>
+        /// (Currently not being used.)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlAgreement_SelectedIndexChanged(object sender, EventArgs e)
         {
             DropDownList ddl = (DropDownList)sender;
@@ -1091,6 +1095,11 @@ namespace ProjectManagement.Admin
 
         }
 
+        /// <summary>
+        /// (Currently Not Being Used.)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlBiostat_SelectedIndexChanged(object sender, EventArgs e)
         {
             DropDownList ddl = (DropDownList)sender;

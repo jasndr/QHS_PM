@@ -35,6 +35,9 @@ namespace ProjectManagement.Report
     ///                                    PI affiliation.
     ///  2018OCT30 - Jason Delos Reyes  -  Added style to "project report" view to be able to see the entire report
     ///                                    using a scrollable window instead of the unsightly overlap of tables.
+    ///  2019FEB06 - Jason Delos Reyes  -  Changed "Grant" to "Funding Source" in project report.
+    ///                                 -  Added "RMATRIX" and "Ola Hawaii" request for resources button to pull 
+    ///                                    report of projects with those checkmarks.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
@@ -128,7 +131,7 @@ namespace ProjectManagement.Report
 
             Control footerTemplate = rptProjectSummary.Controls[rptProjectSummary.Controls.Count - 1].Controls[0];
             Label lblFooter = footerTemplate.FindControl("lblTotal") as Label;
-            lblFooter.Text = hdnRowCount.Value;
+            lblFooter.Text = hdnRowCount.Value + " Projects";
 
             decimal phdHrs = 0.0m, msHrs = 0.0m;
             foreach (DataRow row in dt.Rows)
@@ -206,7 +209,8 @@ namespace ProjectManagement.Report
 
             Int32.TryParse(ddlPIStatus.SelectedValue, out piStatusId);
 
-            int phdId = 0, msId = 0, healthValue = 0, grantValue = 0, isProject = 1, isBiostat = 1, creditTo = 1;
+            int phdId = 0, msId = 0, healthValue = 0, grantValue = 0, isProject = 1, isBiostat = 1, creditTo = 1,
+                isRmatrixRequest = 0, isOlaRequest = 0, letterOfSupportOnly = 0;
 
             Int32.TryParse(ddlPhd.SelectedValue, out phdId);
             Int32.TryParse(ddlMs.SelectedValue, out msId);
@@ -217,6 +221,11 @@ namespace ProjectManagement.Report
             if (grantValue > 0) ReportType = ReportType + " " + ddlGrant.SelectedItem.Text;
 
             isProject = chkProject.Checked ? 1 : 0;
+
+            isRmatrixRequest = chkRmatrixRequest.Checked ? 1 : 0;
+            isOlaRequest = chkOlaRequest.Checked ? 1 : 0;
+
+            letterOfSupportOnly = chkLetterOfSupportOnly.Checked ? 1 : 0;
 
             if ((chkBiostat.Checked && chkBioinfo.Checked) || (!chkBiostat.Checked && !chkBioinfo.Checked))
                 isBiostat = -1;
@@ -236,7 +245,7 @@ namespace ProjectManagement.Report
             DateTime fromDate, toDate;
             if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             {
-                dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
+                dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, letterOfSupportOnly, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
 
                 FromDate = fromDate.ToString("MM/dd/yyyy");
                 ToDate = toDate.ToString("MM/dd/yyyy");
@@ -248,21 +257,24 @@ namespace ProjectManagement.Report
         /// <summary>
         /// Parses the database for the table information with the given information.
         /// </summary>
-        /// <param name="fromDate"></param>
-        /// <param name="toDate"></param>
-        /// <param name="phdId"></param>
-        /// <param name="msId"></param>
-        /// <param name="isProject"></param>
-        /// <param name="isBiostat"></param>
-        /// <param name="creditTo"></param>
-        /// <param name="piId"></param>
-        /// <param name="piStatusId"></param>
-        /// <param name="affilId"></param>
-        /// <param name="healthValue"></param>
-        /// <param name="grantValue"></param>
+        /// <param name="fromDate">Starting date of range.</param>
+        /// <param name="toDate">Ending date of range.</param>
+        /// <param name="phdId">Biostat ID of Phd faculty.</param>
+        /// <param name="msId">Biostat ID of MS staff.</param>
+        /// <param name="isProject">Pulls either projects (1) or consultations (0).</param>
+        /// <param name="isBiostat">Pulls either Biostatistics or Bioinformatics projects.</param>
+        /// <param name="isRmatrixRequest">Pulls projects that have "RMATRIX Request for Resources" checked.</param>
+        /// <param name="isOlaRequest">Pulls projects that have "Ola Hawaii Request for Resources" checked.</param>
+        /// <param name="letterOfSupportOnly">Pulls projects that have "Letter of Support Only" checked.</param>
+        /// <param name="creditTo">Credit to either Biostatistics or Bioinformatics Cores, or both.</param>
+        /// <param name="piId">ID of specified PI (Investigator).</param>
+        /// <param name="piStatusId">Specified PI status ID.</param>
+        /// <param name="affilId">Affiliation of PI.</param>
+        /// <param name="healthValue">Health Database specified.</param>
+        /// <param name="grantValue">Funding Source specified.</param>
         /// <returns></returns>
         private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, int phdId, int msId, int isProject, int isBiostat, 
-            int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
+            int isRmatrixRequest, int isOlaRequest, int letterOfSupportOnly, int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
         {
             DataTable dt = new DataTable("tblProject");
 
@@ -274,7 +286,7 @@ namespace ProjectManagement.Report
 
                 using (SqlConnection sqlcon = new SqlConnection(constr))
                 {
-                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary", sqlcon))
+                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary2", sqlcon))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@FromDate", fromDate);
@@ -283,6 +295,9 @@ namespace ProjectManagement.Report
                         cmd.Parameters.AddWithValue("@MsId", msId);
                         cmd.Parameters.AddWithValue("@IsProject", isProject);
                         cmd.Parameters.AddWithValue("@IsBiostat", isBiostat);
+                        cmd.Parameters.AddWithValue("@IsRmatrixRequest", isRmatrixRequest);
+                        cmd.Parameters.AddWithValue("@IsOlaRequest", isOlaRequest);
+                        cmd.Parameters.AddWithValue("@LetterOfSupportOnly", letterOfSupportOnly);
                         cmd.Parameters.AddWithValue("@CreditTo", creditTo);
                         cmd.Parameters.AddWithValue("@PIId", piId);
                         cmd.Parameters.AddWithValue("@PIStatusId", piStatusId);
