@@ -8,6 +8,7 @@
 
         .tt-menu {
             width: 100%;
+            z-index: 1002 !important;
         }
 
         .innerContainer {
@@ -405,7 +406,7 @@
                                             </tr>
                                         </ItemTemplate>
                                         <FooterTemplate>
-                                            <tr>
+                                            <%--<tr>
                                                 <td>Total</td>
                                                 <td>
                                                     <asp:Label ID="lblTotal" runat="server" /></td>
@@ -425,7 +426,7 @@
                                                     <asp:Label ID="lblPhdHrs" runat="server" /></td>
                                                 <td>
                                                     <asp:Label ID="lblMsHrs" runat="server" /></td>
-                                            </tr>
+                                            </tr>--%>
                                         </FooterTemplate>
                                     </asp:Repeater>
                                 </tbody>
@@ -530,7 +531,7 @@
 
 
 
-
+        ////////////////////////////////////////////////////////////////////////////
         $("#MainContent_chkProject").change(function () {
             if (this.checked) {
                 $('#MainContent_chkConsult').prop('checked', false);
@@ -585,6 +586,47 @@
                 $('#MainContent_chkCreditToBioinfo').prop('checked', false);
             }
         });
+
+        //------------------------------------------------------------
+        $("#MainContent_chkFilter1Checkbox_0").change(function () {
+            if (this.checked) {
+                $("#MainContent_chkFilter1CheckBox_1").prop('checked', false);
+            }
+        });
+
+
+        $("#MainContent_chkFilter1Checkbox_1").change(function () {
+            if (this.checked) {
+                $("#MainContent_chkFilter1CheckBox_0").prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkFilter2Checkbox_0").change(function () {
+            if (this.checked && this.value == 'Yes') {
+                $("#MainContent_chkFilter2CheckBox_1").prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkFilter2Checkbox_1").change(function () {
+            if (this.checked && this.value == 'No') {
+                $("#MainContent_chkFilter2CheckBox_0").prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkFilter3Checkbox_0").change(function () {
+            if (this.checked && this.value == 'Yes') {
+                $("#MainContent_chkFilter3CheckBox_1").prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkFilter3Checkbox_1").change(function () {
+            if (this.checked && this.value == 'No') {
+                $("#MainContent_chkFilter3CheckBox_0").prop('checked', false);
+            }
+        });
+        //-------------------------------------------------------------------------
+
+        ////////////////////////////////////////////////////////////////////////////
 
         function updateId(txtbox) {
             if (txtbox.value == '') {

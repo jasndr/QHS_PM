@@ -19,6 +19,8 @@ namespace ProjectManagement.Admin
     ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
     ///  ------------------------------------------
     ///  2018AUG06 - Jason Delos Reyes  -  Added documentation for easier readibility and maintainability.
+    ///  2019MAR08 - Jason Delos Reyes  -  Added ability to open grant form by referring to ID
+    ///                                    referral in URL.
     /// </summary>
     public partial class GrantForm : System.Web.UI.Page
     {
@@ -34,9 +36,17 @@ namespace ProjectManagement.Admin
             //int projectId = 0;
             //Int32.TryParse(Request.QueryString["ProjectId"], out projectId);
 
+            string grantIdText = Request.QueryString["Id"];
+
             if (!Page.IsPostBack)
             {
                 BindControl();
+
+                int grantId = 0;
+                Int32.TryParse(grantIdText, out grantId);
+
+                if (grantId > 0)
+                    OpenGrant(grantId, true);
 
                 //if (projectId > 0)
                 //{
@@ -44,7 +54,7 @@ namespace ProjectManagement.Admin
                 //    btnAdd_Click(null, null);
                 //    ddlProject.SelectedValue = projectId.ToString();                    
                 //}
-            }          
+            }
 
         }
 
@@ -54,7 +64,7 @@ namespace ProjectManagement.Admin
         private void BindControl()
         {
             if (!Creator.Equals(string.Empty))
-            {               
+            {
                 IDictionary<string, IDictionary<int, string>> controlSource = mgr.GetControlSource();
 
                 PageUtility.BindDropDownList(ddlInvestor, controlSource["ddlInvestor"], String.Empty);
@@ -76,7 +86,7 @@ namespace ProjectManagement.Admin
                 //GridViewGrant.DataBind();
                 BindGridViewBiostat(-1);
             }
-        }        
+        }
 
         /// <summary>
         /// Gets data form database upon clicking the "Submit" button to 
@@ -137,28 +147,29 @@ namespace ProjectManagement.Admin
         protected void GridViewGrant_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName.Equals("editRecord"))
-            {               
+            {
                 int grantId = -1;
                 int.TryParse(e.CommandArgument as string, out grantId);
 
-                if (grantId > 0)
-                {
-                    LoadEditGrant(grantId);
-                    //LoadEditScript(true);
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript(true), false);
-                }
+                //if (grantId > 0)
+                //{
+                //    LoadEditGrant(grantId);
+                //    //LoadEditScript(true);
+                //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                //       "ModalScript", PageUtility.LoadEditScript(true), false);
+                //}
+                OpenGrant(grantId, false);
             }
         }
 
         /// <summary>
-        /// Loads "Add/Edit" Grant form with originally/previously entered 
+        /// Loads Grant form with originally/previously entered 
         /// grant information.
         /// </summary>
         /// <param name="grantId">Referred grant</param>
         private void LoadEditGrant(int grantId)
         {
-            Grant grant = mgr.GetGrantById(grantId);            
+            Grant grant = mgr.GetGrantById(grantId);
 
             if (grant != null)
             {
@@ -182,7 +193,7 @@ namespace ProjectManagement.Admin
 
             // Populates Biostatistician section of grant form.
             BindGridViewBiostat(grant.GrantBiostats);
-        }        
+        }
 
         /// <summary>
         /// Given the list of QHS faculty, populates the "Biostatistician" form
@@ -272,7 +283,7 @@ namespace ProjectManagement.Admin
                 dt.Rows.Add(dr);
             }
 
-            GridViewBiostat.DataSource = dt; 
+            GridViewBiostat.DataSource = dt;
             GridViewBiostat.DataBind();
         }
 
@@ -296,7 +307,7 @@ namespace ProjectManagement.Admin
 
             if (grantBiostat != null && grantBiostat.Count > 0)
             {
-                foreach(var biostat in grantBiostat)
+                foreach (var biostat in grantBiostat)
                 {
                     DataRow dr = dt.NewRow();
                     dr[0] = biostat.Id;
@@ -315,8 +326,8 @@ namespace ProjectManagement.Admin
             }
 
             return dt;
-        }        
-        
+        }
+
         /// <summary>
         /// Prepopulates data table for "Biostatistician" section of the grant form;
         /// notably the Biostat (QHS Faculty/Staff) dropdown to select a member for grant information.
@@ -340,29 +351,75 @@ namespace ProjectManagement.Admin
                         newItem.Value = li.Value;
                         newItem.Text = li.Text;
                         newItem.Selected = false;
-                                                
+
                         if (li.Value == biostatId)
                         {
-                            newItem.Selected = true;    
+                            newItem.Selected = true;
                         }
 
                         ddl.Items.Add(newItem);
                     }
-                    
-                //ddl.Items.FindByValue(biostatId).Selected = true;                
-               
-                //ddl.SelectedValue = biostatId;
-                //ddl.Items.Remove(biostatId);
 
-                //    //if (Convert.ToInt16(biostatId) > 9)
-                //    //    e.Row.Cells[3].BackColor = System.Drawing.Color.Green;
-                //    //else
-                //    //    e.Row.Cells[3].BackColor = System.Drawing.Color.Red;
+                    //ddl.Items.FindByValue(biostatId).Selected = true;                
+
+                    //ddl.SelectedValue = biostatId;
+                    //ddl.Items.Remove(biostatId);
+
+                    //    //if (Convert.ToInt16(biostatId) > 9)
+                    //    //    e.Row.Cells[3].BackColor = System.Drawing.Color.Green;
+                    //    //else
+                    //    //    e.Row.Cells[3].BackColor = System.Drawing.Color.Red;
                 }
-                
+
             }
-        }      
-               
+        }
+
+        /// <summary>
+        /// Opens the pop-up page of the grant form.
+        /// </summary>
+        /// <param name="grantId">Grant ID specified in URL string.</param>
+        /// <param name="fromPageLoad">Boolean value to indicate if function called from page load.</param>
+        protected void OpenGrant(int grantId, bool fromPageLoad)
+        {
+
+            if (grantId > 0)
+            {
+                BindGridViewGrantAll();
+
+                LoadEditGrant(grantId);
+
+                if (fromPageLoad == true)
+                {
+                    //StringBuilder sb = new StringBuilder();
+                    //sb.Append(@"<script type='text/javascript'>");
+                    //sb.Append("$(function() { ");
+                    //sb.Append("$('#editModal').modal('show');");
+                    //sb.Append(" });");
+                    //sb.Append(@"</script>");
+
+                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                    //                "ModalScript", sb.ToString(), false);
+
+                    ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopup()", true);
+
+                }
+                else
+                {
+                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                    //   "ModalScript", PageUtility.LoadEditScript(true), false);
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(@"<script type='text/javascript'>");
+                    sb.Append("$('#editModal').modal('show');");
+                    sb.Append(@"</script>");
+
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                                    "ModalScript", sb.ToString(), false);
+                }
+
+            }
+        }
+        
+
         /// <summary>
         /// Creates a new form for a new Grant entry form.
         /// </summary>
@@ -453,7 +510,7 @@ namespace ProjectManagement.Admin
                                 BiostatId = biostatId,
                                 Pct = decimal.TryParse(txtPct.Text, out outPct) ? outPct : default(decimal?),
                                 Fee = int.TryParse(txtFee.Text, out output) ? output : default(int?),
-                                Year = txtYear.Text, 
+                                Year = txtYear.Text,
                                 Note = txtNote.Text,
                                 Creator = Creator,
                                 CreateDate = DateTime.Now
@@ -522,8 +579,8 @@ namespace ProjectManagement.Admin
             SetGrantPI(new List<GrantPI>());
 
             BindGridViewBiostat(new List<GrantBiostat>());
-        }       
-        
+        }
+
         /// <summary>
         /// Obtains user information and records this information as the user who created
         /// the grant record.
@@ -648,9 +705,9 @@ namespace ProjectManagement.Admin
 
                 TextBoxFollowup.Text = grant.Followup;
                 TextBoxComment.Text = grant.Comment;
-               
+
                 chkInternal.Checked = grant.IsInternal;
-                
+
             }
         }
 

@@ -86,6 +86,19 @@ namespace ProjectManagement
     ///  2018NOV07 - Jason Delos Reyes  -  Added a reference to the Admin person who reviewed the project to record the person who
     ///                                    "approved" the project.
     ///  2018DEC05 - Jason Delos Reyes  -  Changed "Project Closure" email recipients from admin to tracking team.
+    ///  2019MAR04 - Jason Delos Reyes  -  In "Service" section:
+    ///                                    • Changed "Data Analysis" to "Biostatistics Data Analysis",
+    ///                                    • Added options "Data Analysis Plan & Development" and "Letter of Support" options,
+    ///                                    • Removed (made hidden) "Grant Proposal Development" option.
+    ///                                 -  In "Other Description" section:
+    ///                                    • Added fields to address grant proposal-related fields.
+    ///  2019MAR05 - Jason Delos Reyes  -  Made changes to UHGrantID variable so that a null value can be saved, if applicable.
+    ///  2019MAR06 - Jason Delos Reyes  -  Added ability to view linked grants on Project form if "is this project for a grant
+    ///                                    proposal" question is selected.  
+    ///                                 -  Solved "missing project link" in admin reviewed emails by creating referral link 
+    ///                                    from projectId instead of lazily taking existing URL and sending that link.
+    ///  2019MAR08 - Jason Delos Reyes  -  Added linkage from in project form to grant form *if* a grant proposal application
+    ///                                    has been attached to this project.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -103,6 +116,7 @@ namespace ProjectManagement
             if (!Page.IsPostBack)
             {
                 BindControl();
+                
 
                 int id = 0;
                 Int32.TryParse(projectId, out id);
@@ -117,6 +131,10 @@ namespace ProjectManagement
                     tabAdmin.Style["display"] = "none";
                 }
             }
+            
+             // Display linked grant(s) to the project.
+             BindGridViewGrant();
+            
         }
 
         /// <summary>
@@ -161,7 +179,7 @@ namespace ProjectManagement
             else
             {
                 //Response.Write("<script>alert('" + str + "');</script>");
-               
+
                 string err = str.Replace("\\n", "<br />");
 
                 StringBuilder sb2 = new StringBuilder();
@@ -645,6 +663,24 @@ namespace ProjectManagement
                 PageUtility.BindDropDownList(ddlAknDepartmentFunding, dropDownSource, String.Empty); // Duplicate for acknowledgements
 
 
+                // ^^ Populates Other Description > Is project for a grant proposal? 
+                //                                         > Is this application a UH Infrastructure Grant pilot?
+                //                                                 > What is the grant? dropdown.
+                dropDownSource = db.ProjectField
+                                .Where(f => f.IsGrant == true && f.IsFundingSource == true
+                                                              && (f.Name == "RMATRIX"
+                                                               || f.Name == "G12 BRIDGES"
+                                                               || f.Name == "INBRE"
+                                                               || f.Name == "Native and Pacific Islands Health Disparities Research"
+                                                               || f.Name == "COBRE-Cardiovascular"
+                                                               || f.Name == "COBRE-Infectious Diseases"
+                                                               || f.Name == "COBRE-Biogenesis Research"
+                                                               || f.Name == "Ola Hawaii"
+                                                               || f.Name == "P30 UHCC"))
+                                .OrderBy(b => b.Id)
+                                .ToDictionary(c => c.Id, c => c.Name);
+                PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);
+
                 /// Only Admin are allowed to approve (review) projects.
                 if (!Page.User.IsInRole("Admin"))
                 {
@@ -853,6 +889,23 @@ namespace ProjectManagement
             {
                 chkPilotYes.Checked = false;
                 chkPilotNo.Checked = false;
+            }
+
+            if (project.IsGrantProposal.HasValue)
+            {
+                bool isGrantProposal = (bool)project.IsGrantProposal;
+                chkProposalYes.Checked = isGrantProposal;
+                chkProposalNo.Checked = !isGrantProposal;
+            }
+
+            if (project.IsUHGrant.HasValue)
+            {
+                bool isUHGrant = (bool)project.IsUHGrant;
+                chkIsUHPilotGrantYes.Checked = isUHGrant;
+                chkIsUHPilotGrantNo.Checked = !isUHGrant;
+
+                ddlUHGrant.SelectedValue = project.UHGrantID > 0 ? project.UHGrantID.ToString() : string.Empty;
+                txtGrantProposalFundingAgency.Value = project.GrantProposalFundingAgency;
             }
 
             if (project.IsPaid.HasValue)
@@ -1343,6 +1396,10 @@ namespace ProjectManagement
                 MentorEmail = "",
                 IsInternal = (bool?)null,
                 IsPilot = (bool?)null,
+                IsGrantProposal = (bool?)null,
+                IsUHGrant = (bool?)null,
+                UHGrantID = 0,
+                GrantProposalFundingAgency = "",
                 IsPaid = (bool?)null,
                 IsRmatrixRequest = (bool?)null,
                 IsRmatrixReport = false,   //(bool?)null,
@@ -1387,7 +1444,8 @@ namespace ProjectManagement
                 aknBitSum = 0,
                 aknDepartmentFundingType = 0,
                 rmatrixNum = 0,
-                olaHawaiiNum = 0;
+                olaHawaiiNum = 0,
+                uhGrantId = 0;
 
 
             DateTime dtInitialDate, dtDeadline, dtRmatrixSubDate, dtOlaHawaiiSubDate, dtCompletionDate;
@@ -1431,6 +1489,10 @@ namespace ProjectManagement
                 MentorEmail = txtMentorEmail.Value,
                 IsInternal = chkInternalYes.Checked,
                 IsPilot = chkPilotYes.Checked,
+                IsGrantProposal = chkProposalYes.Checked,
+                IsUHGrant = chkIsUHPilotGrantYes.Checked,
+                UHGrantID = Int32.TryParse(ddlUHGrant.SelectedValue, out uhGrantId) ? uhGrantId : default(int?),
+                GrantProposalFundingAgency = txtGrantProposalFundingAgency.Value,
                 IsPaid = chkPayingYes.Checked,
                 IsRmatrixRequest = chkIsRmatrix.Checked,
                 IsRmatrixReport = Int32.TryParse(ddlProject.SelectedValue, out id) ? (chkReportToRmatrix.Checked ? false : true) : false,
@@ -1785,6 +1847,85 @@ namespace ProjectManagement
             return c == bitValue;
         }
 
+
+        /// <summary>
+        /// Obtains grant data table information from the database.
+        /// </summary>
+        private void BindGridViewGrant()
+        {
+            GridViewGrant.DataSource = GetGrantTable();
+            GridViewGrant.DataBind();
+        }
+
+
+        /// <summary>
+        /// Obtains grant table based on what has been specified from the
+        /// dropdown selections.
+        /// </summary>
+        /// <returns></returns>
+        private DataTable GetGrantTable()
+        {
+
+            DataTable dt = new DataTable("grantTable");
+
+            dt.Columns.Add("Id", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("PI", System.Type.GetType("System.String"));
+            dt.Columns.Add("GrantTitle", System.Type.GetType("System.String"));
+            dt.Columns.Add("GrantStatus", System.Type.GetType("System.String"));
+            dt.Columns.Add("GrantSubmitDate", System.Type.GetType("System.String"));
+
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                int projectId = 0;
+                
+                Int32.TryParse(ddlProject.SelectedItem.Value, out projectId);
+
+                var query = db.ViewGrant2.Where(g => g.ProjectId == projectId);
+
+                foreach(var p in query.OrderByDescending(p => p.Id).ToList())
+                {
+                    DataRow row = dt.NewRow();
+
+                    row["Id"] = p.Id;
+                    row["PI"] = p.PI;
+                    row["GrantTitle"] = p.GrantTitle;
+                    row["GrantStatus"] = p.GrantStatus;
+                    row["GrantSubmitDate"] = p.GrantSubmitDate;
+
+                    dt.Rows.Add(row);
+
+                }
+
+            }
+
+
+                return dt;
+        }
+
+
+       // private DataTable
+
+
+        /// <summary>
+        /// Redirects to grant page of clicked id.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void GridViewGrant_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName.Equals("editRecord"))
+            {
+                int grantId = -1;
+                int.TryParse(e.CommandArgument as string, out grantId);
+
+                if (grantId > 0)
+                {
+                    // Go to Grant Page
+                    Response.Redirect(String.Format("~/Tracking/GrantForm?Id={0}", grantId));
+                }
+            }
+        }
+
         #endregion
 
         #region email
@@ -1890,7 +2031,7 @@ namespace ProjectManagement
 
             string subject = String.Format("Your project (# {0}) has been reviewed by admin", projectId);
 
-            string url = HttpContext.Current.Request.Url.AbsoluteUri;
+            string url = HttpContext.Current.Request.Url + "?Id="+projectId;//.AbsoluteUri;
             //if (url.IndexOf("?Id") > 0)
             //{
             //    sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];

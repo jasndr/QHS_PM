@@ -16,18 +16,17 @@ namespace ProjectManagement
     {
         public Project2()
         {
-            this.ProjectPhase = new HashSet<ProjectPhase>();
-            this.SurveyForm = new HashSet<SurveyForm>();
-            this.Grants = new HashSet<Grant>();
-            this.Publications = new HashSet<Publication>();
             this.ClientAgmt = new HashSet<ClientAgmt>();
+            this.Grants = new HashSet<Grant>();
+            this.ProjectPhase = new HashSet<ProjectPhase>();
+            this.Publications = new HashSet<Publication>();
+            this.SurveyForm = new HashSet<SurveyForm>();
         }
     
         public int Id { get; set; }
         public int PIId { get; set; }
         public string Title { get; set; }
         public string Summary { get; set; }
-        public System.DateTime InitialDate { get; set; }
         public Nullable<System.DateTime> DeadLine { get; set; }
         public int LeadBiostatId { get; set; }
         public long OtherMemberBitSum { get; set; }
@@ -59,9 +58,10 @@ namespace ProjectManagement
         public Nullable<System.DateTime> ProjectCompletionDate { get; set; }
         public string ProjectStatus { get; set; }
         public string Comments { get; set; }
-        public bool IsApproved { get; set; }
         public string Creator { get; set; }
         public System.DateTime CreationDate { get; set; }
+        public bool IsApproved { get; set; }
+        public System.DateTime InitialDate { get; set; }
         public byte ProjectType { get; set; }
         public byte CreditTo { get; set; }
         public Nullable<bool> IsOlaHawaiiRequest { get; set; }
@@ -78,12 +78,17 @@ namespace ProjectManagement
         public Nullable<byte> IsLetterOfSupport { get; set; }
         public Nullable<bool> IsReportOlaHawaii { get; set; }
         public Nullable<byte> IsMOU { get; set; }
+        public Nullable<bool> IsGrantProposal { get; set; }
+        public Nullable<bool> IsUHGrant { get; set; }
+        public string GrantProposalFundingAgency { get; set; }
+        public Nullable<int> UHGrantID { get; set; }
     
+        public virtual ICollection<ClientAgmt> ClientAgmt { get; set; }
+        public virtual ICollection<Grant> Grants { get; set; }
         public virtual Invest Invests { get; set; }
         public virtual ICollection<ProjectPhase> ProjectPhase { get; set; }
-        public virtual ICollection<SurveyForm> SurveyForm { get; set; }
-        public virtual ICollection<Grant> Grants { get; set; }
         public virtual ICollection<Publication> Publications { get; set; }
-        public virtual ICollection<ClientAgmt> ClientAgmt { get; set; }
+        public virtual ICollection<SurveyForm> SurveyForm { get; set; }
+        public virtual ProjectField ProjectField { get; set; }
     }
 }

@@ -42,7 +42,7 @@
                 <div class="col-md-1 text-right">
                     <label class="control-label">Request for Resources:</label>
                 </div>
-                <div class="col-md-1 offset2">
+                <div class="col-md-2 offset1">
                     <asp:CheckBox ID="chkRmatrixRequest" runat="server" Text="RMATRIX" ></asp:CheckBox>
                 </div>
                 <div class="col-md-2 offset2">

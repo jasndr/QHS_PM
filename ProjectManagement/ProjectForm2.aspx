@@ -51,6 +51,12 @@
             font-weight: bold;
             color: red;
         }
+
+        #divGrantProposal2{
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -165,15 +171,16 @@
                             </div>
 
                             <%--<div class="col-sm-3 text-left">
-                        <label class="control-label" for="txtDeadline">Request received date:</label></div>
-                    <div class="col-sm-2">
-                        <div class='input-group date' id='dtpRequestRcvDate'>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                            <asp:TextBox ID="txtRequestRcvdDate" runat="server" class="form-control"></asp:TextBox>
-                        </div>
-                    </div>--%>
+                               <label class="control-label" for="txtDeadline">Request received date:</label>
+                            </div>
+                            <div class="col-sm-2">
+                              <div class='input-group date' id='dtpRequestRcvDate'>
+                                 <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                 </span>
+                                 <asp:TextBox ID="txtRequestRcvdDate" runat="server" class="form-control"></asp:TextBox>
+                              </div>
+                            </div>--%>
                         </div>
                         <br />
                         <h5>QHS Faculty/Staff</h5>
@@ -529,13 +536,25 @@
                                         <tr>
                                             <td>
                                                 <label>
-                                                    Is project an infrastructure grant pilot study?
+                                                    Is project a funded infrastructure grant pilot study?
                                                 </label>
                                             </td>
                                             <td>
                                                 <input type="checkbox" id="chkPilotYes" value="1" runat="server" />Yes
                                         &nbsp;
                                         <input type="checkbox" id="chkPilotNo" value="0" runat="server" />No
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    Is this project for a grant proposal?
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chkProposalYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                        <input type="checkbox" id="chkProposalNo" value="0" runat="server" />No
                                             </td>
                                         </tr>
                                         <tr>
@@ -584,6 +603,70 @@
                             </div>
                         </div>
                         <br />
+                        <div class="row divGrantProposal" id="divGrantProposal">
+                            <div class="col-sm-6">
+                                <div class="col-sm-9 text-left">
+                                    <label class="control-label" for="txt">Is this application of a UH Infrastructure Grant pilot program?</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="checkbox" id="chkIsUHPilotGrantYes" value="1" runat="server" />Yes
+                                        &nbsp;
+                                    <input type="checkbox" id="chkIsUHPilotGrantNo" value="0" runat="server" />No
+                                </div>
+                            </div>
+                            <div class="col-sm-6" id="divUHGrant">
+                                <div class="col-sm-3 text-left">
+                                    <label class="control-label" for="ddlUHGrant">What is the grant?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <asp:DropDownList ID="ddlUHGrant" runat="server" CssClass="form-control">
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" id="divGrantProposalFundingAgency">
+                                <div class="col-sm-4 text-left">
+                                    <label class="control-label" for="ddlUHGrant">What is the funding agency?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" name="txtGrantProposalFundingAgency"
+                                        id="txtGrantProposalFundingAgency" runat="Server" />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row divGrantProposal" id="divGrantProposal2">
+                            <label for="grantTable">Grant Proposal Information</label>
+                            <%--<table id="grantTable" class="display">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Submission Date</th>
+                                    </tr>
+                                </thead>
+                            </table>--%>
+                            <asp:GridView ID="GridViewGrant" runat="server"
+                                OnRowCommand="GridViewGrant_RowCommand"
+                                AutoGenerateColumns="false" AllowPaging="false"
+                                DataKeyNames="Id"
+                                class="table table-striped table-bordered"
+                                EmptyDataText="No <a href='Tracking/GrantForm'><strong>grant</strong></a> record linked.  <em>Please send a separate request to Tracking Team to add grant information</em>.">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Id" HeaderStyle-Width="5%">
+                                        <ItemTemplate>
+                                            <asp:LinkButton runat="server" ID="btnGrant" CommandName="editRecord" CommandArgument='<%# Eval("Id") %>' > <%--OnClientClick="javascript:return loading();"--%>
+                                                <asp:Label ID="lblGrantId" runat="server" Text='<%# Eval("Id") %>'></asp:Label>
+                                            </asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="PI" HeaderText="PI" HeaderStyle-Width="15%" />
+                                    <asp:BoundField DataField="GrantTitle" HeaderText="Title" HeaderStyle-Width="40%" />                                    
+                                    <asp:BoundField DataField="GrantStatus" HeaderText="Status" HeaderStyle-Width="5%" />
+                                    <asp:BoundField DataField="GrantSubmitDate" HeaderText="Submission Date" HeaderStyle-Width="5%" />                                                                  
+                                </Columns>
+                            </asp:GridView>
+                        </div>
 
                         <h5>Funding Source</h5>
                         <%--<br />--%>
@@ -894,104 +977,104 @@
 
                     </div>
 
-                    <div class="tab-pane" id="tabAdmin" runat="server">
-                        <h5>Admin</h5>
-                        <br />
+                <div class="tab-pane" id="tabAdmin" runat="server">
+                    <h5>Admin</h5>
+                    <br />
 
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <input type="checkbox" id="chkIsRmatrix" value="1" runat="server" />&nbsp;RMATRIX-II request for resources
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <input type="checkbox" id="chkIsRmatrix" value="1" runat="server" />&nbsp;RMATRIX-II request for resources
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="row" id="divRmatrixRequest">
+                                <div class="col-sm-3 text-right">
+                                    <label class="control-label" for="txtTitle">Request number:</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="txtRmatrixNum" id="txtRmatrixNum" runat="Server" />
+                                </div>
+                                <div class="col-sm-3 text-right">
+                                    <label class="control-label" for="txtRmatrixSubDate">Submission date:</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group date' id='dtpRmatrixSubDate'>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        <asp:TextBox ID="txtRmatrixSubDate" runat="server" class="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-9">
-                                <div class="row" id="divRmatrixRequest">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <%--<div class="col-sm-5">
+                                <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
+                            </div>--%>
+                        <div class="col-sm-5">
+                            <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;Report to RMATRIX
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;Report to Ola Hawaii
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <input type="checkbox" id="chkIsOlaHawaii" value="1" runat="server" />&nbsp;Ola Hawaii request for resources
+                        </div>
+                        <div class="col-sm-9">
+
+                            <div id="divOlaHawaiiRequest">
+                                <div class="row">
                                     <div class="col-sm-3 text-right">
                                         <label class="control-label" for="txtTitle">Request number:</label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input class="form-control" type="text" name="txtRmatrixNum" id="txtRmatrixNum" runat="Server" />
+                                        <input class="form-control" type="text" name="txtOlaHawaiiNum" id="txtOlaHawaiiNum" runat="Server" />
                                     </div>
                                     <div class="col-sm-3 text-right">
-                                        <label class="control-label" for="txtRmatrixSubDate">Submission date:</label>
+                                        <label class="control-label" for="txtOlaHawaiiSubDate">Submission date:</label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <div class='input-group date' id='dtpRmatrixSubDate'>
+                                        <div class='input-group date' id='dtpOlaHawaiiSubDate'>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
-                                            <asp:TextBox ID="txtRmatrixSubDate" runat="server" class="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="txtOlaHawaiiSubDate" runat="server" class="form-control"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <%--<div class="col-sm-5">
-                                <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
-                            </div>--%>
-                            <div class="col-sm-5">
-                                <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;Report to RMATRIX
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;Report to Ola Hawaii
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <input type="checkbox" id="chkIsOlaHawaii" value="1" runat="server" />&nbsp;Ola Hawaii request for resources
-                            </div>
-                            <div class="col-sm-9">
-
-                                <div id="divOlaHawaiiRequest">
-                                    <div class="row">
-                                        <div class="col-sm-3 text-right">
-                                            <label class="control-label" for="txtTitle">Request number:</label>
+                                <div>
+                                    <div class="row offset2">
+                                        <div class="col-sm-6 text-right">
+                                            <label class="control-label">Request Type:</label>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <input class="form-control" type="text" name="txtOlaHawaiiNum" id="txtOlaHawaiiNum" runat="Server" />
-                                        </div>
-                                        <div class="col-sm-3 text-right">
-                                            <label class="control-label" for="txtOlaHawaiiSubDate">Submission date:</label>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class='input-group date' id='dtpOlaHawaiiSubDate'>
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                                <asp:TextBox ID="txtOlaHawaiiSubDate" runat="server" class="form-control"></asp:TextBox>
-                                            </div>
-                                        </div>
+                                        <div class="col-sm-6"></div>
                                     </div>
-                                    <div>
-                                        <div class="row offset2">
-                                            <div class="col-sm-6 text-right">
-                                                <label class="control-label">Request Type:</label>
-                                            </div>
-                                            <div class="col-sm-6"></div>
+                                    <div class="row offset2">
+                                        <div class="col-sm-6"></div>
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkRequestTypeRfunded" runat="server" Text="R-funded"></asp:CheckBox>
                                         </div>
-                                        <div class="row offset2">
-                                            <div class="col-sm-6"></div>
-                                            <div class="col-sm-2">
-                                                <asp:CheckBox ID="chkRequestTypeRfunded" runat="server" Text="R-funded"></asp:CheckBox>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <asp:CheckBox ID="chkRequestTypePilotPI" runat="server" Text="Pilot PI"></asp:CheckBox>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <asp:CheckBox ID="chkRequestTypeOther" runat="server" Text="Other"></asp:CheckBox>
-                                            </div>
-
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkRequestTypePilotPI" runat="server" Text="Pilot PI"></asp:CheckBox>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkRequestTypeOther" runat="server" Text="Other"></asp:CheckBox>
                                         </div>
 
                                     </div>
+
                                 </div>
-
                             </div>
-                        </div>
-                        <br />
 
-                        <%--<b>Phase Completion:</b>
+                        </div>
+                    </div>
+                    <br />
+
+                    <%--<b>Phase Completion:</b>
                 <asp:Repeater ID="rptPhaseCompletion" runat="server">
                     <HeaderTemplate>
                         <table class="table table-bordered table-hover" id="tblPhaseCompletion">
@@ -1021,65 +1104,65 @@
                     </FooterTemplate>
                 </asp:Repeater>
                 <br />--%>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label class="control-label" for="txtCompletionDate">Project completion date:</label>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class='input-group date' id='dtpCompletionDate'>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                    <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <%--<button type="button" ID="btnSurvey" OnClick="ShowSurveyModal()"  class="btn btn-primary">Survey</button>--%>
-                                <asp:Button class="btn btn-primary" ID="btnSurvey" runat="server" Text="Send Client Survey" OnClick="btnSurvey_Click"></asp:Button>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="txtCompletionDate">Project completion date:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class='input-group date' id='dtpCompletionDate'>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control"></asp:TextBox>
                             </div>
                         </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label class="control-label" for="txtProjectStatus">Project status:</label>
-                            </div>
-                            <div class="col-sm-5">
-                                <input class="form-control" type="text" name="txtProjectStatus" id="txtProjectStatus" runat="Server" />
-                            </div>
-                            <div class="col-sm-2">
-                                <asp:Button class="btn btn-primary" ID="btnAddGrant" runat="server" Text="Add Fund" OnClick="btnAddGrant_Click"></asp:Button>
-                            </div>
+                        <div class="col-sm-2">
+                            <%--<button type="button" ID="btnSurvey" OnClick="ShowSurveyModal()"  class="btn btn-primary">Survey</button>--%>
+                            <asp:Button class="btn btn-primary" ID="btnSurvey" runat="server" Text="Send Client Survey" OnClick="btnSurvey_Click"></asp:Button>
                         </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-sm-1 text-left">
-                                <label class="control-label" for="txtSummary">Comments:</label>
-                            </div>
-                            <div class="col-sm-6">
-                                <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
-                            </div>
-                            <div class="col-sm-2">
-                                <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
-                                <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
-                                    data-toggle="modal" data-target="#warningModal">
-                                    Warning Modal</button>
-                            </div>
-                        </div>
-                        <br />
-                        <hr />
-
                     </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label class="control-label" for="txtProjectStatus">Project status:</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" name="txtProjectStatus" id="txtProjectStatus" runat="Server" />
+                        </div>
+                        <div class="col-sm-2">
+                            <asp:Button class="btn btn-primary" ID="btnAddGrant" runat="server" Text="Add Fund" OnClick="btnAddGrant_Click"></asp:Button>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-1 text-left">
+                            <label class="control-label" for="txtSummary">Comments:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
+                        </div>
+                        <div class="col-sm-2">
+                            <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
+                            <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
+                                data-toggle="modal" data-target="#warningModal">
+                                Warning Modal</button>
+                        </div>
+                    </div>
+                    <br />
+                    <hr />
 
-                    <ul class="pager wizard">
-                        <li class="previous first" style="display: none;"><a href="#">First</a></li>
-                        <li class="previous"><a href="#">Previous</a></li>
-                        <li class="next last" style="display: none;"><a href="#">Last</a></li>
-                        <li class="next"><a href="#">Next</a></li>
-                    </ul>
                 </div>
-            </div>
 
+                <ul class="pager wizard">
+                    <li class="previous first" style="display: none;"><a href="#">First</a></li>
+                    <li class="previous"><a href="#">Previous</a></li>
+                    <li class="next last" style="display: none;"><a href="#">Last</a></li>
+                    <li class="next"><a href="#">Next</a></li>
+                </ul>
+            </div>
         </div>
+
+    </div>
     </div>
 
     <div id="surveyModal" class="modal fade">
@@ -1305,6 +1388,9 @@
             // -- Reveals hidden sections if certain choices are made -- \\
             ToggleDiv($('#MainContent_chkMentorYes'), $('#divMentor'));
             ToggleDiv($('#MainContent_chkPayingYes'), $('#divPayProject'));
+            ToggleDiv($('#MainContent_chkProposalYes'), $('.divGrantProposal'));
+            ToggleDiv($('#MainContent_chkIsUHPilotGrantYes'), $('#divUHGrant'));
+            ToggleDiv($('#MainContent_chkIsUHPilotGrantNo'), $('#divGrantProposalFundingAgency'))
             ToggleDiv($('#MainContent_chkIsRmatrix'), $('#divRmatrixRequest'));
             ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divOlaHawaiiRequest'));
             //ToggleDiv($('#MainContent_rptGrant_SecondchkId_6'), $('#divDeptFund'));
@@ -1343,6 +1429,11 @@
                         ToggleDiv($(this), $('#divPayProject'));
                     }
 
+                    if ($(this).is($('#MainContent_chkProposalYes'))) {
+                        ToggleDiv($(this), $('.divGrantProposal'));
+                    }
+
+
                     if ($(this).is(":checked")) {
                         if ($(this).val() == 1)
                             $(this).next().removeAttr("checked");
@@ -1354,7 +1445,43 @@
 
                         if ($(this).is($('#MainContent_chkPayingNo')))
                             $('#divPayProject').hide();
+
+                        if ($(this).is($('#MainContent_chkProposalNo')))
+                            $('.divGrantProposal').hide();
+
+
                     }
+                });
+
+            $('#divGrantProposal').on('click',
+                'input[type="checkbox"]',
+                function () {
+
+                    if ($(this).is($('#MainContent_chkIsUHPilotGrantYes'))) {
+                        ToggleDiv($(this), $('#divUHGrant'));
+                    }
+
+                    if ($(this).is($('#MainContent_chkIsUHPilotGrantNo'))) {
+                        ToggleDiv($(this), $('#divGrantProposalFundingAgency'));
+                    }
+
+                    if ($(this).is(":checked")) {
+                        if ($(this).val() == 1)
+                            $(this).next().removeAttr("checked");
+                        if ($(this).val() == 0) {
+                            $(this).prev().removeAttr("checked");
+                            $('#MainContent_ddlUHGrant').val('');
+                        }
+
+
+                        if ($(this).is($('#MainContent_chkIsUHPilotGrantNo')))
+                            $('#divUHGrant').hide();
+                        if ($(this).is($('#MainContent_chkIsUHPilotGrantYes')))
+                            $('#divGrantProposalFundingAgency').hide();
+                    } else {
+                        $('#MainContent_ddlUHGrant').val('');
+                    }
+
                 });
 
             $('#tblStudyPopulation').on('click',

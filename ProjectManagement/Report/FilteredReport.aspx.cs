@@ -30,6 +30,10 @@ namespace ProjectManagement.Report
     ///  2019JAN23 - Jason Delos Reyes  -  Begin creating report.
     ///  2019JAN29 - Jason Delos Reyes  -  Finalizing first level of filters on the front-end.
     ///  2019JAN30 - Jason Delos Reyes  -  Finalized initial phase of front end for dynamic filtered project report. 
+    ///  2019FEB27 - Jason Delos Reyes  -  Created "Rpt_Project_Summary_Filtered" report to align with back-end for 
+    ///                                    report.
+    ///  2019MAR06 - Jason Delos Reyes  -  Edited "Rpt_Project_Summary_Filtered" report so that the total row produces
+    ///                                    more total numbers for reporting purposes.
     /// </summary>
     public partial class FilteredReport : System.Web.UI.Page
     {
@@ -79,6 +83,7 @@ namespace ProjectManagement.Report
                     dropDownSource2.Add(16, "Is paying project?");
                     dropDownSource2.Add(17, "Funding Source");
                     dropDownSource2.Add(18, "Acknowledgements");
+                    dropDownSource2.Add(19, "Request for resources");
 
                     PageUtility.BindDropDownList(ddlFilter1, dropDownSource2, " -- Filter 1 -- ");
                     PageUtility.BindDropDownList(ddlFilter2, dropDownSource2, " -- Filter 2 -- ");
@@ -176,22 +181,22 @@ namespace ProjectManagement.Report
 
             hdnRowCount.Value = dt.Rows.Count.ToString();
 
-            Control footerTemplate = rptProjectSummary.Controls[rptProjectSummary.Controls.Count - 1].Controls[0];
-            Label lblFooter = footerTemplate.FindControl("lblTotal") as Label;
-            lblFooter.Text = hdnRowCount.Value;
+            //Control footerTemplate = rptProjectSummary.Controls[rptProjectSummary.Controls.Count - 1].Controls[0];
+            //Label lblFooter = footerTemplate.FindControl("lblTotal") as Label;
+            //lblFooter.Text = hdnRowCount.Value + " Project(s)";
 
-            decimal phdHrs = 0.0m, msHrs = 0.0m;
-            foreach (DataRow row in dt.Rows)
-            {
-                phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
-                msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
-            }
+            //decimal phdHrs = 0.0m, msHrs = 0.0m;
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    //phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
+            //    //msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
+            //}
 
-            Label lblPhdHrs = footerTemplate.FindControl("lblPhdHrs") as Label;
-            lblPhdHrs.Text = phdHrs.ToString();
+            //Label lblPhdHrs = footerTemplate.FindControl("lblPhdHrs") as Label;
+            //lblPhdHrs.Text = phdHrs.ToString();
 
-            Label lblMsHrs = footerTemplate.FindControl("lblMsHrs") as Label;
-            lblMsHrs.Text = msHrs.ToString();
+            //Label lblMsHrs = footerTemplate.FindControl("lblMsHrs") as Label;
+            //lblMsHrs.Text = msHrs.ToString();
         }
 
         /// <summary>
@@ -205,22 +210,22 @@ namespace ProjectManagement.Report
             DataTable dt = GetProjectTable();
             dt.TableName = "Project";
 
-            DataRow dr = dt.NewRow();
+            //DataRow dr = dt.NewRow();
 
-            dr[1] = "Total";
-            dr[2] = dt.Rows.Count;
+            //dr[1] = "Total";
+            //dr[2] = dt.Rows.Count + " Project(s)";
 
-            decimal phdHrs = 0.0m, msHrs = 0.0m;
-            foreach (DataRow row in dt.Rows)
-            {
-                phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
-                msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
-            }
+            //decimal phdHrs = 0.0m, msHrs = 0.0m;
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
+            //    msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
+            //}
 
-            dr[16] = phdHrs;
-            dr[17] = msHrs;
+            //dr[16] = phdHrs;
+            //dr[17] = msHrs;
 
-            dt.Rows.Add(dr);
+            //dt.Rows.Add(dr);
 
             string reportHeader = "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate;
             string fileName = "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;
@@ -291,12 +296,14 @@ namespace ProjectManagement.Report
             //x// Obtain value from filters and apply to GetProjectTable() method//x//
             //x////////////////////////////////////////////////////////////////////x//
 
-            int biostatId = 0, projectType = 1, creditTo = 1;
+            int biostatId = 0, projectType = -1, creditTo = -1;
 
-            int isJuniorPI = 0, hasMentor = 0, isInternal = 0, isPilot = 0, isPaid;
+            int isJuniorPI = -1, hasMentor = -1, isInternal = -1, isPilot = -1, isPaid = -1;
 
             int studyAreaValue = 0, healthValue = 0, studyTypeValue = 0, studyPopValue = 0;
             int serviceValue = 0, fundingValue = 0, aknValue = 0;
+
+            int isRmatrixRequest = -1, isOlaRequest = -1;
 
             int piId = 0, projectId = 0;
 
@@ -381,6 +388,10 @@ namespace ProjectManagement.Report
                 case "Acknowledgements": // (18)
                     Int32.TryParse(ddlFilter1DropDown.SelectedValue, out aknValue);
                     break;
+                case "Request for resources": // (19)
+                    isRmatrixRequest = chkFilter1Checkbox.SelectedItem.Text == "RMATRIX" ? 1 : 0;
+                    isOlaRequest = chkFilter1Checkbox.SelectedItem.Text == "Ola HAWAII" ? 1 : 0;
+                    break;
                 default:
                     break;
             }
@@ -397,8 +408,59 @@ namespace ProjectManagement.Report
                         ReportType = ReportType + " " + txtFilter2TextField.Text;
                     }
                     break;
-                case "Project Type":
-                    /*BitSum*/
+                case "Project Type": // (2)
+                    projectType = chkFilter2Checkbox.SelectedItem.Text == "Biostat" ? 1 : 2;
+                    break;
+                case "Project Title": // (3)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out projectId);
+                    break;
+                case "Project Summary": // (4)
+                    //Filter2 = "AND p.Summary LIKE '%" + txtFilter2TextField.Text + "%'";
+                    projSummary = txtFilter2TextField.Text;
+                    break;
+                case "Study Area": // (6)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out studyAreaValue);
+                    break;
+                case "Health Data": // (7)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out healthValue);
+                    break;
+                case "Study Type": // (8)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out studyTypeValue);
+                    break;
+                case "Study Population": // (9)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out studyPopValue);
+                    break;
+                case "Service Type": // (10)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out serviceValue);
+                    break;
+                case "Credit To": // (11)
+                    creditTo = chkFilter2Checkbox.SelectedItem.Text == "Biostat" ? 1
+                             : chkFilter2Checkbox.SelectedItem.Text == "Bioinfo" ? 2 : 3;
+                    break;
+                case "Is PI a junior investigator?": // (12)
+                    isJuniorPI = chkFilter2Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Does PI have mentor?": // (13)
+                    hasMentor = chkFilter2Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Is project internal study?": // (14)
+                    isInternal = chkFilter2Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Is project an infrastructure grant study?": // (15)
+                    isPilot = chkFilter2Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Is paying project?": // (16)
+                    isPaid = chkFilter2Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Funding Source?": // (17)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out fundingValue);
+                    break;
+                case "Acknowledgements": // (18)
+                    Int32.TryParse(ddlFilter2DropDown.SelectedValue, out aknValue);
+                    break;
+                case "Request for resources": // (19)
+                    isRmatrixRequest = chkFilter2Checkbox.SelectedItem.Text == "RMATRIX" ? 1 : 0;
+                    isOlaRequest = chkFilter2Checkbox.SelectedItem.Text == "Ola HAWAII" ? 1 : 0;
                     break;
                 default:
                     break;
@@ -407,7 +469,7 @@ namespace ProjectManagement.Report
             // [Filter 3]
             switch (ddlFilter3.SelectedItem.Text)
             {
-                case "Investigator":
+                case "Investigator": // (1)
                     //[PI ID]
                     if (txtFilter3TextField.Text != string.Empty)
                     {
@@ -415,8 +477,59 @@ namespace ProjectManagement.Report
                         ReportType = ReportType + " " + txtFilter3TextField.Text;
                     }
                     break;
-                case "Project Type":
-                    /*BitSum*/
+                case "Project Type": // (2)
+                    projectType = chkFilter3Checkbox.SelectedItem.Text == "Biostat" ? 1 : 2;
+                    break;
+                case "Project Title": // (3)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out projectId);
+                    break;
+                case "Project Summary": // (4)
+                    //Filter3 = "AND p.Summary LIKE '%" + txtFilter3TextField.Text + "%'";
+                    projSummary = txtFilter3TextField.Text;
+                    break;
+                case "Study Area": // (6)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out studyAreaValue);
+                    break;
+                case "Health Data": // (7)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out healthValue);
+                    break;
+                case "Study Type": // (8)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out studyTypeValue);
+                    break;
+                case "Study Population": // (9)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out studyPopValue);
+                    break;
+                case "Service Type": // (10)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out serviceValue);
+                    break;
+                case "Credit To": // (11)
+                    creditTo = chkFilter3Checkbox.SelectedItem.Text == "Biostat" ? 1
+                             : chkFilter3Checkbox.SelectedItem.Text == "Bioinfo" ? 2 : 3;
+                    break;
+                case "Is PI a junior investigator?": // (12)
+                    isJuniorPI = chkFilter3Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Does PI have mentor?": // (13)
+                    hasMentor = chkFilter3Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Is project internal study?": // (14)
+                    isInternal = chkFilter3Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Is project an infrastructure grant study?": // (15)
+                    isPilot = chkFilter3Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Is paying project?": // (16)
+                    isPaid = chkFilter3Checkbox.SelectedItem.Text == "Yes" ? 1 : 0;
+                    break;
+                case "Funding Source?": // (17)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out fundingValue);
+                    break;
+                case "Acknowledgements": // (18)
+                    Int32.TryParse(ddlFilter3DropDown.SelectedValue, out aknValue);
+                    break;
+                case "Request for resources": // (19)
+                    isRmatrixRequest = chkFilter3Checkbox.SelectedItem.Text == "RMATRIX" ? 1 : 0;
+                    isOlaRequest = chkFilter3Checkbox.SelectedItem.Text == "Ola HAWAII" ? 1 : 0;
                     break;
                 default:
                     break;
@@ -424,43 +537,69 @@ namespace ProjectManagement.Report
 
 
             // [From/To Dates]
-            DateTime fromDate, toDate;
-            if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
-            {
+            DateTime fromDate = DateTime.TryParse(txtFromDate.Text, out fromDate) ? DateTime.Parse(txtFromDate.Text) 
+                                                                                  : new DateTime(2000,01,01);
+            DateTime toDate = DateTime.TryParse(txtToDate.Text, out toDate) ? DateTime.Parse(txtToDate.Text) 
+                                                                            : new DateTime(2099,01,01);
+            
+            //if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
+            //{
 
 
-                //dt = GetProjectTable(fromDate, toDate, biostatId, isProject, isBiostat, creditTo, piId,
-                //                       studyAreaValue, healthValue, studyTypeValue, studyPopValue, serviceValue,
-                //                       fundingValue, aknValue);
-
+            //dt = GetProjectTable(fromDate, toDate, biostatId, isProject, isBiostat, creditTo, piId,
+            //                       studyAreaValue, healthValue, studyTypeValue, studyPopValue, serviceValue,
+            //                       fundingValue, aknValue);
+            dt = GetProjectTable(biostatId, projectType, creditTo, isJuniorPI, hasMentor, isInternal, isPilot,
+                                     isPaid, studyAreaValue, healthValue, studyTypeValue, studyPopValue,
+                                     serviceValue, fundingValue, aknValue, isRmatrixRequest, isOlaRequest,
+                                     piId, projectId, projSummary, fromDate, toDate);
 
 
                 FromDate = fromDate.ToString("MM/dd/yyyy");
                 ToDate = toDate.ToString("MM/dd/yyyy");
-            }
+            //}
             
 
 
             return dt;
         }
 
+        ///dt = GetProjectTable(biostatId, projectType, creditTo, isJuniorPI, hasMentor, isInternal, isPilot,
+        //isPaid, studyAreaValue, healthValue, studyTypeValue, studyPopValue,
+        //                             serviceValue, fundingValue, aknValue, isRmatrixRequest, isOlaRequest,
+        //                             piId, projectId, projSummary, fromDate, toDate);
+
         /// <summary>
         /// Parses the database for the table information with the given information.
         /// </summary>
-        /// <param name="fromDate"></param>
-        /// <param name="toDate"></param>
-        /// <param name="biostatId"></param>
-        /// <param name="isProject"></param>
-        /// <param name="isBiostat"></param>
-        /// <param name="creditTo"></param>
-        /// <param name="piId"></param>
-        /// <param name="piStatusId"></param>
-        /// <param name="healthValue"></param>
-        /// <param name="grantValue"></param>
-        /// <returns></returns>
-        private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, int biostatId, int isProject, int isBiostat, 
-            int creditTo, int piId, int piStatusId, int studyAreaValue, int healthValue, int studyTypeValue,
-            int studyPopValue, int serviceValue, int fundingValue, int aknValue)
+        /// <param name="biostatId">Referred QHS Faculty/Staff member.</param>
+        /// <param name="projectType">Whether Biostat or Bioinfo project.</param>
+        /// <param name="creditTo">Credit to Biostat, Bioinfo, or both.</param>
+        /// <param name="isJuniorPI">Is PI a junior investigator?</param>
+        /// <param name="hasMentor">Does PI have a mentor?</param>
+        /// <param name="isInternal">Internal project (yes/no)?</param>
+        /// <param name="isPilot">Is the project an infrastructure grant study?</param>
+        /// <param name="isPaid">Is the project a paying project?</param>
+        /// <param name="studyAreaValue">Study area selected.</param>
+        /// <param name="healthValue">Health Database selected (if applicable).</param>
+        /// <param name="studyTypeValue">Study Type selected.</param>
+        /// <param name="studyPopValue">Study Population specified.</param>
+        /// <param name="serviceValue">Service specified.</param>
+        /// <param name="fundingValue">Funding source specified.</param>
+        /// <param name="aknValue">Funding acknowledgement specified.</param>
+        /// <param name="isRmatrixRequest">If RMATRIX Request for Resources specified.</param>
+        /// <param name="isOlaRequest">If Ola HAWAII Request for Resources specified.</param>
+        /// <param name="piId">PI (Investigator) ID, if specified.</param>
+        /// <param name="projectId">Project ID, if specific project specified.</param>
+        /// <param name="projSummary">Project summary containing text.</param>
+        /// <param name="fromDate">Starting date of report parameter.</param>
+        /// <param name="toDate">Ending date of reprot parameter.</param>
+        /// <returns>Table returned from database stored procedure.</returns>
+        private DataTable GetProjectTable(int biostatId, int projectType, int creditTo, int isJuniorPI, int hasMentor,
+                                          int isInternal, int isPilot, int isPaid, int studyAreaValue, int healthValue,
+                                          int studyTypeValue, int studyPopValue, int serviceValue, int fundingValue,
+                                          int aknValue, int isRmatrixRequest, int isOlaRequest, int piId, int projectId,
+                                          string projSummary, DateTime fromDate, DateTime toDate)
         {
             DataTable dt = new DataTable("tblProject");
 
@@ -472,21 +611,31 @@ namespace ProjectManagement.Report
 
                 using (SqlConnection sqlcon = new SqlConnection(constr))
                 {
-                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary", sqlcon))
+                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary_Filtered", sqlcon))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@BiostatId", biostatId);
+                        cmd.Parameters.AddWithValue("@ProjectType", projectType);
+                        cmd.Parameters.AddWithValue("@CreditTo", creditTo);
+                        cmd.Parameters.AddWithValue("@IsJuniorPI", isJuniorPI);
+                        cmd.Parameters.AddWithValue("@HasMentor", hasMentor);
+                        cmd.Parameters.AddWithValue("@IsInternal", isInternal);
+                        cmd.Parameters.AddWithValue("@IsPilot", isPilot);
+                        cmd.Parameters.AddWithValue("@IsPaid", isPaid);
+                        cmd.Parameters.AddWithValue("@StudyAreaBitValue", studyAreaValue);
+                        cmd.Parameters.AddWithValue("@HealthBitValue", healthValue);
+                        cmd.Parameters.AddWithValue("@StudyTypeBitValue", studyTypeValue);
+                        cmd.Parameters.AddWithValue("@StudyPopBitValue", studyPopValue);
+                        cmd.Parameters.AddWithValue("@ServiceBitValue", serviceValue);
+                        cmd.Parameters.AddWithValue("@FundingBitValue", fundingValue);
+                        cmd.Parameters.AddWithValue("@AknBitValue", aknValue);
+                        cmd.Parameters.AddWithValue("@IsRmatrixRequest", isRmatrixRequest);
+                        cmd.Parameters.AddWithValue("@IsOlaRequest", isOlaRequest);
+                        cmd.Parameters.AddWithValue("@PIId", piId);
+                        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+                        cmd.Parameters.AddWithValue("@ProjSummary", projSummary);
                         cmd.Parameters.AddWithValue("@FromDate", fromDate);
                         cmd.Parameters.AddWithValue("@ToDate", toDate);
-                        cmd.Parameters.AddWithValue("@PhdId", biostatId);
-                        cmd.Parameters.AddWithValue("@MsId", 0);
-                        cmd.Parameters.AddWithValue("@IsProject", isProject);
-                        cmd.Parameters.AddWithValue("@IsBiostat", isBiostat);
-                        cmd.Parameters.AddWithValue("@CreditTo", creditTo);
-                        cmd.Parameters.AddWithValue("@PIId", piId);
-                        cmd.Parameters.AddWithValue("@PIStatusId", piStatusId);
-                        cmd.Parameters.AddWithValue("@AffilId", 0);
-                        cmd.Parameters.AddWithValue("@HealthBitValue", healthValue);
-                        //cmd.Parameters.AddWithValue("@GrantBitValue", grantValue);
 
                         using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
@@ -566,6 +715,7 @@ namespace ProjectManagement.Report
                 var projectType = new List<string>() { "Biostat", "Bioinfo" };
                 var creditTo = new List<string>() { "Biostat", "Bioinfo", "Both" };
                 var yesNo = new List<string>() { "Yes", "No" };
+                var requestForResources = new List<string>() {"RMATRIX", "Ola HAWAII"};
 
 
                 switch (filterSelection)
@@ -1031,24 +1181,65 @@ namespace ProjectManagement.Report
 
                         break;
 
+                    case "Request for resources": // 19
+
+                        if (filterNum == 1)
+                        {
+                            checkboxesFilter1.Visible = true;
+                            textfieldFilter1.Visible = false;
+                            dropdownFilter1.Visible = false;
+                            lblFilter1Checkbox.Text = filterSelection;
+
+                            chkFilter1Checkbox.DataSource = requestForResources;
+                            chkFilter1Checkbox.DataBind();
+                        }
+                        else if (filterNum == 2)
+                        {
+                            checkboxesFilter2.Visible = true;
+                            textfieldFilter2.Visible = false;
+                            dropdownFilter2.Visible = false;
+                            lblFilter2Checkbox.Text = filterSelection;
+
+                            chkFilter2Checkbox.DataSource = requestForResources;
+                            chkFilter2Checkbox.DataBind();
+                        }
+                        else
+                        {
+                            checkboxesFilter3.Visible = true;
+                            textfieldFilter3.Visible = false;
+                            dropdownFilter3.Visible = false;
+                            lblFilter3Checkbox.Text = filterSelection;
+
+                            chkFilter3Checkbox.DataSource = requestForResources;
+                            chkFilter3Checkbox.DataBind();
+                        }
+
+                        break;
+
                     default:
+
+                        if (filterNum == 1)
+                        {
+                            textfieldFilter1.Visible = false;
+                            dropdownFilter1.Visible = false;
+                            checkboxesFilter1.Visible = false;
+                            chkFilter1Checkbox.Items.Clear();
+                        }
+                        else if (filterNum == 2)
+                        {
+                            textfieldFilter2.Visible = false;
+                            dropdownFilter2.Visible = false;
+                            checkboxesFilter2.Visible = false;
+                            chkFilter2Checkbox.Items.Clear();
+                        }
+                        else
+                        {
+                            textfieldFilter3.Visible = false;
+                            dropdownFilter3.Visible = false;
+                            checkboxesFilter3.Visible = false;
+                            chkFilter3Checkbox.Items.Clear();
+                        }
                         
-                        textfieldFilter1.Visible = false;
-                        textfieldFilter2.Visible = false;
-                        textfieldFilter3.Visible = false;
-
-                        dropdownFilter1.Visible = false;
-                        dropdownFilter2.Visible = false;
-                        dropdownFilter3.Visible = false;
-
-                        checkboxesFilter1.Visible = false;
-                        checkboxesFilter2.Visible = false;
-                        checkboxesFilter3.Visible = false;
-
-                        chkFilter1Checkbox.Items.Clear();
-                        chkFilter2Checkbox.Items.Clear();
-                        chkFilter3Checkbox.Items.Clear();
-
                         break;
                 }
 

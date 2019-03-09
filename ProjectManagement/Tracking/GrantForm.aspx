@@ -413,5 +413,9 @@
     </div>
 
     <script src="../Scripts/WebForms/GrantForm.js"></script>
-    
+    <script type="text/javascript">
+        function ShowPopup() {
+            $('#editModal').modal("show");
+        }
+    </script>    
 </asp:Content>

@@ -427,6 +427,24 @@ namespace ProjectManagement {
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkPilotNo;
         
         /// <summary>
+        /// chkProposalYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkProposalYes;
+        
+        /// <summary>
+        /// chkProposalNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkProposalNo;
+        
+        /// <summary>
         /// chkPayingYes control.
         /// </summary>
         /// <remarks>
@@ -479,6 +497,51 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPayProject;
+        
+        /// <summary>
+        /// chkIsUHPilotGrantYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkIsUHPilotGrantYes;
+        
+        /// <summary>
+        /// chkIsUHPilotGrantNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkIsUHPilotGrantNo;
+        
+        /// <summary>
+        /// ddlUHGrant control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUHGrant;
+        
+        /// <summary>
+        /// txtGrantProposalFundingAgency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtGrantProposalFundingAgency;
+        
+        /// <summary>
+        /// GridViewGrant control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridViewGrant;
         
         /// <summary>
         /// rptGrant control.

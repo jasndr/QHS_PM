@@ -14,6 +14,11 @@ namespace ProjectManagement
     
     public partial class ProjectField
     {
+        public ProjectField()
+        {
+            this.Project2 = new HashSet<Project2>();
+        }
+    
         public int Id { get; set; }
         public string Name { get; set; }
         public string GroupName { get; set; }
@@ -30,5 +35,7 @@ namespace ProjectManagement
         public Nullable<bool> isPhase { get; set; }
         public Nullable<bool> IsFundingSource { get; set; }
         public Nullable<bool> IsAcknowledgment { get; set; }
+    
+        public virtual ICollection<Project2> Project2 { get; set; }
     }
 }

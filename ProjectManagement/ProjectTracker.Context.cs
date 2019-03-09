@@ -87,13 +87,14 @@ namespace ProjectManagement
         public virtual DbSet<ProjectPhase> ProjectPhase { get; set; }
         public virtual DbSet<vwBiostatTime> vwBiostatTime { get; set; }
         public virtual DbSet<Academic> Academic { get; set; }
-        public virtual DbSet<Project2> Project2 { get; set; }
         public virtual DbSet<ProjectField> ProjectField { get; set; }
         public virtual DbSet<AcademicField> AcademicField { get; set; }
         public virtual DbSet<vwProjectBiostat> vwProjectBiostat { get; set; }
         public virtual DbSet<InvoiceItem2> InvoiceItem2 { get; set; }
         public virtual DbSet<vwAgreement> vwAgreement { get; set; }
         public virtual DbSet<vwProject> vwProject { get; set; }
+        public virtual DbSet<Project2> Project2 { get; set; }
+        public virtual DbSet<ViewGrant2> ViewGrant2 { get; set; }
     
         public virtual int P_PROJECT_HOURS(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> projectId, ObjectParameter phdHours, ObjectParameter mSHours)
         {

@@ -483,6 +483,10 @@
           <Property Name="IsLetterOfSupport" Type="tinyint" />
           <Property Name="IsReportOlaHawaii" Type="bit" />
           <Property Name="IsMOU" Type="tinyint" />
+          <Property Name="IsGrantProposal" Type="bit" />
+          <Property Name="IsUHGrant" Type="bit" />
+          <Property Name="GrantProposalFundingAgency" Type="nvarchar" MaxLength="255" />
+          <Property Name="UHGrantID" Type="int" />
         </EntityType>
         <EntityType Name="ProjectBioStat">
           <Key>
@@ -885,6 +889,28 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.ViewGrant' does not have a p
           <Property Name="Biostat" Type="nvarchar(max)" Nullable="false" />
           <Property Name="GrantTitle" Type="nvarchar" MaxLength="100" />
           <Property Name="GrantStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FundStatus" Type="nvarchar" MaxLength="255" />
+          <Property Name="FundDate" Type="varchar" MaxLength="30" />
+          <Property Name="InitDate" Type="varchar" MaxLength="30" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="IsInternal" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BioStatProject_DA.dbo.ViewGrant2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ViewGrant2">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Biostat" />
+            <PropertyRef Name="GrantStatus" />
+            <PropertyRef Name="ProjectId" />
+            <PropertyRef Name="IsInternal" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="PI" Type="nvarchar(max)" />
+          <Property Name="Biostat" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="GrantTitle" Type="nvarchar" MaxLength="100" />
+          <Property Name="GrantStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="GrantSubmitDate" Type="varchar" MaxLength="30" />
           <Property Name="FundStatus" Type="nvarchar" MaxLength="255" />
           <Property Name="FundDate" Type="varchar" MaxLength="30" />
           <Property Name="InitDate" Type="varchar" MaxLength="30" />
@@ -1716,6 +1742,18 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UHGrantProject2">
+          <End Role="ProjectField" Type="Self.ProjectField" Multiplicity="0..1" />
+          <End Role="Project2" Type="Self.Project2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectField">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project2">
+              <PropertyRef Name="UHGrantID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="P_INVOICE_HOURS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CollabCtrId" Type="int" Mode="In" />
           <Parameter Name="InvoiceId" Type="int" Mode="In" />
@@ -1830,6 +1868,21 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
     [ViewGrant].[ProjectId] AS [ProjectId], 
     [ViewGrant].[IsInternal] AS [IsInternal]
     FROM [dbo].[ViewGrant] AS [ViewGrant]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ViewGrant2" EntityType="Self.ViewGrant2" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ViewGrant2].[Id] AS [Id], 
+    [ViewGrant2].[PI] AS [PI], 
+    [ViewGrant2].[Biostat] AS [Biostat], 
+    [ViewGrant2].[GrantTitle] AS [GrantTitle], 
+    [ViewGrant2].[GrantStatus] AS [GrantStatus], 
+    [ViewGrant2].[GrantSubmitDate] AS [GrantSubmitDate], 
+    [ViewGrant2].[FundStatus] AS [FundStatus], 
+    [ViewGrant2].[FundDate] AS [FundDate], 
+    [ViewGrant2].[InitDate] AS [InitDate], 
+    [ViewGrant2].[ProjectId] AS [ProjectId], 
+    [ViewGrant2].[IsInternal] AS [IsInternal]
+    FROM [dbo].[ViewGrant2] AS [ViewGrant2]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ViewInvoice" EntityType="Self.ViewInvoice" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -2149,6 +2202,10 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <End Role="ProjectPhase" EntitySet="ProjectPhase" />
             <End Role="TimeEntries" EntitySet="TimeEntries" />
           </AssociationSet>
+          <AssociationSet Name="FK_UHGrantProject2" Association="Self.FK_UHGrantProject2">
+            <End Role="ProjectField" EntitySet="ProjectField" />
+            <End Role="Project2" EntitySet="Project2" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -2422,28 +2479,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           </FunctionImport>
           <EntitySet Name="vwBiostatTime" EntityType="ProjectTracker.vwBiostatTime" />
           <EntitySet Name="Academic" EntityType="ProjectTracker.Academic" />
-          <EntitySet Name="Project2" EntityType="ProjectTracker.Project2" />
           <EntitySet Name="ProjectField" EntityType="ProjectTracker.ProjectField" />
-          <AssociationSet Name="FK_InvestProject2" Association="ProjectTracker.FK_InvestProject2">
-            <End Role="Invest" EntitySet="Invests" />
-            <End Role="Project2" EntitySet="Project2" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProjecPhase_Project2" Association="ProjectTracker.FK_ProjecPhase_Project2">
-            <End Role="Project2" EntitySet="Project2" />
-            <End Role="ProjectPhase" EntitySet="ProjectPhase" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SurveyForm_Project1" Association="ProjectTracker.FK_SurveyForm_Project1">
-            <End Role="Project2" EntitySet="Project2" />
-            <End Role="SurveyForm" EntitySet="SurveyForms" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Grants_Project1" Association="ProjectTracker.FK_Grants_Project1">
-            <End Role="Project2" EntitySet="Project2" />
-            <End Role="Grant" EntitySet="Grants" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProjectPublication1" Association="ProjectTracker.FK_ProjectPublication1">
-            <End Role="Project2" EntitySet="Project2" />
-            <End Role="Publication" EntitySet="Publications" />
-          </AssociationSet>
           <EntitySet Name="AcademicField" EntityType="ProjectTracker.AcademicField" />
           <EntitySet Name="vwProjectBiostat" EntityType="ProjectTracker.vwProjectBiostat" />
           <EntitySet Name="InvoiceItem2" EntityType="ProjectTracker.InvoiceItem2" />
@@ -2463,10 +2499,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <Parameter Name="Refresh" Mode="In" Type="Boolean" />
           </FunctionImport>
           <EntitySet Name="vwAgreement" EntityType="ProjectTracker.vwAgreement" />
-          <AssociationSet Name="Project2ClientAgmt" Association="ProjectTracker.Project2ClientAgmt">
-            <End Role="Project2" EntitySet="Project2" />
-            <End Role="ClientAgmt" EntitySet="ClientAgmt" />
-          </AssociationSet>
           <EntitySet Name="vwProject" EntityType="ProjectTracker.vwProject" />
           <FunctionImport Name="P_INVOICE_HOURS2" ReturnType="Collection(ProjectTracker.P_INVOICE_HOURS2_Result)">
             <Parameter Name="CollabCtrId" Mode="In" Type="Int32" />
@@ -2483,6 +2515,36 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <Parameter Name="Refresh" Mode="In" Type="Boolean" />
             <Parameter Name="RemoveZeros" Mode="In" Type="Boolean" />
           </FunctionImport>
+          <EntitySet Name="Project2" EntityType="ProjectTracker.Project2" />
+          <AssociationSet Name="FK_ClientAgmt_Project2" Association="ProjectTracker.FK_ClientAgmt_Project2">
+            <End Role="Project2" EntitySet="Project2" />
+            <End Role="ClientAgmt" EntitySet="ClientAgmt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Grants_Project" Association="ProjectTracker.FK_Grants_Project">
+            <End Role="Project2" EntitySet="Project2" />
+            <End Role="Grant" EntitySet="Grants" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvestProject2" Association="ProjectTracker.FK_InvestProject2">
+            <End Role="Invest" EntitySet="Invests" />
+            <End Role="Project2" EntitySet="Project2" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjecPhase_Project2" Association="ProjectTracker.FK_ProjecPhase_Project2">
+            <End Role="Project2" EntitySet="Project2" />
+            <End Role="ProjectPhase" EntitySet="ProjectPhase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectPublication" Association="ProjectTracker.FK_ProjectPublication">
+            <End Role="Project2" EntitySet="Project2" />
+            <End Role="Publication" EntitySet="Publications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyForm_Project" Association="ProjectTracker.FK_SurveyForm_Project">
+            <End Role="Project2" EntitySet="Project2" />
+            <End Role="SurveyForm" EntitySet="SurveyForms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UHGrantProject2" Association="ProjectTracker.FK_UHGrantProject2">
+            <End Role="ProjectField" EntitySet="ProjectField" />
+            <End Role="Project2" EntitySet="Project2" />
+          </AssociationSet>
+          <EntitySet Name="ViewGrant2" EntityType="ProjectTracker.ViewGrant2" />
           </EntityContainer>
         <EntityType Name="Project">
           <Key>
@@ -2984,9 +3046,9 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="RedcapId" Type="Int32" />
           <Property Name="SampleAccept" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PublicationCoAuthorAffils" Relationship="ProjectTracker.FK_PublicationCoAuthorAffil_Publications" FromRole="Publication" ToRole="PublicationCoAuthorAffil" />
-          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_ProjectPublication1" FromRole="Publication" ToRole="Project2" />
           <Property Name="Affiliation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AffiliationOther" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_ProjectPublication" FromRole="Publication" ToRole="Project2" />
           </EntityType>
         <Association Name="FK_PublicationBioStat_BioStat">
           <End Type="ProjectTracker.BioStat" Role="BioStat" Multiplicity="1" />
@@ -3477,7 +3539,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="GrantBiostats" Relationship="ProjectTracker.FK_GrantCost_Grant" FromRole="Grant" ToRole="GrantBiostat" />
           <NavigationProperty Name="GrantPIs" Relationship="ProjectTracker.FK_GrantPI_Grant" FromRole="Grant" ToRole="GrantPI" />
-          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_Grants_Project1" FromRole="Grant" ToRole="Project2" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_Grants_Project" FromRole="Grant" ToRole="Project2" />
         </EntityType>
         <Association Name="FK_GrantCost_Biostat">
           <End Type="ProjectTracker.BioStat" Role="BioStat" Multiplicity="1" />
@@ -3576,7 +3638,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Recommend" Type="Boolean" Nullable="true" />
           <Property Name="RequestCount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_SurveyForm_Project1" FromRole="SurveyForm" ToRole="Project2" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_SurveyForm_Project" FromRole="SurveyForm" ToRole="Project2" />
         </EntityType>
         <EntityType Name="SurveyFormAnswer">
           <Key>
@@ -3780,8 +3842,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="AgmtId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AgmtStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="InvoiceItem2" Relationship="ProjectTracker.ClientAgmtInvoiceItem2" FromRole="ClientAgmt" ToRole="InvoiceItem2" />
-          <NavigationProperty Name="Project2" Relationship="ProjectTracker.Project2ClientAgmt" FromRole="ClientAgmt" ToRole="Project2" />
           <Property Name="Project2Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_ClientAgmt_Project2" FromRole="ClientAgmt" ToRole="Project2" />
         </EntityType>
         <EntityType Name="CollabCtr">
           <Key>
@@ -3874,8 +3936,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <NavigationProperty Name="Projects" Relationship="ProjectTracker.FK_ProjecPhase_Project" FromRole="ProjectPhase" ToRole="Project" />
           <NavigationProperty Name="TimeEntries" Relationship="ProjectTracker.FK_TimeEntries_Phase" FromRole="ProjectPhase" ToRole="TimeEntry" />
           <Property Name="CompletionDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_ProjecPhase_Project2" FromRole="ProjectPhase" ToRole="Project2" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_ProjecPhase_Project2" FromRole="ProjectPhase" ToRole="Project2" />
         </EntityType>
         <Association Name="FK_ProjecPhase_Project">
           <End Type="ProjectTracker.Project" Role="Project" Multiplicity="1" />
@@ -3943,72 +4005,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="CreationDate" Type="DateTime" Precision="3" Nullable="false" />
           <Property Name="Audience" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           </EntityType>
-        <EntityType Name="Project2">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PIId" Type="Int32" Nullable="false" />
-          <Property Name="Title" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Summary" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="InitialDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DeadLine" Type="DateTime" Precision="3" />
-          <Property Name="LeadBiostatId" Type="Int32" Nullable="false" />
-          <Property Name="OtherMemberBitSum" Type="Int64" Nullable="false" />
-          <Property Name="StudyAreaBitSum" Type="Int64" Nullable="false" />
-          <Property Name="StudyAreaOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="HealthDateBitSum" Type="Int64" Nullable="false" />
-          <Property Name="HealthDataOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="StudyTypeBitSum" Type="Int64" Nullable="false" />
-          <Property Name="StudyTypeOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="StudyPopulationBitSum" Type="Int64" Nullable="false" />
-          <Property Name="StudyPopulationOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="ServiceBitSum" Type="Int64" Nullable="false" />
-          <Property Name="ServiceOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="GrantBitSum" Type="Int64" Nullable="false" />
-          <Property Name="GrantOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="IsJuniorPI" Type="Boolean" />
-          <Property Name="HasMentor" Type="Boolean" />
-          <Property Name="MentorFirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="MentorLastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="MentorEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="IsInternal" Type="Boolean" />
-          <Property Name="IsPilot" Type="Boolean" />
-          <Property Name="IsPaid" Type="Boolean" />
-          <Property Name="IsRmatrixRequest" Type="Boolean" />
-          <Property Name="IsRmatrixReport" Type="Boolean" />
-          <Property Name="TypeOfPayment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="RmatrixNum" Type="Int32" />
-          <Property Name="RmatrixSubDate" Type="DateTime" Precision="3" />
-          <Property Name="ProjectCompletionDate" Type="DateTime" Precision="3" />
-          <Property Name="ProjectStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
-          <Property Name="Creator" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Project2" ToRole="Invest" />
-          <NavigationProperty Name="ProjectPhase" Relationship="ProjectTracker.FK_ProjecPhase_Project2" FromRole="Project2" ToRole="ProjectPhase" />
-          <NavigationProperty Name="SurveyForm" Relationship="ProjectTracker.FK_SurveyForm_Project1" FromRole="Project2" ToRole="SurveyForm" />
-          <NavigationProperty Name="Grants" Relationship="ProjectTracker.FK_Grants_Project1" FromRole="Project2" ToRole="Grant" />
-          <NavigationProperty Name="Publications" Relationship="ProjectTracker.FK_ProjectPublication1" FromRole="Project2" ToRole="Publication" />
-          <NavigationProperty Name="ClientAgmt" Relationship="ProjectTracker.Project2ClientAgmt" FromRole="Project2" ToRole="ClientAgmt" />
-          <Property Name="ProjectType" Type="Byte" Nullable="false" />
-          <Property Name="CreditTo" Type="Byte" Nullable="false" />
-          <Property Name="IsOlaHawaiiRequest" Type="Boolean" />
-          <Property Name="OlaHawaiiNum" Type="Int32" />
-          <Property Name="OlaHawaiiSubDate" Type="DateTime" Precision="3" />
-          <Property Name="OlaHawaiiRequestType" Type="Byte" />
-          <Property Name="IsHealthDisparity" Type="Byte" />
-          <Property Name="GrantDepartmentFundingType" Type="Int32" />
-          <Property Name="GrantDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="AknBitSum" Type="Int64" Nullable="false" />
-          <Property Name="AknOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="AknDepartmentFundingType" Type="Int32" />
-          <Property Name="AknDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="IsLetterOfSupport" Type="Byte" />
-          <Property Name="IsReportOlaHawaii" Type="Boolean" />
-          <Property Name="IsMOU" Type="Byte" />
-        </EntityType>
         <EntityType Name="ProjectField">
           <Key>
             <PropertyRef Name="Id" />
@@ -4029,67 +4025,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="isPhase" Type="Boolean" />
           <Property Name="IsFundingSource" Type="Boolean" />
           <Property Name="IsAcknowledgment" Type="Boolean" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_UHGrantProject2" FromRole="ProjectField" ToRole="Project2" />
         </EntityType>
-        <Association Name="FK_InvestProject2">
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Invest">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Project2">
-              <PropertyRef Name="PIId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProjecPhase_Project2">
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
-          <End Type="ProjectTracker.ProjectPhase" Role="ProjectPhase" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Project2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProjectPhase">
-              <PropertyRef Name="ProjectId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SurveyForm_Project1">
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
-          <End Type="ProjectTracker.SurveyForm" Role="SurveyForm" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Project2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SurveyForm">
-              <PropertyRef Name="ProjectId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Grants_Project1">
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
-          <End Type="ProjectTracker.Grant" Role="Grant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Project2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Grant">
-              <PropertyRef Name="ProjectId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProjectPublication1">
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
-          <End Type="ProjectTracker.Publication" Role="Publication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Project2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Publication">
-              <PropertyRef Name="ProjectId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="AcademicField">
           <Key>
             <PropertyRef Name="Id" />
@@ -4205,18 +4142,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="ClientApprovalDate" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="CompletionDate" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="Project2ClientAgmt">
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
-          <End Type="ProjectTracker.ClientAgmt" Role="ClientAgmt" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Project2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ClientAgmt">
-              <PropertyRef Name="Project2Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="vwProject">
           <Key>
             <PropertyRef Name="id" />
@@ -4303,6 +4228,181 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Type="Decimal" Name="RemainAfter" Nullable="true" Precision="8" Scale="2" />
           <Property Type="Int32" Name="ranking" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Project2">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PIId" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Summary" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="DeadLine" Type="DateTime" Precision="3" />
+          <Property Name="LeadBiostatId" Type="Int32" Nullable="false" />
+          <Property Name="OtherMemberBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyAreaBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyAreaOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HealthDateBitSum" Type="Int64" Nullable="false" />
+          <Property Name="HealthDataOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="StudyTypeBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyTypeOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="StudyPopulationBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyPopulationOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceBitSum" Type="Int64" Nullable="false" />
+          <Property Name="ServiceOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="GrantBitSum" Type="Int64" Nullable="false" />
+          <Property Name="GrantOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsJuniorPI" Type="Boolean" />
+          <Property Name="HasMentor" Type="Boolean" />
+          <Property Name="MentorFirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MentorLastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MentorEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsInternal" Type="Boolean" />
+          <Property Name="IsPilot" Type="Boolean" />
+          <Property Name="IsPaid" Type="Boolean" />
+          <Property Name="IsRmatrixRequest" Type="Boolean" />
+          <Property Name="IsRmatrixReport" Type="Boolean" />
+          <Property Name="TypeOfPayment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RmatrixNum" Type="Int32" />
+          <Property Name="RmatrixSubDate" Type="DateTime" Precision="3" />
+          <Property Name="ProjectCompletionDate" Type="DateTime" Precision="3" />
+          <Property Name="ProjectStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Creator" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="InitialDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ProjectType" Type="Byte" Nullable="false" />
+          <Property Name="CreditTo" Type="Byte" Nullable="false" />
+          <Property Name="IsOlaHawaiiRequest" Type="Boolean" />
+          <Property Name="OlaHawaiiNum" Type="Int32" />
+          <Property Name="OlaHawaiiSubDate" Type="DateTime" Precision="3" />
+          <Property Name="OlaHawaiiRequestType" Type="Byte" />
+          <Property Name="IsHealthDisparity" Type="Byte" />
+          <Property Name="GrantDepartmentFundingType" Type="Int32" />
+          <Property Name="GrantDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AknBitSum" Type="Int64" Nullable="false" />
+          <Property Name="AknOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AknDepartmentFundingType" Type="Int32" />
+          <Property Name="AknDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsLetterOfSupport" Type="Byte" />
+          <Property Name="IsReportOlaHawaii" Type="Boolean" />
+          <Property Name="IsMOU" Type="Byte" />
+          <Property Name="IsGrantProposal" Type="Boolean" />
+          <Property Name="IsUHGrant" Type="Boolean" />
+          <Property Name="GrantProposalFundingAgency" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="UHGrantID" Type="Int32" />
+          <NavigationProperty Name="ClientAgmt" Relationship="ProjectTracker.FK_ClientAgmt_Project2" FromRole="Project2" ToRole="ClientAgmt" />
+          <NavigationProperty Name="Grants" Relationship="ProjectTracker.FK_Grants_Project" FromRole="Project2" ToRole="Grant" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Project2" ToRole="Invest" />
+          <NavigationProperty Name="ProjectPhase" Relationship="ProjectTracker.FK_ProjecPhase_Project2" FromRole="Project2" ToRole="ProjectPhase" />
+          <NavigationProperty Name="Publications" Relationship="ProjectTracker.FK_ProjectPublication" FromRole="Project2" ToRole="Publication" />
+          <NavigationProperty Name="SurveyForm" Relationship="ProjectTracker.FK_SurveyForm_Project" FromRole="Project2" ToRole="SurveyForm" />
+          <NavigationProperty Name="ProjectField" Relationship="ProjectTracker.FK_UHGrantProject2" FromRole="Project2" ToRole="ProjectField" />
+        </EntityType>
+        <Association Name="FK_ClientAgmt_Project2">
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
+          <End Type="ProjectTracker.ClientAgmt" Role="ClientAgmt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClientAgmt">
+              <PropertyRef Name="Project2Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Grants_Project">
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
+          <End Type="ProjectTracker.Grant" Role="Grant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Grant">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvestProject2">
+          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project2">
+              <PropertyRef Name="PIId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjecPhase_Project2">
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
+          <End Type="ProjectTracker.ProjectPhase" Role="ProjectPhase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectPhase">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectPublication">
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
+          <End Type="ProjectTracker.Publication" Role="Publication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Publication">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyForm_Project">
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
+          <End Type="ProjectTracker.SurveyForm" Role="SurveyForm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyForm">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UHGrantProject2">
+          <End Type="ProjectTracker.ProjectField" Role="ProjectField" Multiplicity="0..1" />
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectField">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project2">
+              <PropertyRef Name="UHGrantID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ViewGrant2">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Biostat" />
+            <PropertyRef Name="GrantStatus" />
+            <PropertyRef Name="ProjectId" />
+            <PropertyRef Name="IsInternal" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="PI" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Biostat" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GrantTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="GrantStatus" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="GrantSubmitDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FundDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="InitDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="IsInternal" Type="Boolean" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5172,67 +5272,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Project2">
-            <EntityTypeMapping TypeName="ProjectTracker.Project2">
-              <MappingFragment StoreEntitySet="Project2">
-                <ScalarProperty Name="IsMOU" ColumnName="IsMOU" />
-                <ScalarProperty Name="IsReportOlaHawaii" ColumnName="IsReportOlaHawaii" />
-                <ScalarProperty Name="IsLetterOfSupport" ColumnName="IsLetterOfSupport" />
-                <ScalarProperty Name="AknDepartmentFundingOther" ColumnName="AknDepartmentFundingOther" />
-                <ScalarProperty Name="AknDepartmentFundingType" ColumnName="AknDepartmentFundingType" />
-                <ScalarProperty Name="AknOther" ColumnName="AknOther" />
-                <ScalarProperty Name="AknBitSum" ColumnName="AknBitSum" />
-                <ScalarProperty Name="GrantDepartmentFundingOther" ColumnName="GrantDepartmentFundingOther" />
-                <ScalarProperty Name="GrantDepartmentFundingType" ColumnName="GrantDepartmentFundingType" />
-                <ScalarProperty Name="IsHealthDisparity" ColumnName="IsHealthDisparity" />
-                <ScalarProperty Name="OlaHawaiiRequestType" ColumnName="OlaHawaiiRequestType" />
-                <ScalarProperty Name="OlaHawaiiSubDate" ColumnName="OlaHawaiiSubDate" />
-                <ScalarProperty Name="OlaHawaiiNum" ColumnName="OlaHawaiiNum" />
-                <ScalarProperty Name="IsOlaHawaiiRequest" ColumnName="IsOlaHawaiiRequest" />
-                <ScalarProperty Name="CreditTo" ColumnName="CreditTo" />
-                <ScalarProperty Name="ProjectType" ColumnName="ProjectType" />
-                <ScalarProperty Name="InitialDate" ColumnName="InitialDate" />
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
-                <ScalarProperty Name="Creator" ColumnName="Creator" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="ProjectStatus" ColumnName="ProjectStatus" />
-                <ScalarProperty Name="ProjectCompletionDate" ColumnName="ProjectCompletionDate" />
-                <ScalarProperty Name="RmatrixSubDate" ColumnName="RmatrixSubDate" />
-                <ScalarProperty Name="RmatrixNum" ColumnName="RmatrixNum" />
-                <ScalarProperty Name="TypeOfPayment" ColumnName="TypeOfPayment" />
-                <ScalarProperty Name="IsRmatrixReport" ColumnName="IsRmatrixReport" />
-                <ScalarProperty Name="IsRmatrixRequest" ColumnName="IsRmatrixRequest" />
-                <ScalarProperty Name="IsPaid" ColumnName="IsPaid" />
-                <ScalarProperty Name="IsPilot" ColumnName="IsPilot" />
-                <ScalarProperty Name="IsInternal" ColumnName="IsInternal" />
-                <ScalarProperty Name="MentorEmail" ColumnName="MentorEmail" />
-                <ScalarProperty Name="MentorLastName" ColumnName="MentorLastName" />
-                <ScalarProperty Name="MentorFirstName" ColumnName="MentorFirstName" />
-                <ScalarProperty Name="HasMentor" ColumnName="HasMentor" />
-                <ScalarProperty Name="IsJuniorPI" ColumnName="IsJuniorPI" />
-                <ScalarProperty Name="GrantOther" ColumnName="GrantOther" />
-                <ScalarProperty Name="GrantBitSum" ColumnName="GrantBitSum" />
-                <ScalarProperty Name="ServiceOther" ColumnName="ServiceOther" />
-                <ScalarProperty Name="ServiceBitSum" ColumnName="ServiceBitSum" />
-                <ScalarProperty Name="StudyPopulationOther" ColumnName="StudyPopulationOther" />
-                <ScalarProperty Name="StudyPopulationBitSum" ColumnName="StudyPopulationBitSum" />
-                <ScalarProperty Name="StudyTypeOther" ColumnName="StudyTypeOther" />
-                <ScalarProperty Name="StudyTypeBitSum" ColumnName="StudyTypeBitSum" />
-                <ScalarProperty Name="HealthDataOther" ColumnName="HealthDataOther" />
-                <ScalarProperty Name="HealthDateBitSum" ColumnName="HealthDateBitSum" />
-                <ScalarProperty Name="StudyAreaOther" ColumnName="StudyAreaOther" />
-                <ScalarProperty Name="StudyAreaBitSum" ColumnName="StudyAreaBitSum" />
-                <ScalarProperty Name="OtherMemberBitSum" ColumnName="OtherMemberBitSum" />
-                <ScalarProperty Name="LeadBiostatId" ColumnName="LeadBiostatId" />
-                <ScalarProperty Name="DeadLine" ColumnName="DeadLine" />
-                <ScalarProperty Name="Summary" ColumnName="Summary" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="PIId" ColumnName="PIId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProjectField">
             <EntityTypeMapping TypeName="ProjectTracker.ProjectField">
               <MappingFragment StoreEntitySet="ProjectField">
@@ -5418,6 +5457,88 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Project2">
+            <EntityTypeMapping TypeName="ProjectTracker.Project2">
+              <MappingFragment StoreEntitySet="Project2">
+                <ScalarProperty Name="UHGrantID" ColumnName="UHGrantID" />
+                <ScalarProperty Name="GrantProposalFundingAgency" ColumnName="GrantProposalFundingAgency" />
+                <ScalarProperty Name="IsUHGrant" ColumnName="IsUHGrant" />
+                <ScalarProperty Name="IsGrantProposal" ColumnName="IsGrantProposal" />
+                <ScalarProperty Name="IsMOU" ColumnName="IsMOU" />
+                <ScalarProperty Name="IsReportOlaHawaii" ColumnName="IsReportOlaHawaii" />
+                <ScalarProperty Name="IsLetterOfSupport" ColumnName="IsLetterOfSupport" />
+                <ScalarProperty Name="AknDepartmentFundingOther" ColumnName="AknDepartmentFundingOther" />
+                <ScalarProperty Name="AknDepartmentFundingType" ColumnName="AknDepartmentFundingType" />
+                <ScalarProperty Name="AknOther" ColumnName="AknOther" />
+                <ScalarProperty Name="AknBitSum" ColumnName="AknBitSum" />
+                <ScalarProperty Name="GrantDepartmentFundingOther" ColumnName="GrantDepartmentFundingOther" />
+                <ScalarProperty Name="GrantDepartmentFundingType" ColumnName="GrantDepartmentFundingType" />
+                <ScalarProperty Name="IsHealthDisparity" ColumnName="IsHealthDisparity" />
+                <ScalarProperty Name="OlaHawaiiRequestType" ColumnName="OlaHawaiiRequestType" />
+                <ScalarProperty Name="OlaHawaiiSubDate" ColumnName="OlaHawaiiSubDate" />
+                <ScalarProperty Name="OlaHawaiiNum" ColumnName="OlaHawaiiNum" />
+                <ScalarProperty Name="IsOlaHawaiiRequest" ColumnName="IsOlaHawaiiRequest" />
+                <ScalarProperty Name="CreditTo" ColumnName="CreditTo" />
+                <ScalarProperty Name="ProjectType" ColumnName="ProjectType" />
+                <ScalarProperty Name="InitialDate" ColumnName="InitialDate" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="ProjectStatus" ColumnName="ProjectStatus" />
+                <ScalarProperty Name="ProjectCompletionDate" ColumnName="ProjectCompletionDate" />
+                <ScalarProperty Name="RmatrixSubDate" ColumnName="RmatrixSubDate" />
+                <ScalarProperty Name="RmatrixNum" ColumnName="RmatrixNum" />
+                <ScalarProperty Name="TypeOfPayment" ColumnName="TypeOfPayment" />
+                <ScalarProperty Name="IsRmatrixReport" ColumnName="IsRmatrixReport" />
+                <ScalarProperty Name="IsRmatrixRequest" ColumnName="IsRmatrixRequest" />
+                <ScalarProperty Name="IsPaid" ColumnName="IsPaid" />
+                <ScalarProperty Name="IsPilot" ColumnName="IsPilot" />
+                <ScalarProperty Name="IsInternal" ColumnName="IsInternal" />
+                <ScalarProperty Name="MentorEmail" ColumnName="MentorEmail" />
+                <ScalarProperty Name="MentorLastName" ColumnName="MentorLastName" />
+                <ScalarProperty Name="MentorFirstName" ColumnName="MentorFirstName" />
+                <ScalarProperty Name="HasMentor" ColumnName="HasMentor" />
+                <ScalarProperty Name="IsJuniorPI" ColumnName="IsJuniorPI" />
+                <ScalarProperty Name="GrantOther" ColumnName="GrantOther" />
+                <ScalarProperty Name="GrantBitSum" ColumnName="GrantBitSum" />
+                <ScalarProperty Name="ServiceOther" ColumnName="ServiceOther" />
+                <ScalarProperty Name="ServiceBitSum" ColumnName="ServiceBitSum" />
+                <ScalarProperty Name="StudyPopulationOther" ColumnName="StudyPopulationOther" />
+                <ScalarProperty Name="StudyPopulationBitSum" ColumnName="StudyPopulationBitSum" />
+                <ScalarProperty Name="StudyTypeOther" ColumnName="StudyTypeOther" />
+                <ScalarProperty Name="StudyTypeBitSum" ColumnName="StudyTypeBitSum" />
+                <ScalarProperty Name="HealthDataOther" ColumnName="HealthDataOther" />
+                <ScalarProperty Name="HealthDateBitSum" ColumnName="HealthDateBitSum" />
+                <ScalarProperty Name="StudyAreaOther" ColumnName="StudyAreaOther" />
+                <ScalarProperty Name="StudyAreaBitSum" ColumnName="StudyAreaBitSum" />
+                <ScalarProperty Name="OtherMemberBitSum" ColumnName="OtherMemberBitSum" />
+                <ScalarProperty Name="LeadBiostatId" ColumnName="LeadBiostatId" />
+                <ScalarProperty Name="DeadLine" ColumnName="DeadLine" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="PIId" ColumnName="PIId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ViewGrant2">
+            <EntityTypeMapping TypeName="ProjectTracker.ViewGrant2">
+              <MappingFragment StoreEntitySet="ViewGrant2">
+                <ScalarProperty Name="IsInternal" ColumnName="IsInternal" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="InitDate" ColumnName="InitDate" />
+                <ScalarProperty Name="FundDate" ColumnName="FundDate" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="GrantSubmitDate" ColumnName="GrantSubmitDate" />
+                <ScalarProperty Name="GrantStatus" ColumnName="GrantStatus" />
+                <ScalarProperty Name="GrantTitle" ColumnName="GrantTitle" />
+                <ScalarProperty Name="Biostat" ColumnName="Biostat" />
+                <ScalarProperty Name="PI" ColumnName="PI" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
@@ -5434,7 +5555,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
         <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
         <DesignerProperty Name="UseLegacyProvider" Value="False" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->
