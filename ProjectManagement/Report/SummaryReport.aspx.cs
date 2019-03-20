@@ -51,6 +51,11 @@ namespace ProjectManagement.Report
     ///  2018NOV05 - Jason Delos Reyes  -  Fixed bug that prints the headers for the Collboration Center if that one was selected first
     ///                                    but user went back to the Grant section to download that report instead.
     ///  2018NOV14 - Jason Delos Reyes  -  Fixed Rpt_Academic2 procedure to pull the right academic events within the specified range.
+    ///  2019MAR18 - Jason Delos Reyes  -  Changed Ola Hawaii stored procedure reference to "Rpt_Ola_Hawaii_Summary2" to facilitate new
+    ///                                    total row numbers similarly requested by the inaugural Ola Hawaii TAC report.
+    ///                                 -  Fixed summary reports for Ola Hawaii to pull *all* the columns from the report.
+    ///  2019MAR20 - Jason Delos Reyes  -  Redirected Publications and Abstracts to Rpt_Paper2b stored procedure to 
+    ///                                    add information specifically regarding to Ola HAWAII-specific numbers.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
@@ -190,20 +195,48 @@ namespace ProjectManagement.Report
                     if (reportId >= 11 && reportId <= 13) // Projects, Healthcare Data, and NonUH
                     {
                         dt = GetProjectTable(grantId, reportId, fromDate, toDate);
-                        rptSummaryProject.DataSource = dt;
-                        rptSummaryProject.DataBind();
+
+                        if (grantId == 2)
+                        {
+                            rptSummaryProjectOla.DataSource = dt;
+                            rptSummaryProjectOla.DataBind();
+                        }
+                        else
+                        {
+                            rptSummaryProject.DataSource = dt;
+                            rptSummaryProject.DataBind();
+                        }
+
+
                     }
                     else if (reportId == 14) // Publications
                     {
                         dt = GetPubTable(grantId, reportId, fromDate, toDate);
-                        rptSummaryPub.DataSource = dt;
-                        rptSummaryPub.DataBind();
+                        if (grantId == 2)
+                        {
+                            rptSummaryPubOla.DataSource = dt;
+                            rptSummaryPubOla.DataBind();
+                        }
+                        else
+                        {
+                            rptSummaryPub.DataSource = dt;
+                            rptSummaryPub.DataBind();
+                        }
                     }
                     else if (reportId == 15) // AbstractsPresentations
                     {
                         dt = GetPubTable(grantId, reportId, fromDate, toDate);
-                        rptSummaryAbstract.DataSource = dt;
-                        rptSummaryAbstract.DataBind();
+                        if (grantId == 2)
+                        {
+                            rptSummaryAbstractOla.DataSource = dt;
+                            rptSummaryAbstractOla.DataBind();
+                        }
+                        else
+                        {
+                            rptSummaryAbstract.DataSource = dt;
+                            rptSummaryAbstract.DataBind();
+                        }
+                            
                     }
                     else if (reportId == 16) // Academic
                     {
@@ -388,9 +421,13 @@ namespace ProjectManagement.Report
                     break;
                 case 14:
                     ReportType = "Publications";
+                    if (grantId == 2)
+                        cmdText = "Rpt_Paper2b";
                     break;
                 case 15:
                     ReportType = "Abstracts/Presentations";
+                    if (grantId == 2)
+                        cmdText = "Rpt_Paper2b";
                     break;
                 case 16:
                     ReportType = "Academic";
@@ -423,7 +460,7 @@ namespace ProjectManagement.Report
                         }
                         if (grantId == 2)
                         {
-                            cmd.Parameters.AddWithValue("@ProjectGrant", "Ola Hawaii");
+                            cmd.Parameters.AddWithValue("@ProjectGrant", ""); //Removed "Ola Hawaii" to fit with new Rpt_Paper2b stored proecure
                         }
                         if (grantId == 3)
                         {
@@ -485,7 +522,7 @@ namespace ProjectManagement.Report
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary" :
+            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary2" :
                           grantId == 1 ? "Rpt_Rmatrix_Summary" :
                                          "Rpt_CollabCtr_Summary";
 
@@ -613,10 +650,17 @@ namespace ProjectManagement.Report
                 switch (reportId)
                 {
                     case 11: // (all) projects
+
                         dt = GetProjectTable(grantId, reportId, fromDate, toDate);
                         dt.TableName = "Project";
-                        dt.Columns.Remove("HealthData");
-                        dt.Columns.Remove("NonUH");
+
+                        if (grantId != 2)
+                        {
+                            dt.Columns.Remove("HealthData");
+                            dt.Columns.Remove("NonUH");
+                        }
+                        
+                        
                         break;
                     case 12: // Healthcare Data projects
                         dt = GetProjectTable(grantId, reportId, fromDate, toDate);
@@ -643,6 +687,12 @@ namespace ProjectManagement.Report
                         dt.Columns.Remove("ToDate");
                         dt.Columns.Remove("CitationFormat");
                         dt.Columns.Remove("BiostatName");
+                        //if(grantId != 2)
+                        //{
+                        //    dt.Columns.Remove("IsOlaFunded");
+                        //    dt.Columns.Remove("IsOlaAcknowledged");
+                        //    dt.Columns.Remove("IsOlaRequest");
+                        //}
                         break;
                     case 15: // AbstractsPresentations
                         dt = GetPubTable(grantId, reportId, fromDate, toDate);
@@ -662,6 +712,12 @@ namespace ProjectManagement.Report
                         dt.Columns.Remove("ToDate");
                         dt.Columns.Remove("CitationFormat");
                         dt.Columns.Remove("BiostatName");
+                        //if (grantId != 2)
+                        //{
+                        //    dt.Columns.Remove("IsOlaFunded");
+                        //    dt.Columns.Remove("IsOlaAcknowledged");
+                        //    dt.Columns.Remove("IsOlaRequest");
+                        //}
                         break;
                     case 16: // Academic
                         dt = GetAcademicTable(grantId, reportId, fromDate, toDate);

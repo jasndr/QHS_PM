@@ -21,6 +21,9 @@ namespace ProjectManagement.Admin
     ///  2018AUG06 - Jason Delos Reyes  -  Added documentation for easier readibility and maintainability.
     ///  2019MAR08 - Jason Delos Reyes  -  Added ability to open grant form by referring to ID
     ///                                    referral in URL.
+    ///  2019MAR11 - Jason Delos Reyes  -  Made "Submit" button redirect to the same open page upon clicking "Update".
+    ///                                 -  Fixed "Submit" button redirect so that "Record Saved Successfully" pop-up
+    ///                                    appears before reopening the page.
     /// </summary>
     public partial class GrantForm : System.Web.UI.Page
     {
@@ -457,16 +460,31 @@ namespace ProjectManagement.Admin
                 mgr.SaveGrantBiostat(grantId, lstBiostat);
             }
 
+            string appPath = String.Empty;
+            appPath = HttpContext.Current.Request.ApplicationPath.Length > 1 ? HttpContext.Current.Request.ApplicationPath 
+                                                                                                        + "/Tracking/"
+                                                                             : String.Empty;
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "successMsg",
+                "alert('Record Saved Successfully " + appPath + "GrantForm?Id=" + grantId 
+                                                                        + "'); window.location='" + appPath
+                                                                        + "GrantForm?Id=" + grantId + "';", true);
+
             //LoadEditScript(false);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript(false), false);
+            //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+            //           "ModalScript", PageUtility.LoadEditScript(false), false);
+
+
+            //ClientScript.RegisterStartupScript(this.GetType(), "ModalScript", "SuccessMsg()", true);
+
+            //Response.Redirect(String.Format("GrantForm?Id={0}", grantId));
 
             //if (Request.QueryString.Count > 0)
             //{
-            //    //Request.QueryString.Remove("ProjectId");
-            //    //Response.Redirect("GrantForm");
-            //    string newUrl = Request.Url.AbsolutePath;
-            //    Response.Write(newUrl);
+            //Request.QueryString.Remove("ProjectId");
+            //Response.Redirect("GrantForm");
+            //string newUrl = Request.Url.AbsolutePath;
+            //Response.Write(newUrl);
             //}
 
             BindGridViewGrantAll();

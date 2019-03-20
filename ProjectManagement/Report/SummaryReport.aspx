@@ -95,7 +95,7 @@
             <div class="row" id="divProject">
                 <div class="col-md-12">
                     <div class="innerContainer">
-                        <table class="table table-striped table-hover table-bordered" id="olaHawaiiMonthly" style="width: 30% !important">
+                        <table class="table table-striped table-hover table-bordered" id="rmatrixSummary" style="width: 30% !important">
                             <thead>
                                 <tr>
                                     <th colspan="16"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
@@ -135,6 +135,69 @@
                                             <td><%# Eval("StudyType") %></td>
                                             <td><%# Eval("StudyPopulation") %></td>
                                             <td><%# Eval("IsPilotPI") %></td>
+                                            <td><%# Eval("IsNewPI") %></td>
+                                            <td><%# Eval("IsNewProject") %></td>
+                                            <td><%# Eval("IsProject") %></td>
+                                            <td><%# Eval("TotalHours") %></td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="divProjectOla">
+                <div class="col-md-12">
+                    <div class="innerContainer">
+                        <table class="table table-striped table-hover table-bordered" id="olaHawaiiSummary" style="width: 30% !important">
+                            <thead>
+                                <tr>
+                                    <th colspan="20"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-1">ProjectId</th>
+                                    <th class="col-sm-1">First Name</th>
+                                    <th class="col-sm-1">Last Name</th>
+                                    <th class="col-sm-1">Affiliation</th>
+                                    <th class="col-sm-2">Project Title</th>
+                                    <th class="col-sm-1">Initial Date</th>
+                                    <th class="col-sm-1">Completion Date</th>
+                                    <th class="col-sm-1">Service Category</th>
+                                    <th class="col-sm-1">Study Area</th>
+                                    <th class="col-sm-1">Study Type</th>
+                                    <th class="col-sm-1">Study Population</th>
+                                    <th>Ola Hawaii Request</th>
+                                    <th>Ola Project</th>
+                                    <th>Internal Project</th>
+                                    <th>Pilot/Junior Investigator</th>
+                                    <th>Health Disparity</th>
+                                    <th>New PI</th>
+                                    <th>New Project</th>
+                                    <th>Project</th>
+                                    <th>Total Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <asp:Repeater ID="rptSummaryProjectOla" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td><%# Eval("ProjectId") %></td>
+                                            <td><%# Eval("FirstName") %></td>
+                                            <td><%# Eval("LastName") %></td>
+                                            <td><%# Eval("Affiliation") %></td>
+                                            <td><%# Eval("ProjectTitle") %></td>
+                                            <td><%# Eval("InitialDate") %></td>
+                                            <td><%# Eval("CompletionDate") %></td>
+                                            <td><%# Eval("Service") %></td>
+                                            <td><%# Eval("StudyArea") %></td>
+                                            <td><%# Eval("StudyType") %></td>
+                                            <td><%# Eval("StudyPopulation") %></td>
+                                            <td><%# Eval("IsOlaHawaiiRequest") %></td>
+                                            <td><%# Eval("IsOlaProject") %></td>
+                                            <td><%# Eval("IsInternal") %></td>
+                                            <td><%# Eval("IsPilotPI") %></td>
+                                            <td><%# Eval("IsHealthDisparity") %></td>
                                             <td><%# Eval("IsNewPI") %></td>
                                             <td><%# Eval("IsNewProject") %></td>
                                             <td><%# Eval("IsProject") %></td>
@@ -200,6 +263,65 @@
                     </div>
                 </div>
             </div>
+            <div class="row" id="divPubOla">
+                <div class="col-md-12">
+                    <div class="innerContainer">
+                        <table class="table table-striped table-hover table-bordered" id="summaryPubOla">
+                            <thead>
+                                <tr>
+                                    <th colspan="18"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                                </tr>
+                                <tr>
+                                    <th>Paper Id</th>
+                                    <th>Project Id</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Authors</th>
+                                    <th>Title</th>
+                                    <th>HealthData</th>
+                                    <th>Journal</th>
+                                    <th>Pub Year</th>
+                                    <th>Volume</th>
+                                    <th>Issue</th>
+                                    <th>Pages</th>
+                                    <th>DOI</th>
+                                    <th>PMID</th>
+                                    <th>PMCID</th>
+                                    <th>Ola HAWAII Funded</th>
+                                    <th>Ola HAWAII Acknowledged</th>
+                                    <th>Ola Hawaii Request for Resources</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <asp:Repeater ID="rptSummaryPubOla" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td><%# Eval("Id") %></td>
+                                            <td><%# Eval("ProjectId") %></td>
+                                            <td><%# Eval("PubStatus") %></td>
+                                            <td><%# Eval("StatusDate") %></td>
+                                            <td><%# Eval("Author") %></td>
+                                            <td><%# Eval("Title") %></td>
+                                            <td><%# Eval("HealthData") %></td>
+                                            <td><%# Eval("JournalName") %></td>
+                                            <td><%# Eval("PubYear") %></td>
+                                            <td><%# Eval("Volume") %></td>
+                                            <td><%# Eval("Issue") %></td>
+                                            <td><%# Eval("Page") %></td>
+                                            <td><%# Eval("DOI") %></td>
+                                            <td><%# Eval("PMID") %></td>
+                                            <td><%# Eval("PMCID") %></td>
+                                            <td><%# Eval("IsOlaFunded") %></td>
+                                            <td><%# Eval("IsOlaAcknowledged") %></td>
+                                            <td><%# Eval("IsOlaRequest") %></td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <div class="row" id="divAbstract">
                 <div class="col-md-12">
                     <div class="innerContainer">
@@ -222,6 +344,7 @@
                                     <th>Type</th>
                                     <th>Grants</th>
                                 </tr>
+                                </tr>
                             </thead>
                             <tbody>
                                 <asp:Repeater ID="rptSummaryAbstract" runat="server">
@@ -239,6 +362,60 @@
                                             <td><%# Eval("EndDate") %></td>
                                             <td><%# Eval("pp") %></td>
                                             <td><%# Eval("GrantAffilName") %></td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="divAbstractOla">
+                <div class="col-md-12">
+                    <div class="innerContainer">
+                        <table class="table table-striped table-hover table-bordered" id="summaryAbstractOla">
+                            <thead>
+                                <tr>
+                                    <th colspan="15"><% =GrantName %> <% =ReportType %> Report from <% =FromDate %> to <% =ToDate %></th>
+                                </tr>
+                                <tr>
+                                    <th>Paper Id</th>
+                                    <th>Project Id</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Authors</th>
+                                    <th>Title</th>
+                                    <th>Conference</th>
+                                    <th>Location</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Type</th>
+                                    <th>Grants</th>
+                                    <th>Ola HAWAII Funded</th>
+                                    <th>Ola HAWAII Acknowledged</th>
+                                    <th>Ola Hawaii Request for Resources</th>
+                                </tr>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <asp:Repeater ID="rptSummaryAbstractOla" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td><%# Eval("Id") %></td>
+                                            <td><%# Eval("ProjectId") %></td>
+                                            <td><%# Eval("PubStatus") %></td>
+                                            <td><%# Eval("StatusDate") %></td>
+                                            <td><%# Eval("Author") %></td>
+                                            <td><%# Eval("Title") %></td>
+                                            <td><%# Eval("conf") %></td>
+                                            <td><%# Eval("ConfLoc") %></td>
+                                            <td><%# Eval("StartDate") %></td>
+                                            <td><%# Eval("EndDate") %></td>
+                                            <td><%# Eval("pp") %></td>
+                                            <td><%# Eval("GrantAffilName") %></td>
+                                            <td><%# Eval("IsOlaFunded") %></td>
+                                            <td><%# Eval("IsOlaAcknowledged") %></td>
+                                            <td><%# Eval("IsOlaRequest") %></td>
                                         </tr>
                                     </ItemTemplate>
                                 </asp:Repeater>
@@ -397,33 +574,75 @@
         function divToggle() {
             if ($('#MainContent_ddlReport').val() == '') {
                 $('#divProject').hide();
+                $('#divProjectOla').hide();
                 $('#divPub').hide();
                 $('#divAbstract').hide();
+                $('#divPubOla').hide();
+                $('#divAbstractOla').hide();
                 $('#divAcademic').hide();
             }
             else if ($('#MainContent_ddlReport').val() >= 11 && $('#MainContent_ddlReport').val() <= 13) {
-                $('#divProject').show();
+
+                if ($('#MainContent_ddlGrantType').val() != 2) {
+                    $('#divProject').show();
+                    $('#divProjectOla').hide();
+                }
+                else {
+                    $('#divProject').hide();
+                    $('#divProjectOla').show();
+                }
                 $('#divPub').hide();
                 $('#divAbstract').hide();
                 $('#divAcademic').hide();
+                $('#divPubOla').hide();
+                $('#divAbstractOla').hide();
             }
             else if ($('#MainContent_ddlReport').val() == 14) {
+
+                if ($('#MainContent_ddlGrantType').val() != 2) {
+                    $('#divPub').show();
+                    $('#divPubOla').hide();
+                }
+                else {
+                    $('#divPub').hide();
+                    $('#divPubOla').show();
+                }
+
                 $('#divProject').hide();
-                $('#divPub').show();
+                $('#divProjectOla').hide();
+                //$('#divPub').show();
                 $('#divAbstract').hide();
                 $('#divAcademic').hide();
+                //$('#divPubOla').hide();
+                $('#divAbstractOla').hide();
             }
             else if ($('#MainContent_ddlReport').val() == 15) {
+
+                if ($('#MainContent_ddlGrantType').val() != 2) {
+                    $('#divAbstract').show();
+                    $('#divAbstractOla').hide();
+                }
+                else {
+                    $('#divAbstract').hide();
+                    $('#divAbstractOla').show();
+                }
+
                 $('#divProject').hide();
+                $('#divProjectOla').hide();
                 $('#divPub').hide();
-                $('#divAbstract').show();
+                //$('#divAbstract').show();
                 $('#divAcademic').hide();
+                $('#divPubOla').hide();
+                //$('#divAbstractOla').hide();
             }
             else if ($('#MainContent_ddlReport').val() == 16) {
                 $('#divProject').hide();
+                $('#divProjectOla').hide();
                 $('#divPub').hide();
                 $('#divAbstract').hide();
                 $('#divAcademic').show();
+                $('#divPubOla').hide();
+                $('#divAbstractOla').hide();
             }
 
         }

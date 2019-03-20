@@ -103,6 +103,15 @@ namespace ProjectManagement.Report {
         protected global::System.Web.UI.WebControls.Repeater rptSummaryProject;
         
         /// <summary>
+        /// rptSummaryProjectOla control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryProjectOla;
+        
+        /// <summary>
         /// rptSummaryPub control.
         /// </summary>
         /// <remarks>
@@ -112,6 +121,15 @@ namespace ProjectManagement.Report {
         protected global::System.Web.UI.WebControls.Repeater rptSummaryPub;
         
         /// <summary>
+        /// rptSummaryPubOla control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryPubOla;
+        
+        /// <summary>
         /// rptSummaryAbstract control.
         /// </summary>
         /// <remarks>
@@ -119,6 +137,15 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptSummaryAbstract;
+        
+        /// <summary>
+        /// rptSummaryAbstractOla control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryAbstractOla;
         
         /// <summary>
         /// rptSummaryAcademic control.

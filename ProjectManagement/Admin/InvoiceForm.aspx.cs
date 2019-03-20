@@ -45,6 +45,10 @@ namespace ProjectManagement.Admin
     ///  2019JAN17 - Jason Delos Reyes  -  Added radio button partioning between active and inactive collaborative centers as well as
     ///                                    making the collaborative center dropdown a searchable dropdown to be able to quickly 
     ///                                    narrow down to the specific center.
+    ///  2019MAR12 - Jason Delos Reyes  -  Made changes to the "Update" button so that the page would reload another 
+    ///                                    instance of the form instead of simply saving the form.  This change
+    ///                                    would help in cases when the form regenerates a new ID upon saving a new
+    ///                                    Invoice form.
     /// </summary>
     public partial class InvoiceForm : System.Web.UI.Page
     {
@@ -58,12 +62,27 @@ namespace ProjectManagement.Admin
             if (!Page.IsPostBack)
             {
                 BindControl();
+
+                int id = 0;
+                string invoiceId = Request.QueryString["InvoiceId"];
+                if (invoiceId != null)
+                {
+
+                    Invoice1 invoice = GetInvoiceByInvoiceId(invoiceId);
+
+                        if (invoice != null)
+                            id = invoice.Id;
+                }
+
+                if (id > 0)
+                    OpenInvoice(id, true);
+
             }
-            else
-            {
-                //Reopens the modal after page postback.
-                ClientScript.RegisterStartupScript(GetType(), "ModalScript", "$('#editModal').modal('show');", true);
-            }
+            //else
+            //{
+            //    //Reopens the modal after page postback.
+            //    ClientScript.RegisterStartupScript(GetType(), "ModalScript", "$('#editModal').modal('show');", true);
+            //}
         }        
 
         //protected void btnAddInvoiceItem_Click(object sender, EventArgs e)
@@ -187,10 +206,19 @@ namespace ProjectManagement.Admin
                 SaveInvoiceItem(invoice);
             }
 
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript("update"/*false*/), false);
+            string appPath = String.Empty;
+            appPath = HttpContext.Current.Request.ApplicationPath.Length > 1 ? HttpContext.Current.Request.ApplicationPath
+                                                                                +"/Admin/"
+                                                                             : String.Empty;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "successMsg",
+                "alert('Record Saved Successfully'); window.location='" + appPath
+                                                                       + "InvoiceForm?InvoiceId="
+                                                                       + invoiceId + "';", true);
 
-            BindRptInvoice(savedInvoiceId);
+            //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+            //           "ModalScript", PageUtility.LoadEditScript("update"/*false*/), false);
+
+            //BindRptInvoice(savedInvoiceId);
 
             //foreach (GridViewRow row in gvInvoiceItem.Rows)
             //{
@@ -493,19 +521,38 @@ namespace ProjectManagement.Admin
                 int id = 0;
                 int.TryParse(((Button)e.CommandSource).CommandArgument, out id);
 
-                if (id > 0)
-                {
-                    Invoice1 invoice = GetInvoiceById(id);
+                OpenInvoice(id, false);
+                
+            }
+        }
 
-                    if (invoice != null)
+        /// <summary>
+        /// Obtains instance of invoice and prepares invoice form.
+        /// </summary>
+        /// <param name="id">Given invoice id.</param>
+        /// <param name="fromPageLoad">Boolean value to distingusih whether or not the function was
+        ///                            called from page load as it needs to call a client script
+        ///                            instead of being able to parse javascript from codebehind.</param>
+        private void OpenInvoice(int id, bool fromPageLoad)
+        {
+            if (id > 0)
+            {
+                Invoice1 invoice = GetInvoiceById(id);
+
+                if (invoice != null)
+                {
+                    SetInvoice(invoice);
+
+                    if (fromPageLoad == true)
                     {
-                        SetInvoice(invoice);
-                        
+                        ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopup()", true);
+                    }
+                    else
+                    {
                         ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
                                    "ModalScript", PageUtility.LoadEditScript(true), false);
                     }
                 }
-                
             }
         }
 
@@ -576,6 +623,28 @@ namespace ProjectManagement.Admin
 
             return invoice1;
         } 
+
+        /// <summary>
+        /// Pulls instance of Invoice from database based on given
+        /// Invoice ID.
+        /// </summary>
+        /// <param name="invoiceId">Given invoice ID. (E.g., I-OBGYN-02).</param>
+        /// <returns>Instance of Invoice.</returns>
+        private Invoice1 GetInvoiceByInvoiceId(string invoiceId)
+        {
+            Invoice1 invoice1 = null;
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                invoice1 = db.Invoice1Set.FirstOrDefault(i => i.InvoiceId == invoiceId);
+                invoice1.CollabCtr.NameAbbrv = invoice1.CollabCtr.NameAbbrv;
+                invoice1.InvoiceItem2 = invoice1.InvoiceItem2;
+                foreach (InvoiceItem2 i in invoice1.InvoiceItem2)
+                {
+                    i.ClientAgmt = i.ClientAgmt;
+                }
+            }
+            return invoice1;
+        }
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {

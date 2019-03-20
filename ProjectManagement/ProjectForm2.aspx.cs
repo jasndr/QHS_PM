@@ -99,6 +99,11 @@ namespace ProjectManagement
     ///                                    from projectId instead of lazily taking existing URL and sending that link.
     ///  2019MAR08 - Jason Delos Reyes  -  Added linkage from in project form to grant form *if* a grant proposal application
     ///                                    has been attached to this project.
+    ///  2019MAR13 - Jason Delos Reyes  -  Edited "What is the grant?" dropdown to prioritize Ola Hawaii first before
+    ///                                    other dropdown selections.
+    ///                                 -  Reverted "missing project link" change at the request of tracking team.
+    ///  2019MAR14 - Jason Delos Reyes  -  Changed "Admin Review" email to include other faculty/staff members in the 
+    ///                                    "Other Member" field, removing the link to the project creator as necessary.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -295,17 +300,49 @@ namespace ProjectManagement
                             var leadBiostatUserName = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).LogonId;
                             var leadBiostatEmail = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
 
-                            //var emailToSend = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
-                            var emailToSend = db.BioStats.FirstOrDefault(b => b.LogonId == prevProject.Creator).Email;
+                            string otherMembersUserName = "", otherMembersEmail = "", userName = "", emailSendTo = ""; 
+
+                           // Removed sending to project creator (since most likely project members and/or tracking team).
+                           //var emailToSend = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).Email;
+                           // var emailToSend = db.BioStats.FirstOrDefault(b => b.LogonId == prevProject.Creator).Email;
 
                             //var userName = db.BioStats.FirstOrDefault(b => b.Id == leadBiostatId).LogonId;
-                            var userName = db.BioStats.FirstOrDefault(b => b.LogonId == prevProject.Creator).LogonId;
+                            //var userName = db.BioStats.FirstOrDefault(b => b.LogonId == prevProject.Creator).LogonId;
 
-                            if (leadBiostatUserName != userName)
+
+                            /// Obtain other faculty/staff associated with project to inject into admin reviewed email.
+                            // Given OtherMemberBitSum, pull all members' usernames and email addresses
+                            List<BioStat> otherMembers = new List<BioStat>();
+                            foreach (BioStat b in db.BioStats)
                             {
-                                emailToSend = emailToSend + "," + leadBiostatEmail;
-                                userName = userName + ", " + leadBiostatUserName;
+                                if ((project.OtherMemberBitSum & b.BitValue) > 0 && b.BitValue > 0 && b.Name != "N/A")
+                                {
+                                    otherMembers.Add(b);
+                                }
                             }
+
+                            // Add to otherMemberUserName and otherMemberEmail
+                            foreach (BioStat b in otherMembers)
+                            {
+                                otherMembersUserName += " " + b.LogonId + ",";
+                                otherMembersEmail += b.Email + ",";
+                            }
+
+                            //if (leadBiostatUserName != userName)
+                            //{
+                            //    emailToSend = emailToSend + "," + leadBiostatEmail;
+                            //    userName = userName + ", " + leadBiostatUserName;
+                            //}
+                            
+
+                            // Combine all usernames and email addresses
+                            userName = leadBiostatUserName + "," + otherMembersUserName;
+                            emailSendTo = leadBiostatEmail + "," + otherMembersEmail;
+
+                            //sTrim end "," of string
+                            userName = userName.TrimEnd(',');
+                            emailSendTo = emailSendTo.TrimEnd(',');
+
 
                             var investigatorId = project.PIId;
                             var investigatorName = db.Invests.FirstOrDefault(i => i.Id == investigatorId).FirstName + " " +
@@ -313,7 +350,7 @@ namespace ProjectManagement
 
                             var reviewedBy = User.Identity.Name;
 
-                            SendAdminReviewEmail(id, emailToSend, userName, investigatorName, reviewedBy);
+                            SendAdminReviewEmail(id, emailSendTo, userName, investigatorName, reviewedBy);
                         }
 
                         //Updates current project with newly-entered values.
@@ -491,9 +528,13 @@ namespace ProjectManagement
             }
             else
             {
-                if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked))
+                //if (((serviceBitSum & 16) == 16) && (!chkLetterOfSupportYes.Checked && !chkLetterOfSupportNo.Checked))
+                //{
+                //    validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified. \\n");
+                //}
+                if (((serviceBitSum & 1024) == 1024) && (!chkLOS_Collaborative.Checked && !chkLOS_Noncollaborative.Checked && !chkLOS_NA.Checked))
                 {
-                    validateResult.Append("Service > Grant Proposal Development >> Letter of Support question is required since grant proposal development is specified. \\n");
+                    validateResult.Append("Service > Letter of Support >> Letter of Support Type question is required since \"Letter of Support\" is specified. \\n");
                 }
             }
 
@@ -677,7 +718,7 @@ namespace ProjectManagement
                                                                || f.Name == "COBRE-Biogenesis Research"
                                                                || f.Name == "Ola Hawaii"
                                                                || f.Name == "P30 UHCC"))
-                                .OrderBy(b => b.Id)
+                                .OrderBy(b => (b.Name == "Ola Hawaii" ? 1 : b.Id))
                                 .ToDictionary(c => c.Id, c => c.Name);
                 PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);
 
@@ -963,10 +1004,17 @@ namespace ProjectManagement
                 chkHealthDisparityNA.Checked = project.IsHealthDisparity == (byte)HealthDisparityType.NA;
             }
 
-            if (project.IsLetterOfSupport.HasValue)
+            //if (project.IsLetterOfSupport.HasValue)
+            //{
+            //    chkLetterOfSupportYes.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.Yes;
+            //    chkLetterOfSupportNo.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.No;
+            //}
+
+            if (project.IsLosCollaborative.HasValue)
             {
-                chkLetterOfSupportYes.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.Yes;
-                chkLetterOfSupportNo.Checked = project.IsLetterOfSupport == (byte)HealthDisparityType.No;
+                chkLOS_Collaborative.Checked = project.IsLosCollaborative == (byte)HealthDisparityType.Yes;
+                chkLOS_Noncollaborative.Checked = project.IsLosCollaborative == (byte)HealthDisparityType.No;
+                chkLOS_NA.Checked = project.IsLosCollaborative == (byte)HealthDisparityType.NA;
             }
 
             if (project.IsMOU.HasValue)
@@ -1471,7 +1519,8 @@ namespace ProjectManagement
                 IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)HealthDisparityType.Yes : chkHealthDisparityNo.Checked ? (byte)HealthDisparityType.No : chkHealthDisparityNA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
-                IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
+                //IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
+                IsLosCollaborative = chkLOS_Collaborative.Checked ? (byte)HealthDisparityType.Yes : chkLOS_Noncollaborative.Checked ? (byte)HealthDisparityType.No: chkLOS_NA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 IsMOU = chkDeptFundMouYes.Checked ? (byte)HealthDisparityType.Yes : chkDeptFundMouNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
@@ -2018,20 +2067,20 @@ namespace ProjectManagement
         /// Sends admin review email to user when a user closes a project.
         /// </summary>
         /// <param name="projectId">Id of project reviewed.</param>
-        /// <param name="emailToSend">Email of Lead Biostatistician to send admin review email to.</param>
-        /// <param name="userName">Username of Lead Biostatistician to send admin review email to.</param>
+        /// <param name="emailSendTo">Email(s) of Faculty/Staff Member(s) to send admin review email to.</param>
+        /// <param name="userName">Username(s) of Faculty/Staff Member(s) to send admin review email to.</param>
         /// <param name="investigatorName">Investigator of referred project.</param>
         /// <param name="reviewedBy">Admin person to review project.</param>
-        private void SendAdminReviewEmail(int projectId, string emailToSend, string userName, string investigatorName, string reviewedBy)
+        private void SendAdminReviewEmail(int projectId, string emailSendTo, string userName, string investigatorName, string reviewedBy)
         {
             string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
 
             /// Sends to lead biostatistician for confirmation email.
-            sendTo = sendTo + "," + emailToSend;
+            sendTo = sendTo + "," + emailSendTo;
 
             string subject = String.Format("Your project (# {0}) has been reviewed by admin", projectId);
 
-            string url = HttpContext.Current.Request.Url + "?Id="+projectId;//.AbsoluteUri;
+            string url = HttpContext.Current.Request.Url.AbsoluteUri;// + "?Id="+projectId; // (Reverted 2019MAR06 change.)
             //if (url.IndexOf("?Id") > 0)
             //{
             //    sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];

@@ -539,8 +539,8 @@ namespace ProjectManagement.Report
             // [From/To Dates]
             DateTime fromDate = DateTime.TryParse(txtFromDate.Text, out fromDate) ? DateTime.Parse(txtFromDate.Text) 
                                                                                   : new DateTime(2000,01,01);
-            DateTime toDate = DateTime.TryParse(txtToDate.Text, out toDate) ? DateTime.Parse(txtToDate.Text) 
-                                                                            : new DateTime(2099,01,01);
+            DateTime toDate = DateTime.TryParse(txtToDate.Text, out toDate) ? DateTime.Parse(txtToDate.Text)
+                                                                            : DateTime.Now;/*new DateTime(2099,01,01)*/
             
             //if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             //{

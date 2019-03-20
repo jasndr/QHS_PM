@@ -393,7 +393,7 @@
                             <div class="modal-footer">
                                 <asp:Label ID="lblResult" Visible="false" runat="server"></asp:Label>
                                 <asp:Button ID="btnSave" runat="server" Text="Update" CssClass="btn btn-info" OnClientClick="return validateControl();" OnClick="btnSave_Click" />
-                                <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>
+                                <button class="btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="clearQueryString()">Close</button>
                             </div>
                         </ContentTemplate>
                         <Triggers>
@@ -416,6 +416,14 @@
     <script type="text/javascript">
         function ShowPopup() {
             $('#editModal').modal("show");
+        }
+        //function SuccessMsg() {
+        //    alert("Record Saved Successfully");
+        //}
+        function clearQueryString() {            
+            if (window.location.href.indexOf('?') > 0)
+                window.location.href = window.location.href.split('?')[0];
+                //window.history.pushState("object or string", "Title", "/" + window.location.href.substring(window.location.href.lastIndexOf('/') + 1).split("?")[0]);
         }
     </script>    
 </asp:Content>

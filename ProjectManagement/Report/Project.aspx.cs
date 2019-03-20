@@ -38,6 +38,8 @@ namespace ProjectManagement.Report
     ///  2019FEB06 - Jason Delos Reyes  -  Changed "Grant" to "Funding Source" in project report.
     ///                                 -  Added "RMATRIX" and "Ola Hawaii" request for resources button to pull 
     ///                                    report of projects with those checkmarks.
+    ///  2019MAR20 - Jason Delos Reyes  -  Edited Project form to accomodate change to letter
+    ///                                    of support reference in new project form.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
@@ -129,22 +131,22 @@ namespace ProjectManagement.Report
 
             hdnRowCount.Value = dt.Rows.Count.ToString();
 
-            Control footerTemplate = rptProjectSummary.Controls[rptProjectSummary.Controls.Count - 1].Controls[0];
-            Label lblFooter = footerTemplate.FindControl("lblTotal") as Label;
-            lblFooter.Text = hdnRowCount.Value + " Projects";
+            //Control footerTemplate = rptProjectSummary.Controls[rptProjectSummary.Controls.Count - 1].Controls[0];
+            //Label lblFooter = footerTemplate.FindControl("lblTotal") as Label;
+            //lblFooter.Text = hdnRowCount.Value + " Projects";
 
-            decimal phdHrs = 0.0m, msHrs = 0.0m;
-            foreach (DataRow row in dt.Rows)
-            {
-                phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
-                msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
-            }
+            //decimal phdHrs = 0.0m, msHrs = 0.0m;
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
+            //    msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
+            //}
 
-            Label lblPhdHrs = footerTemplate.FindControl("lblPhdHrs") as Label;
-            lblPhdHrs.Text = phdHrs.ToString();
+            //Label lblPhdHrs = footerTemplate.FindControl("lblPhdHrs") as Label;
+            //lblPhdHrs.Text = phdHrs.ToString();
 
-            Label lblMsHrs = footerTemplate.FindControl("lblMsHrs") as Label;
-            lblMsHrs.Text = msHrs.ToString();
+            //Label lblMsHrs = footerTemplate.FindControl("lblMsHrs") as Label;
+            //lblMsHrs.Text = msHrs.ToString();
         }
 
         /// <summary>
@@ -158,22 +160,22 @@ namespace ProjectManagement.Report
             DataTable dt = GetProjectTable();
             dt.TableName = "Project";
 
-            DataRow dr = dt.NewRow();
+            //DataRow dr = dt.NewRow();
 
-            dr[1] = "Total";
-            dr[2] = dt.Rows.Count;
+            //dr[1] = "Total";
+            //dr[2] = dt.Rows.Count;
 
-            decimal phdHrs = 0.0m, msHrs = 0.0m;
-            foreach (DataRow row in dt.Rows)
-            {
-                phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
-                msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
-            }
+            //decimal phdHrs = 0.0m, msHrs = 0.0m;
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    phdHrs += Convert.ToDecimal(row["PhdHrs"].ToString());
+            //    msHrs += Convert.ToDecimal(row["MsHrs"].ToString());
+            //}
 
-            dr[16] = phdHrs;
-            dr[17] = msHrs;
+            //dr[16] = phdHrs;
+            //dr[17] = msHrs;
 
-            dt.Rows.Add(dr);
+            //dt.Rows.Add(dr);
 
             string reportHeader = "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate;
             string fileName = "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;
@@ -210,7 +212,7 @@ namespace ProjectManagement.Report
             Int32.TryParse(ddlPIStatus.SelectedValue, out piStatusId);
 
             int phdId = 0, msId = 0, healthValue = 0, grantValue = 0, isProject = 1, isBiostat = 1, creditTo = 1,
-                isRmatrixRequest = 0, isOlaRequest = 0, letterOfSupportOnly = 0;
+                isRmatrixRequest = 0, isOlaRequest = 0, letterOfSupport = 0;
 
             Int32.TryParse(ddlPhd.SelectedValue, out phdId);
             Int32.TryParse(ddlMs.SelectedValue, out msId);
@@ -225,7 +227,7 @@ namespace ProjectManagement.Report
             isRmatrixRequest = chkRmatrixRequest.Checked ? 1 : 0;
             isOlaRequest = chkOlaRequest.Checked ? 1 : 0;
 
-            letterOfSupportOnly = chkLetterOfSupportOnly.Checked ? 1 : 0;
+            letterOfSupport = chkLetterOfSupport.Checked ? 1 : 0;
 
             if ((chkBiostat.Checked && chkBioinfo.Checked) || (!chkBiostat.Checked && !chkBioinfo.Checked))
                 isBiostat = -1;
@@ -242,14 +244,20 @@ namespace ProjectManagement.Report
                 creditTo = chkCreditToBoth.Checked ? 3 : chkCreditToBioinfo.Checked ? 2 : 1;
             }
 
-            DateTime fromDate, toDate;
-            if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
-            {
-                dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, letterOfSupportOnly, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
+            DateTime fromDate = DateTime.TryParse(txtFromDate.Text, out fromDate) ? DateTime.Parse(txtFromDate.Text)
+                                                                                  : new DateTime(2000, 01, 01);
+            DateTime toDate = DateTime.TryParse(txtToDate.Text, out toDate) ? DateTime.Parse(txtToDate.Text)
+                                                                            : DateTime.Now;/*DateTime(2099, 01, 01)*/
+                                                                                                     
 
-                FromDate = fromDate.ToString("MM/dd/yyyy");
-                ToDate = toDate.ToString("MM/dd/yyyy");
-            }
+            //DateTime fromDate = new DateTime(2000,01,01), toDate = new DateTime(2099,01,01);
+            //if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
+            //{
+            dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, letterOfSupport, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
+
+            FromDate = fromDate.ToString("MM/dd/yyyy");
+            ToDate = toDate.ToString("MM/dd/yyyy");
+            //}
 
             return dt;
         }
@@ -265,7 +273,7 @@ namespace ProjectManagement.Report
         /// <param name="isBiostat">Pulls either Biostatistics or Bioinformatics projects.</param>
         /// <param name="isRmatrixRequest">Pulls projects that have "RMATRIX Request for Resources" checked.</param>
         /// <param name="isOlaRequest">Pulls projects that have "Ola Hawaii Request for Resources" checked.</param>
-        /// <param name="letterOfSupportOnly">Pulls projects that have "Letter of Support Only" checked.</param>
+        /// <param name="letterOfSupport">Pulls projects that have "Letter of Support" checked for Service Type.</param>
         /// <param name="creditTo">Credit to either Biostatistics or Bioinformatics Cores, or both.</param>
         /// <param name="piId">ID of specified PI (Investigator).</param>
         /// <param name="piStatusId">Specified PI status ID.</param>
@@ -274,7 +282,7 @@ namespace ProjectManagement.Report
         /// <param name="grantValue">Funding Source specified.</param>
         /// <returns></returns>
         private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, int phdId, int msId, int isProject, int isBiostat, 
-            int isRmatrixRequest, int isOlaRequest, int letterOfSupportOnly, int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
+            int isRmatrixRequest, int isOlaRequest, int letterOfSupport, int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
         {
             DataTable dt = new DataTable("tblProject");
 
@@ -297,7 +305,7 @@ namespace ProjectManagement.Report
                         cmd.Parameters.AddWithValue("@IsBiostat", isBiostat);
                         cmd.Parameters.AddWithValue("@IsRmatrixRequest", isRmatrixRequest);
                         cmd.Parameters.AddWithValue("@IsOlaRequest", isOlaRequest);
-                        cmd.Parameters.AddWithValue("@LetterOfSupportOnly", letterOfSupportOnly);
+                        cmd.Parameters.AddWithValue("@LetterOfSupport", letterOfSupport);
                         cmd.Parameters.AddWithValue("@CreditTo", creditTo);
                         cmd.Parameters.AddWithValue("@PIId", piId);
                         cmd.Parameters.AddWithValue("@PIStatusId", piStatusId);

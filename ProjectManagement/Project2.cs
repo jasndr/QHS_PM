@@ -82,6 +82,7 @@ namespace ProjectManagement
         public Nullable<bool> IsUHGrant { get; set; }
         public string GrantProposalFundingAgency { get; set; }
         public Nullable<int> UHGrantID { get; set; }
+        public Nullable<byte> IsLosCollaborative { get; set; }
     
         public virtual ICollection<ClientAgmt> ClientAgmt { get; set; }
         public virtual ICollection<Grant> Grants { get; set; }

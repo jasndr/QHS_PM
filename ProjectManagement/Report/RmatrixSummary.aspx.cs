@@ -77,7 +77,7 @@ namespace ProjectManagement.Report
             int reportId;
             if (Int32.TryParse(ddlReport.SelectedValue, out reportId))
             {
-                DateTime fromDate, toDate;
+                DateTime fromDate = new DateTime(2000,01,01), toDate = new DateTime(2099,01,01);
 
                 if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
                 {
@@ -350,7 +350,7 @@ namespace ProjectManagement.Report
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
             int reportId;
-            DateTime fromDate, toDate;
+            DateTime fromDate = new DateTime(2000,01,01), toDate = new DateTime(2099,01,01);
             string fileName= "";
 
             if (Int32.TryParse(ddlReport.SelectedValue, out reportId) &&

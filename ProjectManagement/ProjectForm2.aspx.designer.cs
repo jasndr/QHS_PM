@@ -292,22 +292,31 @@ namespace ProjectManagement {
         protected global::System.Web.UI.WebControls.Repeater rptService;
         
         /// <summary>
-        /// chkLetterOfSupportYes control.
+        /// chkLOS_Collaborative control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupportYes;
+        protected global::System.Web.UI.WebControls.CheckBox chkLOS_Collaborative;
         
         /// <summary>
-        /// chkLetterOfSupportNo control.
+        /// chkLOS_Noncollaborative control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupportNo;
+        protected global::System.Web.UI.WebControls.CheckBox chkLOS_Noncollaborative;
+        
+        /// <summary>
+        /// chkLOS_NA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkLOS_NA;
         
         /// <summary>
         /// txtServiceOther control.

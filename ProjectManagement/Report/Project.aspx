@@ -49,10 +49,10 @@
                     <asp:CheckBox ID="chkOlaRequest" runat="server" Text="Ola HAWAII"></asp:CheckBox>
                 </div>
                 <div class="col-md-2 text-right">
-                    <label class="control-label">Letter of Support only?</label>
+                    <label class="control-label">Letter of Support?</label>
                 </div>
                 <div class="col-md-1 offset2">
-                    <asp:CheckBox ID="chkLetterOfSupportOnly" runat="server" Text="Yes" ></asp:CheckBox>
+                    <asp:CheckBox ID="chkLetterOfSupport" runat="server" Text="Yes" ></asp:CheckBox>
                 </div>
             </div>
             <div class="row offset2">
@@ -237,7 +237,7 @@
                                                 </tr>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <tr>
+                                                <%--<tr>
                                                     <td>Total</td>
                                                     <td>
                                                         <asp:Label ID="lblTotal" runat="server" /></td>
@@ -257,7 +257,7 @@
                                                         <asp:Label ID="lblPhdHrs" runat="server" /></td>
                                                     <td>
                                                         <asp:Label ID="lblMsHrs" runat="server" /></td>
-                                                </tr>
+                                                </tr>--%>
                                             </FooterTemplate>
                                         </asp:Repeater>
                                     </tbody>

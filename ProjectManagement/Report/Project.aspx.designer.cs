@@ -49,13 +49,13 @@ namespace ProjectManagement.Report {
         protected global::System.Web.UI.WebControls.CheckBox chkOlaRequest;
         
         /// <summary>
-        /// chkLetterOfSupportOnly control.
+        /// chkLetterOfSupport control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupportOnly;
+        protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupport;
         
         /// <summary>
         /// txtFromDate control.

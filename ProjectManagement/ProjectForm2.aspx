@@ -449,7 +449,7 @@
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-sm-6" id="divLetterOfSupport">
+                            <%--<div class="col-sm-6" id="divLetterOfSupport">
                                 <div class="col-sm-3">
                                     <label for="chkLetterOfSupportYes">Letter of Support only?</label>
                                 </div>
@@ -458,6 +458,20 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <asp:CheckBox ID="chkLetterOfSupportNo" runat="server" Text="No"></asp:CheckBox>
+                                </div>
+                            </div>--%>
+                            <div class="col-sm-6" id="divCollaborativeLOS">
+                                <div class="col-sm-3">
+                                    <label for="chkLOS_Collaborative">Letter of Support Type:</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkLOS_Collaborative" runat="server" Text="Collaborative"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkLOS_Noncollaborative" runat="server" Text="Non-Collaborative"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkLOS_NA" runat="server" Text="N/A"></asp:CheckBox>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -606,7 +620,7 @@
                         <div class="row divGrantProposal" id="divGrantProposal">
                             <div class="col-sm-6">
                                 <div class="col-sm-9 text-left">
-                                    <label class="control-label" for="txt">Is this application of a UH Infrastructure Grant pilot program?</label>
+                                    <label class="control-label" for="txt">Is this application to a pilot program of a UH infrastructure grant?</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <input type="checkbox" id="chkIsUHPilotGrantYes" value="1" runat="server" />Yes
@@ -651,7 +665,7 @@
                                 AutoGenerateColumns="false" AllowPaging="false"
                                 DataKeyNames="Id"
                                 class="table table-striped table-bordered"
-                                EmptyDataText="No <a href='Tracking/GrantForm'><strong>grant</strong></a> record linked.  <em>Please send a separate request to Tracking Team to add grant information</em>.">
+                                EmptyDataText="No <a href='Tracking/GrantForm'><strong>grant</strong></a> record linked.  <em>After saving this form, please go to <a href='Tracking/GrantForm'><strong>grant page</strong></a> and create a new grant entry to link to this project</em>.">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Id" HeaderStyle-Width="5%">
                                         <ItemTemplate>
@@ -1401,7 +1415,8 @@
                 $('#MainContent_rptStudyPopulation_chkId_3'),
                 $('#divHealthDisparity'));
 
-            ToggleDiv($('#MainContent_rptService_chkId_3'), $('#divLetterOfSupport'));
+           // ToggleDiv($('#MainContent_rptService_chkId_3'), $('#divLetterOfSupport'));
+            ToggleDiv($('#MainContent_rptService_chkId_8'), $('#divCollaborativeLOS'));
 
 
             // -- Hides/shows certain sections if certain selections are made -- \\
@@ -1501,10 +1516,13 @@
             $('#tblService').on('click',
                 'input[type="checkbox"]',
                 function () {
-                    if ($(this).is($('#MainContent_rptService_chkId_3'))) {
-                        ToggleDiv($(this), $('#divLetterOfSupport'));
+                    //if ($(this).is($('#MainContent_rptService_chkId_3'))) {
+                    //    ToggleDiv($(this), $('#divLetterOfSupport'));
+                    //}
+                    if ($(this).is($('#MainContent_rptService_chkId_8'))) {
+                        ToggleDiv($(this), $('#divCollaborativeLOS'));
                     }
-                });
+            });
 
             // -- If exisitng project, adds ability to add grant, invoice, or survey. -- \\
             var projectId = $("#MainContent_lblProjectId").text();
@@ -1943,12 +1961,20 @@
                 });
 
 
-                $('#divLetterOfSupport > div').each(function () {
+                //$('#divLetterOfSupport > div').each(function () {
+                //    var chkBox = $(this).find('input[type="checkbox"]');
+                //    if (chkBox.is(':checked')) {
+                //        chkBox.prop('checked', false);
+                //    }
+                //});
+
+                $('#divCollaborativeLOS > div').each(function () {
                     var chkBox = $(this).find('input[type="checkbox"]');
                     if (chkBox.is(':checked')) {
                         chkBox.prop('checked', false);
                     }
                 });
+                
 
                 $('#MainContent_txtMentorFirstName').val('');
                 $('#MainContent_txtMentorLastName').val('');
@@ -2104,6 +2130,29 @@
                 $('#MainContent_chkLetterOfSupportNo').prop('checked', false);
             }
         });
+
+        //-----------------------------------------------------------------
+        $("#MainContent_chkLOS_Collaborative").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkLOS_Noncollaborative').prop('checked', false);
+                $('#MainContent_chkLOS_NA').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkLOS_Noncollaborative").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkLOS_Collaborative').prop('checked', false);
+                $('#MainContent_chkLOS_NA').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkLOS_NA").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkLOS_Collaborative').prop('checked', false);
+                $('#MainContent_chkLOS_Noncollaborative').prop('checked', false);
+            }
+        });
+
 
         //-----------------------------------------------------------------
         $("#MainContent_chkDeptFundMouYes").change(function () {

@@ -59,6 +59,8 @@ namespace ProjectManagement.Admin
     ///                                    with currently active and/or inactive collaborative centers.
     ///  2019JAN17 - Jason Delos Reyes  -  Added "searchable dropdown" so users are able to search the 
     ///                                    dropdown a specific collaborative center in mind.
+    ///  2019MAR11 - Jason Delos Reyes  -  Adjusted "Update" functionality so that the page is redirected to the
+    ///                                    same page by the URL string instead of simply stopping the modal from closing.
     /// </summary>
     public partial class ClientAgreementForm : System.Web.UI.Page
     {
@@ -90,13 +92,13 @@ namespace ProjectManagement.Admin
                 }
 
             }
-            else
-            {
+            //else
+            //{
                 
-                //Reopens modal after page postback.
-                ClientScript.RegisterStartupScript(GetType(), "ModalScript", "$('#editModal').modal('show');", true);
+            //    //Reopens modal after page postback.
+            //    ClientScript.RegisterStartupScript(GetType(), "ModalScript", "$('#editModal').modal('show');", true);
                  
-            }
+            //}
            
         }
                 
@@ -227,10 +229,22 @@ namespace ProjectManagement.Admin
             //save to database
             SaveClientAgmt(agmt);
 
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                       "ModalScript", PageUtility.LoadEditScript("update"), false);
+            string appPath = String.Empty;
+            appPath = HttpContext.Current.Request.ApplicationPath.Length > 1 ? HttpContext.Current.Request.ApplicationPath
+                                                                                + "/Admin/"
+                                                                             : String.Empty;
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "successMsg",
+                "alert('Record Saved Successfully'); window.location='" + appPath
+                                                                        + "ClientAgreementForm?ClientAgmtId="
+                                                                        + agmtId + "';", true);
+
+            //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+            //           "ModalScript", PageUtility.LoadEditScript(false), false);
            
-            BindRptClientAgmt(id);
+            //BindRptClientAgmt(id);
+
+            //Response.Redirect(String.Format("~/Admin/ClientAgreementForm?ClientAgmtId={0}", agmtId));
 
         }
 
