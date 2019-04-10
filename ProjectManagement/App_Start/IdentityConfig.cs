@@ -60,10 +60,10 @@ namespace ProjectManagement
 
             if (!String.Equals(message.Destination, replyTo.Address, StringComparison.OrdinalIgnoreCase))
             {
-                string superAdminEmail = System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
-                MailAddress superAdmin = new MailAddress(superAdminEmail);
-                mail.ReplyToList.Add(superAdmin);
-                mail.Bcc.Add(superAdmin);                
+                //string superAdminEmail = System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+                MailAddress superAdmin = new MailAddress(/*superAdminEmail*/trackingEmail);
+                mail.ReplyToList.Add(/*superAdmin*/trackingEmail);
+                mail.Bcc.Add(/*superAdmin*/trackingEmail);                
             }
             else
             {

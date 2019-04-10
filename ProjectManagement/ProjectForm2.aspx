@@ -212,7 +212,7 @@
                                                 <%# Eval("Name1") %>
                                             </td>
                                             <td>
-                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (long)Eval("Id2") > 0 %>'></asp:CheckBox>
                                                 <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
                                                 <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
                                                 <%# Eval("Name2") %>
@@ -226,7 +226,7 @@
                                             <%# Eval("Name1") %>
                                         </td>
                                         <td>
-                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (long)Eval("Id2") > 0 %>'></asp:CheckBox>
                                             <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
                                             <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
                                             <%# Eval("Name2") %>
@@ -486,7 +486,7 @@
                         <div class="row">
                             <div class="col-sm-6 text-left">
                                 <label class="control-label">Credit to sister cores</label>
-                            </div>
+                            </div>project
                         </div>
                         <div class="row offset2">
                             <div class="col-sm-2">
@@ -1404,7 +1404,7 @@
             ToggleDiv($('#MainContent_chkPayingYes'), $('#divPayProject'));
             ToggleDiv($('#MainContent_chkProposalYes'), $('.divGrantProposal'));
             ToggleDiv($('#MainContent_chkIsUHPilotGrantYes'), $('#divUHGrant'));
-            ToggleDiv($('#MainContent_chkIsUHPilotGrantNo'), $('#divGrantProposalFundingAgency'))
+            ToggleDiv($('#MainContent_chkIsUHPilotGrantNo'), $('#divGrantProposalFundingAgency'));
             ToggleDiv($('#MainContent_chkIsRmatrix'), $('#divRmatrixRequest'));
             ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divOlaHawaiiRequest'));
             //ToggleDiv($('#MainContent_rptGrant_SecondchkId_6'), $('#divDeptFund'));
@@ -1663,9 +1663,10 @@
 
 
                                 $('#MainContent_ddlDepartmentFunding').change(function () {
-                                    var selectedVal = this.value;
+                                    //var selectedVal = this.value;
+                                    var selectedText = $("option:selected", this).text();
 
-                                    if (selectedVal == 96 /*(Other)*/) {
+                                    if (selectedText == "Other"/*selectedVal == 96*/ /*(Other)*/) {
                                         $('#MainContent_txtDeptFundOth').show();
                                         $('#MainContent_txtDeptFundOth').parent().find('label').show();
 
@@ -1673,7 +1674,7 @@
                                         $('#MainContent_chkDeptFundMouNo').prop('checked', false);
                                         $('#divDeptFundMou').hide();
                                     }
-                                    else if (selectedVal == 62 /*(School of Nursing & Dental Hygiene)*/) {
+                                    else if (selectedText == "School of Nursing & Dental Hygiene"/*selectedVal == 62*/ /*(School of Nursing & Dental Hygiene)*/) {
                                         $('#divDeptFundMou').show();
 
                                         $('#MainContent_txtDeptFundOth').val('');
@@ -1691,11 +1692,11 @@
                                     }
                                 });
 
-                                if ($('#MainContent_ddlDepartmentFunding').val() == 96 /*(Other)*/) {
+                                if ($("option:selected", $('#MainContent_ddlDepartmentFunding')).text() == "Other"/*$('#MainContent_ddlDepartmentFunding').val() == 96*/ /*(Other)*/) {
                                     $('#MainContent_txtDeptFundOth').show();
                                     $('#MainContent_txtDeptFundOth').parent().find('label').show();
                                 }
-                                else if ($('#MainContent_ddlDepartmentFunding').val() == 62 /*(School of Nursing & Dental Hygiene)*/) {
+                                else if ($("option:selected", $('#MainContent_ddlDepartmentFunding')).text() == "School of Nursing & Dental Hygiene"/*$('#MainContent_ddlDepartmentFunding').val() == 62*/ /*(School of Nursing & Dental Hygiene)*/) {
                                     $('#divDeptFundMou').show();
 
                                     $('#MainContent_txtDeptFundOth').val('');
@@ -1742,9 +1743,10 @@
 
 
                                 $('#MainContent_ddlAknDepartmentFunding').change(function () {
-                                    var selectedVal = this.value;
+                                    //var selectedVal = this.value;
+                                    var selectedText = $("option:selected", this).text();
 
-                                    if (selectedVal == 96) {
+                                    if (selectedText == "Other"/*selectedVal == 96*/) {
                                         $('#MainContent_txtAknDeptFundOth').show();
                                         $('#MainContent_txtAknDeptFundOth').parent().find('label').show();
                                     }
@@ -1755,7 +1757,7 @@
                                     }
                                 });
 
-                                if ($('#MainContent_ddlAknDepartmentFunding').val() == 96) {
+                                if ($("option:selected", $('#MainContent_ddlAknDepartmentFunding')).text() == "Other"/*$('#MainContent_ddlAknDepartmentFunding').val() == 96*/) {
                                     $('#MainContent_txtAknDeptFundOth').show();
                                     $('#MainContent_txtAknDeptFundOth').parent().find('label').show();
                                 } else {
@@ -1843,10 +1845,17 @@
         // -- Initializes view of projects -- \\
         function bindProjects() {
             //var piId = $("#MainContent_ddlPI").val();
+
+            // --> First + Last Name of PI.
             var filterPI = $("#MainContent_ddlPI :selected").text();
+
+
             //var currentProjectId = $("#MainContent_ddlProjectHdn").val();
 
+            // --> Prepopulates PI link with PI name (from dropdown).
             $('#MainContent_lblPI').text(filterPI);
+
+            // --> Preopulates hidden Project dropdown with value from ddlProject dropdown.
             $("#MainContent_ddlProjectHdn > option").not(":first").each(function () {
                 if (this.text.indexOf(filterPI) > 0 || filterPI.length == 0 || filterPI.indexOf('Search') >= 0) {
                     $("#MainContent_ddlProjectHdn").children("option[value=" + this.value + "]").show();
@@ -1862,6 +1871,7 @@
                 //}
             });
 
+            // Creates a fresh new form (initializes form) if there is no PI specified.
             if (filterPI.length == 0 || filterPI.indexOf('Search') >= 0) {
                 $('#MainContent_lblProjectId').text('');
                 $('#MainContent_txtTitle').val('');

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
+using ProjectManagement.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -36,6 +38,10 @@ namespace ProjectManagement.Guest
     ///                                    be valid before submission, as well as duplicating front-end field
     ///                                    validations to the back end.  A modal pop-up field has been added so
     ///                                    that form users will simply not ignore the errors on the page.
+    /// 2019APR08  - Jason Delos Reyes  -  Nearly completed adding front-end of new Client Request form.
+    ///                                    Need to add "required" indicator to stop users from entering
+    ///                                    missing forms.
+
     public partial class ClientRequestForm : System.Web.UI.Page
     {
         /// <summary>
@@ -48,7 +54,185 @@ namespace ProjectManagement.Guest
             if (!IsPostBack)
             {
                 //FillCapctha();
+
+                BindControl();
+
             }
+        }
+
+        /// <summary>
+        /// Populates dropdowns and checkboxes with existing database values.
+        /// </summary>
+        private void BindControl()
+        {
+            var dropDownSource = new Dictionary<int, string>();
+
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                /// Populates "Degree" dropdown
+                dropDownSource = db.JabsomAffils
+                                   .Where(d => d.Type == "Degree")
+                                   .OrderBy(d => d.Name)
+                                   .ToDictionary(c=>c.Id, c=>c.Name);
+                PageUtility.BindDropDownList(ddlDegree, dropDownSource, "-- Select Degree --");
+
+                /// Populates "Investigator Status" dropdown
+                dropDownSource = db.InvestStatus
+                                   .OrderBy(d=>d.DisplayOrder)
+                                    .ToDictionary(c => c.Id, c => c.StatusValue);
+
+                PageUtility.BindDropDownList(ddlPIStatus, dropDownSource, "-- Select status --");
+
+                /// Populates "Organization" typeable dropdown (if available from database)
+                var deptAffil = db.JabsomAffils
+                                  .Where(a => a.Type != "Other" && a.Type != "Degree" 
+                                                                && a.Type != "Unknown" 
+                                                                && a.Type != "UHFaculty"
+                                                                && a.Name != "Other")
+                                  .OrderBy(a => a.Id)
+                                  .Select(x => new { Id = x.Id, Name = x.Name });
+
+                textAreaDeptAffil.Value = Newtonsoft.Json.JsonConvert.SerializeObject(deptAffil);
+
+                /// Populates "Study Area" checkbox grid
+                var qProjectField = db.ProjectField.Where(f => f.IsStudyArea == true).ToList();
+
+                rptStudyArea.DataSource = qProjectField;
+                rptStudyArea.DataBind();
+
+                /// Populates "Health Data" checkbox grid
+                qProjectField = db.ProjectField.Where(f => f.IsHealthData == true).ToList();
+                rptHealthData.DataSource = qProjectField;
+                rptHealthData.DataBind();
+
+                /// Populates "Study Type" checkbox grid
+                qProjectField = db.ProjectField.Where(f => f.IsStudyType == true).ToList();
+                rptStudyType.DataSource = qProjectField;
+                rptStudyType.DataBind();
+
+                /// Populates "Study Population" checkbox grid
+                qProjectField = db.ProjectField.Where(f => f.IsStudyPopulation == true).ToList();
+                rptStudyPopulation.DataSource = qProjectField;
+                rptStudyPopulation.DataBind();
+
+                /// Populates "Service" checkbox grid
+                qProjectField = db.ProjectField.Where(f => f.IsService == true).ToList();
+                rptService.DataSource = qProjectField;
+                rptService.DataBind();
+
+
+                /// Populates "QHS Faculty/Staff preference" dropdown\
+                dropDownSource = db.BioStats
+                                   .Where(b => b.EndDate >= DateTime.Now && b.Id > 0 && b.Name != "N/A")
+                                   .OrderBy(b => b.Name)
+                                   .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlBiostat, dropDownSource, String.Empty);
+
+
+                //var members = db.BioStats
+                //                .Where(b => b.EndDate >= DateTime.Now)
+                //                .OrderBy(b=>b.Name)
+                //                .Select(x => new { Id = x.Id, Name = x.Name });
+
+                //textAreaMembers.Value = Newtonsoft.Json.JsonConvert.SerializeObject(members);
+
+                /// Populates "Grant Status" dropdown
+                //var qGrantStatus = new Dictionary<int, string>();
+                //qGrantStatus.Add(1, "New - first time submission");
+                //qGrantStatus.Add(2, "New - resubmission");
+                //qGrantStatus.Add(3, "Completing renewal - research grant application");
+                //qGrantStatus.Add(4, "Completing renewal - resubmission");
+
+
+                //PageUtility.BindDropDownList(ddlGrantStatus, qGrantStatus, "-- Select status --");
+
+                /// Populates "Funding Source" checkbox grid
+                var qFundingSource = db.ProjectField.Where(f => f.IsGrant == true && f.IsFundingSource == true)
+                                      .OrderBy(b=>b.Id)
+                                      .ToDictionary(c=>c.Id, c=>c.Name);
+
+                BindTable2(qFundingSource, rptFunding);
+
+
+                /// Populates Funding Source > Department Funding dropdown.
+                dropDownSource = db.JabsomAffils
+                                   .Where(f => f.Name == "Obstetrics, Gynecology, and Women's Health"
+                                           || f.Name == "School of Nursing & Dental Hygiene"
+                                           || f.Id == 96 /*Other*/)
+                                   .OrderBy(b => b.Id)
+                                   .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlDepartmentFunding, dropDownSource, String.Empty);
+
+                /// Populates "Is project for a grant proposal ?"
+                ///              > "Is this application for a UH Infrastructure Grant pilot?"
+                ///                  >  "What is the grant?" dropdown.
+                dropDownSource = db.ProjectField
+                                   .Where(f => f.IsGrant == true && f.IsFundingSource == true
+                                                               && (f.Name == "Ola Hawaii"
+                                                                || f.Name == "RMATRIX"
+                                                                || f.Name == "INBRE"
+                                                                // --> (Not a grant source) || f.Name == "Native and Pacific Islands Health Disparities Research"
+                                                                // --> (Bioinformatics) || f.Name == "COBRE-Cardiovascular"
+                                                                // --> (Bioinformatics) || f.Name == "COBRE-Infectious Diseases"
+                                                                // --> (Bioinformatics) || f.Name == "COBRE-Biogenesis Research"
+                                                                // --> (Bioinformatics) || f.Name == "P30 UHCC"
+                                                                ))
+                                   .OrderBy(b => (b.Name == "Ola Hawaii" ? 1 : b.Id))
+                                   .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);
+         
+            }
+
+        }
+
+        /// <summary>
+        /// Binds grid of checkboxes with choices for selected areas (faculty/staff, etc).
+        /// </summary>
+        /// <param name="collection">List of choices for given selected area.</param>
+        /// <param name="rpt">Grid for selected area.</param>
+        private void BindTable2(Dictionary<int, string> collection, Repeater rpt)
+        {
+            DataTable dt = new DataTable("tblRpt");
+
+            dt.Columns.Add("Id1", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Name1", System.Type.GetType("System.String"));
+            dt.Columns.Add("BitValue1", System.Type.GetType("System.Int32"));
+
+            dt.Columns.Add("Id2", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Name2", System.Type.GetType("System.String"));
+            dt.Columns.Add("BitValue2", System.Type.GetType("System.Int32"));
+
+            var query = collection.ToArray();
+
+            for (int i = 0; i < query.Length; i += 2)
+            {
+                DataRow dr = dt.NewRow();
+
+                dr[0] = query[i].Key;
+                dr[1] = query[i].Value;
+                dr[2] = query[i].Key;
+
+                if (i < query.Length - 1)
+                {
+                    dr[3] = query[i + 1].Key;
+                    dr[4] = query[i + 1].Value;
+                    dr[5] = query[i + 1].Key;
+                }
+                else
+                {
+                    dr[3] = 0;
+                    dr[4] = "";
+                    dr[5] = 0;
+                }
+
+                dt.Rows.Add(dr);
+            }
+
+            rpt.DataSource = dt;
+            rpt.DataBind();
         }
 
         //private void FillCapctha()
@@ -184,7 +368,7 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Last name is required. <br />");
             }
-            if (txtDegree.Value.Equals(string.Empty))
+            if (ddlDegree.SelectedValue.Equals(string.Empty))
             {
                 validateForm.Append("Degree is required. <br />");
             }
@@ -200,10 +384,67 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Department/Organization is required. <br />");
             }
+            if (ddlPIStatus.SelectedValue.Equals(string.Empty))
+            {
+                validateForm.Append("Investigator status is required. <br />");
+            }
+            if (!chkJuniorPIYes.Checked && !chkJuniorPINo.Checked)
+            {
+                validateForm.Append("Response to question \"Is PI a junior investigator?\" is required. <br />");
+            }
+            if (!chkMentorYes.Checked && !chkMentorNo.Checked)
+            {
+                validateForm.Append("Response to question \"Does PI have mentor?\" is required. <br />");
+            }
+            if (chkMentorYes.Checked && (txtMentorFirstName.Value.Equals(string.Empty)
+                                      || txtMentorLastName.Value.Equals(string.Empty)
+                                      || txtMentorEmail.Value.Equals(string.Empty)))
+            {
+                validateForm.Append(">>> Mentor specified - please complete mentor information. <br />");
+            }
             if (txtProjectTitle.Value.Equals(string.Empty))
             {
                 validateForm.Append("Project Title is required. <br />");
             }
+            if (txtProjectTitle.Value.Length > 255)
+            {
+                validateForm.Append("Project title is too long. Limit is 255 characters. <br />");
+            }
+            if(txtProjectSummary.Value.Length > 255)
+            {
+                validateForm.Append("Project summary is too long. Limit is 255 characters. <br />");
+            }
+
+            int studyAreaBitSum = 0;
+            Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum);
+            if(studyAreaBitSum <= 0)
+            {
+                validateForm.Append("Study area is required. <br />");
+            }
+
+            int healthDataBitSum = 0;
+            Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum);
+            if (healthDataBitSum <= 0)
+            {
+                validateForm.Append("Health data is required. <br />");
+            }
+
+            int studyPopulationBitSum = 0;
+            Int32.TryParse(txtStudyTypeBitSum.Value, out studyPopulationBitSum);
+            if (studyPopulationBitSum <= 0)
+            {
+                validateForm.Append("Study population is required. <br />");
+            }
+
+            int serviceBitSum = 0;
+            Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum);
+            if (serviceBitSum <= 0)
+            {
+                validateForm.Append("Service is required. <br />");
+            }
+
+            
+
 
             return validateForm.ToString();
         }
@@ -271,8 +512,8 @@ namespace ProjectManagement.Guest
                 ProjectSummary = Request.Form["txtProjectSummary"],
                 DueDate = DateTime.TryParse(txtDueDate.Text, out dt) ? dt : (DateTime?)null,
                 PreferBiostat = Request.Form["txtPreferBiostat"],
-                StudyArea = string.Join("; ", GetCheckedValue(tblStudyArea)),
-                ServiceType = string.Join("; ", GetCheckedValue(tblServiceType)),
+                StudyArea = string.Empty,//string.Join("; ", GetCheckedValue(tblStudyArea)),
+                ServiceType = string.Empty,//string.Join("; ", GetCheckedValue(tblServiceType)),
                 Creator = Request.UserHostAddress.ToString(),
                 CreationDate = DateTime.Now,
                 RequestStatus = "Created",

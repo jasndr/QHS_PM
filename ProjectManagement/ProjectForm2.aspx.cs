@@ -104,6 +104,11 @@ namespace ProjectManagement
     ///                                 -  Reverted "missing project link" change at the request of tracking team.
     ///  2019MAR14 - Jason Delos Reyes  -  Changed "Admin Review" email to include other faculty/staff members in the 
     ///                                    "Other Member" field, removing the link to the project creator as necessary.
+    ///  2019APR03 - Jason Delos Reyes  -  Removed sending to "SuperAdmin" as QHS Tracking Team is taking full
+    ///                                    responsibility of receiving tracking notifications.
+    ///  2019APR04 - Jason Delos Reyes  -  Changed "Department Funding" dropdown options functionality for "Funding Source" 
+    ///                                    and "Acknowledgement" sections so that it matches text value vs. numeric value
+    ///                                    to account for management changes.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -465,6 +470,16 @@ namespace ProjectManagement
                 validateResult.Append("Project title is required. \\n");
             }
 
+            if (txtTitle.Value.Length > 500)
+            {
+                validateResult.Append("Project title is too long. Limit is 500 characters. \\n");
+            }
+
+            if (txtSummary.Value.Length > 4000)
+            {
+                validateResult.Append("Project summary is too long. Limit is 4000 characters. \\n");
+            }
+
             int leadBiostatId = 0;
             Int32.TryParse(ddlLeadBiostat.SelectedValue, out leadBiostatId);
             if (leadBiostatId <= 0)
@@ -478,8 +493,10 @@ namespace ProjectManagement
             //    validateResult.Append("Initial date is required. \\n");
             //}
 
-            int otherMemberBitSum = 0;
-            Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum);
+            //int otherMemberBitSum = 0;
+            //Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum);
+            long otherMemberBitSum = 0;
+            Int64.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum);
             if (otherMemberBitSum <= 0)
             {
                 validateResult.Append("Other member is required. \\n");
@@ -562,6 +579,11 @@ namespace ProjectManagement
                 validateResult.Append("Acknowledgements are required. \\n");
             }
 
+            if (txtComments.Value.Length > 500)
+            {
+                validateResult.Append("Admin: Comments are too long.  Limit is 500 characters.");
+            }
+
             return validateResult.ToString();
         }
 
@@ -633,12 +655,18 @@ namespace ProjectManagement
                 PageUtility.BindDropDownList(ddlLeadBiostat, dropDownSource, String.Empty);
 
                 /// Populates dropdown of checkbox grid of other members.
-                dropDownSource = query
+                var dropDownSource2 = query
                                 .Where(b => b.Id > 0)
                                 .OrderBy(b => b.Id == 99 ? 2 : 1)
-                                .ToDictionary(c => (int)c.BitValue, c => c.Name);
+                                .ToDictionary(c => (long)c.BitValue, c => c.Name);
 
-                BindTable2(dropDownSource, rptBiostat);
+                BindTable2a(dropDownSource2, rptBiostat);
+                //dropDownSource = query
+                //                .Where(b => b.Id > 0)
+                //                .OrderBy(b => b.Id == 99 ? 2 : 1)
+                //                .ToDictionary(c => (int)c.BitValue, c => c.Name);
+
+                //BindTable2(dropDownSource, rptBiostat);
 
                 /// Populates "Study Area" checkbox grid.
                 var qProjectField = db.ProjectField.Where(f => f.IsStudyArea == true).ToList();
@@ -766,12 +794,12 @@ namespace ProjectManagement
 
                         PageUtility.BindDropDownList(ddlLeadBiostat, dropDownSource, String.Empty);
 
-                        dropDownSource = query
+                        var dropDownSource2 = query
                                         .Where(b => b.Id > 0)
                                         .OrderBy(b => b.Id)
-                                        .ToDictionary(c => (int)c.BitValue, c => c.Name);
+                                        .ToDictionary(c => (long)c.BitValue, c => c.Name);
 
-                        BindTable2(dropDownSource, rptBiostat);
+                        BindTable2a(dropDownSource2, rptBiostat);
 
                         SetProject(project);
                     }
@@ -789,6 +817,7 @@ namespace ProjectManagement
             BindPhaseByProject(projectId);
         }
 
+        
 
         /// <summary>
         /// Populates project field based on which project information 
@@ -815,7 +844,7 @@ namespace ProjectManagement
             //{
             //    BindTable(rptBiostat, (int)project.OtherMemberBitSum);                    
             //}
-            BindTable(rptBiostat, (int)project.OtherMemberBitSum);
+            BindTable1a(rptBiostat, (long)project.OtherMemberBitSum);
 
             //if (project.StudyAreaBitSum > 0)
             //{
@@ -1353,6 +1382,50 @@ namespace ProjectManagement
         }
 
         /// <summary>
+        /// Binds grid of checkboxes to the values of referred table.
+        /// 
+        /// Same functionality as BindTable(), but receives values of "long" in lieu of "int".
+        /// </summary>
+        /// <param name="rpt">Grid of Checkboxes (e.g., rptBiostat = List of Biostat Members)</param>
+        /// <param name="bitSum">Bitsum of referred field to match grid of checkboxes. 
+        ///                      (e.g., Bitsum 894224 = Chelu & Ved [pseudoexample])</param>
+        private void BindTable1a(Repeater rpt, long bitSum)
+        {
+            foreach (RepeaterItem i in rpt.Items)
+            {
+                CheckBox cb, cb1, cb2;
+                HiddenField hdnBitValue, hdnBitValue1, hdnBitValue2;
+
+                cb = (CheckBox)i.FindControl("chkId");
+                hdnBitValue = (HiddenField)i.FindControl("BitValue");
+
+                if (cb != null && hdnBitValue != null)
+                {
+                    cb.Checked = bitSum > 0 ? CheckBitValue2(bitSum, hdnBitValue) : false;
+                }
+
+                if (cb == null)
+                {
+                    cb1 = (CheckBox)i.FindControl("FirstchkId");
+                    cb2 = (CheckBox)i.FindControl("SecondchkId");
+
+                    hdnBitValue1 = (HiddenField)i.FindControl("FirstBitValue");
+                    hdnBitValue2 = (HiddenField)i.FindControl("SecondBitValue");
+
+                    if (cb1 != null && hdnBitValue1 != null)
+                    {
+                        cb1.Checked = bitSum > 0 ? CheckBitValue2(bitSum, hdnBitValue1) : false;
+                    }
+
+                    if (cb2 != null && hdnBitValue2 != null)
+                    {
+                        cb2.Checked = bitSum > 0 ? CheckBitValue2(bitSum, hdnBitValue2) : false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Binds grid of checkboxes with choices for selected areas (faculty/staff, etc).
         /// </summary>
         /// <param name="collection">List of choices for given selected area.</param>
@@ -1368,6 +1441,55 @@ namespace ProjectManagement
             dt.Columns.Add("Id2", System.Type.GetType("System.Int32"));
             dt.Columns.Add("Name2", System.Type.GetType("System.String"));
             dt.Columns.Add("BitValue2", System.Type.GetType("System.Int32"));
+
+            var query = collection.ToArray();
+
+            for (int i = 0; i < query.Length; i += 2)
+            {
+                DataRow dr = dt.NewRow();
+
+                dr[0] = query[i].Key;
+                dr[1] = query[i].Value;
+                dr[2] = query[i].Key;
+
+                if (i < query.Length - 1)
+                {
+                    dr[3] = query[i + 1].Key;
+                    dr[4] = query[i + 1].Value;
+                    dr[5] = query[i + 1].Key;
+                }
+                else
+                {
+                    dr[3] = 0;
+                    dr[4] = "";
+                    dr[5] = 0;
+                }
+
+                dt.Rows.Add(dr);
+            }
+
+            rpt.DataSource = dt;
+            rpt.DataBind();
+        }
+
+        /// <summary>
+        /// Binds grid of checkboxes with choices for selected areas (faculty/staff, etc).
+        /// Same functionality as BindTable2, but allowing the use of long in lieu of int.
+        /// </summary>
+        /// <param name="collection">List of choices for given selected area.</param>
+        /// <param name="rpt">Grid for selected area.</param>
+        private void BindTable2a(Dictionary<long, string> collection, Repeater rpt)
+        {
+
+            DataTable dt = new DataTable("tblRpt");
+
+            dt.Columns.Add("Id1", System.Type.GetType("System.Int64"));
+            dt.Columns.Add("Name1", System.Type.GetType("System.String"));
+            dt.Columns.Add("BitValue1", System.Type.GetType("System.Int64"));
+
+            dt.Columns.Add("Id2", System.Type.GetType("System.Int64"));
+            dt.Columns.Add("Name2", System.Type.GetType("System.String"));
+            dt.Columns.Add("BitValue2", System.Type.GetType("System.Int64"));
 
             var query = collection.ToArray();
 
@@ -1481,7 +1603,7 @@ namespace ProjectManagement
             int id = 0,
                 piId = 0,
                 leadBiostatId = 0,
-                otherMemberBitSum = 0,
+                //otherMemberBitSum = 0,
                 studyAreaBitSum = 0,
                 healthDataBitSum = 0,
                 studyTypeBitSum = 0,
@@ -1495,6 +1617,7 @@ namespace ProjectManagement
                 olaHawaiiNum = 0,
                 uhGrantId = 0;
 
+            long otherMemberBitSum = 0;
 
             DateTime dtInitialDate, dtDeadline, dtRmatrixSubDate, dtOlaHawaiiSubDate, dtCompletionDate;
 
@@ -1507,7 +1630,8 @@ namespace ProjectManagement
                 InitialDate = DateTime.TryParse(txtInitialDate.Text, out dtInitialDate) ? dtInitialDate : DateTime.Now,
                 DeadLine = DateTime.TryParse(txtDeadline.Text, out dtDeadline) ? dtDeadline : (DateTime?)null,
                 LeadBiostatId = Int32.TryParse(ddlLeadBiostat.SelectedValue, out leadBiostatId) ? leadBiostatId : -1, // required
-                OtherMemberBitSum = Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum) ? otherMemberBitSum : 0, // required
+                //OtherMemberBitSum = Int32.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum) ? otherMemberBitSum : 0, // required
+                OtherMemberBitSum = Int64.TryParse(txtOtherMemberBitSum.Value, out otherMemberBitSum) ? otherMemberBitSum : 0, // required
                 StudyAreaBitSum = Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0, // required
                 StudyAreaOther = txtStudyAreaOther.Value,
                 HealthDateBitSum = Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0, // required
@@ -1896,6 +2020,23 @@ namespace ProjectManagement
             return c == bitValue;
         }
 
+        /// <summary>
+        /// Checks whether or not the bit value exists in the current bit sum calculation.
+        /// 
+        /// Same functionality as CheckBitValue() but accepts type "long" in lieu of "int".
+        /// </summary>
+        /// <param name="bitSum">Total bit sum (e.g., [1026](fake) = Ved[2] & Chelu[1024])</param>
+        /// <param name="hdnBitValue">Bit Value of current selection (e.g., 1024 = Chelu</param>
+        /// <returns>Returns 1 if the bit value is in the bitsum, 0 if not.</returns>
+        private bool CheckBitValue2(long bitSum, HiddenField hdnBitValue)
+        {
+            long bitValue = 0;
+            Int64.TryParse(hdnBitValue.Value, out bitValue);
+
+            long c = bitSum & bitValue;
+
+            return c == bitValue;
+        }
 
         /// <summary>
         /// Obtains grant data table information from the database.
@@ -1980,8 +2121,7 @@ namespace ProjectManagement
         #region email
         /// <summary>
         /// Sends notification email to QHS Admin when a user enters
-        /// a new project into the Project Tracking System. Also sends a copy to the fiscal team
-        /// if it is specified to be a paying project.
+        /// a new project into the Project Tracking System.
         /// </summary>
         /// <param name="projectId">Id of new project that was recently entered.</param>
         /// <param name="sendToFiscal">Determines whether or not a paying project is sent to fiscal team.</param>
@@ -1990,8 +2130,8 @@ namespace ProjectManagement
             string sendTo = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
 
             /// Sends to fiscal team if a project has been indicated as a paying project.
-            if (sendToFiscal == true) sendTo = sendTo + ","
-                    + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+            //if (sendToFiscal == true) sendTo = sendTo + ","
+            //        + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
 
 
             string subject = String.Format("A new project is pending approval, id {0}", projectId);
@@ -1999,7 +2139,7 @@ namespace ProjectManagement
             string url = HttpContext.Current.Request.Url.AbsoluteUri;
             if (url.IndexOf("?Id") > 0)
             {
-                sendTo = sendTo + ";" + System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+                sendTo = sendTo + ";" /*+ System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"]*/;
                 url = url.Substring(0, url.IndexOf("?Id"));
             }
 
@@ -2007,10 +2147,10 @@ namespace ProjectManagement
             body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
             body.AppendFormat("Please approve new project created by {0} at {1}", User.Identity.Name, url);
             body.AppendFormat("?Id={0}</p>", projectId);
-            if (sendToFiscal == true) body.AppendFormat("<br /><strong>QHS Fiscal Team:  This project " +
-                                                        "has been marked as either a paid project and/or " +
-                                                        "supported by a grant.  Please verify with admin " +
-                                                        "before proceeding.  Mahalo!</strong>");
+            //if (sendToFiscal == true) body.AppendFormat("<br /><strong>QHS Fiscal Team:  This project " +
+            //                                            "has been marked as either a paid project and/or " +
+            //                                            "supported by a grant.  Please verify with admin " +
+            //                                            "before proceeding.  Mahalo!</strong>");
             body.AppendLine();
 
             IdentityMessage im = new IdentityMessage()

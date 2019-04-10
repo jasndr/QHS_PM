@@ -336,7 +336,8 @@ namespace ProjectManagement.Guest
         /// <param name="surveyId">Referred survey ID.</param>
         private void SendNotificationEmail(string surveyId)
         {
-            string email = System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
+            string email = System.Configuration.ConfigurationManager.AppSettings["trackingEmail"];
+                         //System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"];
 
             System.Net.Mail.MailAddress destination = new System.Net.Mail.MailAddress(email);
 

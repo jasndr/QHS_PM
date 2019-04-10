@@ -399,6 +399,7 @@
     <Content Include="Scripts\i18n\defaults-zh_CN.min.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
+    <Content Include="Scripts\InputMask.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.bootstrap.wizard.js" />

@@ -6,6 +6,7 @@
     <%--<script src="Scripts/typeahead.jquery.min.js"></script>--%>     
     <script src="Scripts/jquery.dataTables.min.js"></script>
     <script src="Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="Scripts/InputMask.js"></script>
     <link href="Content/dataTables.bootstrap.min.css" rel="stylesheet" />
     <%--<link href="Content/Site.css" rel="stylesheet" />--%>  
 </asp:Content>
@@ -204,7 +205,7 @@
                                 <div class="row">
                                     <div class="col-xs-6 col-md-6">
                                         <label for="TextBoxPhone">Phone</label>
-                                        <asp:TextBox ID="TextBoxPhone" runat="server" placeholder="(___) ___-____" class="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="TextBoxPhone" runat="server" placeholder="(___) ___-____" class="form-control phoneNum"></asp:TextBox>
                                     </div>
                                 </div>
                                 <br />
@@ -472,6 +473,22 @@
 
     
     <script type="text/javascript">
+
+        //$(document).ready(function () {
+        $(window).load(function () {
+
+            //Automatically put parentheses and dash for phone number fields
+            $(function () {
+                var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-##############" }];
+                $('.phoneNum').inputmask({
+                    mask: phones,
+                    greedy: false,
+                    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+                });
+            });
+
+        });
+
         function pageLoad(sender, args) {
             $('#li_pi').addClass('selected');
 

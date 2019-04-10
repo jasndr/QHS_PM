@@ -29,6 +29,7 @@ namespace ProjectManagement.Admin
     ///                                 -  Changed "update success message" into Javascript pop-up.
     ///                                 -  Removed "user rights" checkboxes for faculty/staff without tracking system accounts.
     ///  2018NOV27 - Jason Delos Reyes  -  Enabled "user rights" feature to add/remove user rights privileges on Admin/Staff page.
+    ///  2019APR03 - Jason Delos Reyes  -  Fixed "edit" feature with missing accounts.
     ///  </summary>
     public partial class StaffForm : System.Web.UI.Page
     {
@@ -280,67 +281,75 @@ namespace ProjectManagement.Admin
 
                         //var selectedRights = rptUserRights.check
 
-                        var qRightsOfCurrUser = context.AspNetUsers
-                                                                .Where(x => x.UserName == txtLogonId.Text)
-                                                                .Select(y => y.AspNetRoles.Select(z => z.Name)).ToList();
+                        AspNetUser biostatUserAcct = context.AspNetUsers.FirstOrDefault(x => x.UserName == biostat.LogonId);
 
-                        // For each of the user rights (Super, Admin, Biostat, ...),
-                        // If there is a match in qRightsOfCurrentUser
-                        // If there is not already in database
-                        foreach (RepeaterItem item in rptUserRights.Items)
+                        if (biostatUserAcct != null)
                         {
-                            CheckBox checkbox = item.FindControl("chkId") as CheckBox;
-                            if (checkbox != null)
+
+                            var qRightsOfCurrUser = context.AspNetUsers
+                                                                    .Where(x => x.UserName == txtLogonId.Text)
+                                                                    .Select(y => y.AspNetRoles.Select(z => z.Name)).ToList();
+
+                            // For each of the user rights (Super, Admin, Biostat, ...),
+                            // If there is a match in qRightsOfCurrentUser
+                            // If there is not already in database
+                            foreach (RepeaterItem item in rptUserRights.Items)
                             {
-
-                                var currRights = checkbox.Text;
-                                bool markedRights = checkbox.Checked == true ? true : false;
-
-                                AspNetUser biostatUserAcct = context.AspNetUsers.First(x => x.UserName == biostat.LogonId);
-                                AspNetRole currAcctRole = context.AspNetRoles.First(x => x.Name == currRights);
-
-                                if (markedRights)
+                                CheckBox checkbox = item.FindControl("chkId") as CheckBox;
+                                if (checkbox != null)
                                 {
-                                    //Add Role if doesn't exist.
-                                    if (biostatUserAcct.AspNetRoles.FirstOrDefault(x => x.Name == currRights) == null)
+
+                                    var currRights = checkbox.Text;
+                                    bool markedRights = checkbox.Checked == true ? true : false;
+
+                                    /*AspNetUser */biostatUserAcct = context.AspNetUsers.First(x => x.UserName == biostat.LogonId);
+                                    AspNetRole currAcctRole = context.AspNetRoles.First(x => x.Name == currRights);
+
+                                    if (markedRights)
                                     {
-                                        biostatUserAcct.AspNetRoles.Add(currAcctRole);
+                                        //Add Role if doesn't exist.
+                                        if (biostatUserAcct.AspNetRoles.FirstOrDefault(x => x.Name == currRights) == null)
+                                        {
+                                            biostatUserAcct.AspNetRoles.Add(currAcctRole);
+                                        }
+
                                     }
-                                    
-                                } else
+                                    else
+                                    {
+                                        // Delete Role if currently exists.
+                                        if (biostatUserAcct.AspNetRoles.FirstOrDefault(x => x.Name == currRights) != null)
+                                        {
+                                            biostatUserAcct.AspNetRoles.Remove(currAcctRole);
+                                        }
+                                    }
+
+                                }
+                            }
+
+
+                            // Make appropriate user rights checked.
+                            foreach (RepeaterItem item in rptUserRights.Items)
+                            {
+                                CheckBox checkbox = item.FindControl("chkId") as CheckBox;
+                                if (checkbox != null)
                                 {
-                                    // Delete Role if currently exists.
-                                    if (biostatUserAcct.AspNetRoles.FirstOrDefault(x => x.Name == currRights) != null)
+
+                                    // Checks checkbox if the current checkbox exist in rights of current user.
+                                    var currRights = checkbox.Text;
+
+                                    bool doesBiostathaveRights = (currRights != null && qRightsOfCurrUser.Where(x => x.Contains(currRights)).FirstOrDefault() != null)
+                                                                    ? true : false;
+
+                                    if (qRightsOfCurrUser.Count > 0 && doesBiostathaveRights == true)
                                     {
-                                        biostatUserAcct.AspNetRoles.Remove(currAcctRole);
+                                        checkbox.Checked = true;
                                     }
+
                                 }
 
                             }
+                            /****/
                         }
-                        // Make appropriate user rights checked.
-                        foreach (RepeaterItem item in rptUserRights.Items)
-                        {
-                            CheckBox checkbox = item.FindControl("chkId") as CheckBox;
-                            if (checkbox != null)
-                            {
-                               
-                                // Checks checkbox if the current checkbox exist in rights of current user.
-                                var currRights = checkbox.Text;
-
-                                bool doesBiostathaveRights = (currRights != null && qRightsOfCurrUser.Where(x => x.Contains(currRights)).FirstOrDefault() != null)
-                                                                ? true : false;
-
-                                if (qRightsOfCurrUser.Count > 0 && doesBiostathaveRights == true)
-                                {
-                                    checkbox.Checked = true;
-                                }
-
-                            }
-
-                        }
-                        /****/
-
 
                         WriteInvest(context, biostat);
 
