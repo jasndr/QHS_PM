@@ -121,6 +121,24 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.Label lblInvestStatus;
         
         /// <summary>
+        /// lblJuniorPI control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblJuniorPI;
+        
+        /// <summary>
+        /// lblMentor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMentor;
+        
+        /// <summary>
         /// lblProjectTitle control.
         /// </summary>
         /// <remarks>
@@ -148,13 +166,85 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.Label lblStudyArea;
         
         /// <summary>
-        /// lblServiceType control.
+        /// lblHealthData control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblServiceType;
+        protected global::System.Web.UI.WebControls.Label lblHealthData;
+        
+        /// <summary>
+        /// lblStudyType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStudyType;
+        
+        /// <summary>
+        /// lblStudyPopulation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStudyPopulation;
+        
+        /// <summary>
+        /// lblService control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblService;
+        
+        /// <summary>
+        /// lblPilot control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPilot;
+        
+        /// <summary>
+        /// lblProposal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProposal;
+        
+        /// <summary>
+        /// lblUHPilotGrant control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblUHPilotGrant;
+        
+        /// <summary>
+        /// lblPilotGrantName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPilotGrantName;
+        
+        /// <summary>
+        /// lblGrant control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGrant;
         
         /// <summary>
         /// lblDueDate control.
@@ -166,13 +256,13 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.Label lblDueDate;
         
         /// <summary>
-        /// lblPreferBiostat control.
+        /// lblBiostat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPreferBiostat;
+        protected global::System.Web.UI.WebControls.Label lblBiostat;
         
         /// <summary>
         /// chkCompleted control.

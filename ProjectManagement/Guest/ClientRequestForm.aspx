@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Quantitative Health Sciences Collaboration & Service Request Form</title>
+    <title>JABSOM Biostatistics Core Facility Collaboration & Service Request Form</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
@@ -133,10 +133,10 @@
             padding: 3px;
         }
 
-            .tt-selectable:hover,
-            .tt-selectable:focus {
-                background-color: lightgreen;
-            }
+        .tt-selectable:hover,
+        .tt-selectable:focus {
+            background-color: lightgreen;
+        }
 
         .tooltip2 {
             position: relative;
@@ -145,39 +145,45 @@
             font-weight: bold;
         }
 
-            .tooltip2 .tooltiptext2 {
-                visibility: hidden;
-                width: 120px;
-                background-color: grey;
-                color: #FFF;
-                text-align: center;
-                border-radius: 6px;
-                padding: 5px;
-                font-weight: normal;
-                /* Position the tooltip. */
-                position: absolute;
-                z-index: 1;
-                top: -5px;
-                left: 105%;
-                /* Fade in tooltip - takes 1 second to go from 0% to 100% opacity. */
-                opacity: 0;
-                transition: opacity 1s;
-            }
+        .tooltip2 .tooltiptext2 {
+            visibility: hidden;
+            width: 120px;
+            background-color: grey;
+            color: #FFF;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            font-weight: normal;
+            /* Position the tooltip. */
+            position: absolute;
+            z-index: 1;
+            top: -5px;
+            left: 105%;
+            /* Fade in tooltip - takes 1 second to go from 0% to 100% opacity. */
+            opacity: 0;
+            transition: opacity 1s;
+        }
 
-            /*.tooltip2 .tooltiptext2::after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          right: 100%;
-          margin-top: -5px;
-          border-width: 5px;
-          border-style: solid;
-          border-color: transparent black transparent transparent;
+        /*.tooltip2 .tooltiptext2::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 100%;
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent black transparent transparent;
         }*/
-            .tooltip2:hover .tooltiptext2 {
-                visibility: visible;
-                opacity: 1;
-            }
+        .tooltip2:hover .tooltiptext2 {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .help-block{
+            font-weight: normal;
+            color: #AAA;
+        }
+
     </style>
 
 </head>
@@ -203,7 +209,7 @@
             <br />
             <div id="divRequest" visible="false">
                 <div class="text-center">
-                    <h3 class="text-center pageTitle"><strong>QUANTITATIVE HEALTH SCIENCES COLLABORATION & SERVICE REQUEST FORM</strong></h3>
+                    <h3 class="text-center pageTitle"><strong>JABSOM BIOSTATISTICS CORE FACILITY COLLABORATION & SERVICE REQUEST FORM</strong></h3>
                 </div>
                 <br />
                 <div class="instructions">
@@ -219,8 +225,8 @@
                     </p>
                     <br />
                     <p class="contentWords">
-                        <strong>Authorship:</strong> It is our policy that for biostatistical and bioinformatics service requests which result in manuscript(s),
-                           the biostatistician or bioinformatician contribution should be recognized by manuscript co-authorship. Investigators submitting requests for
+                        <strong>Authorship:</strong> It is our policy that for biostatistical <%--and bioinformatics --%>service requests which result in manuscript(s),
+                           the biostatistician <%--or bioinformatician --%>contribution should be recognized by manuscript co-authorship. Investigators submitting requests for
                            statistical assistance with research grant preparation are expected to include a budget for statistical effort in the grant.
                     </p>
                     <br />
@@ -254,7 +260,7 @@
                     <div class="col-sm-2">
                         <input class="form-control" type="text" name="txtLastName" id="txtLastName" placeholder="Last name" runat="server" />
                     </div>
-                    <label class="col-sm-1 control-label" for="txtDegree">Degree</label>
+                    <label class="col-sm-1 control-label" for="ddlDegree">Degree</label>
                     <div class="col-sm-3">
                         <%--<input class="form-control" type="text" name="txtDegree" id="txtDegree" placeholder="Degree" runat="server" />--%>
                         <asp:DropDownList ID="ddlDegree" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -927,7 +933,8 @@
                 </div>
                 <br />
 
-                <div class="row" id="divProjectTypeQ">
+                <%--[Not including bioinformatics for now]--%>
+                <%--<div class="row" id="divProjectTypeQ">
                     <div>
                         <div class="col-sm-4">
                             <label for="chkProjectTypeBiostat">Send request to:</label>
@@ -943,7 +950,7 @@
                         </div>
                     </div>
                 </div>
-                <br />
+                <br />--%>
 
                 <div class="row">
                     <div class="col-sm-2">
@@ -1184,26 +1191,27 @@
 
                 });
 
-            $("#chkProjectTypeBiostat").change(function () {
-                if (this.checked) {
-                    $('#chkProjectTypeBioinfo').prop('checked', false);
-                    $('#chkProjectTypeBoth').prop('checked', false);
-                }
-            });
+            /// [Not including bioinformatics for now]
+            //$("#chkProjectTypeBiostat").change(function () {
+            //    if (this.checked) {
+            //        $('#chkProjectTypeBioinfo').prop('checked', false);
+            //        $('#chkProjectTypeBoth').prop('checked', false);
+            //    }
+            //});
 
-            $('#chkProjectTypeBioinfo').change(function () {
-                if (this.checked) {
-                    $("#chkProjectTypeBiostat").prop('checked', false);
-                    $('#chkProjectTypeBoth').prop('checked', false);
-                }
-            });
+            //$('#chkProjectTypeBioinfo').change(function () {
+            //    if (this.checked) {
+            //        $("#chkProjectTypeBiostat").prop('checked', false);
+            //        $('#chkProjectTypeBoth').prop('checked', false);
+            //    }
+            //});
 
-            $('#chkProjectTypeBoth').change(function () {
-                if (this.checked) {
-                    $('#chkProjectTypeBioinfo').prop('checked', false);
-                    $("#chkProjectTypeBiostat").prop('checked', false);
-                }
-            });
+            //$('#chkProjectTypeBoth').change(function () {
+            //    if (this.checked) {
+            //        $('#chkProjectTypeBioinfo').prop('checked', false);
+            //        $("#chkProjectTypeBiostat").prop('checked', false);
+            //    }
+            //});
 
 
 
@@ -1463,7 +1471,14 @@
                 },
                 txtProjectTitle: {
                     required: true
-                }//,
+                },
+                ddlUHGrant: {
+                    required: true
+                },
+                txtGrantProposalFundingAgency:{
+                    required: true
+                }
+                //,
                 //txtCaptchaCode: {
                 //    required: true,
                 //    remote: function () {

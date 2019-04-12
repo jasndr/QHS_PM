@@ -10,8 +10,29 @@ using System.Web.UI.WebControls;
 
 namespace ProjectManagement.Admin
 {
+    /// <summary>
+    /// @File: ClientForm.aspx.cs
+    /// @FrontEnd: ClientForm.aspx
+    /// @Author: Yang Rui
+    /// @Summary: Admin Review Form for Client Requests.
+    /// 
+    ///           Page for admin to review Client Request forms and see whether or not they can 
+    ///           be added into projects.
+    ///           
+    /// @Maintenance/Revision History:
+    ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
+    ///  ------------------------------------------
+    ///  2019APR11 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
+    ///                                    easier data structure view and management.
+    ///                                 -  Linked Client Request Form to BQHS Request Database.
+    /// </summary>
     public partial class ClientForm : System.Web.UI.Page
     {
+        /// <summary>
+        /// Loads the page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -20,6 +41,9 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Pulls all of the client requests and survey reponses to display on current form.
+        /// </summary>
         private void BindControl()
         {
             DataTable clientRqstTable = GetClientRqstAll();
@@ -30,8 +54,13 @@ namespace ProjectManagement.Admin
             DataTable surveyTable = GetSurveyAll();
             rptSurvey.DataSource = surveyTable;
             rptSurvey.DataBind();
-        }        
+        }
 
+        /// <summary>
+        /// Marks "Client Request Form" as "Completed" or "Requested".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -60,6 +89,10 @@ namespace ProjectManagement.Admin
             rptClientRqst.DataBind();
         }
 
+        /// <summary>
+        /// Obtains all the survey reponses and displays them onto a list.
+        /// </summary>
+        /// <returns></returns>
         private DataTable GetSurveyAll()
         {
             DataTable dt = new DataTable("surveyTable");
@@ -89,7 +122,7 @@ namespace ProjectManagement.Admin
                     row[3] = p.Responded ? "Yes" : "No";
                     row[4] = p.RespondDate != null ? Convert.ToDateTime(p.RespondDate).ToShortDateString() : "";
                     row[5] = p.Id;
-                    row[6] = p.RequestDate != null ? Convert.ToDateTime(p.RequestDate).ToShortDateString() : ""; 
+                    row[6] = p.RequestDate != null ? Convert.ToDateTime(p.RequestDate).ToShortDateString() : "";
 
                     dt.Rows.Add(row);
                 }
@@ -98,6 +131,10 @@ namespace ProjectManagement.Admin
             return dt;
         }
 
+        /// <summary>
+        /// Obtains all Client Request Forms from the database.
+        /// </summary>
+        /// <returns></returns>
         private DataTable GetClientRqstAll()
         {
             DataTable dt = new DataTable("clientRqstTable");
@@ -109,9 +146,9 @@ namespace ProjectManagement.Admin
             dt.Columns.Add("CreateDate", System.Type.GetType("System.String"));
             dt.Columns.Add("Status", System.Type.GetType("System.String"));
 
-            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            using (ClientRequestTracker cr = new ClientRequestTracker())
             {
-                var query = db.ClientRequest
+                var query = cr.ClientRequest2_cr
                     .Select(t => new { t.Id, t.FirstName, t.LastName, t.ProjectTitle, t.CreationDate, t.RequestStatus })
                     .OrderByDescending(t => t.Id);
 
@@ -164,6 +201,11 @@ namespace ProjectManagement.Admin
         //    }
         //}
 
+        /// <summary>
+        /// Opens specific Client Request Form entry. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rptClientRqst_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
             if (((Button)e.CommandSource).Text.Equals("Edit"))
@@ -175,7 +217,7 @@ namespace ProjectManagement.Admin
 
                 if (rqstId > 0)
                 {
-                    ClientRequest rqst = GetClientRequestById(rqstId);
+                    ClientRequest2_cr rqst = GetClientRequestById(rqstId);
 
                     if (rqst != null)
                     {
@@ -188,92 +230,346 @@ namespace ProjectManagement.Admin
             }
         }
 
-        private void BindEditModal(ClientRequest rqst)
+        /// <summary>
+        /// Binds given request to web form.
+        /// </summary>
+        /// <param name="rqst">Given request.</param>
+        private void BindEditModal(ClientRequest2_cr rqst)
         {
-            DateTime dt;
-            if (rqst != null)
+            using (ClientRequestTracker cr = new ClientRequestTracker())
             {
-                lblFirstName.Text = rqst.FirstName;
-                lblLastName.Text = rqst.LastName;
-                lblDegree.Text = rqst.Degree;
-                lblEmail.Text = rqst.Email;
-                lblPhone.Text = rqst.Phone;
-                lblDept.Text = rqst.Department;
-                lblInvestStatus.Text = rqst.InvestStatus;
-                lblProjectTitle.Text = rqst.ProjectTitle;
-                lblProjectSummary.Text = rqst.ProjectSummary;
-                lblStudyArea.Text = rqst.StudyArea;
-                lblServiceType.Text = rqst.ServiceType;
-                lblDueDate.Text = DateTime.TryParse(rqst.DueDate.ToString(), out dt) ? dt.ToShortDateString() : "";
-                lblPreferBiostat.Text = rqst.PreferBiostat;
 
-                if (rqst.RequestStatus == "Completed")
+                DateTime dt;
+
+                // Obtain list of study areas
+                Dictionary<int, string> studyAreas = cr.ProjectField_cr
+                                                       .Where(f => f.IsStudyArea == true)
+                                                       .Select(d => new { d.BitValue, d.Name })
+                                                       .ToDictionary(g => g.BitValue, g => g.Name);
+
+                Dictionary<int, string> healthData = cr.ProjectField_cr
+                                                       .Where(f => f.IsHealthData == true)
+                                                       .Select(d => new { d.BitValue, d.Name })
+                                                       .ToDictionary(g => g.BitValue, g => g.Name);
+
+                Dictionary<int, string> studyType = cr.ProjectField_cr
+                                                       .Where(f => f.IsStudyType == true)
+                                                       .Select(d => new { d.BitValue, d.Name })
+                                                       .ToDictionary(g => g.BitValue, g => g.Name);
+
+                Dictionary<int, string> studyPopulation = cr.ProjectField_cr
+                                                            .Where(f => f.IsStudyPopulation == true)
+                                                            .Select(d => new { d.BitValue, d.Name })
+                                                            .ToDictionary(g => g.BitValue, g => g.Name);
+                Dictionary<int, string> service = cr.ProjectField_cr
+                                                    .Where(f => f.IsService == true)
+                                                    .Select(d => new { d.BitValue, d.Name })
+                                                    .ToDictionary(g => g.BitValue, g => g.Name);
+
+                Dictionary<int, string> fundingSource = cr.ProjectField_cr
+                                                   .Where(f => f.IsFundingSource == true)
+                                                   .Select(d => new { d.BitValue, d.Name })
+                                                   .ToDictionary(g => g.BitValue, g => g.Name);
+
+                Dictionary<int, string> biostats = cr.BioStat_cr
+                                                   .Where(f => f.EndDate > DateTime.Today && f.Name != "N/A")
+                                                   .Select(d => new { d.Id, d.Name })
+                                                   .ToDictionary(g => g.Id, g => g.Name);
+
+                if (rqst != null)
                 {
-                    chkCompleted.Checked = true;
+                    lblFirstName.Text = rqst.FirstName;
+                    lblLastName.Text = rqst.LastName;
+                    lblDegree.Text = rqst.Degree.Equals("Other") ? "Other - " + rqst.DegreeOther : rqst.Degree;
+                    lblEmail.Text = rqst.Email;
+                    lblPhone.Text = rqst.Phone;
+                    lblDept.Text = rqst.Department;
+                    lblInvestStatus.Text = rqst.InvestStatus.Equals("Other") ? "Other - " + rqst.InvestStatusOther : rqst.InvestStatus;
+                    lblJuniorPI.Text = rqst.IsJuniorPI.Equals(true) ? "Yes" : "No";
+                    lblMentor.Text = rqst.HasMentor.Equals(true) ? "Yes - " + rqst.MentorFirstName + " " + rqst.MentorLastName + " (" + rqst.MentorEmail + ")" : "No";
+                    lblProjectTitle.Text = rqst.ProjectTitle;
+                    lblProjectSummary.Text = rqst.ProjectSummary;
+                    
+
+                    // For each study area, if match study area, then print.
+                    foreach (var sa in studyAreas)
+                    {
+                        int bitValue = sa.Key;
+
+                        int match = (int)rqst.StudyAreaBitSum & bitValue;
+
+                        if (match == sa.Key)
+                        {
+                            
+                            if (lblStudyArea.Text.Equals(string.Empty) && sa.Value.Equals("Other"))
+                            {
+                                lblStudyArea.Text = sa.Value + " - " + rqst.StudyAreaOther;
+                            }
+                            else if (!lblStudyArea.Text.Equals(string.Empty) && sa.Value.Equals("Other"))
+                            {
+                                lblStudyArea.Text = lblStudyArea.Text + ", " + sa.Value + " - " + rqst.StudyAreaOther;
+                            }
+                            else if (lblStudyArea.Text.Equals(string.Empty))
+                            {
+                                lblStudyArea.Text = sa.Value;
+                            }
+                            else 
+                            {
+                                lblStudyArea.Text = lblStudyArea.Text + ", " + sa.Value;
+                            }
+                        }
+
+
+                    }
+
+                    // Health Data
+                    foreach (var hd in healthData)
+                    {
+                        int bitValue = hd.Key;
+
+                        int match = (int)rqst.HealthDateBitSum & bitValue;
+
+                        if (match == hd.Key)
+                        {
+
+                            if (lblHealthData.Text.Equals(string.Empty) && hd.Value.Equals("Other"))
+                            {
+                                lblHealthData.Text = hd.Value + " - " + rqst.HealthDataOther;
+                            }
+                            else if (!lblHealthData.Text.Equals(string.Empty) && hd.Value.Equals("Other"))
+                            {
+                                lblHealthData.Text = lblHealthData.Text + ", " + hd.Value + " - " + rqst.HealthDataOther;
+                            }
+                            else if (lblHealthData.Text.Equals(string.Empty))
+                            {
+                                lblHealthData.Text = hd.Value;
+                            }
+                            else
+                            {
+                                lblHealthData.Text = lblHealthData.Text + ", " + hd.Value;
+                            }
+                        }
+                    }
+
+
+                    // Study Type
+                    foreach (var st in studyType)
+                    {
+                        int bitValue = st.Key;
+
+                        int match = (int)rqst.StudyTypeBitSum & bitValue;
+
+                        if (match == st.Key)
+                        {
+
+                            if (lblStudyType.Text.Equals(string.Empty) && st.Value.Equals("Other"))
+                            {
+                                lblStudyType.Text = st.Value + " - " + rqst.StudyTypeOther;
+                            }
+                            else if (!lblStudyType.Text.Equals(string.Empty) && st.Value.Equals("Other"))
+                            {
+                                lblStudyType.Text = lblStudyType.Text + ", " + st.Value + " - " + rqst.StudyTypeOther;
+                            }
+                            else if (lblStudyType.Text.Equals(string.Empty))
+                            {
+                                lblStudyType.Text = st.Value;
+                            }
+                            else
+                            {
+                                lblStudyType.Text = lblStudyType.Text + ", " + st.Value;
+                            }
+                        }
+                        
+                    }
+
+                    // Study Population
+                    foreach (var sp in studyPopulation)
+                    {
+                        int bitValue = sp.Key;
+
+                        int match = (int)rqst.StudyPopulationBitSum & bitValue;
+
+                        if (match == sp.Key)
+                        {
+
+                            if (lblStudyPopulation.Text.Equals(string.Empty) && sp.Value.Equals("Other"))
+                            {
+                                lblStudyPopulation.Text = sp.Value + " - " + rqst.StudyPopulationOther;
+                            }
+                            else if (!lblStudyPopulation.Text.Equals(string.Empty) && sp.Value.Equals("Other"))
+                            {
+                                lblStudyPopulation.Text = lblStudyPopulation.Text + ", " + sp.Value + " - " + rqst.StudyPopulationOther;
+                            }
+                            else if (lblStudyPopulation.Text.Equals(string.Empty))
+                            {
+                                lblStudyPopulation.Text = sp.Value;
+                            }
+                            else
+                            {
+                                lblStudyPopulation.Text = lblStudyPopulation.Text + ", " + sp.Value;
+                            }
+                        }
+                    }
+
+
+                    // Service
+                    foreach (var sv in service)
+                    {
+                        int bitValue = sv.Key;
+
+                        int match = (int)rqst.ServiceBitSum & bitValue;
+
+                        if (match == sv.Key)
+                        {
+
+                            if (lblService.Text.Equals(string.Empty) && sv.Value.Equals("Other"))
+                            {
+                                lblService.Text = sv.Value + " - " + rqst.ServiceOther;
+                            }
+                            else if (!lblService.Text.Equals(string.Empty) && sv.Value.Equals("Other"))
+                            {
+                                lblService.Text = lblService.Text + ", " + sv.Value + " - " + rqst.ServiceOther;
+                            }
+                            else if (lblService.Text.Equals(string.Empty))
+                            {
+                                lblService.Text = sv.Value;
+                            }
+                            else
+                            {
+                                lblService.Text = lblService.Text + ", " + sv.Value;
+                            }
+                        }
+
+
+                    }
+
+                    lblPilot.Text = rqst.IsPilot == true ? "Yes" : "No";
+
+                    lblProposal.Text = rqst.IsGrantProposal == true ? "Yes" : "No";
+
+                    lblUHPilotGrant.Text = rqst.IsUHGrant == true ? "Yes" : "No";
+
+                    lblPilotGrantName.Text = (!rqst.UHGrantName.Equals(string.Empty)
+                                                || !rqst.GrantProposalFundingAgency.Equals(string.Empty))
+                                                ? (rqst.IsUHGrant == true ? rqst.UHGrantName : rqst.GrantProposalFundingAgency) : "N/A";
+                    
+                    // Funding Source
+                    foreach (var fs in fundingSource)
+                    {
+                        int bitValue = fs.Key;
+
+                        int match = (int)rqst.GrantBitSum & bitValue;
+
+                        if (match == fs.Key)
+                        {
+
+                            if (lblGrant.Text.Equals(string.Empty) && fs.Value.Equals("Other"))
+                            {
+                                lblGrant.Text = fs.Value + " - " + rqst.GrantOther;
+                            }
+                            else if (!lblGrant.Text.Equals(string.Empty) && fs.Value.Equals("Other"))
+                            {
+                                lblGrant.Text = lblGrant.Text + ", " + fs.Value + " - " + rqst.GrantOther;
+                            }
+                            else if (lblGrant.Text.Equals(string.Empty))
+                            {
+                                lblGrant.Text = fs.Value;
+                            }
+                            else
+                            {
+                                lblGrant.Text = lblGrant.Text + ", " + fs.Value;
+                            }
+                        }
+
+
+                    }
+
+
+                    lblDueDate.Text = DateTime.TryParse(rqst.DeadLine.ToString(), out dt) ? dt.ToShortDateString() : "";
+               
+
+                    string biostatName = cr.BioStat_cr.FirstOrDefault(f=>f.Id == rqst.BiostatId).Name;
+                    lblBiostat.Text = biostatName;
+     
+
+                    if (rqst.RequestStatus == "Completed")
+                    {
+                        chkCompleted.Checked = true;
+                    }
+                    else
+                    {
+                        chkCompleted.Checked = false;
+                    }
                 }
-                else
-                {
-                    chkCompleted.Checked = false;
-                }
+
             }
+
+
         }
 
-        private ClientRequest GetClientRequestById(int rqstId)
+        /// <summary>
+        /// Given Client Request form ID, pulls information pertaining to that specific form.
+        /// </summary>
+        /// <param name="rqstId">Referred to Client Request Form.</param>
+        /// <returns>Instance of ClientRequest2 form.</returns>
+        private ClientRequest2_cr GetClientRequestById(int rqstId)
         {
-            ClientRequest myRqst;
+            ClientRequest2_cr myRqst;
 
-            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            using (ClientRequestTracker cr = new ClientRequestTracker())
             {
-                myRqst = db.ClientRequest.FirstOrDefault(t => t.Id == rqstId);
+                myRqst = cr.ClientRequest2_cr.FirstOrDefault(t => t.Id == rqstId);
 
-                if (myRqst != null)
-                {
-                    var studyAreas = db.HiPrograms
-                                    .Where(s => s.isStudyArea);
+                //if (myRqst != null)
+                //{
+                //    var studyAreas = cr.ProjectField_cr.Where(s => s.IsStudyArea == true);
 
-                    StringBuilder sb = new StringBuilder();
-                    String[] studyArray = myRqst.StudyArea.Split(';');
+                //    //db.HiPrograms
+                //    ///Where(s => s.isStudyArea);
 
-                    foreach (string studyCode in studyArray)
-                    {
-                        int studyId = 0;
-                        Int32.TryParse(studyCode, out studyId);
+                //    //StringBuilder sb = new StringBuilder();
+                //    //String[] studyArray = myRqst.StudyAreaBitSum.StudyArea.Split(';');
 
-                        if (studyId > 0)
-                        {
-                            var studyArea = studyAreas.FirstOrDefault(d => d.Id == studyId);
+                //    //foreach (string studyCode in studyArray)
+                //    //{
+                //    //    int studyId = 0;
+                //    //    Int32.TryParse(studyCode, out studyId);
 
-                            if (studyArea != null)
-                            {
-                                sb.AppendFormat("{0}; ", studyArea.Name);
-                            }
-                        }
-                    }
+                //    //    if (studyId > 0)
+                //    //    {
+                //    //        var studyArea = studyAreas.FirstOrDefault(d => d.Id == studyId);
 
-                    myRqst.StudyArea = sb.ToString();
+                //    //        if (studyArea != null)
+                //    //        {
+                //    //            sb.AppendFormat("{0}; ", studyArea.Name);
+                //    //        }
+                //    //    }
+                //    //}
 
-                    sb.Clear();
+                //    //myRqst.StudyArea = sb.ToString();
 
-                    var serviceTypes = db.ServiceTypes;
-                    String[] serviceArray = myRqst.ServiceType.Split(';');
-                    foreach (string serviceCode in serviceArray)
-                    {
-                        int serviceId = 0;
-                        Int32.TryParse(serviceCode, out serviceId);
+                //    //sb.Clear();
 
-                        if (serviceId > 0)
-                        {
-                            var serviceType = serviceTypes.FirstOrDefault(d => d.Id == serviceId);
+                //    //var serviceTypes = db.ServiceTypes;
+                //    //String[] serviceArray = myRqst.ServiceType.Split(';');
+                //    //foreach (string serviceCode in serviceArray)
+                //    //{
+                //    //    int serviceId = 0;
+                //    //    Int32.TryParse(serviceCode, out serviceId);
 
-                            if (serviceType != null)
-                            {
-                                sb.AppendFormat("{0}; ", serviceType.Name);
-                            }
-                        }
-                    }
-                    myRqst.ServiceType = sb.ToString();
+                //    //    if (serviceId > 0)
+                //    //    {
+                //    //        var serviceType = serviceTypes.FirstOrDefault(d => d.Id == serviceId);
 
-                }
+                //    //        if (serviceType != null)
+                //    //        {
+                //    //            sb.AppendFormat("{0}; ", serviceType.Name);
+                //    //        }
+                //    //    }
+                //    //}
+                //    //myRqst.ServiceType = sb.ToString();
+
+                //}
             }
 
             return myRqst;

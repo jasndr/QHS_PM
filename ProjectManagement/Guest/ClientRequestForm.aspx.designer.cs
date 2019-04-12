@@ -490,33 +490,6 @@ namespace ProjectManagement.Guest {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPreferBiostatId;
         
         /// <summary>
-        /// chkProjectTypeBiostat control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkProjectTypeBiostat;
-        
-        /// <summary>
-        /// chkProjectTypeBioinfo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkProjectTypeBioinfo;
-        
-        /// <summary>
-        /// chkProjectTypeBoth control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkProjectTypeBoth;
-        
-        /// <summary>
         /// lblRecaptchaMessage control.
         /// </summary>
         /// <remarks>

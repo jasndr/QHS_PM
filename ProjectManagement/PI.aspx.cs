@@ -129,7 +129,7 @@ namespace ProjectManagement
                     }
 
                     chkApproved.Checked = invest.IsApproved;
-                    chkPilot.Checked = invest.IsPilot;
+                    //chkPilot.Checked = invest.IsPilot;
 
                     //bind jabsom affils
                     //if (jabsomAffilList.Count > 0)
@@ -296,7 +296,7 @@ namespace ProjectManagement
             PageUtility.UncheckGrid(GridViewCommunityPartner);
 
             chkApproved.Checked = false;
-            chkPilot.Checked = false;
+            //chkPilot.Checked = false;
         }
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace ProjectManagement
                             Phone = TextBoxPhone.Text,
                             InvestStatusId = Convert.ToInt32(ddlStatus.SelectedValue),
                             IsApproved = chkApproved.Checked,
-                            IsPilot = chkPilot.Checked
+                            //IsPilot = chkPilot.Checked
                         };
 
                         //check existing PI with same name
@@ -481,7 +481,7 @@ namespace ProjectManagement
                             invest.OtherCommunityPartner = txtCommunityPartnerOther.Text;
 
                             invest.IsApproved = chkApproved.Checked;
-                            invest.IsPilot = chkPilot.Checked;
+                            //invest.IsPilot = chkPilot.Checked;
 
                             db.SaveChanges();
                         }

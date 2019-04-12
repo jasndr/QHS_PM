@@ -196,16 +196,16 @@
                                         <label for="TextBoxEmail">Email</label>
                                         <asp:TextBox ID="TextBoxEmail" runat="server" placeholder="Email" class="form-control"></asp:TextBox>
                                     </div>
-                                    <div class="col-xs-2 col-md-2">
+                                    <%--<div class="col-xs-2 col-md-2">
                                         <label for="chkPilot">Pilot Investigator</label>
                                         <asp:CheckBox ID="chkPilot" runat="server"></asp:CheckBox>
-                                    </div>
+                                    </div>--%>
                                 </div>
                                 <br />
                                 <div class="row">
                                     <div class="col-xs-6 col-md-6">
                                         <label for="TextBoxPhone">Phone</label>
-                                        <asp:TextBox ID="TextBoxPhone" runat="server" placeholder="(___) ___-____" class="form-control phoneNum"></asp:TextBox>
+                                        <asp:TextBox ID="TextBoxPhone" runat="server" placeholder="(___) ___-____" CssClass="form-control phoneNum"></asp:TextBox>
                                     </div>
                                 </div>
                                 <br />
@@ -474,20 +474,7 @@
     
     <script type="text/javascript">
 
-        //$(document).ready(function () {
-        $(window).load(function () {
-
-            //Automatically put parentheses and dash for phone number fields
-            $(function () {
-                var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-##############" }];
-                $('.phoneNum').inputmask({
-                    mask: phones,
-                    greedy: false,
-                    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
-                });
-            });
-
-        });
+        
 
         function pageLoad(sender, args) {
             $('#li_pi').addClass('selected');
@@ -772,6 +759,21 @@
 
         //});
 
+
+        $(document).ready(function () {
+        //$(window).load(function () {
+
+            //Automatically put parentheses and dash for phone number fields
+            $(function () {
+                var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-##############" }];
+                $('.phoneNum').inputmask({
+                    mask: phones,
+                    greedy: false,
+                    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+                });
+            });
+
+        });
        
     </script>
 

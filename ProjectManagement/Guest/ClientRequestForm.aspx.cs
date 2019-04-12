@@ -41,7 +41,9 @@ namespace ProjectManagement.Guest
     /// 2019APR08  - Jason Delos Reyes  -  Nearly completed adding front-end of new Client Request form.
     ///                                    Need to add "required" indicator to stop users from entering
     ///                                    missing forms.
-
+    /// 2019APR11  - Jason Delos Reyes  -  Finished front-end and added linking to database. Created ClientRequestTracker.edmx
+    ///                                    file to build the "second database" functionality of the system.
+    /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
         /// <summary>
@@ -67,24 +69,25 @@ namespace ProjectManagement.Guest
         {
             var dropDownSource = new Dictionary<int, string>();
 
-            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            using (ClientRequestTracker cr = new ClientRequestTracker())
             {
+
                 /// Populates "Degree" dropdown
-                dropDownSource = db.JabsomAffils
+                dropDownSource = cr.JabsomAffil_cr
                                    .Where(d => d.Type == "Degree")
                                    .OrderBy(d => d.Name)
                                    .ToDictionary(c=>c.Id, c=>c.Name);
                 PageUtility.BindDropDownList(ddlDegree, dropDownSource, "-- Select Degree --");
 
                 /// Populates "Investigator Status" dropdown
-                dropDownSource = db.InvestStatus
+                dropDownSource = cr.InvestStatus_cr
                                    .OrderBy(d=>d.DisplayOrder)
                                     .ToDictionary(c => c.Id, c => c.StatusValue);
 
                 PageUtility.BindDropDownList(ddlPIStatus, dropDownSource, "-- Select status --");
 
                 /// Populates "Organization" typeable dropdown (if available from database)
-                var deptAffil = db.JabsomAffils
+                var deptAffil = cr.JabsomAffil_cr
                                   .Where(a => a.Type != "Other" && a.Type != "Degree" 
                                                                 && a.Type != "Unknown" 
                                                                 && a.Type != "UHFaculty"
@@ -95,34 +98,34 @@ namespace ProjectManagement.Guest
                 textAreaDeptAffil.Value = Newtonsoft.Json.JsonConvert.SerializeObject(deptAffil);
 
                 /// Populates "Study Area" checkbox grid
-                var qProjectField = db.ProjectField.Where(f => f.IsStudyArea == true).ToList();
+                var qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyArea == true).ToList();
 
                 rptStudyArea.DataSource = qProjectField;
                 rptStudyArea.DataBind();
 
                 /// Populates "Health Data" checkbox grid
-                qProjectField = db.ProjectField.Where(f => f.IsHealthData == true).ToList();
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsHealthData == true).ToList();
                 rptHealthData.DataSource = qProjectField;
                 rptHealthData.DataBind();
 
                 /// Populates "Study Type" checkbox grid
-                qProjectField = db.ProjectField.Where(f => f.IsStudyType == true).ToList();
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyType == true).ToList();
                 rptStudyType.DataSource = qProjectField;
                 rptStudyType.DataBind();
 
                 /// Populates "Study Population" checkbox grid
-                qProjectField = db.ProjectField.Where(f => f.IsStudyPopulation == true).ToList();
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyPopulation == true).ToList();
                 rptStudyPopulation.DataSource = qProjectField;
                 rptStudyPopulation.DataBind();
 
                 /// Populates "Service" checkbox grid
-                qProjectField = db.ProjectField.Where(f => f.IsService == true).ToList();
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsService == true).ToList();
                 rptService.DataSource = qProjectField;
                 rptService.DataBind();
 
 
                 /// Populates "QHS Faculty/Staff preference" dropdown\
-                dropDownSource = db.BioStats
+                dropDownSource = cr.BioStat_cr
                                    .Where(b => b.EndDate >= DateTime.Now && b.Id > 0 && b.Name != "N/A")
                                    .OrderBy(b => b.Name)
                                    .ToDictionary(c => c.Id, c => c.Name);
@@ -148,7 +151,10 @@ namespace ProjectManagement.Guest
                 //PageUtility.BindDropDownList(ddlGrantStatus, qGrantStatus, "-- Select status --");
 
                 /// Populates "Funding Source" checkbox grid
-                var qFundingSource = db.ProjectField.Where(f => f.IsGrant == true && f.IsFundingSource == true)
+                var qFundingSource = cr.ProjectField_cr.Where(f => f.IsGrant == true 
+                                                             && f.IsFundingSource == true
+                                                             && f.Name != "N/A"
+                                                             && f.Name != "No (No funding)")
                                       .OrderBy(b=>b.Id)
                                       .ToDictionary(c=>c.Id, c=>c.Name);
 
@@ -156,7 +162,7 @@ namespace ProjectManagement.Guest
 
 
                 /// Populates Funding Source > Department Funding dropdown.
-                dropDownSource = db.JabsomAffils
+                dropDownSource = cr.JabsomAffil_cr
                                    .Where(f => f.Name == "Obstetrics, Gynecology, and Women's Health"
                                            || f.Name == "School of Nursing & Dental Hygiene"
                                            || f.Id == 96 /*Other*/)
@@ -168,7 +174,7 @@ namespace ProjectManagement.Guest
                 /// Populates "Is project for a grant proposal ?"
                 ///              > "Is this application for a UH Infrastructure Grant pilot?"
                 ///                  >  "What is the grant?" dropdown.
-                dropDownSource = db.ProjectField
+                dropDownSource = cr.ProjectField_cr
                                    .Where(f => f.IsGrant == true && f.IsFundingSource == true
                                                                && (f.Name == "Ola Hawaii"
                                                                 || f.Name == "RMATRIX"
@@ -410,9 +416,9 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Project title is too long. Limit is 255 characters. <br />");
             }
-            if(txtProjectSummary.Value.Length > 255)
+            if(txtProjectSummary.Value.Length > 4000)
             {
-                validateForm.Append("Project summary is too long. Limit is 255 characters. <br />");
+                validateForm.Append("Project summary is too long. Limit is 4000 characters. <br />");
             }
 
             int studyAreaBitSum = 0;
@@ -443,8 +449,37 @@ namespace ProjectManagement.Guest
                 validateForm.Append("Service is required. <br />");
             }
 
-            
+            if (!chkPilotYes.Checked && !chkPilotNo.Checked)
+            {
+                validateForm.Append("Response to question \"Is project a funded infrastructure grant pilot study?\" is required. <br />");
+            }
 
+            if (!chkProposalYes.Checked && !chkProposalNo.Checked)
+            {
+                validateForm.Append("Response to question \"Is this project for a grant proposal?\" is required. <br />");
+            }
+
+            if (chkProposalYes.Checked && !chkIsUHPilotGrantYes.Checked && !chkIsUHPilotGrantNo.Checked)
+            {
+                validateForm.Append(">>> Grant Proposal specified - Response to follow-up question \"Is this application to a pilot program of a UH infrastructure grant?\" is required. <br />");
+            }
+
+            if (chkIsUHPilotGrantYes.Checked && ddlUHGrant.SelectedValue.Equals(string.Empty))
+            {
+                validateForm.Append(">>> UH Infrastructure Grant (Yes) specified - Response to follow-up question \"What is the grant?\" is required. <br />");
+            }
+
+            if (chkIsUHPilotGrantNo.Checked && txtGrantProposalFundingAgency.Value.Equals(string.Empty))
+            {
+                validateForm.Append(">>> UH Infrastructure Grant (No) specified - Reponse to follow-up question \"What is the funding agency?\" is required. <br />");
+            }
+
+            int fundingBitSum = 0;
+            Int32.TryParse(txtFundingBitSum.Value, out fundingBitSum);
+            if (fundingBitSum <= 0)
+            {
+                validateForm.Append("Funding source is required. <br />");
+            }
 
             return validateForm.ToString();
         }
@@ -461,7 +496,7 @@ namespace ProjectManagement.Guest
 
             MailAddress destination = new MailAddress(email);
 
-            string subject = String.Format("A new request is created, id {0}", newRequestId);
+            string subject = String.Format("A new client request has been created, id {0}", newRequestId);
 
             string url = Request.Url.Scheme + "://" + Request.Url.Authority +
                             Request.ApplicationPath.TrimEnd('/') + "/Admin/ClientForm";
@@ -473,7 +508,7 @@ namespace ProjectManagement.Guest
 
             StringBuilder body = new StringBuilder();
             body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
-            body.AppendFormat("Please check new request id {0} at {1}", newRequestId, url);
+            body.AppendFormat("Please check new client request, id {0} at {1}", newRequestId, url);
             body.AppendLine();
 
             IdentityMessage im = new IdentityMessage()
@@ -497,35 +532,57 @@ namespace ProjectManagement.Guest
         /// <returns>Request Id generated by the database for this form.</returns>
         private int SaveRequest()
         {
-            int requestId = 0;
+            int requestId = 0, uhGrantId = 0, biostatId = 0;
+            long studyAreaBitSum = 0, healthDataBitSum = 0, studyTypeBitSum = 0, studyPopulationBitSum = 0, 
+                 serviceBitSum = 0, grantBitSum = 0;
             DateTime dt;
-            ClientRequest rqst = new ClientRequest()
+            ClientRequest2_cr rqst = new ClientRequest2_cr()
             {
                 FirstName = Request.Form["txtFirstName"],
                 LastName = Request.Form["txtLastName"],
-                Degree = Request.Form["txtDegree"],
+                Degree = ddlDegree.SelectedItem.Text,//Request.Form["ddlDegree"],
+                DegreeOther = Request.Form["txtDegreeOther"],
                 Email = Request.Form["txtEmail"],
                 Phone = Request.Form["txtPhone"],
                 Department = Request.Form["txtDept"],
-                InvestStatus = Request.Form["ddlPIStatus"],
+                InvestStatus = ddlPIStatus.SelectedItem.Text,//Request.Form["ddlPIStatus"],
+                InvestStatusOther = Request.Form["txtPIStatusOther"],
+                IsJuniorPI = chkJuniorPIYes.Checked ? true : false,
+                HasMentor = chkMentorYes.Checked ? true : false,
+                MentorFirstName = Request.Form["txtMentorFirstName"],
+                MentorLastName = Request.Form["txtMentorLastName"],
+                MentorEmail = Request.Form["txtMentorEmail"],
                 ProjectTitle = Request.Form["txtProjectTitle"],
                 ProjectSummary = Request.Form["txtProjectSummary"],
-                DueDate = DateTime.TryParse(txtDueDate.Text, out dt) ? dt : (DateTime?)null,
-                PreferBiostat = Request.Form["txtPreferBiostat"],
-                StudyArea = string.Empty,//string.Join("; ", GetCheckedValue(tblStudyArea)),
-                ServiceType = string.Empty,//string.Join("; ", GetCheckedValue(tblServiceType)),
+                StudyAreaBitSum = Int64.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0,
+                StudyAreaOther = Request.Form["txtStudyAreaOther"],
+                HealthDateBitSum = Int64.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0,
+                HealthDataOther = Request.Form["txtHealthDataOther"],
+                StudyTypeBitSum = Int64.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum) ? studyTypeBitSum : 0,
+                StudyTypeOther = Request.Form["txtStudyTypeOther"],
+                StudyPopulationBitSum = Int64.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum) ? studyPopulationBitSum : 0,
+                StudyPopulationOther = Request.Form["txtStudyPopulationOther"],
+                ServiceBitSum = Int64.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0,
+                IsPilot = chkPilotYes.Checked ? true : false,
+                IsGrantProposal = chkProposalYes.Checked ? true : false,
+                IsUHGrant = chkIsUHPilotGrantYes.Checked ? true : false,
+                UHGrantName = ddlUHGrant.SelectedItem.Text,
+                GrantProposalFundingAgency = Request.Form["txtGrantProposalFundingAgency"],
+                GrantBitSum = Int64.TryParse(txtFundingBitSum.Value, out grantBitSum) ? grantBitSum : 0,
+                GrantOther = Request.Form["txtFundingOther"],
+                DeadLine = DateTime.TryParse(txtDueDate.Text, out dt) ? dt : (DateTime?)null,
+                BiostatId = Int32.TryParse(ddlBiostat.SelectedItem.Value, out biostatId) ? biostatId : 0,
                 Creator = Request.UserHostAddress.ToString(),
                 CreationDate = DateTime.Now,
                 RequestStatus = "Created",
-                ProjectId = -1
             };
 
             try
             {
-                using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+                using (ClientRequestTracker cr = new ClientRequestTracker())
                 {
-                    db.ClientRequest.Add(rqst);
-                    db.SaveChanges();
+                    cr.ClientRequest2_cr.Add(rqst);
+                    cr.SaveChanges();
 
                     requestId = rqst.Id;
                 }

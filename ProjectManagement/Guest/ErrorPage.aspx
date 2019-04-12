@@ -1,10 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="MahaloRequest.aspx.cs" Inherits="ProjectManagement.Guest.MahaloRequest" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ErrorPage.aspx.cs" Inherits="ProjectManagement.Guest.ErrorPage" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>JABSOM Biostatistics Core Facility Collaboration Request & Request form - Mahalo</title>    
+    <title>JABSOM Biostatistics Core Facility - ERROR</title>    
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
@@ -74,16 +74,16 @@
         <img src="../images/Banner_Print3.jpg" class="img-rounded" />
         <br />
         <br />
-            <div class="panel panel-success">
+            <div class="panel panel-warning">
                 <div class="panel-heading">              
-                    <h4 class="text-center"><b>Mahalo for your request!</b></h4>
+                    <h4 class="text-center"><b>Error - Something went wrong with your form.</b></h4>
                 </div>
             </div>
 
             <div class="text-center">
                 <h2></h2>
                 <br />
-                <h3><b>We will contact you soon regarding your request. For more information about the JABSOM Biostatistics Core Facility, feel free to contact us:</b></h3>
+                <h3><b>Please try again.<br /><br /> For additional assistance or more information about the JABSOM Biostatistics Core Facility, feel free to contact us:</b></h3>
                 <br />
                 <p style="font-size:120%;">
                     <%--<h4>Office of Biostatistics & Quantitative Health Sciences (BQHS)</h4>

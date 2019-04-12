@@ -271,6 +271,16 @@
     <Content Include="Admin\AffiliationForm.aspx" />
     <Content Include="Admin\ClientForm.aspx" />
     <Content Include="Admin\StaffForm.aspx" />
+    <Content Include="ClientRequestTracker.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientRequestTracker.edmx</DependentUpon>
+      <LastGenOutput>ClientRequestTracker.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="ClientRequestTracker.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientRequestTracker.edmx</DependentUpon>
+      <LastGenOutput>ClientRequestTracker.cs</LastGenOutput>
+    </Content>
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-datepicker.min.css" />
     <Content Include="Content\bootstrap-datepicker.standalone.css" />
@@ -291,6 +301,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Guest\BingHeatMap.html" />
     <Content Include="Guest\HeatMap.aspx" />
+    <Content Include="Guest\ErrorPage.aspx" />
     <Content Include="images\Banner_Print3_CIM.png" />
     <Content Include="images\Logo_Final.png" />
     <Content Include="images\sort_asc.png" />
@@ -421,6 +432,13 @@
     </None>
     <Content Include="BioStatProject_Academic2Dataset.xss">
       <DependentUpon>BioStatProject_Academic2Dataset.xsd</DependentUpon>
+    </Content>
+    <EntityDeploy Include="ClientRequestTracker.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ClientRequestTracker.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="ClientRequestTracker.edmx.diagram">
+      <DependentUpon>ClientRequestTracker.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -801,10 +819,40 @@
     <Compile Include="Admin\AffiliationForm.aspx.designer.cs">
       <DependentUpon>AffiliationForm.aspx</DependentUpon>
     </Compile>
+    <Compile Include="BioStat.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
     <Compile Include="BioStatProject_Academic2Dataset.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BioStatProject_Academic2Dataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BioStat_cr.cs">
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequest.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequest2_cr.cs">
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequestTracker.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientRequestTracker.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequestTracker.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequestTracker.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientRequestTracker.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientRequest_cr.cs">
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="Dtos\PaperDto.cs" />
     <Compile Include="Dtos\PaperHistory.cs" />
@@ -815,6 +863,13 @@
     <Compile Include="Guest\HeatMap.aspx.designer.cs">
       <DependentUpon>HeatMap.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Guest\ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guest\ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ImportRequest.aspx.cs">
       <DependentUpon>ImportRequest.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -822,8 +877,17 @@
     <Compile Include="ImportRequest.aspx.designer.cs">
       <DependentUpon>ImportRequest.aspx</DependentUpon>
     </Compile>
+    <Compile Include="InvestStatus_cr.cs">
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
+    </Compile>
     <Compile Include="InvoiceItem2.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JabsomAffil.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JabsomAffil_cr.cs">
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\AgreementExportEnum.cs" />
     <Compile Include="Model\HealthDisparityType.cs" />
@@ -837,6 +901,9 @@
     </Compile>
     <Compile Include="ProjectField.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectField_cr.cs">
+      <DependentUpon>ClientRequestTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="ProjectForm2.aspx.cs">
       <DependentUpon>ProjectForm2.aspx</DependentUpon>
@@ -1004,9 +1071,6 @@
     <Compile Include="AspNetUserLogin.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
-    <Compile Include="BioStat.cs">
-      <DependentUpon>ProjectTracker.tt</DependentUpon>
-    </Compile>
     <Compile Include="BioStatGroup.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
@@ -1022,9 +1086,6 @@
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="ClientAgmt.cs">
-      <DependentUpon>ProjectTracker.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ClientRequest.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="CoAuthorAffil.cs">
@@ -1114,9 +1175,6 @@
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="Invoice1.cs">
-      <DependentUpon>ProjectTracker.tt</DependentUpon>
-    </Compile>
-    <Compile Include="JabsomAffil.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="JabsomDept.cs">

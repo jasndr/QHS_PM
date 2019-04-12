@@ -1,0 +1,448 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BQHSRequest_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BioStats">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="LogonId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="BitValue" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Department" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Degree" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="InvestStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProjectTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProjectSummary" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="StudyArea" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ServiceType" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DueDate" Type="datetime" />
+          <Property Name="PreferBiostat" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Creator" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="RequestStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientRequest2">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Degree" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DegreeOther" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Department" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="InvestStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="InvestStatusOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="IsJuniorPI" Type="bit" Nullable="false" />
+          <Property Name="HasMentor" Type="bit" Nullable="false" />
+          <Property Name="MentorFirstName" Type="nvarchar" MaxLength="255" />
+          <Property Name="MentorLastName" Type="nvarchar" MaxLength="255" />
+          <Property Name="MentorEmail" Type="nvarchar" MaxLength="255" />
+          <Property Name="ProjectTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProjectSummary" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="StudyAreaBitSum" Type="bigint" Nullable="false" />
+          <Property Name="StudyAreaOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="HealthDateBitSum" Type="bigint" Nullable="false" />
+          <Property Name="HealthDataOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="StudyTypeBitSum" Type="bigint" Nullable="false" />
+          <Property Name="StudyTypeOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="StudyPopulationBitSum" Type="bigint" Nullable="false" />
+          <Property Name="StudyPopulationOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="ServiceBitSum" Type="bigint" Nullable="false" />
+          <Property Name="ServiceOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="IsPilot" Type="bit" Nullable="false" />
+          <Property Name="IsGrantProposal" Type="bit" Nullable="false" />
+          <Property Name="IsUHGrant" Type="bit" />
+          <Property Name="UHGrantName" Type="nvarchar" MaxLength="255" />
+          <Property Name="GrantProposalFundingAgency" Type="nvarchar" MaxLength="255" />
+          <Property Name="GrantBitSum" Type="bigint" Nullable="false" />
+          <Property Name="GrantOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="DeadLine" Type="datetime" />
+          <Property Name="BiostatId" Type="int" />
+          <Property Name="Creator" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="RequestStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvestStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="StatusValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DisplayOrder" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JabsomAffils">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PrevName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="ProjectField">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BitValue" Type="int" Nullable="false" />
+          <Property Name="DisplayOrder" Type="int" Nullable="false" />
+          <Property Name="IsStudyArea" Type="bit" />
+          <Property Name="IsHealthData" Type="bit" />
+          <Property Name="IsStudyType" Type="bit" />
+          <Property Name="IsStudyPopulation" Type="bit" />
+          <Property Name="IsService" Type="bit" />
+          <Property Name="IsGrant" Type="bit" />
+          <Property Name="Creator" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="isPhase" Type="bit" />
+          <Property Name="IsFundingSource" Type="bit" />
+          <Property Name="IsAcknowledgment" Type="bit" />
+        </EntityType>
+        <Association Name="FK_ClientRequest2_BioStats">
+          <End Role="BioStats" Type="Self.BioStats" Multiplicity="0..1" />
+          <End Role="ClientRequest2" Type="Self.ClientRequest2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BioStats">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClientRequest2">
+              <PropertyRef Name="BiostatId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BQHSRequest_ModelStoreContainer">
+          <EntitySet Name="BioStats" EntityType="Self.BioStats" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientRequest" EntityType="Self.ClientRequest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientRequest2" EntityType="Self.ClientRequest2" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvestStatus" EntityType="Self.InvestStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JabsomAffils" EntityType="Self.JabsomAffils" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectField" EntityType="Self.ProjectField" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ClientRequest2_BioStats" Association="Self.FK_ClientRequest2_BioStats">
+            <End Role="BioStats" EntitySet="BioStats" />
+            <End Role="ClientRequest2" EntitySet="ClientRequest2" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BQHSRequest_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BioStat_cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LogonId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BitValue" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="ClientRequest2" Relationship="BQHSRequest_Model.FK_ClientRequest2_BioStats" FromRole="BioStat_cr" ToRole="ClientRequest2" />
+        </EntityType>
+        <EntityType Name="ClientRequest_cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Degree" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="InvestStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProjectTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProjectSummary" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StudyArea" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ServiceType" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DueDate" Type="DateTime" Precision="3" />
+          <Property Name="PreferBiostat" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Creator" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RequestStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvestStatus_cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="StatusValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JabsomAffil_cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PrevName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ProjectField_cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GroupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BitValue" Type="Int32" Nullable="false" />
+          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+          <Property Name="IsStudyArea" Type="Boolean" />
+          <Property Name="IsHealthData" Type="Boolean" />
+          <Property Name="IsStudyType" Type="Boolean" />
+          <Property Name="IsStudyPopulation" Type="Boolean" />
+          <Property Name="IsService" Type="Boolean" />
+          <Property Name="IsGrant" Type="Boolean" />
+          <Property Name="Creator" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="isPhase" Type="Boolean" />
+          <Property Name="IsFundingSource" Type="Boolean" />
+          <Property Name="IsAcknowledgment" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="ClientRequestTracker" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BioStat_cr" EntityType="BQHSRequest_Model.BioStat_cr" />
+          <EntitySet Name="ClientRequest_cr" EntityType="BQHSRequest_Model.ClientRequest_cr" />
+          <EntitySet Name="InvestStatus_cr" EntityType="BQHSRequest_Model.InvestStatus_cr" />
+          <EntitySet Name="JabsomAffil_cr" EntityType="BQHSRequest_Model.JabsomAffil_cr" />
+          <EntitySet Name="ProjectField_cr" EntityType="BQHSRequest_Model.ProjectField_cr" />
+          <EntitySet Name="ClientRequest2_cr" EntityType="BQHSRequest_Model.ClientRequest2_cr" />
+          <AssociationSet Name="FK_ClientRequest2_BioStats" Association="BQHSRequest_Model.FK_ClientRequest2_BioStats">
+            <End Role="BioStat_cr" EntitySet="BioStat_cr" />
+            <End Role="ClientRequest2" EntitySet="ClientRequest2_cr" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ClientRequest2_cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Degree" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DegreeOther" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Department" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="InvestStatus" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="InvestStatusOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsJuniorPI" Type="Boolean" Nullable="false" />
+          <Property Name="HasMentor" Type="Boolean" Nullable="false" />
+          <Property Name="MentorFirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MentorLastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MentorEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectTitle" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectSummary" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="StudyAreaBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyAreaOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HealthDateBitSum" Type="Int64" Nullable="false" />
+          <Property Name="HealthDataOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="StudyTypeBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyTypeOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="StudyPopulationBitSum" Type="Int64" Nullable="false" />
+          <Property Name="StudyPopulationOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceBitSum" Type="Int64" Nullable="false" />
+          <Property Name="ServiceOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsPilot" Type="Boolean" Nullable="false" />
+          <Property Name="IsGrantProposal" Type="Boolean" Nullable="false" />
+          <Property Name="IsUHGrant" Type="Boolean" />
+          <Property Name="UHGrantName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="GrantProposalFundingAgency" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="GrantBitSum" Type="Int64" Nullable="false" />
+          <Property Name="GrantOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DeadLine" Type="DateTime" Precision="3" />
+          <Property Name="BiostatId" Type="Int32" />
+          <Property Name="Creator" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RequestStatus" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BioStat" Relationship="BQHSRequest_Model.FK_ClientRequest2_BioStats" FromRole="ClientRequest2" ToRole="BioStat_cr" />
+        </EntityType>
+        <Association Name="FK_ClientRequest2_BioStats">
+          <End Type="BQHSRequest_Model.BioStat_cr" Role="BioStat_cr" Multiplicity="0..1" />
+          <End Type="BQHSRequest_Model.ClientRequest2_cr" Role="ClientRequest2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BioStat_cr">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClientRequest2">
+              <PropertyRef Name="BiostatId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BQHSRequest_ModelStoreContainer" CdmEntityContainer="ClientRequestTracker">
+          <EntitySetMapping Name="BioStat_cr">
+            <EntityTypeMapping TypeName="BQHSRequest_Model.BioStat_cr">
+              <MappingFragment StoreEntitySet="BioStats">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="LogonId" ColumnName="LogonId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="BitValue" ColumnName="BitValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientRequest_cr">
+            <EntityTypeMapping TypeName="BQHSRequest_Model.ClientRequest_cr">
+              <MappingFragment StoreEntitySet="ClientRequest">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Degree" ColumnName="Degree" />
+                <ScalarProperty Name="InvestStatus" ColumnName="InvestStatus" />
+                <ScalarProperty Name="ProjectTitle" ColumnName="ProjectTitle" />
+                <ScalarProperty Name="ProjectSummary" ColumnName="ProjectSummary" />
+                <ScalarProperty Name="StudyArea" ColumnName="StudyArea" />
+                <ScalarProperty Name="ServiceType" ColumnName="ServiceType" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="PreferBiostat" ColumnName="PreferBiostat" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="RequestStatus" ColumnName="RequestStatus" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvestStatus_cr">
+            <EntityTypeMapping TypeName="BQHSRequest_Model.InvestStatus_cr">
+              <MappingFragment StoreEntitySet="InvestStatus">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StatusValue" ColumnName="StatusValue" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JabsomAffil_cr">
+            <EntityTypeMapping TypeName="BQHSRequest_Model.JabsomAffil_cr">
+              <MappingFragment StoreEntitySet="JabsomAffils">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="PrevName" ColumnName="PrevName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectField_cr">
+            <EntityTypeMapping TypeName="BQHSRequest_Model.ProjectField_cr">
+              <MappingFragment StoreEntitySet="ProjectField">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="BitValue" ColumnName="BitValue" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+                <ScalarProperty Name="IsStudyArea" ColumnName="IsStudyArea" />
+                <ScalarProperty Name="IsHealthData" ColumnName="IsHealthData" />
+                <ScalarProperty Name="IsStudyType" ColumnName="IsStudyType" />
+                <ScalarProperty Name="IsStudyPopulation" ColumnName="IsStudyPopulation" />
+                <ScalarProperty Name="IsService" ColumnName="IsService" />
+                <ScalarProperty Name="IsGrant" ColumnName="IsGrant" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="isPhase" ColumnName="isPhase" />
+                <ScalarProperty Name="IsFundingSource" ColumnName="IsFundingSource" />
+                <ScalarProperty Name="IsAcknowledgment" ColumnName="IsAcknowledgment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientRequest2_cr">
+            <EntityTypeMapping TypeName="BQHSRequest_Model.ClientRequest2_cr">
+              <MappingFragment StoreEntitySet="ClientRequest2">
+                <ScalarProperty Name="RequestStatus" ColumnName="RequestStatus" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="BiostatId" ColumnName="BiostatId" />
+                <ScalarProperty Name="DeadLine" ColumnName="DeadLine" />
+                <ScalarProperty Name="GrantOther" ColumnName="GrantOther" />
+                <ScalarProperty Name="GrantBitSum" ColumnName="GrantBitSum" />
+                <ScalarProperty Name="GrantProposalFundingAgency" ColumnName="GrantProposalFundingAgency" />
+                <ScalarProperty Name="UHGrantName" ColumnName="UHGrantName" />
+                <ScalarProperty Name="IsUHGrant" ColumnName="IsUHGrant" />
+                <ScalarProperty Name="IsGrantProposal" ColumnName="IsGrantProposal" />
+                <ScalarProperty Name="IsPilot" ColumnName="IsPilot" />
+                <ScalarProperty Name="ServiceOther" ColumnName="ServiceOther" />
+                <ScalarProperty Name="ServiceBitSum" ColumnName="ServiceBitSum" />
+                <ScalarProperty Name="StudyPopulationOther" ColumnName="StudyPopulationOther" />
+                <ScalarProperty Name="StudyPopulationBitSum" ColumnName="StudyPopulationBitSum" />
+                <ScalarProperty Name="StudyTypeOther" ColumnName="StudyTypeOther" />
+                <ScalarProperty Name="StudyTypeBitSum" ColumnName="StudyTypeBitSum" />
+                <ScalarProperty Name="HealthDataOther" ColumnName="HealthDataOther" />
+                <ScalarProperty Name="HealthDateBitSum" ColumnName="HealthDateBitSum" />
+                <ScalarProperty Name="StudyAreaOther" ColumnName="StudyAreaOther" />
+                <ScalarProperty Name="StudyAreaBitSum" ColumnName="StudyAreaBitSum" />
+                <ScalarProperty Name="ProjectSummary" ColumnName="ProjectSummary" />
+                <ScalarProperty Name="ProjectTitle" ColumnName="ProjectTitle" />
+                <ScalarProperty Name="MentorEmail" ColumnName="MentorEmail" />
+                <ScalarProperty Name="MentorLastName" ColumnName="MentorLastName" />
+                <ScalarProperty Name="MentorFirstName" ColumnName="MentorFirstName" />
+                <ScalarProperty Name="HasMentor" ColumnName="HasMentor" />
+                <ScalarProperty Name="IsJuniorPI" ColumnName="IsJuniorPI" />
+                <ScalarProperty Name="InvestStatusOther" ColumnName="InvestStatusOther" />
+                <ScalarProperty Name="InvestStatus" ColumnName="InvestStatus" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DegreeOther" ColumnName="DegreeOther" />
+                <ScalarProperty Name="Degree" ColumnName="Degree" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
