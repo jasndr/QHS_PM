@@ -311,13 +311,13 @@
                         <asp:DropDownList ID="ddlPIStatus" runat="server" CssClass="form-control"></asp:DropDownList>
                     </div>
                 </div>
-                <div class="row form-group-md">
+                <%--<div class="row form-group-md">
                     <div class="col-sm-9"></div>
                     <div class="col-sm-3">
                         <label class="control-label" for="txtPIStatusOther">Other:</label>
                         <input class="form-control" type="text" name="txtPIStatusOther" id="txtPIStatusOther" placeholder="Investigator status - Other" runat="Server" />
                     </div>
-                </div>
+                </div>--%>
                 <div class="row offset2 hidden">
                     <div class="col-md-2 text-right">
                         <label class="control-label">Organization Affiliation Id:</label>
@@ -398,7 +398,7 @@
                     </label>
                     <div class="col-sm-10">
                         <textarea class="form-control noresize" rows="5" id="txtProjectSummary" name="txtProjectSummary" runat="server"></textarea>
-                        <p class="help-block">Please provide a short summary of your project: description of data, outcomes, and a short statement of your service needs. It will be helpful for QHS to evaluate your need ahead of our initial consultation. (255 character limit)</p>
+                        <p class="help-block">Please provide a short summary of your project: description of data, outcomes, and a short statement of your service needs. It will be helpful for QHS to evaluate your need ahead of our initial consultation. (4000 character limit)</p>
 
                     </div>
                 </div>
@@ -629,6 +629,20 @@
                             </tbody>
                         </table>
                         <div class="row">
+                            <div class="col-sm-4" id="divHealthDisparity">
+                                <div class="col-sm-3">
+                                    <label for="chkHealthDisparityYes">Health disparity?</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkHealthDisparityYes" runat="server" Text="Yes"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkHealthDisparityNo" runat="server" Text="No"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <asp:CheckBox ID="chkHealthDisparityNA" runat="server" Text="N/A"></asp:CheckBox>
+                                </div>
+                            </div>
                             <div class="col-sm-6">
                                 <label class="control-label" for="txtStudyPopulationOther">Specify:</label>
                                 <input class="form-control" type="text" name="txtStudyPopulationOther" id="txtStudyPopulationOther" placeholder="International Populations - Specify" runat="Server" />
@@ -1142,7 +1156,35 @@
             $('#chkPilotNo').change(function () {
                 $('#chkPilotYes').prop('checked', false);
             });
-            
+
+            ToggleDiv4($('#rptStudyPopulation_chkId_0'),
+                $('#rptStudyPopulation_chkId_1'),
+                $('#rptStudyPopulation_chkId_2'),
+                $('#rptStudyPopulation_chkId_3'),
+                $('#divHealthDisparity'));
+
+
+
+            $("#chkHealthDisparityYes").change(function () {
+            if (this.checked) {
+                $('#chkHealthDisparityNo').prop('checked', false);
+                $('#chkHealthDisparityNA').prop('checked', false);
+            }
+            });
+
+            $("#chkHealthDisparityNo").change(function () {
+                if (this.checked) {
+                    $('#chkHealthDisparityYes').prop('checked', false);
+                    $('#chkHealthDisparityNA').prop('checked', false);
+                }
+            });
+
+            $("#chkHealthDisparityNA").change(function () {
+                if (this.checked) {
+                    $('#chkHealthDisparityYes').prop('checked', false);
+                    $('#chkHealthDisparityNo').prop('checked', false);
+                }
+            });
 
             ToggleDiv($('#chkProposalYes'), $('#divGrantProposal'));
 
@@ -1190,6 +1232,20 @@
                     }
 
                 });
+
+                $('#tblStudyPopulation').on('click',
+                    'input[type="checkbox"]',
+                    function () {
+                        if ($(this).is($('#rptStudyPopulation_chkId_0')) // Native Hawaiians,
+                            //--- Pacific Islanders,
+                            //--- and Filipinos
+                            || $(this).is($('#rptStudyPopulation_chkId_1')) // Hawaii Populations
+                            || $(this).is($('#rptStudyPopulation_chkId_2')) // U.S. Populations
+                            || $(this).is($('#rptStudyPopulation_chkId_3')) // International Populations
+                        ) {
+                            ToggleDiv($(this), $('#divHealthDisparity'));
+                        }
+                    });
 
             /// [Not including bioinformatics for now]
             //$("#chkProjectTypeBiostat").change(function () {
@@ -1425,6 +1481,17 @@
             else {
                 theDiv.hide();
             }
+        }
+
+        // ToggleDiv4 - Same functionality as 'ToggleDiv' with ability to handle four checkboxes.
+        function ToggleDiv4(checkBox1, checkBox2, checkBox3, checkBox4, theDiv) {
+            if (checkBox1.is(":checked")
+                || checkBox2.is(":checked")
+                || checkBox3.is(":checked")
+                || checkBox4.is(":checked"))
+                theDiv.show();
+            else
+                theDiv.hide();
         }
 
 

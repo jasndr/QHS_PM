@@ -94,15 +94,6 @@ namespace ProjectManagement.Guest {
         protected global::System.Web.UI.WebControls.DropDownList ddlPIStatus;
         
         /// <summary>
-        /// txtPIStatusOther control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtPIStatusOther;
-        
-        /// <summary>
         /// txtDeptAffilId control.
         /// </summary>
         /// <remarks>
@@ -281,6 +272,33 @@ namespace ProjectManagement.Guest {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptStudyPopulation;
+        
+        /// <summary>
+        /// chkHealthDisparityYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkHealthDisparityYes;
+        
+        /// <summary>
+        /// chkHealthDisparityNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkHealthDisparityNo;
+        
+        /// <summary>
+        /// chkHealthDisparityNA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkHealthDisparityNA;
         
         /// <summary>
         /// txtStudyPopulationOther control.

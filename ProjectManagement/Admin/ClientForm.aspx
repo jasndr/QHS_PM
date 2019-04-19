@@ -6,12 +6,13 @@
     <div class="jumbotron">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <a data-toggle="collapse" data-target="#collapseRequest"
-                    class="collapsed"><b>Request</b>
-                </a>
+                <%--<a data-toggle="collapse" data-target="#collapseRequest"
+                    class="collapsed"><strong>Request</strong>
+                </a>--%>
+                <strong>Request</strong>
             </div>
 
-            <div id="collapseRequest" class="panel-collapse collapse">
+            <div id="request">
                 <div class="panel-body">
                     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                         <ContentTemplate>
@@ -84,52 +85,52 @@
                                     <div class="row form-group-md">
                                         <%--<label class="col-sm-2 control-label" for="lblFirstName">First name</label>--%>
                                         <div class="col-sm-4">
-                                            <b>First name:</b>
+                                            <b><u>First name:</u></b>
                                             <asp:Label ID="lblFirstName" runat="server"></asp:Label>
                                             <%--<input class="form-control disbaled" type="text" Id="lblFirstName" runat="server" />--%>
                                         </div>
                                         <div class="col-sm-4">
-                                            <b>Last name:</b>
+                                            <b><u>Last name:</u></b>
                                             <asp:Label ID="lblLastName" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-sm-4">
-                                            <b>Degree:</b>
+                                            <b><u>Degree:</u></b>
                                             <asp:Label ID="lblDegree" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <b>Email:</b>
+                                            <b><u>Email:</u></b>
                                             <asp:Label ID="lblEmail" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-sm-4">
-                                            <b>Phone number:</b>
+                                            <b><u>Phone number:</u></b>
                                             <asp:Label ID="lblPhone" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <b>Organization/Department:</b>
+                                            <b><u>Organization/Department:</u></b>
                                             <asp:Label ID="lblDept" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-sm-6">
-                                            <b>Investigator status:</b>
+                                            <b><u>Investigator status:</u></b>
                                             <asp:Label ID="lblInvestStatus" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <b>Is PI a junior investigator?</b>
+                                            <b><u>Is PI a junior investigator?</u></b>
                                             <asp:Label ID="lblJuniorPI" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <b>Does PI have mentor?</b>
+                                            <b><u>Does PI have mentor?</u></b>
                                             <asp:Label ID="lblMentor" runat="server"></asp:Label>
                                         </div>
                                     </div>
@@ -145,43 +146,51 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <b>Project Title:</b>
+                                            <b><u>Project Title:</u></b>
                                             <asp:Label ID="lblProjectTitle" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <b>Project Summary:</b>
+                                            <b><u>Project Summary:</u></b>
                                             <asp:Label ID="lblProjectSummary" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <b>Study Area:</b>
+                                            <b><u>Study Area:</u></b>
                                             <asp:Label ID="lblStudyArea" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-sm-6">
-                                            <b>Health Database(s) Utilized:</b>
+                                            <b><u>Health Database(s) Utilized:</u></b>
                                             <asp:Label ID="lblHealthData" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <b>Study Type:</b>
+                                            <b><u>Study Type:</u></b>
                                             <asp:Label ID="lblStudyType" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-sm-6">
-                                            <b>Study Population:</b>
+                                            <b><u>Study Population:</u></b>
                                             <asp:Label ID="lblStudyPopulation" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
+                                        <div class="col-sm-6"></div>
+                                        <div class="col-sm-5 col-sm-offset-1">
+                                            <b><u>Health Disparity?</u></b>
+                                            <asp:Label ID="lblHealthDisparity" runat="server"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
                                         <div class="col-sm-12">
-                                            <b>Type of support:</b>
+                                            <b><u>Type of support:</u></b>
                                             <asp:Label ID="lblService" runat="server"></asp:Label>
                                         </div>
                                     </div>
@@ -189,7 +198,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <b>Is project a funded infrastructure grant pilot study?</b>
+                                            <b><u>Is project a funded infrastructure grant pilot study?</u></b>
                                             <asp:Label ID="lblPilot" runat="server"></asp:Label>
                                         </div>
                                     </div>
@@ -198,7 +207,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <b>Is this project for a grant proposal?</b>
+                                            <b><u>Is this project for a grant proposal?</u></b>
                                             <asp:Label ID="lblProposal" runat="server"></asp:Label>
                                         </div>
                                     </div>
@@ -206,11 +215,11 @@
 
                                     <div class="row">
                                         <div class="col-sm-11 col-sm-offset-1">
-                                            <b>Is this application to a pilot program of a UH infrastructure grant?</b>
+                                            <b><u>Is this application to a pilot program of a UH infrastructure grant?</u></b>
                                             <asp:Label ID="lblUHPilotGrant" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-sm-11 col-sm-offset-1">
-                                            <b>What is the grant / funding agency?</b>
+                                            <b><u>What is the grant / funding agency?</u></b>
                                             <asp:Label ID="lblPilotGrantName" runat="server"></asp:Label>
                                         </div>
                                     </div>
@@ -218,7 +227,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <b>Funding Source:</b>
+                                            <b><u>Funding Source:</u></b>
                                             <asp:Label ID="lblGrant" runat="server"></asp:Label>
                                         </div>
                                     </div>
@@ -227,22 +236,25 @@
 
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <b>Important deadlines:</b>
+                                            <b><u>Important deadlines:</u></b>
                                             <asp:Label ID="lblDueDate" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <b>BQHS faculty/staff preference (if any):</b>
+                                            <b><u>QHS faculty/staff preference (if any):</u></b>
                                             <asp:Label ID="lblBiostat" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <asp:CheckBox ID="chkCompleted" runat="server" Text="Request Completed" />
+                                        <div class="col-md-6">
+                                            <asp:CheckBox ID="chkCompleted" runat="server" Text="Request Completed" Enabled="false"  />
                                         </div>
+                                        <%--<div class="col-md-4">
+                                            <asp:Button ID="btnCreateProject" runat="server" Text="Create Project" CssClass="btn btn-dark btn-sm" OnClientClick="return validateControl();" OnClick="btnCreateProject_Click" />
+                                        </div>--%>
                                     </div>
                                     <%--<div class="row">
                                     <div class="col-xs-3 col-md-3">
@@ -279,14 +291,17 @@
 
                                 <div class="modal-footer">
                                     <asp:Label ID="lblResult" Visible="false" runat="server"></asp:Label>
-                                    <asp:Button ID="btnSave" runat="server" Text="Update" CssClass="btn btn-info" OnClientClick="return validateControl();" OnClick="btnSave_Click" />
+                                    <%--<asp:Button ID="btnSave" runat="server" Text="Update" CssClass="btn btn-info" OnClientClick="return validateControl();" OnClick="btnSave_Click" />--%>
+                                    <asp:Button ID="btnCreateProject" runat="server" Text="Create Project" CssClass="btn btn-dark" OnClientClick="return validateControl();" OnClick="btnCreateProject_Click" />
+                                       
                                     <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>
                                 </div>
 
                             </ContentTemplate>
                             <Triggers>
                                 <asp:AsyncPostBackTrigger ControlID="rptClientRqst" EventName="ItemCommand" />
-                                <asp:AsyncPostBackTrigger ControlID="btnSave" EventName="Click" />
+                                <%--<asp:AsyncPostBackTrigger ControlID="btnSave" EventName="Click" />--%>
+                                <asp:AsyncPostBackTrigger ControlID="btnCreateProject" EventName="Click" />
                             </Triggers>
                         </asp:UpdatePanel>
 

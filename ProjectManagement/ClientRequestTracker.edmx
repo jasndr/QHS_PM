@@ -83,6 +83,9 @@
           <Property Name="Creator" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="RequestStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="IsHealthDisparity" Type="tinyint" />
+          <Property Name="GrantDepartmentFundingType" Type="int" />
+          <Property Name="GrantDepartmentFundingOther" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="InvestStatus">
           <Key>
@@ -280,6 +283,9 @@
           <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="RequestStatus" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BioStat" Relationship="BQHSRequest_Model.FK_ClientRequest2_BioStats" FromRole="ClientRequest2" ToRole="BioStat_cr" />
+          <Property Name="IsHealthDisparity" Type="Byte" />
+          <Property Name="GrantDepartmentFundingType" Type="Int32" />
+          <Property Name="GrantDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_ClientRequest2_BioStats">
           <End Type="BQHSRequest_Model.BioStat_cr" Role="BioStat_cr" Multiplicity="0..1" />
@@ -380,6 +386,9 @@
           <EntitySetMapping Name="ClientRequest2_cr">
             <EntityTypeMapping TypeName="BQHSRequest_Model.ClientRequest2_cr">
               <MappingFragment StoreEntitySet="ClientRequest2">
+                <ScalarProperty Name="GrantDepartmentFundingOther" ColumnName="GrantDepartmentFundingOther" />
+                <ScalarProperty Name="GrantDepartmentFundingType" ColumnName="GrantDepartmentFundingType" />
+                <ScalarProperty Name="IsHealthDisparity" ColumnName="IsHealthDisparity" />
                 <ScalarProperty Name="RequestStatus" ColumnName="RequestStatus" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="Creator" ColumnName="Creator" />

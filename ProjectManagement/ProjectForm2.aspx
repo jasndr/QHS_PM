@@ -486,7 +486,7 @@
                         <div class="row">
                             <div class="col-sm-6 text-left">
                                 <label class="control-label">Credit to sister cores</label>
-                            </div>project
+                            </div>
                         </div>
                         <div class="row offset2">
                             <div class="col-sm-2">

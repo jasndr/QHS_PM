@@ -53,6 +53,9 @@ namespace ProjectManagement
         public string Creator { get; set; }
         public System.DateTime CreationDate { get; set; }
         public string RequestStatus { get; set; }
+        public Nullable<byte> IsHealthDisparity { get; set; }
+        public Nullable<int> GrantDepartmentFundingType { get; set; }
+        public string GrantDepartmentFundingOther { get; set; }
     
         public virtual BioStat_cr BioStat { get; set; }
     }

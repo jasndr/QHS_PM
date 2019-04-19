@@ -193,6 +193,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.Label lblStudyPopulation;
         
         /// <summary>
+        /// lblHealthDisparity control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblHealthDisparity;
+        
+        /// <summary>
         /// lblService control.
         /// </summary>
         /// <remarks>
@@ -283,13 +292,13 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.WebControls.Label lblResult;
         
         /// <summary>
-        /// btnSave control.
+        /// btnCreateProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSave;
+        protected global::System.Web.UI.WebControls.Button btnCreateProject;
         
         /// <summary>
         /// rptSurvey control.
