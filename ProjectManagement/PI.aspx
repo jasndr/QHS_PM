@@ -89,7 +89,7 @@
                     </asp:UpdatePanel>
                     <asp:UpdateProgress ID="UpdateProgress1" runat="server">
                         <ProgressTemplate>
-                            <img src="" alt="Loading.. Please wait!" />
+                            <img src="../images/Logo_Final.png" alt="Loading.. Please wait!" />
                         </ProgressTemplate>
                     </asp:UpdateProgress>
 
@@ -673,19 +673,21 @@
             }
         }
 
+
         function validateControl() {
             $("#commentForm").validate({
                 rules: {
                     <%=TextBoxFirstName.UniqueID %>: {
-                        required:true
-                    },
+                    required: true
+                },
                     <%=TextBoxLastName.UniqueID %>: {
-                        required:true
-                    },
+                    required: true
+                },
                     <%=TextBoxEmail.UniqueID %>: {
-                        required:true,
-                        email:true
-                    }
+                    required: true,
+                    email: true
+                }
+
                 }
             });
         }

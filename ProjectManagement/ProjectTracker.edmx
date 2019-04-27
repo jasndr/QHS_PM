@@ -1038,6 +1038,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProject' does not have a p
           <Property Name="Comments" Type="nvarchar" MaxLength="500" />
           <Property Name="NotReportRmatrix" Type="bit" />
           <Property Name="IsRmatrix" Type="bit" />
+          <Property Name="NotReportOla" Type="bit" />
+          <Property Name="IsOlaRequest" Type="bit" />
           <Property Name="HealthDateBitSum" Type="bigint" Nullable="false" />
           <Property Name="GrantBitSum" Type="bigint" Nullable="false" />
           <Property Name="LeadBiostatId" Type="int" Nullable="false" />
@@ -1961,6 +1963,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
     [vwProject].[Comments] AS [Comments], 
     [vwProject].[NotReportRmatrix] AS [NotReportRmatrix], 
     [vwProject].[IsRmatrix] AS [IsRmatrix], 
+    [vwProject].[NotReportOla] AS [NotReportOla], 
+    [vwProject].[IsOlaRequest] AS [IsOlaRequest], 
     [vwProject].[HealthDateBitSum] AS [HealthDateBitSum], 
     [vwProject].[GrantBitSum] AS [GrantBitSum], 
     [vwProject].[LeadBiostatId] AS [LeadBiostatId], 
@@ -4192,6 +4196,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="OtherMemberBitSum" Type="Int64" Nullable="false" />
           <Property Name="ProjectType" Type="Byte" Nullable="false" />
           <Property Name="CreditTo" Type="Byte" Nullable="false" />
+          <Property Name="NotReportOla" Type="Boolean" />
+          <Property Name="IsOlaRequest" Type="Boolean" />
         </EntityType>
         <ComplexType Name="P_INVOICE_HOURS2_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
@@ -5383,6 +5389,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="vwProject">
             <EntityTypeMapping TypeName="ProjectTracker.vwProject">
               <MappingFragment StoreEntitySet="vwProject">
+                <ScalarProperty Name="IsOlaRequest" ColumnName="IsOlaRequest" />
+                <ScalarProperty Name="NotReportOla" ColumnName="NotReportOla" />
                 <ScalarProperty Name="CreditTo" ColumnName="CreditTo" />
                 <ScalarProperty Name="ProjectType" ColumnName="ProjectType" />
                 <ScalarProperty Name="OtherMemberBitSum" ColumnName="OtherMemberBitSum" />

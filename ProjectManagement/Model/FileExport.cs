@@ -20,6 +20,9 @@ namespace ProjectManagement.Model
     ///                                    Also added initial documentation for readibility.
     ///  2018JUL30 - Jason Delos Reyes  -  Edited ExportExcel2() function so that the project type is printed as the sheet name
     ///                                    instead of the "Insert Table" text that was initially specified.
+    ///  2019APR26 - Jason Delos Reyes  -  Added ExportCsv() overload function to accomodate grant distinction, mainly for Ola HAWAII 
+    ///                                    Monthly Reports.
+    ///                                 -  Added Year to ExportCsv() overload function (pulls from "from date" year).
     /// </summary>
     public class FileExport
     {
@@ -142,6 +145,62 @@ namespace ProjectManagement.Model
             }
 
             string fileName = string.Format("attachment;filename=RMATRIX_Monthly_{0}.csv", dtFrom.ToString("MMM", System.Globalization.CultureInfo.InvariantCulture));
+
+            //Download the CSV file.
+            _repsonse.Clear();
+            //Response.ClearHeaders();
+            //Response.ClearContent();                                   
+
+            _repsonse.Buffer = true;
+            _repsonse.AddHeader("content-disposition", fileName);
+            _repsonse.Charset = "";
+            _repsonse.ContentType = "application/text";
+            _repsonse.Output.Write(csv);
+
+            _repsonse.AppendCookie(new HttpCookie("fileDownloadToken", downloadTokenValue)); //downloadTokenValue 
+
+            _repsonse.Flush();
+            _repsonse.End();
+        }
+
+        /// <summary>
+        /// Used by the RMATRIX / Ola HAWAII Monthly reports, creates a downloadable CSV
+        /// file form the data obtained from the SQL Database.
+        /// </summary>
+        /// <param name="dt">Data table extracted from SQL data.</param>
+        /// <param name="dtFrom">Initial Date of range.</param>
+        /// <param name="downloadTokenValue">Download token value required for CSV download cookie.</param>
+        /// <param name="reportGrant">Distinguishes between type of grant, mainly RMATRIX or Ola HAWAII.</param>
+        public void CsvExport(DataTable dt, DateTime dtFrom, string downloadTokenValue, string reportGrant)
+        {
+            //Build the CSV file data as a Comma separated string.
+            string csv = string.Empty;
+
+            foreach (DataColumn column in dt.Columns)
+            {
+                //Add the Header row for CSV file.
+                csv += column.ColumnName + ',';
+            }
+
+            //Add new line.
+            csv += "\r\n";
+
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach (DataColumn column in dt.Columns)
+                {
+                    //Add the Data rows.
+                    csv += row[column.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+
+                //Add new line.
+                csv += "\r\n";
+            }
+
+            string reportGrantName = reportGrant == "RMATRIX" ? reportGrant : "Ola_HAWAII";
+
+            string fileName = string.Format("attachment;filename={0}_Monthly_{1}_{2}.csv", reportGrantName, dtFrom.ToString("MMM", System.Globalization.CultureInfo.InvariantCulture)
+                                                                                                         , dtFrom.Year);
 
             //Download the CSV file.
             _repsonse.Clear();

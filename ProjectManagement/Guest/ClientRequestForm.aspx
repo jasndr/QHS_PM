@@ -407,7 +407,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        Study Area(s)<p class="help-block">(check all that apply)</p>
+                        Study Area(s)<span class="help-block">(check all that apply)</span>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblStudyArea">
@@ -661,7 +661,7 @@
                     <div class="col-sm-2">
                         <label class="control-label">
                             Type(s) of support needed
-                <p class="help-block">(check all that apply)</p>
+                <span class="help-block">(check all that apply)</span>
                         </label>
                     </div>
                     <div class="col-sm-10">

@@ -642,15 +642,68 @@ namespace ProjectManagement.Admin
 
                 if (rqst != null)
                 {
-                    lblFirstName.Text = rqst.FirstName;
-                    lblLastName.Text = rqst.LastName;
-                    lblDegree.Text = rqst.Degree.Equals("Other") ? "Other - " + rqst.DegreeOther : rqst.Degree;
-                    lblEmail.Text = rqst.Email;
-                    lblPhone.Text = rqst.Phone;
-                    lblDept.Text = rqst.Department;
-                    lblInvestStatus.Text = rqst.InvestStatus.Equals("Other") ? "Other - " + rqst.InvestStatusOther : rqst.InvestStatus;
-                    lblJuniorPI.Text = rqst.IsJuniorPI.Equals(true) ? "Yes" : "No";
-                    lblMentor.Text = rqst.HasMentor.Equals(true) ? "Yes - " + rqst.MentorFirstName + " " + rqst.MentorLastName + " (" + rqst.MentorEmail + ")" : "No";
+                    txtFirstName.Value = rqst.FirstName; //lblFirstName.Text = rqst.FirstName;
+                    txtLastName.Value = rqst.LastName;   //lblLastName.Text = rqst.LastName;
+                    
+                    /// Populates "Degree" dropdown
+                    var dropDownSource = cr.JabsomAffil_cr
+                                       .Where(d => d.Type == "Degree")
+                                       .OrderBy(d => d.Name)
+                                       .ToDictionary(c => c.Id, c => c.Name);
+                    PageUtility.BindDropDownList(ddlDegree, dropDownSource, "-- Select Degree --");
+
+                    ddlDegree.SelectedValue = dropDownSource.FirstOrDefault(f => f.Value == rqst.Degree).Key.ToString();
+
+                    txtDegreeOther.Value = rqst.DegreeOther;
+
+                    txtEmail.Value = rqst.Email;
+                    txtPhone.Value = rqst.Phone;
+                    txtDept.Value = rqst.Department;
+
+                    /// Populates "Organization" typeable dropdown (if available from database)
+                    var deptAffil = cr.JabsomAffil_cr
+                                      .Where(a => a.Type != "Other" && a.Type != "Degree"
+                                                                    && a.Type != "Unknown"
+                                                                    && a.Type != "UHFaculty"
+                                                                    && a.Name != "Other")
+                                      .OrderBy(a => a.Id)
+                                      .Select(x => new { Id = x.Id, Name = x.Name });
+
+                    //textAreaDeptAffil.Value = Newtonsoft.Json.JsonConvert.SerializeObject(deptAffil);
+
+                    /// Populates "Investigator Status" dropdown
+                    dropDownSource = cr.InvestStatus_cr
+                                       .OrderBy(d => d.DisplayOrder)
+                                        .ToDictionary(c => c.Id, c => c.StatusValue);
+
+                    PageUtility.BindDropDownList(ddlPIStatus, dropDownSource, "-- Select status --");
+
+                    ddlPIStatus.SelectedValue = dropDownSource.FirstOrDefault(f => f.Value == rqst.InvestStatus).Key.ToString();
+
+                    if (rqst.IsJuniorPI.Equals(true))
+                    {
+                        chkJuniorPIYes.Checked = true;
+                    }
+                    else
+                    {
+                        chkJuniorPINo.Checked = true;
+                    }
+
+                    //lblJuniorPI.Text = rqst.IsJuniorPI.Equals(true) ? "Yes" : "No";
+
+                    if (rqst.HasMentor.Equals(true))
+                    {
+                        chkMentorYes.Checked = true;
+                    }
+                    else
+                    {
+                        chkMentorNo.Checked = true;
+                    }
+
+                    txtMentorFirstName.Value = rqst.MentorFirstName;
+                    txtMentorLastName.Value = rqst.MentorLastName;
+                    txtMentorEmail.Value = rqst.MentorEmail;
+
                     lblProjectTitle.Text = rqst.ProjectTitle;
                     lblProjectSummary.Text = rqst.ProjectSummary;
 
@@ -862,11 +915,15 @@ namespace ProjectManagement.Admin
                     {
                         chkCompleted.Checked = true;
                         btnCreateProject.Enabled = false;
+                        btnCreateProject.Text = "-- Project Already Created --";
+                        //btnCreateProject.CssClass = "notAllowed";
                     }
                     else
                     {
                         chkCompleted.Checked = false;
                         btnCreateProject.Enabled = true;
+                        btnCreateProject.Text = "Create Project";
+                        //btnCreateProject.CssClass = "";
                     }
                     
 

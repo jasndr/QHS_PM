@@ -1027,10 +1027,10 @@
                                 <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
                             </div>--%>
                         <div class="col-sm-5">
-                            <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;Report to RMATRIX
+                            <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;<%--Report--%>Submit to RMATRIX
                         </div>
                         <div class="col-sm-5">
-                            <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;Report to Ola Hawaii
+                            <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;<%--Report--%>Submit to Ola Hawaii
                         </div>
                     </div>
                     <br />

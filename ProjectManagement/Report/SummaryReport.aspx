@@ -15,7 +15,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <b>RMATRIX / Ola Hawaiʻi <span id="collabCtrSectionTitle" runat="server">/ Collaboration Center </span>Summary Report</b>
+            <b>RMATRIX / Ola HAWAII <span id="collabCtrSectionTitle" runat="server">/ Collaboration Center </span>Summary Report</b>
         </div>
 
         <div class="panel-body">

@@ -26,6 +26,8 @@ namespace ProjectManagement
     ///  2018JUL20 - Jason Delos Reyes  -  Made "Data Presentation" > "RMATRIX Summary Report" and "Ola Hawaii Summary Report" 
     ///                                    hidden as to consolidate to a unified summary report form for both grants, that can
     ///                                    easily be expanded to more grants.
+    ///  2019APR26 - Jason Delos Reyes  -  Replace sole "RMATRIX Monthly Report" link to a more inclusive "RMATRIX / Ola HAWAII Monthly Report"
+    ///                                    tab to allow pulling Ola HAWAII reports for now, and possibly expand to other grants in the future.
     /// </summary>
     public partial class SiteMaster : MasterPage
     {
@@ -108,11 +110,12 @@ namespace ProjectManagement
                 TimeEntryLink.Visible = true;
                 
                 ReportLink1.Visible = true;
-                ReportLink2.Visible = true;
+                //ReportLink2.Visible = true;
                 //ReportLink3.Visible = true;
                 ReportLink4.Visible = true;
                 //ReportLink5.Visible = true;
                 ReportLink6.Visible = true;
+                ReportLink7.Visible = true;
 
                 if (HttpContext.Current.User.IsInRole("Admin"))
                 {

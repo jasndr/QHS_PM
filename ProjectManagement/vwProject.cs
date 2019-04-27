@@ -43,5 +43,7 @@ namespace ProjectManagement
         public long OtherMemberBitSum { get; set; }
         public byte ProjectType { get; set; }
         public byte CreditTo { get; set; }
+        public Nullable<bool> NotReportOla { get; set; }
+        public Nullable<bool> IsOlaRequest { get; set; }
     }
 }

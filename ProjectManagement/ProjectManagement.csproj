@@ -315,6 +315,7 @@
     <Content Include="ImportRequest.aspx" />
     <Content Include="ProjectForm2.aspx" />
     <Content Include="Report\FilteredReport.aspx" />
+    <Content Include="Report\MonthlyReport.aspx" />
     <Content Include="Report\SummaryReport.aspx" />
     <Content Include="Report\Project.aspx" />
     <Content Include="Report\RmatrixMonthly.aspx" />
@@ -932,6 +933,13 @@
     </Compile>
     <Compile Include="Report\FilteredReport.aspx.designer.cs">
       <DependentUpon>FilteredReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\MonthlyReport.aspx.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\MonthlyReport.aspx.designer.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Report\SummaryReport.aspx.cs">
       <DependentUpon>SummaryReport.aspx</DependentUpon>
