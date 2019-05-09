@@ -61,6 +61,8 @@ namespace ProjectManagement.Admin
     ///                                    dropdown a specific collaborative center in mind.
     ///  2019MAR11 - Jason Delos Reyes  -  Adjusted "Update" functionality so that the page is redirected to the
     ///                                    same page by the URL string instead of simply stopping the modal from closing.
+    ///  2019MAY06 - Jason Delos Reyes  -  Increased the potential number of phases to 20 to increase the number of phases
+    ///                                    that could be displayed on the Client Agreement Form.
     /// </summary>
     public partial class ClientAgreementForm : System.Web.UI.Page
     {
@@ -132,7 +134,7 @@ namespace ProjectManagement.Admin
 
             //phase
             dropDownSource = new Dictionary<int, string>();
-            for (int p = 1; p < 10; p++)
+            for (int p = 1; p < 20; p++)
             {
                 string s = string.Format("Phase-{0}", p);
                 dropDownSource.Add(p, s);

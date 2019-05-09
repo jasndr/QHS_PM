@@ -41,6 +41,14 @@ namespace ProjectManagement.Admin
     ///                                             has been created.  At this point, the "Create Project" button will also be disabled.
     ///                                           • Make fields editable upon review and request is "Created".
     ///                                           • Make PI editable with new information instead of just pulling old information.
+    ///  2019MAY03 - Jason Delos Reyes  -  Fixed the issue that didn't allow javascript code to run.
+    ///  2019MAY08 - Jason Delos Reyes  -  Fixed the issue that didn't allow the checkboxes for a checkbox group
+    ///                                    (e.g., Study Area) to be clicked or hide the auxilary options.
+    ///                                 -  Made all fields disabled if the client request already has a
+    ///                                    project form created in the project tracking system.
+    ///                                 -  Fixed the issue that duplicated the creation of PI's in the system
+    ///                                    whenever a Client Request Form was used to create a new project.
+    ///                                 -  Added QHS Banner.
     ///                                           
     /// </summary>
     public partial class ClientForm : System.Web.UI.Page
@@ -80,6 +88,7 @@ namespace ProjectManagement.Admin
         /// <param name="e"></param>
         protected void btnCreateProject_Click(object sender, EventArgs e)
         {
+
             using (ClientRequestTracker cr = new ClientRequestTracker())
             {
 
@@ -96,62 +105,83 @@ namespace ProjectManagement.Admin
 
                         using (ProjectTrackerContainer db = new ProjectTrackerContainer())
                         {
-                            ///<> PI <> ///
-                            // If there is not an existing PI in the database,
-                            // Create create new PI entry and send email to admin.
-                            int investId = 0;
-                            Invest pi = db.Invests.FirstOrDefault(x => x.FirstName + " " + x.LastName == rqst.FirstName + " " + rqst.LastName);
-
-
-                            if (pi == null)
+                            // Links project to existing project in tracking system
+                            if (chkCompleted.Checked.Equals(true))
                             {
-                                Invest invest = CreateInvest(rqst);
+                                Project2 project = FindProject(rqst);
 
-                                if (invest != null)
+                                if (project != null)
                                 {
-                                    db.Invests.Add(invest);
-                                    db.SaveChanges();
-
-                                    investId = invest.Id;
-
-                                    SendPINotificationEmail(investId);
+                                    Response.Redirect(String.Format("~/ProjectForm2?Id={0}", project.Id));
+                                }
+                                else
+                                {
+                                    btnCreateProject.Enabled = false;
+                                    btnCreateProject.Text = "-- Project already created; search manually --";
                                 }
 
                             }
                             else
                             {
-                                investId = pi.Id;
+
+                                ///<> PI <> ///
+                                // If there is not an existing PI in the database,
+                                // Create create new PI entry and send email to admin.
+                                int investId = 0;
+                                Invest pi = db.Invests.FirstOrDefault(x => x.FirstName + " " + x.LastName == rqst.FirstName + " " + rqst.LastName);
+
+
+                                if (pi == null)
+                                {
+                                    Invest invest = CreateInvest(rqst);
+
+                                    if (invest != null)
+                                    {
+                                        //Delete - duplicates creation of PI's, which duplicates PI records.
+                                        //db.Invests.Add(invest);
+                                        //db.SaveChanges();
+
+                                        investId = invest.Id;
+
+                                        SendPINotificationEmail(investId);
+                                    }
+
+                                }
+                                else
+                                {
+                                    investId = pi.Id;
+                                }
+
+                                ///<> Project <> ///
+                                // Push create new PROJECT entry and send email to admin for approval. 
+
+
+                                Project2 project = CreateProject(rqst);
+                                project.PIId = investId;
+
+                                if (project != null)
+                                {
+                                    db.Project2.Add(project);
+                                    db.SaveChanges();
+
+                                    SendProjectNotificationEmail(project.Id);
+                                }
+
+                                // Print success message and close window.
+                                ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                                "ModalScript", PageUtility.LoadEditScript(false), false);
+
+                                // Make "Completed" checkbox checked.
+                                cr.ClientRequest2_cr.FirstOrDefault(t => t.Id == rqstId).RequestStatus = "Completed";
+                                cr.SaveChanges();
+
+
+                                // Rebind list of Client Requests.
+                                DataTable clientRqstTable = GetClientRqstAll();
+                                rptClientRqst.DataSource = clientRqstTable;
+                                rptClientRqst.DataBind();
+
                             }
-
-                            ///<> Project <> ///
-                            // Push create new PROJECT entry and send email to admin for approval. 
-
-
-                            Project2 project = CreateProject(rqst);
-                            project.PIId = investId;
-
-                            if (project != null)
-                            {
-                                db.Project2.Add(project);
-                                db.SaveChanges();
-
-                                SendProjectNotificationEmail(project.Id);
-                            }
-
-                            // Print success message and close window.
-                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
-                            "ModalScript", PageUtility.LoadEditScript(false), false);
-
-                            // Make "Completed" checkbox checked.
-                            cr.ClientRequest2_cr.FirstOrDefault(t => t.Id == rqstId).RequestStatus = "Completed";
-                            cr.SaveChanges();
-
-
-                            // Rebind list of Client Requests.
-                            DataTable clientRqstTable = GetClientRqstAll();
-                            rptClientRqst.DataSource = clientRqstTable;
-                            rptClientRqst.DataBind();
-
                         }
 
                     }
@@ -159,6 +189,8 @@ namespace ProjectManagement.Admin
 
                 }
             }
+
+
 
 
             //using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -233,7 +265,7 @@ namespace ProjectManagement.Admin
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
-                
+
                 invest = new Invest()
                 {
 
@@ -245,8 +277,8 @@ namespace ProjectManagement.Admin
                     InvestStatusId = db.InvestStatus.FirstOrDefault(g => g.StatusValue == rqst.InvestStatus) != null ?
                                      db.InvestStatus.FirstOrDefault(g => g.StatusValue == rqst.InvestStatus).Id : -1,
                     IsApproved = false
-                    
-                   
+
+
 
                 };
 
@@ -263,9 +295,11 @@ namespace ProjectManagement.Admin
 
                 //-->Organization
                 JabsomAffil investOrganization = db.JabsomAffils.FirstOrDefault(g => g.Name == rqst.Department);
-                if (investOrganization != null) {
+                if (investOrganization != null)
+                {
                     invest.JabsomAffils.Add(investOrganization);
-                } else
+                }
+                else
                 {
                     invest.NonUHClient = rqst.Department;
                 }
@@ -300,16 +334,16 @@ namespace ProjectManagement.Admin
                 //grantBitSum = 0,
                 //grantDepartmentFundingType = 0,
                 aknBitSum = 0;
-                //aknDepartmentFundingType = 0,
-                //rmatrixNum = 0,
-                //olaHawaiiNum = 0,
-                //uhGrantId = 0;
+            //aknDepartmentFundingType = 0,
+            //rmatrixNum = 0,
+            //olaHawaiiNum = 0,
+            //uhGrantId = 0;
 
             long otherMemberBitSum = 0;
 
             //DateTime dtDeadline, dtRmatrixSubDate, dtOlaHawaiiSubDate, dtCompletionDate;
 
-           
+
             Project2 project;
 
 
@@ -350,7 +384,7 @@ namespace ProjectManagement.Admin
                     IsPilot = rqst.IsPilot,
                     IsGrantProposal = rqst.IsGrantProposal,
                     IsUHGrant = rqst.IsUHGrant,
-                    UHGrantID = db.GrantAffils.FirstOrDefault(g => g.GrantAffilName == rqst.UHGrantName)?.Id,
+                    UHGrantID = /*db.GrantAffils.FirstOrDefault(g => g.GrantAffilName == rqst.UHGrantName)?.Id*/null,
                     GrantProposalFundingAgency = rqst.GrantProposalFundingAgency,
                     IsInternal = false,
                     IsApproved = false,
@@ -603,19 +637,6 @@ namespace ProjectManagement.Admin
             using (ClientRequestTracker cr = new ClientRequestTracker())
             {
 
-                DateTime dt;
-
-                // Obtain list of study areas
-                Dictionary<int, string> studyAreas = cr.ProjectField_cr
-                                                       .Where(f => f.IsStudyArea == true)
-                                                       .Select(d => new { d.BitValue, d.Name })
-                                                       .ToDictionary(g => g.BitValue, g => g.Name);
-
-                Dictionary<int, string> healthData = cr.ProjectField_cr
-                                                       .Where(f => f.IsHealthData == true)
-                                                       .Select(d => new { d.BitValue, d.Name })
-                                                       .ToDictionary(g => g.BitValue, g => g.Name);
-
                 Dictionary<int, string> studyType = cr.ProjectField_cr
                                                        .Where(f => f.IsStudyType == true)
                                                        .Select(d => new { d.BitValue, d.Name })
@@ -640,298 +661,429 @@ namespace ProjectManagement.Admin
                                                    .Select(d => new { d.Id, d.Name })
                                                    .ToDictionary(g => g.Id, g => g.Name);
 
+
+                /// Populates "Degree" dropdown
+                var dropDownSource = cr.JabsomAffil_cr
+                                   .Where(d => d.Type == "Degree")
+                                   .OrderBy(d => d.Name)
+                                   .ToDictionary(c => c.Id, c => c.Name);
+                PageUtility.BindDropDownList(ddlDegree, dropDownSource, "-- Select Degree --");
+
+                //ddlDegree.SelectedValue = dropDownSource.FirstOrDefault(f => f.Value == rqst.Degree).Key.ToString();
+
+
+                /// Populates "Organization" typeable dropdown (if available from database)
+                var deptAffil = cr.JabsomAffil_cr
+                                  .Where(a => a.Type != "Other" && a.Type != "Degree"
+                                                                && a.Type != "Unknown"
+                                                                && a.Type != "UHFaculty"
+                                                                && a.Name != "Other")
+                                  .OrderBy(a => a.Id)
+                                  .Select(x => new { Id = x.Id, Name = x.Name });
+
+                textAreaDeptAffil.Value = Newtonsoft.Json.JsonConvert.SerializeObject(deptAffil);
+
+                /// Populates "Investigator Status" dropdown
+                dropDownSource = cr.InvestStatus_cr
+                                   .OrderBy(d => d.DisplayOrder)
+                                    .ToDictionary(c => c.Id, c => c.StatusValue);
+
+                PageUtility.BindDropDownList(ddlPIStatus, dropDownSource, "-- Select status --");
+
+                //ddlPIStatus.SelectedValue = dropDownSource.FirstOrDefault(f => f.Value == rqst.InvestStatus).Key.ToString();
+
+
+                /// Populates "Study Area" checkbox grid
+                var qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyArea == true).ToList();
+
+                rptStudyArea.DataSource = qProjectField;
+                rptStudyArea.DataBind();
+
+
+                /// Populates "Health Data" checkbox grid
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsHealthData == true).ToList();
+                rptHealthData.DataSource = qProjectField;
+                rptHealthData.DataBind();
+
+                /// Populates "Study Type" checkbox grid.
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyType == true).ToList();
+                rptStudyType.DataSource = qProjectField;
+                rptStudyType.DataBind();
+
+                /// Populates "Study Population" checkbox grid.
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyPopulation == true).ToList();
+                rptStudyPopulation.DataSource = qProjectField;
+                rptStudyPopulation.DataBind();
+
+                /// Populates "Service" checkbox grid.
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsService == true).ToList();
+                rptService.DataSource = qProjectField;
+                rptService.DataBind();
+
+                /// Populates "QHS Faculty/Staff preference" dropdown\
+                dropDownSource = cr.BioStat_cr
+                                   .Where(b => b.EndDate >= DateTime.Now && b.Id > 0
+                                                                         && b.Name != "N/A"
+                                                                         && b.Name != "Vedbar Khadka"
+                                                                         && b.Name != "Youping Deng"
+                                                                         && b.Name != "Mark Menor"
+                                                                         && b.Name != "Laura Tipton"
+                                                                         && b.Name != "JaNay Wyss")
+                                   .OrderBy(b => b.Name)
+                                   .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlBiostat, dropDownSource, String.Empty);
+
+                /// Populates "Funding Source" checkbox grid
+                var qFundingSource = cr.ProjectField_cr.Where(f => f.IsGrant == true
+                                                             && f.IsFundingSource == true
+                                                             && f.Name != "N/A"
+                                                             && f.Name != "No (No funding)"
+                                                             && f.Name != "COBRE-Cardiovascular"
+                                                             && f.Name != "RMATRIX"
+                                                             && f.Name != "Ola Hawaii"
+                                                             && f.Name != "P30 UHCC")
+                                      .OrderBy(b => b.DisplayOrder)
+                                      .ToDictionary(c => c.Id, c => c.Name);
+
+                BindTable2(qFundingSource, rptFunding);
+
+
+                /// Populates "Is project for a grant proposal ?"
+                ///              > "Is this application for a UH Infrastructure Grant pilot?"
+                ///                  >  "What is the grant?" dropdown.
+                /*dropDownSource = cr.ProjectField_cr
+                                   .Where(f => f.IsGrant == true && f.IsFundingSource == true
+                                                               && (f.Name == "Ola Hawaii"
+                                                                || f.Name == "RMATRIX"
+                                                                || f.Name == "INBRE"
+                                                                // --> (Not a grant source) || f.Name == "Native and Pacific Islands Health Disparities Research"
+                                                                // --> (Bioinformatics) || f.Name == "COBRE-Cardiovascular"
+                                                                // --> (Bioinformatics) || f.Name == "COBRE-Infectious Diseases"
+                                                                // --> (Bioinformatics) || f.Name == "COBRE-Biogenesis Research"
+                                                                // --> (Bioinformatics) || f.Name == "P30 UHCC"
+                                                                ))
+                                   .OrderBy(b => (b.Name == "Ola Hawaii" ? 1 : b.Id))
+                                   .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);*/
+
+                /// Populates "Funding Source > Department Funding" dropdown.
+                dropDownSource = cr.JabsomAffil_cr
+                                   .Where(f => f.Name == "Obstetrics, Gynecology, and Women's Health"
+                                            || f.Name == "School of Nursing & Dental Hygiene"
+                                            || f.Id == 96 /*"Other"*/)
+                                   .OrderBy(b => b.Id)
+                                   .ToDictionary(c => c.Id, c => c.Name);
+
+                PageUtility.BindDropDownList(ddlDepartmentFunding, dropDownSource, String.Empty);
+
                 if (rqst != null)
                 {
-                    txtFirstName.Value = rqst.FirstName; //lblFirstName.Text = rqst.FirstName;
-                    txtLastName.Value = rqst.LastName;   //lblLastName.Text = rqst.LastName;
-                    
-                    /// Populates "Degree" dropdown
-                    var dropDownSource = cr.JabsomAffil_cr
-                                       .Where(d => d.Type == "Degree")
-                                       .OrderBy(d => d.Name)
-                                       .ToDictionary(c => c.Id, c => c.Name);
-                    PageUtility.BindDropDownList(ddlDegree, dropDownSource, "-- Select Degree --");
-
-                    ddlDegree.SelectedValue = dropDownSource.FirstOrDefault(f => f.Value == rqst.Degree).Key.ToString();
-
-                    txtDegreeOther.Value = rqst.DegreeOther;
-
-                    txtEmail.Value = rqst.Email;
-                    txtPhone.Value = rqst.Phone;
-                    txtDept.Value = rqst.Department;
-
-                    /// Populates "Organization" typeable dropdown (if available from database)
-                    var deptAffil = cr.JabsomAffil_cr
-                                      .Where(a => a.Type != "Other" && a.Type != "Degree"
-                                                                    && a.Type != "Unknown"
-                                                                    && a.Type != "UHFaculty"
-                                                                    && a.Name != "Other")
-                                      .OrderBy(a => a.Id)
-                                      .Select(x => new { Id = x.Id, Name = x.Name });
-
-                    //textAreaDeptAffil.Value = Newtonsoft.Json.JsonConvert.SerializeObject(deptAffil);
-
-                    /// Populates "Investigator Status" dropdown
-                    dropDownSource = cr.InvestStatus_cr
-                                       .OrderBy(d => d.DisplayOrder)
-                                        .ToDictionary(c => c.Id, c => c.StatusValue);
-
-                    PageUtility.BindDropDownList(ddlPIStatus, dropDownSource, "-- Select status --");
-
-                    ddlPIStatus.SelectedValue = dropDownSource.FirstOrDefault(f => f.Value == rqst.InvestStatus).Key.ToString();
-
-                    if (rqst.IsJuniorPI.Equals(true))
-                    {
-                        chkJuniorPIYes.Checked = true;
-                    }
-                    else
-                    {
-                        chkJuniorPINo.Checked = true;
-                    }
-
-                    //lblJuniorPI.Text = rqst.IsJuniorPI.Equals(true) ? "Yes" : "No";
-
-                    if (rqst.HasMentor.Equals(true))
-                    {
-                        chkMentorYes.Checked = true;
-                    }
-                    else
-                    {
-                        chkMentorNo.Checked = true;
-                    }
-
-                    txtMentorFirstName.Value = rqst.MentorFirstName;
-                    txtMentorLastName.Value = rqst.MentorLastName;
-                    txtMentorEmail.Value = rqst.MentorEmail;
-
-                    lblProjectTitle.Text = rqst.ProjectTitle;
-                    lblProjectSummary.Text = rqst.ProjectSummary;
-
-
-                    // For each study area, if match study area, then print.
-                    foreach (var sa in studyAreas)
-                    {
-                        int bitValue = sa.Key;
-
-                        int match = (int)rqst.StudyAreaBitSum & bitValue;
-
-                        if (match == sa.Key)
-                        {
-
-                            if (lblStudyArea.Text.Equals(string.Empty) && sa.Value.Equals("Other"))
-                            {
-                                lblStudyArea.Text = sa.Value + " - " + rqst.StudyAreaOther;
-                            }
-                            else if (!lblStudyArea.Text.Equals(string.Empty) && sa.Value.Equals("Other"))
-                            {
-                                lblStudyArea.Text = lblStudyArea.Text + ", " + sa.Value + " - " + rqst.StudyAreaOther;
-                            }
-                            else if (lblStudyArea.Text.Equals(string.Empty))
-                            {
-                                lblStudyArea.Text = sa.Value;
-                            }
-                            else
-                            {
-                                lblStudyArea.Text = lblStudyArea.Text + ", " + sa.Value;
-                            }
-                        }
-
-
-                    }
-
-                    // Health Data
-                    foreach (var hd in healthData)
-                    {
-                        int bitValue = hd.Key;
-
-                        int match = (int)rqst.HealthDateBitSum & bitValue;
-
-                        if (match == hd.Key)
-                        {
-
-                            if (lblHealthData.Text.Equals(string.Empty) && hd.Value.Equals("Other"))
-                            {
-                                lblHealthData.Text = hd.Value + " - " + rqst.HealthDataOther;
-                            }
-                            else if (!lblHealthData.Text.Equals(string.Empty) && hd.Value.Equals("Other"))
-                            {
-                                lblHealthData.Text = lblHealthData.Text + ", " + hd.Value + " - " + rqst.HealthDataOther;
-                            }
-                            else if (lblHealthData.Text.Equals(string.Empty))
-                            {
-                                lblHealthData.Text = hd.Value;
-                            }
-                            else
-                            {
-                                lblHealthData.Text = lblHealthData.Text + ", " + hd.Value;
-                            }
-                        }
-                    }
-
-
-                    // Study Type
-                    foreach (var st in studyType)
-                    {
-                        int bitValue = st.Key;
-
-                        int match = (int)rqst.StudyTypeBitSum & bitValue;
-
-                        if (match == st.Key)
-                        {
-
-                            if (lblStudyType.Text.Equals(string.Empty) && st.Value.Equals("Other"))
-                            {
-                                lblStudyType.Text = st.Value + " - " + rqst.StudyTypeOther;
-                            }
-                            else if (!lblStudyType.Text.Equals(string.Empty) && st.Value.Equals("Other"))
-                            {
-                                lblStudyType.Text = lblStudyType.Text + ", " + st.Value + " - " + rqst.StudyTypeOther;
-                            }
-                            else if (lblStudyType.Text.Equals(string.Empty))
-                            {
-                                lblStudyType.Text = st.Value;
-                            }
-                            else
-                            {
-                                lblStudyType.Text = lblStudyType.Text + ", " + st.Value;
-                            }
-                        }
-
-                    }
-
-                    // Study Population
-                    foreach (var sp in studyPopulation)
-                    {
-                        int bitValue = sp.Key;
-
-                        int match = (int)rqst.StudyPopulationBitSum & bitValue;
-
-                        if (match == sp.Key)
-                        {
-
-                            if (lblStudyPopulation.Text.Equals(string.Empty) && sp.Value.Equals("Other"))
-                            {
-                                lblStudyPopulation.Text = sp.Value + " - " + rqst.StudyPopulationOther;
-                            }
-                            else if (!lblStudyPopulation.Text.Equals(string.Empty) && sp.Value.Equals("Other"))
-                            {
-                                lblStudyPopulation.Text = lblStudyPopulation.Text + ", " + sp.Value + " - " + rqst.StudyPopulationOther;
-                            }
-                            else if (lblStudyPopulation.Text.Equals(string.Empty))
-                            {
-                                lblStudyPopulation.Text = sp.Value;
-                            }
-                            else
-                            {
-                                lblStudyPopulation.Text = lblStudyPopulation.Text + ", " + sp.Value;
-                            }
-                        }
-                    }
-
-
-                    // Service
-                    foreach (var sv in service)
-                    {
-                        int bitValue = sv.Key;
-
-                        int match = (int)rqst.ServiceBitSum & bitValue;
-
-                        if (match == sv.Key)
-                        {
-
-                            if (lblService.Text.Equals(string.Empty) && sv.Value.Equals("Other"))
-                            {
-                                lblService.Text = sv.Value + " - " + rqst.ServiceOther;
-                            }
-                            else if (!lblService.Text.Equals(string.Empty) && sv.Value.Equals("Other"))
-                            {
-                                lblService.Text = lblService.Text + ", " + sv.Value + " - " + rqst.ServiceOther;
-                            }
-                            else if (lblService.Text.Equals(string.Empty))
-                            {
-                                lblService.Text = sv.Value;
-                            }
-                            else
-                            {
-                                lblService.Text = lblService.Text + ", " + sv.Value;
-                            }
-                        }
-
-
-                    }
-
-                    lblPilot.Text = rqst.IsPilot == true ? "Yes" : "No";
-
-                    lblProposal.Text = rqst.IsGrantProposal == true ? "Yes" : "No";
-
-                    lblUHPilotGrant.Text = rqst.IsUHGrant == true ? "Yes" : "No";
-
-                    lblPilotGrantName.Text = (!rqst.UHGrantName.Equals(string.Empty)
-                                                || !rqst.GrantProposalFundingAgency.Equals(string.Empty))
-                                                ? (rqst.IsUHGrant == true ? rqst.UHGrantName : rqst.GrantProposalFundingAgency) : "N/A";
-
-                    lblHealthDisparity.Text = rqst.IsHealthDisparity == 1 ? "Yes" : rqst.IsHealthDisparity == 2 ? "No" : "N/A";
-
-                    // Funding Source
-                    foreach (var fs in fundingSource)
-                    {
-                        int bitValue = fs.Key;
-
-                        int match = (int)rqst.GrantBitSum & bitValue;
-
-                        if (match == fs.Key)
-                        {
-
-                            if (lblGrant.Text.Equals(string.Empty) && fs.Value.Equals("Other"))
-                            {
-                                lblGrant.Text = fs.Value + " - " + rqst.GrantOther;
-                            }
-                            else if (!lblGrant.Text.Equals(string.Empty) && fs.Value.Equals("Other"))
-                            {
-                                lblGrant.Text = lblGrant.Text + ", " + fs.Value + " - " + rqst.GrantOther;
-                            }
-                            else if (lblGrant.Text.Equals(string.Empty))
-                            {
-                                lblGrant.Text = fs.Value;
-                            }
-                            else
-                            {
-                                lblGrant.Text = lblGrant.Text + ", " + fs.Value;
-                            }
-                        }
-
-
-                    }
-
-
-                    lblDueDate.Text = DateTime.TryParse(rqst.DeadLine.ToString(), out dt) ? dt.ToShortDateString() : "";
-
-
-                    string biostatName = cr.BioStat_cr.FirstOrDefault(f => f.Id == rqst.BiostatId).Name;
-                    lblBiostat.Text = biostatName;
-
-
-                    if (rqst.RequestStatus == "Completed")
-                    {
-                        chkCompleted.Checked = true;
-                        btnCreateProject.Enabled = false;
-                        btnCreateProject.Text = "-- Project Already Created --";
-                        //btnCreateProject.CssClass = "notAllowed";
-                    }
-                    else
-                    {
-                        chkCompleted.Checked = false;
-                        btnCreateProject.Enabled = true;
-                        btnCreateProject.Text = "Create Project";
-                        //btnCreateProject.CssClass = "";
-                    }
-                    
-
+                    SetRequest(rqst);
                 }
 
             }
 
 
+        }
+
+        /// <summary>
+        /// Sets client request form items into client request admin review form.
+        /// </summary>
+        /// <param name="request">Request originating from client.</param>
+        private void SetRequest(ClientRequest2_cr request)
+        {
+
+            DateTime dt;
+
+            txtFirstName.Value = request.FirstName; //lblFirstName.Text = request.FirstName;
+            txtLastName.Value = request.LastName;   //lblLastName.Text = request.LastName;
+
+            ddlDegree.SelectedItem.Text = request.Degree /*> 0 ? request.Degree : string.Empty*/;
+            txtDegreeOther.Value = request.DegreeOther;
+            ddlPIStatus.SelectedItem.Text = request.InvestStatus;
+
+            txtEmail.Value = request.Email;
+            txtPhone.Value = request.Phone;
+            txtDept.Value = request.Department;
+
+
+            if (request.IsJuniorPI.Equals(true))
+            {
+                chkJuniorPIYes.Checked = true;
+            }
+            else
+            {
+                chkJuniorPINo.Checked = true;
+            }
+
+            //lblJuniorPI.Text = request.IsJuniorPI.Equals(true) ? "Yes" : "No";
+
+            if (request.HasMentor.Equals(true))
+            {
+                chkMentorYes.Checked = true;
+            }
+            else
+            {
+                chkMentorNo.Checked = true;
+            }
+
+            txtMentorFirstName.Value = request.MentorFirstName;
+            txtMentorLastName.Value = request.MentorLastName;
+            txtMentorEmail.Value = request.MentorEmail;
+
+            txtProjectTitle.Value = request.ProjectTitle;
+            txtProjectSummary.Value = request.ProjectSummary;
+
+
+            BindTable(rptStudyArea, (int)request.StudyAreaBitSum);
+            txtStudyAreaOther.Value = request.StudyAreaOther;
+
+            BindTable(rptHealthData, (int)request.HealthDateBitSum);
+            txtHealthDataOther.Value = request.HealthDataOther;
+
+            BindTable(rptStudyType, (int)request.StudyTypeBitSum);
+            txtStudyTypeOther.Value = request.StudyTypeOther;
+
+            BindTable(rptStudyPopulation, (int)request.StudyPopulationBitSum);
+            txtStudyPopulationOther.Value = request.StudyPopulationOther;
+
+            switch (request.IsHealthDisparity)
+            {
+                case 1: // Yes
+                    chkHealthDisparityYes.Checked = true;
+                    chkHealthDisparityNo.Checked = false;
+                    chkHealthDisparityNA.Checked = false;
+                    break;
+                case 2: // No
+                    chkHealthDisparityYes.Checked = false;
+                    chkHealthDisparityNo.Checked = true;
+                    chkHealthDisparityNA.Checked = false;
+                    break;
+                case 3: // N/A
+                    chkHealthDisparityYes.Checked = false;
+                    chkHealthDisparityNo.Checked = false;
+                    chkHealthDisparityNA.Checked = true;
+                    break;
+                default:
+                    chkHealthDisparityYes.Checked = false;
+                    chkHealthDisparityNo.Checked = false;
+                    chkHealthDisparityNA.Checked = false;
+                    break;
+            }
+
+            BindTable(rptService, (int)request.ServiceBitSum);
+            txtServiceOther.Value = request.ServiceOther;
+
+            if (request.IsPilot.Equals(true))
+            {
+                chkPilotYes.Checked = true;
+            }
+            else
+            {
+                chkPilotNo.Checked = true;
+            }
+
+
+            if (request.IsGrantProposal.Equals(true))
+            {
+                chkProposalYes.Checked = true;
+            }
+            else
+            {
+                chkProposalNo.Checked = true;
+            }
+
+            if (request.IsUHGrant.Equals(true))
+            {
+                chkIsUHPilotGrantYes.Checked = true;
+            }
+            else
+            {
+                chkIsUHPilotGrantNo.Checked = true;
+            }
+
+            txtGrantProposalFundingAgency.Value = request.GrantProposalFundingAgency;
+
+
+            BindTable(rptFunding, (int)request.GrantBitSum);
+            txtFundingOther.Value = request.GrantOther;
+            ddlDepartmentFunding.SelectedValue = request.GrantDepartmentFundingType > 0 ? request.GrantDepartmentFundingType.ToString()
+                                                                                        : string.Empty;
+            txtDeptFundOth.Value = request.GrantDepartmentFundingOther;
+
+            txtDueDate.Text = DateTime.TryParse(request.DeadLine.ToString(), out dt) ? dt.ToShortDateString() : "";
+
+            ddlBiostat.SelectedValue = request.BiostatId > 0 ? request.BiostatId.ToString() : string.Empty;
+
+
+
+            if (request.RequestStatus == "Completed")
+            {
+                chkCompleted.Checked = true;
+                //btnCreateProject.Enabled = false;
+                //btnCreateProject.Text = "-- Project Already Created --";
+
+
+                Project2 project = FindProject(request);
+                
+
+                if (project != null)
+                {
+                    btnCreateProject.Text = "-- Project already created; Project # " + project.Id.ToString() + " --";
+                    btnCreateProject.Enabled = true;
+                }
+                else
+                {
+                    btnCreateProject.Enabled = false;
+                    btnCreateProject.Text = "-- Project already created; search manually --";
+                }
+
+
+            }
+            else
+            {
+                chkCompleted.Checked = false;
+                btnCreateProject.Enabled = true;
+                btnCreateProject.Text = "Create Project";
+            }
+            
+        }
+
+        /// <summary>
+        /// Finds project in the database with the same information as the one in the request.
+        /// Returns the project if found, null otherwise.
+        /// </summary>
+        /// <param name="request">Client request.</param>
+        /// <returns>Instance of project.</returns>
+        private Project2 FindProject(ClientRequest2_cr request)
+        {
+            Project2 project = null;
+            Invest invest = null;
+
+            // Find link to existing project.
+            // --> If a link can be found, then enable the button and link to that project.
+            // --> Otherwise, leave disable button w/message "search manually for project".
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                invest = db.Invests.FirstOrDefault(f => f.FirstName == request.FirstName
+                                                     && f.LastName == request.LastName);
+
+                if (invest != null)
+                {
+                    project = db.Project2.FirstOrDefault(f => f.Title == request.ProjectTitle.ToString()
+                                                           && f.PIId == invest.Id);
+                }
+
+            }
+
+            return project;
+        }
+
+        /// <summary>
+        /// Binds grid of checkboxes to the values of referred table.
+        /// </summary>
+        /// <param name="rpt">Grid of Checkboxes (e.g., rptBiostat = List of Biostat Members)</param>
+        /// <param name="bitSum">Bitsum of referred field to match grid of checkboxes. 
+        ///                      (e.g., Bitsum 894224 = Chelu & Ved [pseudoexample])</param>
+        private void BindTable(Repeater rpt, int bitSum)
+        {
+            foreach (RepeaterItem i in rpt.Items)
+            {
+                CheckBox cb, cb1, cb2;
+                HiddenField hdnBitValue, hdnBitValue1, hdnBitValue2;
+
+                cb = (CheckBox)i.FindControl("chkId");
+                hdnBitValue = (HiddenField)i.FindControl("BitValue");
+
+                if (cb != null && hdnBitValue != null)
+                {
+                    cb.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue) : false;
+                }
+
+                if (cb == null)
+                {
+                    cb1 = (CheckBox)i.FindControl("FirstchkId");
+                    cb2 = (CheckBox)i.FindControl("SecondchkId");
+
+                    hdnBitValue1 = (HiddenField)i.FindControl("FirstBitValue");
+                    hdnBitValue2 = (HiddenField)i.FindControl("SecondBitValue");
+
+                    if (cb1 != null && hdnBitValue1 != null)
+                    {
+                        cb1.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue1) : false;
+                    }
+
+                    if (cb2 != null && hdnBitValue2 != null)
+                    {
+                        cb2.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue2) : false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Binds grid of checkboxes with choices for selected areas (faculty/staff, etc).
+        /// </summary>
+        /// <param name="collection">List of choices for given selected area.</param>
+        /// <param name="rpt">Grid for selected area.</param>
+        private void BindTable2(Dictionary<int, string> collection, Repeater rpt)
+        {
+            DataTable dt = new DataTable("tblRpt");
+
+            dt.Columns.Add("Id1", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Name1", System.Type.GetType("System.String"));
+            dt.Columns.Add("BitValue1", System.Type.GetType("System.Int32"));
+
+            dt.Columns.Add("Id2", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Name2", System.Type.GetType("System.String"));
+            dt.Columns.Add("BitValue2", System.Type.GetType("System.Int32"));
+
+            var query = collection.ToArray();
+
+            for (int i = 0; i < query.Length; i += 2)
+            {
+                DataRow dr = dt.NewRow();
+
+                dr[0] = query[i].Key;
+                dr[1] = query[i].Value;
+                dr[2] = query[i].Key;
+
+                if (i < query.Length - 1)
+                {
+                    dr[3] = query[i + 1].Key;
+                    dr[4] = query[i + 1].Value;
+                    dr[5] = query[i + 1].Key;
+                }
+                else
+                {
+                    dr[3] = 0;
+                    dr[4] = "";
+                    dr[5] = 0;
+                }
+
+                dt.Rows.Add(dr);
+            }
+
+            rpt.DataSource = dt;
+            rpt.DataBind();
+        }
+
+        /// <summary>
+        /// Checks whether or not the bit value exists in the current bit sum calculation.
+        /// </summary>
+        /// <param name="bitSum">Total bit sum (e.g., [1026](fake) = Ved[2] & Chelu[1024])</param>
+        /// <param name="hdnBitValue">Bit Value of current selection (e.g., 1024 = Chelu</param>
+        /// <returns>Returns 1 if the bit value is in the bitsum, 0 if not.</returns>
+        private bool CheckBitValue(int bitSum, HiddenField hdnBitValue)
+        {
+            int bitValue = 0;
+            Int32.TryParse(hdnBitValue.Value, out bitValue);
+
+            int c = bitSum & bitValue;
+
+            return c == bitValue;
         }
 
         /// <summary>

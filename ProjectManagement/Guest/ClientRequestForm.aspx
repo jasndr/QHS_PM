@@ -204,7 +204,7 @@
         <div class="container body-content">
             <%--<div class="jumbotron">--%>
             <%--<img src="../images/Banner_Print3.jpg" class="img-rounded" />--%>
-            <img src="<%=Page.ResolveUrl("~/images/Banner_Print3.jpg")%>" class="img-rounded" />
+            <img src="<%=Page.ResolveUrl("~/images/Banner_Print3_QHS-01.png")%>" class="img-rounded" />
             <br />
             <br />
             <div id="divRequest" visible="false">
@@ -232,6 +232,10 @@
                     <br />
                     <p class="contentWords">
                         Please review the <a href="http://oitwp02.jabsom.hawaii.edu/cim/wp-content/uploads/sites/31/2018/01/QHS-Core-Collaborative-Process-clean-MT012218.pdf" target="_blank" class="greenLink"><strong>QHS Core Collaborative Process</strong></a> <strong>prior</strong> to submitting this request.
+                    </p>
+                    <br />
+                    <p class="contentWords">
+                        If funding from <strong>Ola HAWAII</strong> will be used to support this request, please go <a href="https://redcap.jabsom.hawaii.edu/redcap/surveys/?s=8HD7K4EMWJ" class="greenLink"><strong>here</strong></a>. 
                     </p>
                     <br />
                     <p class="contentWords">
@@ -803,18 +807,9 @@
                                     <input type="checkbox" id="chkIsUHPilotGrantNo" value="0" runat="server" />No
                         </div>
                     </div>
-                    <div class="col-sm-6" id="divUHGrant">
-                        <div class="col-sm-3 text-left">
-                            <label class="control-label" for="ddlUHGrant">What is the grant?</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <asp:DropDownList ID="ddlUHGrant" runat="server" CssClass="form-control">
-                            </asp:DropDownList>
-                        </div>
-                    </div>
                     <div class="col-sm-6" id="divGrantProposalFundingAgency">
                         <div class="col-sm-4 text-left">
-                            <label class="control-label" for="ddlUHGrant">What is the funding agency?</label>
+                            <label class="control-label" for="ddlUHGrant">What is the grant name?</label>
                         </div>
                         <div class="col-sm-6">
                             <input class="form-control" type="text" name="txtGrantProposalFundingAgency"
@@ -830,7 +825,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        Funding Source<span class="help-block">(check all that apply)</span> <%--Is your project affiliated with any of the following grants?--%>
+                        What is the funding source to support this request?<span class="help-block">(check all that apply)</span> <%--Is your project affiliated with any of the following grants?--%>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblFunding">
@@ -1095,7 +1090,7 @@
 
             // --> Shows "Other" field if dropdown selection is "Other".
             showHideOtherField($('#ddlDegree'), $('#txtDegreeOther'));
-            showHideOtherField($('#ddlPIStatus'), $('#txtPIStatusOther'));
+            //showHideOtherField($('#ddlPIStatus'), $('#txtPIStatusOther'));
 
 
             // --> Initialize Other/Bitsum functionality.
@@ -1199,7 +1194,7 @@
                 $('#divGrantProposal').hide();
             });
 
-            ToggleDiv($('#chkIsUHPilotGrantYes'), $('#divUHGrant'));
+            ToggleDiv($('#chkIsUHPilotGrantYes'), $('#divGrantProposalFundingAgency'));
             ToggleDiv($('#chkIsUHPilotGrantNo'), $('#divGrantProposalFundingAgency'));
 
             $('#divGrantProposal').on('click',
@@ -1207,7 +1202,7 @@
                 function () {
 
                     if ($(this).is($('#chkIsUHPilotGrantYes'))) {
-                        ToggleDiv($(this), $('#divUHGrant'));
+                        ToggleDiv($(this), $('#divGrantProposalFundingAgency'));
                     }
 
                     if ($(this).is($('#chkIsUHPilotGrantNo'))) {
@@ -1219,17 +1214,17 @@
                             $(this).next().removeAttr("checked");
                         if ($(this).val() == 0) {
                             $(this).prev().removeAttr("checked");
-                            $('#ddlUHGrant').val('');
+                            //$('#ddlUHGrant').val('');
                         }
 
 
-                        if ($(this).is($('#chkIsUHPilotGrantNo')))
+                        /*if ($(this).is($('#chkIsUHPilotGrantNo')))
                             $('#divUHGrant').hide();
                         if ($(this).is($('#chkIsUHPilotGrantYes')))
-                            $('#divGrantProposalFundingAgency').hide();
-                    } else {
+                            $('#divGrantProposalFundingAgency').hide();*/
+                    } /*else {
                         $('#ddlUHGrant').val('');
-                    }
+                    }*/
 
                 });
 

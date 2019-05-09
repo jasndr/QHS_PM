@@ -303,6 +303,8 @@
     <Content Include="Guest\HeatMap.aspx" />
     <Content Include="Guest\ErrorPage.aspx" />
     <Content Include="images\Banner_Print3_CIM.png" />
+    <Content Include="images\Banner_Print3_QHS-01.png" />
+    <Content Include="images\Loading_2.gif" />
     <Content Include="images\Logo_Final.png" />
     <Content Include="images\sort_asc.png" />
     <Content Include="images\sort_asc_disabled.png" />

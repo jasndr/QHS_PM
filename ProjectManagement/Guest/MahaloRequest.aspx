@@ -71,12 +71,12 @@
 <body>
     <form id="form1" runat="server">
      <div class="container body-content">
-        <img src="../images/Banner_Print3.jpg" class="img-rounded" />
+        <img src="../images/Banner_Print3_QHS-01.png" class="img-rounded" />
         <br />
         <br />
             <div class="panel panel-success">
                 <div class="panel-heading">              
-                    <h4 class="text-center"><b>Mahalo for your request!</b></h4>
+                    <h4 class="text-center"><b>Mahalo for your request!  &mdash; Request ID # <%=Request.QueryString["Id"] %></b></h4>
                 </div>
             </div>
 

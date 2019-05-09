@@ -707,7 +707,7 @@ namespace ProjectManagement
                 /// Populates "Grant" (Changed to "Funding Source") checkbox grid. 
                 dropDownSource = db.ProjectField
                                 .Where(f => f.IsGrant == true && f.IsFundingSource == true)
-                                .OrderBy(b => b.Id)
+                                .OrderBy(b => b.DisplayOrder)
                                 .ToDictionary(c => c.BitValue, c => c.Name);
 
                 BindTable2(dropDownSource, rptGrant);
@@ -715,7 +715,7 @@ namespace ProjectManagement
                 /// Populates "Acknowledgements" checkbox grid.
                 dropDownSource = db.ProjectField
                                 .Where(f => f.IsGrant == true && f.IsAcknowledgment == true)
-                                .OrderBy(b => b.Id)
+                                .OrderBy(b => b.DisplayOrder)
                                 .ToDictionary(c => c.BitValue, c => c.Name);
 
                 BindTable2(dropDownSource, rptAkn);
@@ -2185,7 +2185,7 @@ namespace ProjectManagement
 
             StringBuilder body = new StringBuilder();
             //body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
-            body.AppendFormat("Aloha QHS Admin,<br /><br />");
+            body.AppendFormat("Aloha QHS Tracking Team,<br /><br />");
             body.AppendFormat("<p>Project # {0} has been closed by {1} at {2}", projectId, User.Identity.Name, url);
             body.AppendFormat("?Id={0} with a closing date of {1}.</p><br />", projectId, closureDate.ToString("MM/dd/yyyy"));
             body.AppendFormat("Mahalo!");

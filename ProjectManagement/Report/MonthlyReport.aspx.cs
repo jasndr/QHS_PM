@@ -26,6 +26,8 @@ namespace ProjectManagement.Report
     ///  ------------------------------------------
     ///  2019APR26 - Jason Delos Reyes  -  Duplicated file from RmatrixMonthly.aspx to allow for multiple grants, namely
     ///                                    the addition of the Ola HAWAII grant for now.
+    ///  2019APR29 - Jason Delos Reyes  -  Edited query to pull *only* Biostatistics project and paying external projects
+    ///                                    for Ola HAWAII.
     /// </summary>
     public partial class MonthlyReport : System.Web.UI.Page
     {
@@ -136,6 +138,7 @@ namespace ProjectManagement.Report
                                                  && (int) p.IsInternal == 0
                                                  && p.IsPilot == "N"
                         );
+
                     }
 
                     dt = PageUtility.ToDataTable(query.ToList());
@@ -160,15 +163,59 @@ namespace ProjectManagement.Report
             {
                 using (ProjectTrackerContainer dbContext = new ProjectTrackerContainer())
                 {
-                    var query = dbContext.vwProject
-                        .Where(p => p.ReportDate >= fromDate
-                                    && p.ReportDate <= toDate
-                                    && !(bool)p.IsOlaRequest
-                                    && !(bool)p.NotReportOla
-                                    && (int)p.IsInternal == 0
-                                    && p.IsPilot == "N"
-                        );
-                 
+                    //var query = dbContext.vwProject
+                    //    .Where(p => p.ReportDate >= fromDate
+                    //                && p.ReportDate <= toDate
+                    //                && !(bool)p.IsOlaRequest
+                    //                && !(bool)p.NotReportOla
+                    //                && (int)p.IsInternal == 0
+                    //                && p.IsPilot == "N"
+                    //    );
+
+                    var query = dbContext.vwProject.Join(dbContext.Project2,
+                                                                   p => p.id,
+                                                                   p2 => p2.Id,
+                                                                   (p, p2) => new {p, p2})
+                                                   .Where(pp2 => pp2.p.ReportDate >= fromDate
+                                                                 && pp2.p.ReportDate <= toDate
+                                                                 && !(bool)pp2.p.IsOlaRequest
+                                                                 && !(bool)pp2.p.NotReportOla
+                                                                 && (int)pp2.p.IsInternal == 0
+                                                                 && pp2.p.IsPilot == "N"
+                                                                 
+                                                                 && pp2.p.ProjectType == 1
+                                                                 
+                                                                 && pp2.p2.IsPaid == true)
+                                                   .Select(x=> new { x.p.id
+                                                                    ,x.p.InvestId
+                                                                    ,x.p.PIName
+                                                                    ,x.p.Title
+                                                                    ,x.p.Summary
+                                                                    ,x.p.GrantName
+                                                                    ,x.p.IsPilot
+                                                                    ,x.p.BiostatId
+                                                                    ,x.p.LeadBio
+                                                                    ,x.p.Member
+                                                                    ,x.p.ServiceCategory
+                                                                    ,x.p.StudyArea
+                                                                    ,x.p.StudyType
+                                                                    ,x.p.StudyPopulation
+                                                                    ,x.p.initialdate
+                                                                    ,x.p.ReportDate
+                                                                    ,x.p.anslysiscompletiondate
+                                                                    ,x.p.ProjectCompletionDate
+                                                                    ,x.p.IsInternal
+                                                                    ,x.p.Comments
+                                                                    ,x.p.NotReportRmatrix
+                                                                    ,x.p.IsRmatrix
+                                                                    ,x.p.NotReportOla
+                                                                    ,x.p.IsOlaRequest
+                                                                    ,x.p.HealthDateBitSum
+                                                                    ,x.p.GrantBitSum
+                                                                    ,x.p.LeadBiostatId
+                                                                    ,x.p.OtherMemberBitSum
+                                                                    ,x.p.ProjectType
+                                                                    ,x.p.CreditTo});
 
                     dt = PageUtility.ToDataTable(query.ToList());
                     hdnRowCount.Value = query.Count().ToString();

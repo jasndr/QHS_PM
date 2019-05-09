@@ -202,139 +202,337 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorEmail;
         
         /// <summary>
-        /// lblProjectTitle control.
+        /// txtProjectTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProjectTitle;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtProjectTitle;
         
         /// <summary>
-        /// lblProjectSummary control.
+        /// txtProjectSummary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProjectSummary;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea txtProjectSummary;
         
         /// <summary>
-        /// lblStudyArea control.
+        /// rptStudyArea control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStudyArea;
+        protected global::System.Web.UI.WebControls.Repeater rptStudyArea;
         
         /// <summary>
-        /// lblHealthData control.
+        /// txtStudyAreaOther control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblHealthData;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudyAreaOther;
         
         /// <summary>
-        /// lblStudyType control.
+        /// txtStudyAreaBitSum control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStudyType;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudyAreaBitSum;
         
         /// <summary>
-        /// lblStudyPopulation control.
+        /// rptHealthData control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStudyPopulation;
+        protected global::System.Web.UI.WebControls.Repeater rptHealthData;
         
         /// <summary>
-        /// lblHealthDisparity control.
+        /// txtHealthDataOther control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblHealthDisparity;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtHealthDataOther;
         
         /// <summary>
-        /// lblService control.
+        /// txtHealthDataBitSum control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblService;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtHealthDataBitSum;
         
         /// <summary>
-        /// lblPilot control.
+        /// rptStudyType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPilot;
+        protected global::System.Web.UI.WebControls.Repeater rptStudyType;
         
         /// <summary>
-        /// lblProposal control.
+        /// txtStudyTypeOther control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProposal;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudyTypeOther;
         
         /// <summary>
-        /// lblUHPilotGrant control.
+        /// txtStudyTypeBitSum control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUHPilotGrant;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudyTypeBitSum;
         
         /// <summary>
-        /// lblPilotGrantName control.
+        /// rptStudyPopulation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPilotGrantName;
+        protected global::System.Web.UI.WebControls.Repeater rptStudyPopulation;
         
         /// <summary>
-        /// lblGrant control.
+        /// chkHealthDisparityYes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGrant;
+        protected global::System.Web.UI.WebControls.CheckBox chkHealthDisparityYes;
         
         /// <summary>
-        /// lblDueDate control.
+        /// chkHealthDisparityNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDueDate;
+        protected global::System.Web.UI.WebControls.CheckBox chkHealthDisparityNo;
         
         /// <summary>
-        /// lblBiostat control.
+        /// chkHealthDisparityNA control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBiostat;
+        protected global::System.Web.UI.WebControls.CheckBox chkHealthDisparityNA;
+        
+        /// <summary>
+        /// txtStudyPopulationOther control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudyPopulationOther;
+        
+        /// <summary>
+        /// txtStudyPopulationBitSum control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtStudyPopulationBitSum;
+        
+        /// <summary>
+        /// rptService control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptService;
+        
+        /// <summary>
+        /// txtServiceOther control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtServiceOther;
+        
+        /// <summary>
+        /// txtServiceBitSum control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtServiceBitSum;
+        
+        /// <summary>
+        /// chkPilotYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPilotYes;
+        
+        /// <summary>
+        /// chkPilotNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPilotNo;
+        
+        /// <summary>
+        /// chkProposalYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkProposalYes;
+        
+        /// <summary>
+        /// chkProposalNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkProposalNo;
+        
+        /// <summary>
+        /// chkIsUHPilotGrantYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkIsUHPilotGrantYes;
+        
+        /// <summary>
+        /// chkIsUHPilotGrantNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkIsUHPilotGrantNo;
+        
+        /// <summary>
+        /// txtGrantProposalFundingAgency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtGrantProposalFundingAgency;
+        
+        /// <summary>
+        /// rptFunding control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptFunding;
+        
+        /// <summary>
+        /// ddlDepartmentFunding control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDepartmentFunding;
+        
+        /// <summary>
+        /// txtDeptFundOth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtDeptFundOth;
+        
+        /// <summary>
+        /// txtFundingOther control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFundingOther;
+        
+        /// <summary>
+        /// txtFundingBitSum control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFundingBitSum;
+        
+        /// <summary>
+        /// chkDeptFundMouYes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDeptFundMouYes;
+        
+        /// <summary>
+        /// chkDeptFundMouNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDeptFundMouNo;
+        
+        /// <summary>
+        /// txtDueDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDueDate;
+        
+        /// <summary>
+        /// ddlBiostat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlBiostat;
+        
+        /// <summary>
+        /// txtPreferBiostatId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtPreferBiostatId;
         
         /// <summary>
         /// chkCompleted control.

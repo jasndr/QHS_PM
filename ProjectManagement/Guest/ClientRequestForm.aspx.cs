@@ -160,8 +160,12 @@ namespace ProjectManagement.Guest
                 var qFundingSource = cr.ProjectField_cr.Where(f => f.IsGrant == true 
                                                              && f.IsFundingSource == true
                                                              && f.Name != "N/A"
-                                                             && f.Name != "No (No funding)")
-                                      .OrderBy(b=>b.Id)
+                                                             && f.Name != "No (No funding)"
+                                                             && f.Name != "COBRE-Cardiovascular"
+                                                             && f.Name != "RMATRIX"
+                                                             && f.Name != "Ola Hawaii"
+                                                             && f.Name != "P30 UHCC")
+                                      .OrderBy(b=>b.DisplayOrder)
                                       .ToDictionary(c=>c.Id, c=>c.Name);
 
                 BindTable2(qFundingSource, rptFunding);
@@ -180,7 +184,7 @@ namespace ProjectManagement.Guest
                 /// Populates "Is project for a grant proposal ?"
                 ///              > "Is this application for a UH Infrastructure Grant pilot?"
                 ///                  >  "What is the grant?" dropdown.
-                dropDownSource = cr.ProjectField_cr
+               /* dropDownSource = cr.ProjectField_cr
                                    .Where(f => f.IsGrant == true && f.IsFundingSource == true
                                                                && (f.Name == "Ola Hawaii"
                                                                 || f.Name == "RMATRIX"
@@ -194,7 +198,7 @@ namespace ProjectManagement.Guest
                                    .OrderBy(b => (b.Name == "Ola Hawaii" ? 1 : b.Id))
                                    .ToDictionary(c => c.Id, c => c.Name);
 
-                PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);
+                PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);*/
          
             }
 
@@ -328,7 +332,7 @@ namespace ProjectManagement.Guest
                 if (newRequestId > 0)
                 {
                     SendEmailNotification(newRequestId);
-                    Response.Redirect("MahaloRequest");
+                    Response.Redirect(String.Format("MahaloRequest?Id={0}", newRequestId));
                 }
             }
             else
@@ -477,14 +481,9 @@ namespace ProjectManagement.Guest
                 validateForm.Append(">>> Grant Proposal specified - Response to follow-up question \"Is this application to a pilot program of a UH infrastructure grant?\" is required. <br />");
             }
 
-            if (chkIsUHPilotGrantYes.Checked && ddlUHGrant.SelectedValue.Equals(string.Empty))
+            if ((chkIsUHPilotGrantYes.Checked || chkIsUHPilotGrantNo.Checked) && txtGrantProposalFundingAgency.Value.Equals(string.Empty))
             {
-                validateForm.Append(">>> UH Infrastructure Grant (Yes) specified - Response to follow-up question \"What is the grant?\" is required. <br />");
-            }
-
-            if (chkIsUHPilotGrantNo.Checked && txtGrantProposalFundingAgency.Value.Equals(string.Empty))
-            {
-                validateForm.Append(">>> UH Infrastructure Grant (No) specified - Reponse to follow-up question \"What is the funding agency?\" is required. <br />");
+                validateForm.Append(">>> UH Infrastructure Grant specified - Response to follow-up question \"What is the funding agency?\" is required. <br />");
             }
 
             int fundingBitSum = 0;
@@ -580,7 +579,7 @@ namespace ProjectManagement.Guest
                 IsPilot = chkPilotYes.Checked ? true : false,
                 IsGrantProposal = chkProposalYes.Checked ? true : false,
                 IsUHGrant = chkIsUHPilotGrantYes.Checked ? true : false,
-                UHGrantName = ddlUHGrant.SelectedItem.Text,
+                UHGrantName = /*ddlUHGrant.SelectedItem.Text*/null,
                 GrantProposalFundingAgency = Request.Form["txtGrantProposalFundingAgency"],
                 GrantBitSum = Int64.TryParse(txtFundingBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = Request.Form["txtFundingOther"],
