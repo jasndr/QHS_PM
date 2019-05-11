@@ -40,6 +40,8 @@ namespace ProjectManagement.Report
     ///                                    report of projects with those checkmarks.
     ///  2019MAR20 - Jason Delos Reyes  -  Edited Project form to accomodate change to letter
     ///                                    of support reference in new project form.
+    ///  2019MAY10 - Jason Delos Reyes  -  Created "Rpt_Project_Summary2a" to be able to pull projects that have 
+    ///                                    "Submitted to RMATRIX" and "Submitted to Ola HAWAII" checked.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
@@ -212,7 +214,7 @@ namespace ProjectManagement.Report
             Int32.TryParse(ddlPIStatus.SelectedValue, out piStatusId);
 
             int phdId = 0, msId = 0, healthValue = 0, grantValue = 0, isProject = 1, isBiostat = 1, creditTo = 1,
-                isRmatrixRequest = 0, isOlaRequest = 0, letterOfSupport = 0;
+                isRmatrixRequest = 0, isOlaRequest = 0, submitRMATRIX = 1, submitOlaHAWAII = 1, letterOfSupport = 0;
 
             Int32.TryParse(ddlPhd.SelectedValue, out phdId);
             Int32.TryParse(ddlMs.SelectedValue, out msId);
@@ -226,6 +228,9 @@ namespace ProjectManagement.Report
 
             isRmatrixRequest = chkRmatrixRequest.Checked ? 1 : 0;
             isOlaRequest = chkOlaRequest.Checked ? 1 : 0;
+
+            submitRMATRIX = chkSubmitToRMATRIX.Checked ? 0 : 1;
+            submitOlaHAWAII = chkSubmitToOlaHAWAII.Checked ? 0 : 1;
 
             letterOfSupport = chkLetterOfSupport.Checked ? 1 : 0;
 
@@ -253,7 +258,7 @@ namespace ProjectManagement.Report
             //DateTime fromDate = new DateTime(2000,01,01), toDate = new DateTime(2099,01,01);
             //if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             //{
-            dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, letterOfSupport, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
+            dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, submitRMATRIX, submitOlaHAWAII, letterOfSupport, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
 
             FromDate = fromDate.ToString("MM/dd/yyyy");
             ToDate = toDate.ToString("MM/dd/yyyy");
@@ -273,6 +278,8 @@ namespace ProjectManagement.Report
         /// <param name="isBiostat">Pulls either Biostatistics or Bioinformatics projects.</param>
         /// <param name="isRmatrixRequest">Pulls projects that have "RMATRIX Request for Resources" checked.</param>
         /// <param name="isOlaRequest">Pulls projects that have "Ola Hawaii Request for Resources" checked.</param>
+        /// <param name="submitRMATRIX">Pulls projects that have "Submit to RMATRIX" checked.</param>
+        /// <param name="submitOlaHAWAII">Pulls projects that have "Submit to Ola HAWAII" checked.</param>
         /// <param name="letterOfSupport">Pulls projects that have "Letter of Support" checked for Service Type.</param>
         /// <param name="creditTo">Credit to either Biostatistics or Bioinformatics Cores, or both.</param>
         /// <param name="piId">ID of specified PI (Investigator).</param>
@@ -282,7 +289,7 @@ namespace ProjectManagement.Report
         /// <param name="grantValue">Funding Source specified.</param>
         /// <returns></returns>
         private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, int phdId, int msId, int isProject, int isBiostat, 
-            int isRmatrixRequest, int isOlaRequest, int letterOfSupport, int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
+            int isRmatrixRequest, int isOlaRequest, int submitRMATRIX, int submitOlaHAWAII, int letterOfSupport, int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
         {
             DataTable dt = new DataTable("tblProject");
 
@@ -294,7 +301,7 @@ namespace ProjectManagement.Report
 
                 using (SqlConnection sqlcon = new SqlConnection(constr))
                 {
-                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary2", sqlcon))
+                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary2a", sqlcon))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@FromDate", fromDate);
@@ -305,6 +312,8 @@ namespace ProjectManagement.Report
                         cmd.Parameters.AddWithValue("@IsBiostat", isBiostat);
                         cmd.Parameters.AddWithValue("@IsRmatrixRequest", isRmatrixRequest);
                         cmd.Parameters.AddWithValue("@IsOlaRequest", isOlaRequest);
+                        cmd.Parameters.AddWithValue("@SubmitToRMATRIX", submitRMATRIX);
+                        cmd.Parameters.AddWithValue("@SubmitToOlaHAWAII", submitOlaHAWAII);
                         cmd.Parameters.AddWithValue("@LetterOfSupport", letterOfSupport);
                         cmd.Parameters.AddWithValue("@CreditTo", creditTo);
                         cmd.Parameters.AddWithValue("@PIId", piId);

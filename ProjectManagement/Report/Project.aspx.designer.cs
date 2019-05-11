@@ -58,6 +58,24 @@ namespace ProjectManagement.Report {
         protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupport;
         
         /// <summary>
+        /// chkSubmitToRMATRIX control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSubmitToRMATRIX;
+        
+        /// <summary>
+        /// chkSubmitToOlaHAWAII control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSubmitToOlaHAWAII;
+        
+        /// <summary>
         /// txtFromDate control.
         /// </summary>
         /// <remarks>

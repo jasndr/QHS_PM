@@ -39,22 +39,34 @@
                 <div class="col-md-1 offset2">
                     <asp:CheckBox ID="chkConsult" runat="server" Text="Consult"></asp:CheckBox>
                 </div>
-                <div class="col-md-1 text-right">
+                <div class="col-md-2 text-right">
                     <label class="control-label">Request for Resources:</label>
                 </div>
                 <div class="col-md-2 offset1">
                     <asp:CheckBox ID="chkRmatrixRequest" runat="server" Text="RMATRIX" ></asp:CheckBox>
                 </div>
-                <div class="col-md-2 offset2">
+                <div class="col-md-2 offset1">
                     <asp:CheckBox ID="chkOlaRequest" runat="server" Text="Ola HAWAII"></asp:CheckBox>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-md-1 text-right">
                     <label class="control-label">Letter of Support?</label>
                 </div>
                 <div class="col-md-1 offset2">
                     <asp:CheckBox ID="chkLetterOfSupport" runat="server" Text="Yes" ></asp:CheckBox>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-offset-4 col-md-1">
+                    <label class="control-label">Submitted to:</label>
+                </div>
+                <div class="col-md-2 offset1">
+                    <asp:CheckBox ID="chkSubmitToRMATRIX" runat="server" Text="RMATRIX" />
+                </div>
+                <div class="col-md-2 offset1">
+                    <asp:CheckBox ID="chkSubmitToOlaHAWAII" runat="server" Text="Ola HAWAII" />
+                </div>
+            </div>
+        <br />
             <div class="row offset2">
                 <div class="col-md-1 text-right">
                     <label class="control-label">From Date:</label>
