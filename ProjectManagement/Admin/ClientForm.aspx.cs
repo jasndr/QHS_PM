@@ -49,7 +49,14 @@ namespace ProjectManagement.Admin
     ///                                 -  Fixed the issue that duplicated the creation of PI's in the system
     ///                                    whenever a Client Request Form was used to create a new project.
     ///                                 -  Added QHS Banner.
-    ///                                           
+    ///  2019MAY10 - Jason Delos Reyes  -  Added required text field validations (and email validations) for the Client
+    ///                                    review form fields to prevent missing data from being imported into the database.
+    ///  2019MAY13 - Jason Delos Reyes  -  Added functionality to open Client Request review forms using the query string,
+    ///                                    both for self-saving purposes and for the Client Request Form admin review emails.
+    ///                                 -  Fixed error that automatically checked the COBRE and State/County Government options
+    ///                                    for "Funding Source", which was referring to Id instead of Bitsum.
+    ///                                 -  Moved the "clear all" functionality to the cleartQueryString() javascript function
+    ///                                    as it no longer worked in the "pageLoad" javascript function.
     /// </summary>
     public partial class ClientForm : System.Web.UI.Page
     {
@@ -63,6 +70,14 @@ namespace ProjectManagement.Admin
             if (!Page.IsPostBack)
             {
                 BindControl();
+
+                int clientRequestId = 0;
+                Int32.TryParse(Request.QueryString["ClientRequestId"], out clientRequestId);
+                if (clientRequestId > 0)
+                {
+                     OpenClientRequest(clientRequestId);
+                }
+
             }
         }
 
@@ -75,6 +90,9 @@ namespace ProjectManagement.Admin
 
             rptClientRqst.DataSource = clientRqstTable;
             rptClientRqst.DataBind();
+
+            //Bind Client Request review form.
+            BindEditModal();
 
             DataTable surveyTable = GetSurveyAll();
             rptSurvey.DataSource = surveyTable;
@@ -613,7 +631,8 @@ namespace ProjectManagement.Admin
                 int rqstId = 0;
                 int.TryParse(lblClientRqstId.Text, out rqstId);
 
-                if (rqstId > 0)
+                OpenClientRequest(rqstId);
+                /*if (rqstId > 0)
                 {
                     ClientRequest2_cr rqst = GetClientRequestById(rqstId);
 
@@ -624,15 +643,44 @@ namespace ProjectManagement.Admin
                         ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
                                    "ModalScript", PageUtility.LoadEditScript(true), false);
                     }
-                }
+                }*/
             }
         }
 
         /// <summary>
-        /// Binds given request to web form.
+        /// Opens the pop-up modal of the client request review page.
         /// </summary>
-        /// <param name="rqst">Given request.</param>
-        private void BindEditModal(ClientRequest2_cr rqst)
+        /// <param name="rqstId">ID of client form to open</param>
+        protected void OpenClientRequest(int rqstId)
+        {
+            if (rqstId > 0)
+            {
+                ClientRequest2_cr rqst = GetClientRequestById(rqstId);
+
+                if (rqst != null)
+                {
+                    SetRequest(rqst);//BindEditModal(rqst);
+
+                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                    //           "ModalScript", PageUtility.LoadEditScript(true), false);
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(@"<script type='text/javascript'>");
+                    sb.Append("$('#editModal').modal('show');");
+                    sb.Append(@"</script>");
+
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                               "ModalScript", sb.ToString(), false);
+
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Binds fields of Client Request review form.
+        /// </summary>
+        private void BindEditModal(/*ClientRequest2_cr rqst*/)
         {
             using (ClientRequestTracker cr = new ClientRequestTracker())
             {
@@ -744,7 +792,7 @@ namespace ProjectManagement.Admin
                                                              && f.Name != "Ola Hawaii"
                                                              && f.Name != "P30 UHCC")
                                       .OrderBy(b => b.DisplayOrder)
-                                      .ToDictionary(c => c.Id, c => c.Name);
+                                      .ToDictionary(c => c.BitValue, c => c.Name);
 
                 BindTable2(qFundingSource, rptFunding);
 
@@ -778,10 +826,10 @@ namespace ProjectManagement.Admin
 
                 PageUtility.BindDropDownList(ddlDepartmentFunding, dropDownSource, String.Empty);
 
-                if (rqst != null)
+                /*if (rqst != null)
                 {
                     SetRequest(rqst);
-                }
+                }*/
 
             }
 
@@ -796,6 +844,8 @@ namespace ProjectManagement.Admin
         {
 
             DateTime dt;
+
+            lblClientRqstId.Text = request.Id.ToString();
 
             txtFirstName.Value = request.FirstName; //lblFirstName.Text = request.FirstName;
             txtLastName.Value = request.LastName;   //lblLastName.Text = request.LastName;

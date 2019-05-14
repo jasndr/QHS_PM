@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>JABSOM Biostatistics Core Facility Collaboration & Service Request Form</title>
+    <title>JABSOM Biostatistics Core Facility Request Form</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/bootstrap-datepicker.min.js"></script>
@@ -209,7 +209,7 @@
             <br />
             <div id="divRequest" visible="false">
                 <div class="text-center">
-                    <h3 class="text-center pageTitle"><strong>JABSOM BIOSTATISTICS CORE FACILITY COLLABORATION & SERVICE REQUEST FORM</strong></h3>
+                    <h3 class="text-center pageTitle"><strong>JABSOM BIOSTATISTICS CORE FACILITY REQUEST FORM</strong></h3>
                 </div>
                 <br />
                 <div class="instructions">

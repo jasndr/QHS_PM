@@ -6,6 +6,10 @@
             opacity: 0.6;
             /*cursor: not-allowed;*/
         }
+        .validation{
+            font-weight: bold;
+            color: red;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -68,7 +72,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="cleartQueryString()">×</button>
                             <h3 id="editModalLabel">Client Request</h3>
                         </div>
                         <asp:UpdatePanel ID="upEdit" runat="server">
@@ -96,10 +100,16 @@
                                         <label class="col-sm-2 control-label" for="txtFirstName"><strong>First name:</strong></label>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtFirstName" id="txtFirstName" placeholder="First name" runat="server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtFirstName" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtFirstName"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation"></asp:RequiredFieldValidator>
                                         </div>
                                         <label class="col-sm-2 control-label" for="txtLastName"><strong>Last name:</strong></label>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtLastName" id="txtLastName" placeholder="Last name" runat="server" />
+                                            <asp:RequiredFieldValidator ID="rdTxtLastName" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtLastName"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation"></asp:RequiredFieldValidator>
                                         </div>
                                         <%--<div class="col-sm-4">
                                             <b><u>Degree:</u></b>
@@ -115,6 +125,10 @@
                                         <div class="col-sm-3">
                                             <label class="control-label" for="txtDegreeOther">Other:</label>
                                             <input class="form-control" type="text" name="txtDegreeOther" id="txtDegreeOther" placeholder="Degree - Other" runat="Server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtDegreeOther" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtDegreeOther"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                     </div>
                                     <br />
@@ -122,10 +136,22 @@
                                         <label class="col-sm-2 control-label" for="txtEmail"><strong>Email</strong></label>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtEmail" id="txtEmail" placeholder="Email" runat="server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtEmail" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtEmail"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
+                                            <asp:RegularExpressionValidator ID="reTxtEmail" runat="server"
+                                                ControlToValidate="txtEmail" CssClass="validation" ErrorMessage="Enter valid e-mail address."
+                                                ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*">
+                                            </asp:RegularExpressionValidator>
                                         </div>
                                         <label class="col-sm-2 control-label" for="txtPhone"><strong>Phone number</strong></label>
                                         <div class="col-sm-2">
                                             <input class="form-control phoneNum" type="text" name="txtPhone" id="txtPhone" placeholder="Phone" runat="server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtPhone" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtPhone"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                     </div>
                                     <br />
@@ -133,6 +159,10 @@
                                         <label class="col-sm-3 control-label" for="txtDept"><strong>Organization/Department</strong></label>
                                         <div class="col-sm-4">
                                             <input class="form-control typeahead" type="text" name="txtDept" id="txtDept" placeholder="Organization/Department" runat="server" onchange="updateId(this)" />
+                                            <asp:RequiredFieldValidator ID="rfTxtDept" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtDept"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                         <label class="col-sm-2 control-label">Investigator status</label>
                                         <div class="col-sm-3">
@@ -186,18 +216,34 @@
                                         </div>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtMentorFirstName" id="txtMentorFirstName" runat="Server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtMentorFirstName" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtMentorFirstName"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                         <div class="col-sm-2 text-right">
                                             <label class="control-label" for="txtTitle">Mentor last name:</label>
                                         </div>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtMentorLastName" id="txtMentorLastName" runat="Server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtMentorLastName" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtMentorLastName"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                         <div class="col-sm-1 text-right">
                                             <label class="control-label" for="txtTitle">Email:</label>
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" type="text" name="txtMentorEmail" id="txtMentorEmail" runat="Server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtMentorEmail" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtMentorEmail"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
+                                            <asp:RegularExpressionValidator ID="reTxtMentorEmail" runat="server"
+                                                ControlToValidate="txtMentorEmail" CssClass="validation" ErrorMessage="Enter valid e-mail address."
+                                                ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*">
+                                            </asp:RegularExpressionValidator>
                                         </div>
                                     </div>
                                     <br />
@@ -217,6 +263,10 @@
                                         <label class="col-sm-2 control-label" for="txtProjectTitle">Project title</label>
                                         <div class="col-sm-10">
                                             <input class="form-control" type="text" name="txtProjectTitle" id="txtProjectTitle" placeholder="Project title" runat="server" />
+                                            <asp:RequiredFieldValidator ID="rfTxtProjectTitle" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtProjectTitle"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                     </div>
                                     <br />
@@ -226,6 +276,10 @@
                                         </label>
                                         <div class="col-sm-10">
                                             <textarea class="form-control noresize" rows="5" id="txtProjectSummary" name="txtProjectSummary" runat="server"></textarea>
+                                            <asp:RequiredFieldValidator ID="rfTxtProjectSummary" runat="server" 
+                                                ErrorMessage="Required." ControlToValidate="txtProjectSummary"
+                                                ValidationGroup="clientRequestFormValidations" CssClass="validation">
+                                            </asp:RequiredFieldValidator>
                                         </div>
                                     </div>
                                     <hr />
@@ -655,9 +709,11 @@
                                     <div class="modal-footer">
                                         <asp:Label ID="lblResult" Visible="false" runat="server"></asp:Label>
                                         <%--<asp:Button ID="btnSave" runat="server" Text="Update" CssClass="btn btn-info" OnClientClick="return validateControl();" OnClick="btnSave_Click" />--%>
-                                        <asp:Button ID="btnCreateProject" runat="server" Text="Create Project" CssClass="btn btn-dark" OnClientClick="ClientSideClick(this)" OnClick="btnCreateProject_Click" />
+                                        <asp:Button ID="btnCreateProject" runat="server" Text="Create Project" CssClass="btn btn-dark" 
+                                             OnClientClick="ClientSideClick(this)" OnClick="btnCreateProject_Click" 
+                                            ValidationGroup="clientRequestFormValidations" CausesValidation="true"/>
 
-                                        <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>
+                                        <button class="btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="cleartQueryString()">Close</button>
                                     </div>
 
                                     <div class="hidden">
@@ -726,6 +782,7 @@
 
     </div>
     <script src="../Scripts/typeahead.jquery.min.js"></script>
+    <script src="../Scripts/jquery.validate.js"></script>
     <script type="text/javascript">
 
 
@@ -737,14 +794,22 @@
 
             bindForm();
 
-            $("#editModal").on('hidden.bs.modal', function () {
-                $(this).find("input,textarea,select")
-                            .val('')
-                            .end()
-                       .find("input[type=checkbox],input[type=radio]")
-                            .prop('checked', "")
-                            .end();
-            });
+            var rqstId = GetURLParameter('ClientRequestId');
+
+            if (typeof (rqstId) != 'undefined' && rqstId.length > 0) {
+                $('#editModal').modal('show');
+            }
+
+            //$("#editModal").on('hidden.bs.modal', function () {
+            //    $(this).find("input,textarea,select")
+            //                .val('')
+            //                .end()
+            //           .find("input[type=checkbox],input[type=radio]")
+            //                .prop('checked', "")
+            //                .end();
+            //});
+
+
         }
 
 
@@ -1143,6 +1208,40 @@
                     otherField.parent().find('label').hide();
                 }
             });
+        }
+
+        /// NAME: GetURLParameter(sParam)
+        ///
+        /// FUNCTION: Grabs URL after ampersand (&) symbol, checks
+        ///           the parameter before the equals (=) symbol is the same as given
+        ///           given parameter, and returns the value after the "=".
+        ///
+        /// PARAMETERS: sParam - given parameter.
+        ///
+        /// RETURNS: Value after the equals (=) sign (the Collaborative Center abbreviation).
+        function GetURLParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        }
+
+        function cleartQueryString() {
+            if (window.location.href.indexOf('?') > 0)
+                window.location.href = window.location.href.split('?')[0];
+            
+            // Also moved "Clear form" functionality here.
+            $(this).find("input,textarea,select")
+                .val('')
+                .end()
+                .find("input[type=checkbox],input[type=radio]")
+                .prop('checked', "")
+                .end();
+
         }
 
         function openSurvey(btnView) {

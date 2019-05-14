@@ -32,17 +32,18 @@ namespace ProjectManagement.Guest
     ///  ------------------------------------------
     ///  2019FEB25 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
     ///                                    easier data structure view and management.
-    ///                                  - Added reCaptcha to increase security and prevent bots from
+    ///                                 -  Added reCaptcha to increase security and prevent bots from
     ///                                    successfully submitting a form.
     ///  2019FEB26 - Jason Delos Reyes  -  Enhanced "submit" feature so that Google reCaptcha feature has to
     ///                                    be valid before submission, as well as duplicating front-end field
     ///                                    validations to the back end.  A modal pop-up field has been added so
     ///                                    that form users will simply not ignore the errors on the page.
-    /// 2019APR08  - Jason Delos Reyes  -  Nearly completed adding front-end of new Client Request form.
+    ///  2019APR08 - Jason Delos Reyes  -  Nearly completed adding front-end of new Client Request form.
     ///                                    Need to add "required" indicator to stop users from entering
     ///                                    missing forms.
-    /// 2019APR11  - Jason Delos Reyes  -  Finished front-end and added linking to database. Created ClientRequestTracker.edmx
+    ///  2019APR11 - Jason Delos Reyes  -  Finished front-end and added linking to database. Created ClientRequestTracker.edmx
     ///                                    file to build the "second database" functionality of the system.
+    ///  2019MAY13 - Jason Delos Reyes  -  Updated notification email link to link with the proper Client Request review form.
     /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
@@ -166,7 +167,7 @@ namespace ProjectManagement.Guest
                                                              && f.Name != "Ola Hawaii"
                                                              && f.Name != "P30 UHCC")
                                       .OrderBy(b=>b.DisplayOrder)
-                                      .ToDictionary(c=>c.Id, c=>c.Name);
+                                      .ToDictionary(c=>c.BitValue, c=>c.Name);
 
                 BindTable2(qFundingSource, rptFunding);
 
@@ -513,14 +514,15 @@ namespace ProjectManagement.Guest
             string url = Request.Url.Scheme + "://" + Request.Url.Authority +
                             Request.ApplicationPath.TrimEnd('/') + "/Admin/ClientForm";
 
-            if (url.IndexOf("?Id") > 0)
+            if (url.IndexOf("?ClientRequestId") > 0)
             {
-                url = url.Substring(0, url.IndexOf("?Id"));
+                url = url.Substring(0, url.IndexOf("?ClientRequestId"));
             }
 
             StringBuilder body = new StringBuilder();
             body.AppendFormat("<p>Request GUID {0}<br /><br />", Guid.NewGuid());
             body.AppendFormat("Please check new client request, id {0} at {1}", newRequestId, url);
+            body.AppendFormat("?ClientRequestId={0}</p>", newRequestId);
             body.AppendLine();
 
             IdentityMessage im = new IdentityMessage()

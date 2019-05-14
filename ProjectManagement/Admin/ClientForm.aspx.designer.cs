@@ -67,6 +67,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFirstName;
         
         /// <summary>
+        /// rfTxtFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtFirstName;
+        
+        /// <summary>
         /// txtLastName control.
         /// </summary>
         /// <remarks>
@@ -74,6 +83,15 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtLastName;
+        
+        /// <summary>
+        /// rdTxtLastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rdTxtLastName;
         
         /// <summary>
         /// ddlDegree control.
@@ -94,6 +112,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtDegreeOther;
         
         /// <summary>
+        /// rfTxtDegreeOther control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtDegreeOther;
+        
+        /// <summary>
         /// txtEmail control.
         /// </summary>
         /// <remarks>
@@ -101,6 +128,24 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtEmail;
+        
+        /// <summary>
+        /// rfTxtEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtEmail;
+        
+        /// <summary>
+        /// reTxtEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator reTxtEmail;
         
         /// <summary>
         /// txtPhone control.
@@ -112,6 +157,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPhone;
         
         /// <summary>
+        /// rfTxtPhone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtPhone;
+        
+        /// <summary>
         /// txtDept control.
         /// </summary>
         /// <remarks>
@@ -119,6 +173,15 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtDept;
+        
+        /// <summary>
+        /// rfTxtDept control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtDept;
         
         /// <summary>
         /// ddlPIStatus control.
@@ -184,6 +247,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorFirstName;
         
         /// <summary>
+        /// rfTxtMentorFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtMentorFirstName;
+        
+        /// <summary>
         /// txtMentorLastName control.
         /// </summary>
         /// <remarks>
@@ -191,6 +263,15 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorLastName;
+        
+        /// <summary>
+        /// rfTxtMentorLastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtMentorLastName;
         
         /// <summary>
         /// txtMentorEmail control.
@@ -202,6 +283,24 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorEmail;
         
         /// <summary>
+        /// rfTxtMentorEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtMentorEmail;
+        
+        /// <summary>
+        /// reTxtMentorEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator reTxtMentorEmail;
+        
+        /// <summary>
         /// txtProjectTitle control.
         /// </summary>
         /// <remarks>
@@ -211,6 +310,15 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtProjectTitle;
         
         /// <summary>
+        /// rfTxtProjectTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtProjectTitle;
+        
+        /// <summary>
         /// txtProjectSummary control.
         /// </summary>
         /// <remarks>
@@ -218,6 +326,15 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea txtProjectSummary;
+        
+        /// <summary>
+        /// rfTxtProjectSummary control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtProjectSummary;
         
         /// <summary>
         /// rptStudyArea control.
