@@ -12,11 +12,15 @@
     <script src="../Scripts/bootstrap.min.js"></script>
     <script src="../Scripts/InputMask.js"></script>
     <%-- Refer to reCaptcha API --%>
-    <script src="https://www.google.com/recaptcha/api.js?onload=renderRecaptcha&render=explicit" async="async" defer="defer"></script>
+    <%--<script src="https://www.google.com/recaptcha/api.js?onload=renderRecaptcha&render=explicit" async="async" defer="defer"></script>--%>
+    <script src="http://www.google.com/recaptcha/api.js?render=<%= ConfigurationManager.AppSettings["captchaSiteKeyV3Test"] %>"></script>
+    
 
     <%-- https://www.c-sharpcorner.com/article/integration-of-google-recaptcha-in-websites/ --%>
 
     <%--<script src="../Scripts/jquery.cookie.js"></script>--%>
+
+     
 
     <style>
         /*h3 {
@@ -961,7 +965,7 @@
                 </div>
                 <br />--%>
 
-                <div class="row">
+                <div class="row" style="display: none;">
                     <div class="col-sm-2">
                         <label class="control-label">Google Captcha</label>
                     </div>
@@ -971,6 +975,11 @@
 
                         <div id="ReCaptchaContainer"></div>
                         <label id="lblRecaptchaMessage" runat="server" clientmode="static"></label>
+
+                        <%--<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />--%>
+                        <asp:HiddenField ID="GcaptchaResponse" runat="server" />
+                        <input type="hidden" name="action" value="validate_captcha" />
+
 
                     </div>
                 </div>
@@ -1046,6 +1055,12 @@
     <script src="../Scripts/typeahead.jquery.min.js"></script>
     <script type="text/javascript">
 
+        grecaptcha.ready(function () {
+            grecaptcha.execute('<%= ConfigurationManager.AppSettings["captchaSiteKeyV3Test"] %>', { action: 'validate_captcha' })
+                .then(function (token) {
+                    $('#GcaptchaResponse').val(token);
+                })
+        });
 
         $(document).ready(function () {
 

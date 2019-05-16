@@ -112,15 +112,6 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtDegreeOther;
         
         /// <summary>
-        /// rfTxtDegreeOther control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtDegreeOther;
-        
-        /// <summary>
         /// txtEmail control.
         /// </summary>
         /// <remarks>
@@ -247,15 +238,6 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorFirstName;
         
         /// <summary>
-        /// rfTxtMentorFirstName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtMentorFirstName;
-        
-        /// <summary>
         /// txtMentorLastName control.
         /// </summary>
         /// <remarks>
@@ -265,15 +247,6 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorLastName;
         
         /// <summary>
-        /// rfTxtMentorLastName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtMentorLastName;
-        
-        /// <summary>
         /// txtMentorEmail control.
         /// </summary>
         /// <remarks>
@@ -281,24 +254,6 @@ namespace ProjectManagement.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtMentorEmail;
-        
-        /// <summary>
-        /// rfTxtMentorEmail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfTxtMentorEmail;
-        
-        /// <summary>
-        /// reTxtMentorEmail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator reTxtMentorEmail;
         
         /// <summary>
         /// txtProjectTitle control.

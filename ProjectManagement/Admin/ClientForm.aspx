@@ -10,7 +10,28 @@
             font-weight: bold;
             color: red;
         }
+        #tblClientRequest_filter label,
+        #tblClientRequest_length label,
+        #tblClientSurvey_filter label,
+        #tblClientSurvey_length label{
+            font-weight: normal;
+            display: block;
+        }
+        #tblClientRequest_filter input,
+        #tblClientSurvey_filter input{
+            margin-left: 10px;
+            display: inline-block;
+           
+        }
+        #tblClientRequest_filter,
+        #tblClientSurvey_filter input{
+            
+            max-width: inherit;
+        }
+
+
     </style>
+    <link href="../Content/dataTables.bootstrap.min.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="jumbotron">
@@ -27,7 +48,7 @@
                     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                         <ContentTemplate>
                             <div>
-                                <table class="table table-striped table-hover">
+                                <table class="table table-striped table-hover table-bordered no-footer dataTable" id="tblClientRequest">
                                     <thead>
                                         <tr>
                                             <th style="width: 5%; padding: 0,0,0,1px;">Id</th>
@@ -125,10 +146,10 @@
                                         <div class="col-sm-3">
                                             <label class="control-label" for="txtDegreeOther">Other:</label>
                                             <input class="form-control" type="text" name="txtDegreeOther" id="txtDegreeOther" placeholder="Degree - Other" runat="Server" />
-                                            <asp:RequiredFieldValidator ID="rfTxtDegreeOther" runat="server" 
+                                            <%--<asp:RequiredFieldValidator ID="rfTxtDegreeOther" runat="server" 
                                                 ErrorMessage="Required." ControlToValidate="txtDegreeOther"
                                                 ValidationGroup="clientRequestFormValidations" CssClass="validation">
-                                            </asp:RequiredFieldValidator>
+                                            </asp:RequiredFieldValidator>--%>
                                         </div>
                                     </div>
                                     <br />
@@ -216,34 +237,34 @@
                                         </div>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtMentorFirstName" id="txtMentorFirstName" runat="Server" />
-                                            <asp:RequiredFieldValidator ID="rfTxtMentorFirstName" runat="server" 
+                                            <%--<asp:RequiredFieldValidator ID="rfTxtMentorFirstName" runat="server" 
                                                 ErrorMessage="Required." ControlToValidate="txtMentorFirstName"
                                                 ValidationGroup="clientRequestFormValidations" CssClass="validation">
-                                            </asp:RequiredFieldValidator>
+                                            </asp:RequiredFieldValidator>--%>
                                         </div>
                                         <div class="col-sm-2 text-right">
                                             <label class="control-label" for="txtTitle">Mentor last name:</label>
                                         </div>
                                         <div class="col-sm-2">
                                             <input class="form-control" type="text" name="txtMentorLastName" id="txtMentorLastName" runat="Server" />
-                                            <asp:RequiredFieldValidator ID="rfTxtMentorLastName" runat="server" 
+                                            <%--<asp:RequiredFieldValidator ID="rfTxtMentorLastName" runat="server" 
                                                 ErrorMessage="Required." ControlToValidate="txtMentorLastName"
                                                 ValidationGroup="clientRequestFormValidations" CssClass="validation">
-                                            </asp:RequiredFieldValidator>
+                                            </asp:RequiredFieldValidator>--%>
                                         </div>
                                         <div class="col-sm-1 text-right">
                                             <label class="control-label" for="txtTitle">Email:</label>
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" type="text" name="txtMentorEmail" id="txtMentorEmail" runat="Server" />
-                                            <asp:RequiredFieldValidator ID="rfTxtMentorEmail" runat="server" 
+                                           <%-- <asp:RequiredFieldValidator ID="rfTxtMentorEmail" runat="server" 
                                                 ErrorMessage="Required." ControlToValidate="txtMentorEmail"
                                                 ValidationGroup="clientRequestFormValidations" CssClass="validation">
                                             </asp:RequiredFieldValidator>
                                             <asp:RegularExpressionValidator ID="reTxtMentorEmail" runat="server"
                                                 ControlToValidate="txtMentorEmail" CssClass="validation" ErrorMessage="Enter valid e-mail address."
                                                 ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*">
-                                            </asp:RegularExpressionValidator>
+                                            </asp:RegularExpressionValidator>--%>
                                         </div>
                                     </div>
                                     <br />
@@ -741,7 +762,7 @@
             <div class="panel-body">
 
                 <div>
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-hover table-bordered no-footer dataTable" id="tblClientSurvey">
                         <thead>
                             <tr>
                                 <th style="width: 10%; padding: 0,0,0,1px;">Project Id</th>
@@ -783,6 +804,8 @@
     </div>
     <script src="../Scripts/typeahead.jquery.min.js"></script>
     <script src="../Scripts/jquery.validate.js"></script>
+    <script src="../Scripts/jquery.dataTables.min.js"></script>
+    <script src="../Scripts/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript">
 
 
@@ -794,21 +817,48 @@
 
             bindForm();
 
+            $('#tblClientRequest').DataTable({
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false }
+                ],
+               order: [[0, 'desc']]
+            });
+
+            /*
+            $('#tblClientSurvey').DataTable({
+                "aoColumns": [
+                    null,
+                    null,
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false }
+                ]
+            });*/
+
             var rqstId = GetURLParameter('ClientRequestId');
 
             if (typeof (rqstId) != 'undefined' && rqstId.length > 0) {
                 $('#editModal').modal('show');
             }
 
+            
             //$("#editModal").on('hidden.bs.modal', function () {
             //    $(this).find("input,textarea,select")
             //                .val('')
             //                .end()
-            //           .find("input[type=checkbox],input[type=radio]")
+            //           .find("input[type=checkbox]")
             //                .prop('checked', "")
             //                .end();
             //});
-
+            
 
         }
 
@@ -1235,12 +1285,16 @@
                 window.location.href = window.location.href.split('?')[0];
             
             // Also moved "Clear form" functionality here.
-            $(this).find("input,textarea,select")
+             $("#editModal").find("input[type=text],textarea,select")
                 .val('')
                 .end()
                 .find("input[type=checkbox],input[type=radio]")
                 .prop('checked', "")
                 .end();
+            //$("#editModal").find("input,textarea,select").val('');
+                
+            //$("#editModal").find("input[type=checkbox],input[type=radio]").prop('checked', "");
+                
 
         }
 

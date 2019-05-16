@@ -508,6 +508,15 @@ namespace ProjectManagement.Guest {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblRecaptchaMessage;
         
         /// <summary>
+        /// GcaptchaResponse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField GcaptchaResponse;
+        
+        /// <summary>
         /// UP1 control.
         /// </summary>
         /// <remarks>

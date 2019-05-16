@@ -57,6 +57,13 @@ namespace ProjectManagement.Admin
     ///                                    for "Funding Source", which was referring to Id instead of Bitsum.
     ///                                 -  Moved the "clear all" functionality to the cleartQueryString() javascript function
     ///                                    as it no longer worked in the "pageLoad" javascript function.
+    ///  2019MAY14 - Jason Delos Reyes  -  Added paging and sorting for Client Request section to shorten view.
+    ///                                 -  Attempted to make fields save from the Client Form Review items
+    ///                                    in case the admin team decides to make changes, but have been 
+    ///                                    halted by Javascript issue preventing to save the form. (Now should fix btnCreateProject algorithm.)
+    ///  2019MAY15 - Jason Delos Reyes  -  Fixed the issue with btnCreateProject algorithm always rewriting the client request form, when it should
+    ///                                    only do so upon saving the form from client review.  Also solved the issue with checkbox being checked instead
+    ///                                    of clearing the client request review modal form upon closure.
     /// </summary>
     public partial class ClientForm : System.Web.UI.Page
     {
@@ -116,7 +123,7 @@ namespace ProjectManagement.Admin
                 if (rqstId > 0)
                 {
 
-                    ClientRequest2_cr rqst = GetClientRequestById(rqstId);
+                    ClientRequest2_cr rqst = GetRequest(rqstId);/*GetClientRequestById(rqstId);*/
 
                     if (rqst != null)
                     {
@@ -173,6 +180,8 @@ namespace ProjectManagement.Admin
                                 ///<> Project <> ///
                                 // Push create new PROJECT entry and send email to admin for approval. 
 
+                                // If reached this point, save changes into Client Request database.
+                                cr.SaveChanges();
 
                                 Project2 project = CreateProject(rqst);
                                 project.PIId = investId;
@@ -199,6 +208,8 @@ namespace ProjectManagement.Admin
                                 rptClientRqst.DataSource = clientRqstTable;
                                 rptClientRqst.DataBind();
 
+                                // Reopen the modal window 
+                                //Response.Redirect(String.Format("~/Admin/ClientForm?ClientRequestId={0}", rqstId));
                             }
                         }
 
@@ -238,7 +249,7 @@ namespace ProjectManagement.Admin
         }
 
         /// <summary>
-        /// Marks "Client Request Form" as "Completed" or "Requested".
+        /// (CURRENTLY NOT IN USE) Marks "Client Request Form" as "Completed" or "Requested".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1151,6 +1162,73 @@ namespace ProjectManagement.Admin
             }
 
             return myRqst;
+        }
+
+        /// <summary>
+        /// Returns the created client request instance with the given request id.
+        /// </summary>
+        /// <param name="rqstId">Client request entry to update.</param>
+        /// <returns>Newly updated client request instance from the given request id..</returns>
+        private ClientRequest2_cr GetRequest(int rqstId)
+        {
+            int biostatId = 0, grantDepartmentFundingType = 0;
+            long studyAreaBitSum = 0, healthDataBitSum = 0, studyTypeBitSum = 0, studyPopulationBitSum = 0,
+                 serviceBitSum = 0, grantBitSum = 0;
+            DateTime dt;
+
+            //ClientRequest2_cr rqst = GetClientRequestById(rqstId);
+
+            ClientRequest2_cr rqst = null;
+
+            using (ClientRequestTracker cr = new ClientRequestTracker())
+            {
+
+                rqst = cr.ClientRequest2_cr.FirstOrDefault(t => t.Id == rqstId);
+
+                rqst.FirstName = txtFirstName.Value; //Request.Form["txtFirstName"];
+                rqst.LastName = txtLastName.Value; //Request.Form["txtLastName"];
+                rqst.Degree = ddlDegree.SelectedItem.Text;
+                rqst.DegreeOther = txtDegreeOther.Value;//Request.Form["txtDegreeOther"];
+                rqst.Email = txtEmail.Value; //Request.Form["txtEmail"];
+                rqst.Phone = txtPhone.Value; //Request.Form["txtPhone"];
+                rqst.Department = txtDept.Value; // Request.Form["txtDept"];
+                rqst.InvestStatus = ddlPIStatus.SelectedItem.Text;
+                rqst.IsJuniorPI = chkJuniorPIYes.Checked ? true : false;
+                rqst.HasMentor = chkMentorYes.Checked ? true : false;
+                rqst.MentorFirstName = txtMentorFirstName.Value; //Request.Form["txtMentorFirstName"];
+                rqst.MentorLastName = txtMentorLastName.Value; //Request.Form["txtMentorLastName"];
+                rqst.MentorEmail = txtMentorEmail.Value; //Request.Form["txtMentorEmail"];
+                rqst.ProjectTitle = txtProjectTitle.Value; //Request.Form["txtProjectTitle"];
+                rqst.ProjectSummary = txtProjectSummary.Value; // Request.Form["txtProjectSummary"];
+                rqst.StudyAreaBitSum = Int64.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0;
+                rqst.StudyAreaOther = txtStudyAreaOther.Value; // Request.Form["txtStudyAreaOther"];
+                rqst.HealthDateBitSum = Int64.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0;
+                rqst.HealthDataOther = txtHealthDataOther.Value; // Request.Form["txtHealthDataOther"];
+                rqst.StudyTypeBitSum = Int64.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum) ? studyTypeBitSum : 0;
+                rqst.StudyTypeOther = txtStudyTypeOther.Value; // Request.Form["txtStudyTypeOther"];
+                rqst.StudyPopulationBitSum = Int64.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum) ? studyPopulationBitSum : 0;
+                rqst.StudyPopulationOther = txtStudyPopulationOther.Value; // Request.Form["txtStudyPopulationOther"];
+                rqst.IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)1 : chkHealthDisparityNo.Checked ? (byte)2 : chkHealthDisparityNA.Checked ? (byte)3 : (byte)0;
+                rqst.ServiceBitSum = Int64.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0;
+                rqst.IsPilot = chkPilotYes.Checked ? true : false;
+                rqst.IsGrantProposal = chkProposalYes.Checked ? true : false;
+                rqst.IsUHGrant = chkIsUHPilotGrantYes.Checked ? true : false;
+                rqst.UHGrantName = /*ddlUHGrant.SelectedItem.Text*/null;
+                rqst.GrantProposalFundingAgency = txtGrantProposalFundingAgency.Value; // Request.Form["txtGrantProposalFundingAgency"];
+                rqst.GrantBitSum = Int64.TryParse(txtFundingBitSum.Value, out grantBitSum) ? grantBitSum : 0;
+                rqst.GrantOther = txtFundingOther.Value; // Request.Form["txtFundingOther"];
+                rqst.GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0;
+                rqst.GrantDepartmentFundingOther = txtDeptFundOth.Value; //Request.Form["txtDeptFundOth"];
+                rqst.DeadLine = DateTime.TryParse(txtDueDate.Text, out dt) ? dt : (DateTime?)null;
+                rqst.BiostatId = Int32.TryParse(ddlBiostat.SelectedItem.Value, out biostatId) ? biostatId : 0;
+                /*Fields that we want to capture from original form that hasn't been transformed from original request.*/
+                //rqst.Creator = Request.UserHostAddress.ToString();
+                //rqst.CreationDate = DateTime.Now;
+                //rqst.RequestStatus = "Created";
+
+            }
+
+            return rqst;
         }
     }
 }

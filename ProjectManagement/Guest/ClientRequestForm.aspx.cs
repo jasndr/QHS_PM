@@ -44,6 +44,7 @@ namespace ProjectManagement.Guest
     ///  2019APR11 - Jason Delos Reyes  -  Finished front-end and added linking to database. Created ClientRequestTracker.edmx
     ///                                    file to build the "second database" functionality of the system.
     ///  2019MAY13 - Jason Delos Reyes  -  Updated notification email link to link with the proper Client Request review form.
+    ///  2019MAY16 - Jason Delos Reyes  -  Replaced reCAPTCHA from v2 to v3 for increased security.
     /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
@@ -77,20 +78,20 @@ namespace ProjectManagement.Guest
                 dropDownSource = cr.JabsomAffil_cr
                                    .Where(d => d.Type == "Degree")
                                    .OrderBy(d => d.Name)
-                                   .ToDictionary(c=>c.Id, c=>c.Name);
+                                   .ToDictionary(c => c.Id, c => c.Name);
                 PageUtility.BindDropDownList(ddlDegree, dropDownSource, "-- Select Degree --");
 
                 /// Populates "Investigator Status" dropdown
                 dropDownSource = cr.InvestStatus_cr
-                                   .OrderBy(d=>d.DisplayOrder)
+                                   .OrderBy(d => d.DisplayOrder)
                                     .ToDictionary(c => c.Id, c => c.StatusValue);
 
                 PageUtility.BindDropDownList(ddlPIStatus, dropDownSource, "-- Select status --");
 
                 /// Populates "Organization" typeable dropdown (if available from database)
                 var deptAffil = cr.JabsomAffil_cr
-                                  .Where(a => a.Type != "Other" && a.Type != "Degree" 
-                                                                && a.Type != "Unknown" 
+                                  .Where(a => a.Type != "Other" && a.Type != "Degree"
+                                                                && a.Type != "Unknown"
                                                                 && a.Type != "UHFaculty"
                                                                 && a.Name != "Other")
                                   .OrderBy(a => a.Id)
@@ -120,14 +121,14 @@ namespace ProjectManagement.Guest
                 rptStudyPopulation.DataBind();
 
                 /// Populates "Service" checkbox grid
-                qProjectField = cr.ProjectField_cr.Where(f => f.IsService == true).ToList();
+                qProjectField = cr.ProjectField_cr.Where(f => f.IsService == true && f.Name != "Bioinformatics Analysis").ToList();
                 rptService.DataSource = qProjectField;
                 rptService.DataBind();
 
 
                 /// Populates "QHS Faculty/Staff preference" dropdown\
                 dropDownSource = cr.BioStat_cr
-                                   .Where(b => b.EndDate >= DateTime.Now && b.Id > 0 
+                                   .Where(b => b.EndDate >= DateTime.Now && b.Id > 0
                                                                          && b.Name != "N/A"
                                                                          && b.Name != "Vedbar Khadka"
                                                                          && b.Name != "Youping Deng"
@@ -158,7 +159,7 @@ namespace ProjectManagement.Guest
                 //PageUtility.BindDropDownList(ddlGrantStatus, qGrantStatus, "-- Select status --");
 
                 /// Populates "Funding Source" checkbox grid
-                var qFundingSource = cr.ProjectField_cr.Where(f => f.IsGrant == true 
+                var qFundingSource = cr.ProjectField_cr.Where(f => f.IsGrant == true
                                                              && f.IsFundingSource == true
                                                              && f.Name != "N/A"
                                                              && f.Name != "No (No funding)"
@@ -166,8 +167,8 @@ namespace ProjectManagement.Guest
                                                              && f.Name != "RMATRIX"
                                                              && f.Name != "Ola Hawaii"
                                                              && f.Name != "P30 UHCC")
-                                      .OrderBy(b=>b.DisplayOrder)
-                                      .ToDictionary(c=>c.BitValue, c=>c.Name);
+                                      .OrderBy(b => b.DisplayOrder)
+                                      .ToDictionary(c => c.BitValue, c => c.Name);
 
                 BindTable2(qFundingSource, rptFunding);
 
@@ -185,22 +186,22 @@ namespace ProjectManagement.Guest
                 /// Populates "Is project for a grant proposal ?"
                 ///              > "Is this application for a UH Infrastructure Grant pilot?"
                 ///                  >  "What is the grant?" dropdown.
-               /* dropDownSource = cr.ProjectField_cr
-                                   .Where(f => f.IsGrant == true && f.IsFundingSource == true
-                                                               && (f.Name == "Ola Hawaii"
-                                                                || f.Name == "RMATRIX"
-                                                                || f.Name == "INBRE"
-                                                                // --> (Not a grant source) || f.Name == "Native and Pacific Islands Health Disparities Research"
-                                                                // --> (Bioinformatics) || f.Name == "COBRE-Cardiovascular"
-                                                                // --> (Bioinformatics) || f.Name == "COBRE-Infectious Diseases"
-                                                                // --> (Bioinformatics) || f.Name == "COBRE-Biogenesis Research"
-                                                                // --> (Bioinformatics) || f.Name == "P30 UHCC"
-                                                                ))
-                                   .OrderBy(b => (b.Name == "Ola Hawaii" ? 1 : b.Id))
-                                   .ToDictionary(c => c.Id, c => c.Name);
+                /* dropDownSource = cr.ProjectField_cr
+                                    .Where(f => f.IsGrant == true && f.IsFundingSource == true
+                                                                && (f.Name == "Ola Hawaii"
+                                                                 || f.Name == "RMATRIX"
+                                                                 || f.Name == "INBRE"
+                                                                 // --> (Not a grant source) || f.Name == "Native and Pacific Islands Health Disparities Research"
+                                                                 // --> (Bioinformatics) || f.Name == "COBRE-Cardiovascular"
+                                                                 // --> (Bioinformatics) || f.Name == "COBRE-Infectious Diseases"
+                                                                 // --> (Bioinformatics) || f.Name == "COBRE-Biogenesis Research"
+                                                                 // --> (Bioinformatics) || f.Name == "P30 UHCC"
+                                                                 ))
+                                    .OrderBy(b => (b.Name == "Ola Hawaii" ? 1 : b.Id))
+                                    .ToDictionary(c => c.Id, c => c.Name);
 
-                PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);*/
-         
+                 PageUtility.BindDropDownList(ddlUHGrant, dropDownSource, String.Empty);*/
+
             }
 
         }
@@ -294,24 +295,47 @@ namespace ProjectManagement.Guest
         /// <returns>Whether or not captcha request is valid.</returns>
         private bool IsReCaptchaValid()
         {
-            var result = false;
-            var captchaResponse = Request.Form["g-recaptcha-response"];
-            var secretKey = ConfigurationManager.AppSettings["captchaSecretKey"];
-            var apiUrl = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}";
-            var requestUri = string.Format(apiUrl, secretKey, captchaResponse);
-            var request = (HttpWebRequest)WebRequest.Create(requestUri);
+            
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify");
 
-            using (WebResponse response = request.GetResponse())
-            {
-                using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+            req.ProtocolVersion = HttpVersion.Version10;
+            req.Method = "POST";
+            req.ContentType = "application/x-www-form-urlencoded";
+            string Fdata = string.Format("secret={0}&response={1}",
+                new object[]
                 {
-                    JObject jResponse = JObject.Parse(stream.ReadToEnd());
-                    var isSuccess = jResponse.Value<bool>("success");
-                    result = (isSuccess) ? true : false;
-                }
+                    HttpUtility.UrlEncode(ConfigurationManager.AppSettings["captchaSecretKeyV3Test"]),
+                    HttpUtility.UrlEncode(GcaptchaResponse.Value),
+                });
+
+            byte[] resData = Encoding.ASCII.GetBytes(Fdata);
+
+            using (Stream rStream = req.GetRequestStream())
+            {
+                rStream.Write(resData, 0, resData.Length);
             }
 
+            bool result;
+            try
+            {
+                using (WebResponse wResponse = req.GetResponse())
+                {
+                    using (TextReader readStream = new StreamReader(wResponse.GetResponseStream(), Encoding.UTF8))
+                    {
+                        JObject jResponse = JObject.Parse(readStream.ReadToEnd());
+                        var isSuccess = jResponse.Value<bool>("success");
+                        result = (isSuccess) ? true : false;
+                    }
+                }
+            }
+            catch
+            {
+                result = false;
                 return result;
+            }
+
+            return result;
+
         }
 
         /// <summary>
@@ -347,7 +371,7 @@ namespace ProjectManagement.Guest
                 StringBuilder sb2 = new StringBuilder();
                 sb2.Append(@"<script type='text/javascript'>");
                 sb2.Append("$('#MainContent_lblWarning').text('Please review the following error message:');");
-                sb2.Append("$('#textWarning').append('<span>"+validateForm+"</span>');");
+                sb2.Append("$('#textWarning').append('<span>" + validateForm + "</span>');");
                 //sb2.Append("ShowWarningModal();");
                 sb2.Append("$('#btnShowWarningModal').click();");
                 sb2.Append(@"</script>");
@@ -357,7 +381,7 @@ namespace ProjectManagement.Guest
 
                 //lblRecaptchaMessage.InnerHtml = "<span style='color: red'>Captcha verification failed!</span>";
             }
-  
+
         }
 
         /// <summary>
@@ -427,14 +451,14 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Project title is too long. Limit is 255 characters. <br />");
             }
-            if(txtProjectSummary.Value.Length > 4000)
+            if (txtProjectSummary.Value.Length > 4000)
             {
                 validateForm.Append("Project summary is too long. Limit is 4000 characters. <br />");
             }
 
             int studyAreaBitSum = 0;
             Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum);
-            if(studyAreaBitSum <= 0)
+            if (studyAreaBitSum <= 0)
             {
                 validateForm.Append("Study area is required. <br />");
             }
@@ -546,7 +570,7 @@ namespace ProjectManagement.Guest
         /// <returns>Request Id generated by the database for this form.</returns>
         private int SaveRequest()
         {
-            int requestId = 0, /*uhGrantId = 0,*/ biostatId = 0, grantDepartmentFundingType = 0; 
+            int requestId = 0, /*uhGrantId = 0,*/ biostatId = 0, grantDepartmentFundingType = 0;
             long studyAreaBitSum = 0, healthDataBitSum = 0, studyTypeBitSum = 0, studyPopulationBitSum = 0,
                  serviceBitSum = 0, grantBitSum = 0;
             DateTime dt;
@@ -609,7 +633,7 @@ namespace ProjectManagement.Guest
 
                     requestId = rqst.Id;
                 }
-                
+
             }
             catch (Exception ex)
             {
