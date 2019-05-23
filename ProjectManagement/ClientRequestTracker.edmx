@@ -86,6 +86,7 @@
           <Property Name="IsHealthDisparity" Type="tinyint" />
           <Property Name="GrantDepartmentFundingType" Type="int" />
           <Property Name="GrantDepartmentFundingOther" Type="nvarchar" MaxLength="255" />
+          <Property Name="Archive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="InvestStatus">
           <Key>
@@ -286,6 +287,7 @@
           <Property Name="IsHealthDisparity" Type="Byte" />
           <Property Name="GrantDepartmentFundingType" Type="Int32" />
           <Property Name="GrantDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Archive" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_ClientRequest2_BioStats">
           <End Type="BQHSRequest_Model.BioStat_cr" Role="BioStat_cr" Multiplicity="0..1" />
@@ -386,6 +388,7 @@
           <EntitySetMapping Name="ClientRequest2_cr">
             <EntityTypeMapping TypeName="BQHSRequest_Model.ClientRequest2_cr">
               <MappingFragment StoreEntitySet="ClientRequest2">
+                <ScalarProperty Name="Archive" ColumnName="Archive" />
                 <ScalarProperty Name="GrantDepartmentFundingOther" ColumnName="GrantDepartmentFundingOther" />
                 <ScalarProperty Name="GrantDepartmentFundingType" ColumnName="GrantDepartmentFundingType" />
                 <ScalarProperty Name="IsHealthDisparity" ColumnName="IsHealthDisparity" />

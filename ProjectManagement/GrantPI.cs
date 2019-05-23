@@ -21,6 +21,6 @@ namespace ProjectManagement
         public System.DateTime CreateDate { get; set; }
     
         public virtual Grant Grant { get; set; }
-        public virtual Invest Invest { get; set; }
+        public virtual Invests Invests { get; set; }
     }
 }

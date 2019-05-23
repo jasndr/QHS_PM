@@ -26,6 +26,7 @@ namespace ProjectManagement
     ///  ------------------------------------------
     ///  2018JUN25 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
     ///                                    easier data structure view and management.
+    ///  2019MAY17 - Jason Delos Reyes  -  Reversed the order of Project Review list to list them last-in first-out.                                  
     ///   
     public partial class ProjectList : System.Web.UI.Page
     {
@@ -90,7 +91,7 @@ namespace ProjectManagement
                            .Join(context.InvestStatus, i => i.InvestStatusId, s => s.Id,
                                    (i, s) => new { i.Id, i.FirstName, i.LastName, i.Email, i.Phone, s.StatusValue, i.IsApproved })
                            .Where(d => d.Id > 0 && !d.IsApproved)
-                           .OrderBy(d => d.Id);
+                           .OrderByDescending(d => d.Id);
 
                 // Bind list of pending Investigators to table.
                 GridViewPI.DataSource = query.ToList();
@@ -99,7 +100,8 @@ namespace ProjectManagement
                 // List of pending Projects to review by QHS Tracking Team.
                 var pending = context.Project2
                             .Join(context.Invests, p => p.Invests.Id, i => i.Id, ((p, i) => new { p.Id, p.Title, p.InitialDate, p.IsApproved, i.FirstName, i.LastName}))
-                            .Where(a => a.IsApproved == false && a.Id > 0);
+                            .Where(a => a.IsApproved == false && a.Id > 0)
+                            .OrderByDescending(d=>d.Id);
 
                 // Binds list of pending Projects to table.
                 GridViewPending.DataSource = pending.ToList();

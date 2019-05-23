@@ -345,6 +345,9 @@
           <Property Name="IsPilot" Type="bit" Nullable="false" />
           <Property Name="OtherDegree" Type="nvarchar" MaxLength="255" />
           <Property Name="OtherCommunityPartner" Type="nvarchar" MaxLength="255" />
+          <Property Name="AltEmail" Type="nvarchar" MaxLength="255" />
+          <Property Name="AltPhone" Type="nvarchar" MaxLength="255" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="400" />
         </EntityType>
         <EntityType Name="InvestStatus">
           <Key>
@@ -2218,7 +2221,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ProjectTracker" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="ProjectTrackerContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Projects" EntityType="ProjectTracker.Project" />
-          <EntitySet Name="Invests" EntityType="ProjectTracker.Invest" />
           <EntitySet Name="InvestStatus" EntityType="ProjectTracker.InvestStatus" />
           <EntitySet Name="ServiceTypes" EntityType="ProjectTracker.ServiceType" />
           <EntitySet Name="BioStatGroups" EntityType="ProjectTracker.BioStatGroup" />
@@ -2244,10 +2246,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySet Name="JabsomOffices" EntityType="ProjectTracker.JabsomOffice" />
           <EntitySet Name="JabsomAffils" EntityType="ProjectTracker.JabsomAffil" />
           <EntitySet Name="Conferences" EntityType="ProjectTracker.Conference" />
-          <AssociationSet Name="InvestGrantApp" Association="ProjectTracker.InvestGrantApp">
-            <End Role="Invest" EntitySet="Invests" />
-            <End Role="GrantApp" EntitySet="GrantApps" />
-          </AssociationSet>
           <AssociationSet Name="ProjectGrantApp" Association="ProjectTracker.ProjectGrantApp">
             <End Role="Project" EntitySet="Projects" />
             <End Role="GrantApp" EntitySet="GrantApps" />
@@ -2260,18 +2258,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <AssociationSet Name="BioStatFact" Association="ProjectTracker.BioStatFact">
             <End Role="BioStat" EntitySet="BioStats" />
             <End Role="Fact" EntitySet="TimeEntries" />
-          </AssociationSet>
-          <AssociationSet Name="InvestStatusInvest" Association="ProjectTracker.InvestStatusInvest">
-            <End Role="InvestStatus" EntitySet="InvestStatus" />
-            <End Role="Invest" EntitySet="Invests" />
-          </AssociationSet>
-          <AssociationSet Name="InvestProject" Association="ProjectTracker.InvestProject">
-            <End Role="Invest" EntitySet="Invests" />
-            <End Role="Project" EntitySet="Projects" />
-          </AssociationSet>
-          <AssociationSet Name="InvestJabsomAffil" Association="ProjectTracker.InvestJabsomAffil">
-            <End Role="Invest" EntitySet="Invests" />
-            <End Role="JabsomAffil" EntitySet="JabsomAffils" />
           </AssociationSet>
           <EntitySet Name="ProjectBioStats" EntityType="ProjectTracker.ProjectBioStat" />
           <AssociationSet Name="FK_ProjectBioStat_BioStat" Association="ProjectTracker.FK_ProjectBioStat_BioStat">
@@ -2412,10 +2398,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <End Role="Grant" EntitySet="Grants" />
             <End Role="GrantPI" EntitySet="GrantPIs" />
           </AssociationSet>
-          <AssociationSet Name="FK_GrantPI_Pi" Association="ProjectTracker.FK_GrantPI_Pi">
-            <End Role="Invest" EntitySet="Invests" />
-            <End Role="GrantPI" EntitySet="GrantPIs" />
-          </AssociationSet>
           <EntitySet Name="ViewGrants" EntityType="ProjectTracker.ViewGrant" />
           <EntitySet Name="Surveys" EntityType="ProjectTracker.Survey" />
           <EntitySet Name="SurveyForms" EntityType="ProjectTracker.SurveyForm" />
@@ -2529,10 +2511,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <End Role="Project2" EntitySet="Project2" />
             <End Role="Grant" EntitySet="Grants" />
           </AssociationSet>
-          <AssociationSet Name="FK_InvestProject2" Association="ProjectTracker.FK_InvestProject2">
-            <End Role="Invest" EntitySet="Invests" />
-            <End Role="Project2" EntitySet="Project2" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProjecPhase_Project2" Association="ProjectTracker.FK_ProjecPhase_Project2">
             <End Role="Project2" EntitySet="Project2" />
             <End Role="ProjectPhase" EntitySet="ProjectPhase" />
@@ -2550,6 +2528,31 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             <End Role="Project2" EntitySet="Project2" />
           </AssociationSet>
           <EntitySet Name="ViewGrant2" EntityType="ProjectTracker.ViewGrant2" />
+          <EntitySet Name="Invests" EntityType="ProjectTracker.Invests" />
+          <AssociationSet Name="FK_InvestGrantApp" Association="ProjectTracker.FK_InvestGrantApp">
+            <End Role="Invests" EntitySet="Invests" />
+            <End Role="GrantApp" EntitySet="GrantApps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrantPI_Pi" Association="ProjectTracker.FK_GrantPI_Pi">
+            <End Role="Invests" EntitySet="Invests" />
+            <End Role="GrantPI" EntitySet="GrantPIs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvestProject2" Association="ProjectTracker.FK_InvestProject2">
+            <End Role="Invests" EntitySet="Invests" />
+            <End Role="Project2" EntitySet="Project2" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvestStatusInvest" Association="ProjectTracker.FK_InvestStatusInvest">
+            <End Role="InvestStatus" EntitySet="InvestStatus" />
+            <End Role="Invests" EntitySet="Invests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblInvesttblProject" Association="ProjectTracker.FK_tblInvesttblProject">
+            <End Role="Invests" EntitySet="Invests" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="InvestJabsomAffil" Association="ProjectTracker.InvestJabsomAffil">
+            <End Role="Invests" EntitySet="Invests" />
+            <End Role="JabsomAffil" EntitySet="JabsomAffils" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Project">
           <Key>
@@ -2565,7 +2568,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="HiProgramId" Type="Int32" Nullable="false" />
           <Property Name="EthincGroupId" Type="Int32" Nullable="false" />
           <Property Name="IsJabsom" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Invest" Relationship="ProjectTracker.InvestProject" FromRole="Project" ToRole="Invest" />
           <NavigationProperty Name="ProjectBioStats" Relationship="ProjectTracker.FK_ProjectBioStat_Project" FromRole="Project" ToRole="ProjectBioStat" />
           <NavigationProperty Name="ProjectGrants" Relationship="ProjectTracker.FK_ProjectGrants_Projects" FromRole="Project" ToRole="ProjectGrant" />
           <NavigationProperty Name="ProjectServiceTypes" Relationship="ProjectTracker.FK_ProjectServiceType_Project" FromRole="Project" ToRole="ProjectServiceType" />
@@ -2598,29 +2600,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="NotReportRmatrix" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ClientRequest" Relationship="ProjectTracker.FK_ClientRequest_Projects" FromRole="Project" ToRole="ClientRequest" />
           <NavigationProperty Name="ProjectPhase" Relationship="ProjectTracker.FK_ProjecPhase_Project" FromRole="Project" ToRole="ProjectPhase" />
-        </EntityType>
-        <EntityType Name="Invest">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Phone" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="InvestStatu" Relationship="ProjectTracker.InvestStatusInvest" FromRole="Invest" ToRole="InvestStatus" />
-          <Property Name="InvestStatusId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Projects" Relationship="ProjectTracker.InvestProject" FromRole="Invest" ToRole="Project" />
-          <NavigationProperty Name="JabsomAffils" Relationship="ProjectTracker.InvestJabsomAffil" FromRole="Invest" ToRole="JabsomAffil" />
-          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
-          <Property Name="HashValue" Type="String" MaxLength="66" FixedLength="true" Unicode="true" />
-          <Property Name="NonUHClient" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="NonHawaiiClient" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IsPilot" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="GrantPIs" Relationship="ProjectTracker.FK_GrantPI_Pi" FromRole="Invest" ToRole="GrantPI" />
-          <Property Name="OtherDegree" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="OtherCommunityPartner" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Invest" ToRole="Project2" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_tblInvesttblProject" FromRole="Project" ToRole="Invests" />
         </EntityType>
         <EntityType Name="InvestStatus">
           <Key>
@@ -2629,6 +2609,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="StatusValue" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestStatusInvest" FromRole="InvestStatus" ToRole="Invests" />
         </EntityType>
         <EntityType Name="ServiceType">
           <Key>
@@ -2672,6 +2653,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="ProjectId" Type="Int32" Nullable="true" />
           <Property Name="StartDate" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="EndDate" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestGrantApp" FromRole="GrantApp" ToRole="Invests" />
         </EntityType>
         <EntityType Name="GrantAffil">
           <Key>
@@ -2764,8 +2746,8 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Invests" Relationship="ProjectTracker.InvestJabsomAffil" FromRole="JabsomAffil" ToRole="Invest" />
           <Property Name="PrevName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.InvestJabsomAffil" FromRole="JabsomAffil" ToRole="Invests" />
         </EntityType>
         <EntityType Name="Conference">
           <Key>
@@ -2778,18 +2760,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Publications" Relationship="ProjectTracker.FK_ConferencePublication" FromRole="Conference" ToRole="Publication" />
         </EntityType>
-        <Association Name="InvestGrantApp">
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
-          <End Type="ProjectTracker.GrantApp" Role="GrantApp" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Invest">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GrantApp">
-              <PropertyRef Name="InvestId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="ProjectGrantApp">
           <End Type="ProjectTracker.Project" Role="Project" Multiplicity="0..1" />
           <End Type="ProjectTracker.GrantApp" Role="GrantApp" Multiplicity="*" />
@@ -2854,34 +2824,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Member Name="Published" Value="3" />
           <Member Name="NotAccepted" Value="4" />
         </EnumType>
-        <Association Name="InvestStatusInvest">
-          <End Type="ProjectTracker.InvestStatus" Role="InvestStatus" Multiplicity="1" />
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InvestStatus">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Invest">
-              <PropertyRef Name="InvestStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="InvestProject">
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
-          <End Type="ProjectTracker.Project" Role="Project" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Invest">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Project">
-              <PropertyRef Name="InvestId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="InvestJabsomAffil">
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="*" />
-          <End Type="ProjectTracker.JabsomAffil" Role="JabsomAffil" Multiplicity="*" />
-        </Association>
         <EntityType Name="ProjectBioStat">
           <Key>
             <PropertyRef Name="Id" />
@@ -3510,7 +3452,7 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="Creator" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Grant" Relationship="ProjectTracker.FK_GrantPI_Grant" FromRole="GrantPI" ToRole="Grant" />
-          <NavigationProperty Name="Invest" Relationship="ProjectTracker.FK_GrantPI_Pi" FromRole="GrantPI" ToRole="Invest" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_GrantPI_Pi" FromRole="GrantPI" ToRole="Invests" />
         </EntityType>
         <EntityType Name="Grant">
           <Key>
@@ -3579,18 +3521,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             </Principal>
             <Dependent Role="GrantPI">
               <PropertyRef Name="GrantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_GrantPI_Pi">
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
-          <End Type="ProjectTracker.GrantPI" Role="GrantPI" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Invest">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GrantPI">
-              <PropertyRef Name="PiId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4300,12 +4230,12 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="UHGrantID" Type="Int32" />
           <NavigationProperty Name="ClientAgmt" Relationship="ProjectTracker.FK_ClientAgmt_Project2" FromRole="Project2" ToRole="ClientAgmt" />
           <NavigationProperty Name="Grants" Relationship="ProjectTracker.FK_Grants_Project" FromRole="Project2" ToRole="Grant" />
-          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Project2" ToRole="Invest" />
           <NavigationProperty Name="ProjectPhase" Relationship="ProjectTracker.FK_ProjecPhase_Project2" FromRole="Project2" ToRole="ProjectPhase" />
           <NavigationProperty Name="Publications" Relationship="ProjectTracker.FK_ProjectPublication" FromRole="Project2" ToRole="Publication" />
           <NavigationProperty Name="SurveyForm" Relationship="ProjectTracker.FK_SurveyForm_Project" FromRole="Project2" ToRole="SurveyForm" />
           <NavigationProperty Name="ProjectField" Relationship="ProjectTracker.FK_UHGrantProject2" FromRole="Project2" ToRole="ProjectField" />
           <Property Name="IsLosCollaborative" Type="Byte" />
+          <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Project2" ToRole="Invests" />
         </EntityType>
         <Association Name="FK_ClientAgmt_Project2">
           <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
@@ -4328,18 +4258,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
             </Principal>
             <Dependent Role="Grant">
               <PropertyRef Name="ProjectId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InvestProject2">
-          <End Type="ProjectTracker.Invest" Role="Invest" Multiplicity="1" />
-          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Invest">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Project2">
-              <PropertyRef Name="PIId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4411,6 +4329,97 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <Property Name="ProjectId" Type="Int32" Nullable="false" />
           <Property Name="IsInternal" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="Invests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="InvestStatusId" Type="Int32" Nullable="false" />
+          <Property Name="NonUHClient" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="NonHawaiiClient" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="HashValue" Type="String" MaxLength="66" FixedLength="true" Unicode="true" />
+          <Property Name="IsPilot" Type="Boolean" Nullable="false" />
+          <Property Name="OtherDegree" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="OtherCommunityPartner" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AltEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AltPhone" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GrantApps" Relationship="ProjectTracker.FK_InvestGrantApp" FromRole="Invests" ToRole="GrantApp" />
+          <NavigationProperty Name="GrantPI" Relationship="ProjectTracker.FK_GrantPI_Pi" FromRole="Invests" ToRole="GrantPI" />
+          <NavigationProperty Name="Project2" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Invests" ToRole="Project2" />
+          <NavigationProperty Name="InvestStatus" Relationship="ProjectTracker.FK_InvestStatusInvest" FromRole="Invests" ToRole="InvestStatus" />
+          <NavigationProperty Name="Projects" Relationship="ProjectTracker.FK_tblInvesttblProject" FromRole="Invests" ToRole="Project" />
+          <NavigationProperty Name="JabsomAffils" Relationship="ProjectTracker.InvestJabsomAffil" FromRole="Invests" ToRole="JabsomAffil" />
+        </EntityType>
+        <Association Name="FK_InvestGrantApp">
+          <End Type="ProjectTracker.Invests" Role="Invests" Multiplicity="1" />
+          <End Type="ProjectTracker.GrantApp" Role="GrantApp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invests">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GrantApp">
+              <PropertyRef Name="InvestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrantPI_Pi">
+          <End Type="ProjectTracker.Invests" Role="Invests" Multiplicity="1" />
+          <End Type="ProjectTracker.GrantPI" Role="GrantPI" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invests">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GrantPI">
+              <PropertyRef Name="PiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvestProject2">
+          <End Type="ProjectTracker.Invests" Role="Invests" Multiplicity="1" />
+          <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invests">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project2">
+              <PropertyRef Name="PIId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvestStatusInvest">
+          <End Type="ProjectTracker.InvestStatus" Role="InvestStatus" Multiplicity="1" />
+          <End Type="ProjectTracker.Invests" Role="Invests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvestStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Invests">
+              <PropertyRef Name="InvestStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblInvesttblProject">
+          <End Type="ProjectTracker.Invests" Role="Invests" Multiplicity="1" />
+          <End Type="ProjectTracker.Project" Role="Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invests">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="InvestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="InvestJabsomAffil">
+          <End Type="ProjectTracker.Invests" Role="Invests" Multiplicity="*" />
+          <End Type="ProjectTracker.JabsomAffil" Role="JabsomAffil" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4454,25 +4463,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <ScalarProperty Name="HiProgramId" ColumnName="HiProgramId" />
           <ScalarProperty Name="EthincGroupId" ColumnName="EthincGroupId" />
           <ScalarProperty Name="IsJabsom" ColumnName="IsJabsom" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Invests">
-      <EntityTypeMapping TypeName="IsTypeOf(ProjectTracker.Invest)">
-        <MappingFragment StoreEntitySet="Invests">
-          <ScalarProperty Name="OtherCommunityPartner" ColumnName="OtherCommunityPartner" />
-                <ScalarProperty Name="OtherDegree" ColumnName="OtherDegree" />
-                <ScalarProperty Name="IsPilot" ColumnName="IsPilot" />
-                <ScalarProperty Name="NonHawaiiClient" ColumnName="NonHawaiiClient" />
-                <ScalarProperty Name="NonUHClient" ColumnName="NonUHClient" />
-                <ScalarProperty Name="HashValue" ColumnName="HashValue" />
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="InvestStatusId" ColumnName="InvestStatusId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-          <ScalarProperty Name="Phone" ColumnName="Phone" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4615,14 +4605,6 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-          <AssociationSetMapping Name="InvestJabsomAffil" TypeName="ProjectTracker.InvestJabsomAffil" StoreEntitySet="InvestJabsomAffil">
-            <EndProperty Name="JabsomAffil">
-              <ScalarProperty Name="Id" ColumnName="JabsomAffils_Id" />
-            </EndProperty>
-            <EndProperty Name="Invest">
-              <ScalarProperty Name="Id" ColumnName="Invests_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="ProjectBioStats">
             <EntityTypeMapping TypeName="ProjectTracker.ProjectBioStat">
               <MappingFragment StoreEntitySet="ProjectBioStat">
@@ -5550,6 +5532,36 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Invests">
+            <EntityTypeMapping TypeName="ProjectTracker.Invests">
+              <MappingFragment StoreEntitySet="Invests">
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="AltPhone" ColumnName="AltPhone" />
+                <ScalarProperty Name="AltEmail" ColumnName="AltEmail" />
+                <ScalarProperty Name="OtherCommunityPartner" ColumnName="OtherCommunityPartner" />
+                <ScalarProperty Name="OtherDegree" ColumnName="OtherDegree" />
+                <ScalarProperty Name="IsPilot" ColumnName="IsPilot" />
+                <ScalarProperty Name="HashValue" ColumnName="HashValue" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="NonHawaiiClient" ColumnName="NonHawaiiClient" />
+                <ScalarProperty Name="NonUHClient" ColumnName="NonUHClient" />
+                <ScalarProperty Name="InvestStatusId" ColumnName="InvestStatusId" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="InvestJabsomAffil" TypeName="ProjectTracker.InvestJabsomAffil" StoreEntitySet="InvestJabsomAffil">
+            <EndProperty Name="JabsomAffil">
+              <ScalarProperty Name="Id" ColumnName="JabsomAffils_Id" />
+            </EndProperty>
+            <EndProperty Name="Invests">
+              <ScalarProperty Name="Id" ColumnName="Invests_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

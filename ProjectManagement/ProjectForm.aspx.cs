@@ -2745,7 +2745,7 @@ namespace ProjectManagement
                                 ProjectCompletionDate = project.ProjectCompletionDate,
                                 LeadBiostat = sb.ToString().Substring(0, sb.Length - 2),
                                 ProjectTitle = project.Title,
-                                SendTo = project.Invest.Email,
+                                SendTo = project.Invests.Email,
                                 Comment = string.Empty
                             };
 

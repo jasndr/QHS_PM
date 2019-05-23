@@ -4,9 +4,8 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f3fbaeb618a14ba5826f7a09e1ebf993" Name="Diagram1" ZoomLevel="109" >
+      <Diagram DiagramId="f3fbaeb618a14ba5826f7a09e1ebf993" Name="Diagram1" ZoomLevel="74" >
         <EntityTypeShape EntityType="ProjectTracker.Project" Width="2.125" PointX="7.125" PointY="5.5" />
-        <EntityTypeShape EntityType="ProjectTracker.Invest" Width="1.5" PointX="5.75" PointY="0.5" />
         <EntityTypeShape EntityType="ProjectTracker.InvestStatus" Width="1.5" PointX="3.25" PointY="2.125" />
         <EntityTypeShape EntityType="ProjectTracker.ServiceType" Width="1.5" PointX="1.125" PointY="11.5" />
         <EntityTypeShape EntityType="ProjectTracker.BioStatGroup" Width="1.5" PointX="1.125" PointY="2.125" />
@@ -22,14 +21,10 @@
         <EntityTypeShape EntityType="ProjectTracker.JabsomOffice" Width="1.5" PointX="2.75" PointY="0.5" />
         <EntityTypeShape EntityType="ProjectTracker.JabsomAffil" Width="1.5" PointX="8.625" PointY="0.5" />
         <EntityTypeShape EntityType="ProjectTracker.Conference" Width="1.5" PointX="17.125" PointY="10.625" />
-        <AssociationConnector Association="ProjectTracker.InvestGrantApp" />
         <AssociationConnector Association="ProjectTracker.ProjectGrantApp" />
         <EntityTypeShape EntityType="ProjectTracker.TimeEntry" Width="1.5" PointX="13.25" PointY="14.375" />
         <AssociationConnector Association="ProjectTracker.ProjectFact" />
         <AssociationConnector Association="ProjectTracker.BioStatFact" />
-        <AssociationConnector Association="ProjectTracker.InvestStatusInvest" />
-        <AssociationConnector Association="ProjectTracker.InvestProject" />
-        <AssociationConnector Association="ProjectTracker.InvestJabsomAffil" />
         <EntityTypeShape EntityType="ProjectTracker.ProjectBioStat" Width="1.5" PointX="5.125" PointY="14.25" />
         <AssociationConnector Association="ProjectTracker.FK_ProjectBioStat_BioStat" />
         <AssociationConnector Association="ProjectTracker.FK_ProjectBioStat_Project" />
@@ -85,7 +80,6 @@
         <AssociationConnector Association="ProjectTracker.FK_GrantCost_Biostat" />
         <AssociationConnector Association="ProjectTracker.FK_GrantCost_Grant" />
         <AssociationConnector Association="ProjectTracker.FK_GrantPI_Grant" />
-        <AssociationConnector Association="ProjectTracker.FK_GrantPI_Pi" />
         <EntityTypeShape EntityType="ProjectTracker.ViewGrant" Width="1.5" PointX="13.125" PointY="21.25" />
         <EntityTypeShape EntityType="ProjectTracker.Survey" Width="1.75" PointX="16.125" PointY="23" />
         <EntityTypeShape EntityType="ProjectTracker.SurveyForm" Width="1.75" PointX="19.625" PointY="26" />
@@ -124,12 +118,18 @@
         <EntityTypeShape EntityType="ProjectTracker.Project2" Width="1.5" PointX="5.125" PointY="27.375" />
         <AssociationConnector Association="ProjectTracker.FK_ClientAgmt_Project2" />
         <AssociationConnector Association="ProjectTracker.FK_Grants_Project" />
-        <AssociationConnector Association="ProjectTracker.FK_InvestProject2" />
         <AssociationConnector Association="ProjectTracker.FK_ProjecPhase_Project2" />
         <AssociationConnector Association="ProjectTracker.FK_ProjectPublication" />
         <AssociationConnector Association="ProjectTracker.FK_SurveyForm_Project" />
         <AssociationConnector Association="ProjectTracker.FK_UHGrantProject2" />
         <EntityTypeShape EntityType="ProjectTracker.ViewGrant2" Width="1.5" PointX="10.375" PointY="24.75" />
+        <EntityTypeShape EntityType="ProjectTracker.Invests" Width="1.5" PointX="5.5" PointY="0.75" />
+        <AssociationConnector Association="ProjectTracker.FK_InvestGrantApp" />
+        <AssociationConnector Association="ProjectTracker.FK_GrantPI_Pi" />
+        <AssociationConnector Association="ProjectTracker.FK_InvestProject2" />
+        <AssociationConnector Association="ProjectTracker.FK_InvestStatusInvest" />
+        <AssociationConnector Association="ProjectTracker.FK_tblInvesttblProject" />
+        <AssociationConnector Association="ProjectTracker.InvestJabsomAffil" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

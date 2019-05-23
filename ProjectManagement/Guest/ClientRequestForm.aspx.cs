@@ -616,6 +616,7 @@ namespace ProjectManagement.Guest
                 Creator = Request.UserHostAddress.ToString(),
                 CreationDate = DateTime.Now,
                 RequestStatus = "Created",
+                Archive = false
             };
 
             try

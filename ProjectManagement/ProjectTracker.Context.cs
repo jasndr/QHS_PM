@@ -28,7 +28,7 @@ namespace ProjectManagement
         }
     
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<Invest> Invests { get; set; }
+        public virtual DbSet<Invests> Invests { get; set; }
         public virtual DbSet<InvestStatus> InvestStatus { get; set; }
         public virtual DbSet<ServiceType> ServiceTypes { get; set; }
         public virtual DbSet<BioStatGroup> BioStatGroups { get; set; }

@@ -64,6 +64,14 @@ namespace ProjectManagement.Admin
     ///  2019MAY15 - Jason Delos Reyes  -  Fixed the issue with btnCreateProject algorithm always rewriting the client request form, when it should
     ///                                    only do so upon saving the form from client review.  Also solved the issue with checkbox being checked instead
     ///                                    of clearing the client request review modal form upon closure.
+    ///  2019MAY17 - Jason Delos Reyes  -  Added a way to save PI responses from the client request review page instead of
+    ///                                    directly from the form.  Need to figure out a way to save the exisitng information into 
+    ///                                    alternate email and phone fields before saving, as well as figuring out a way to
+    ///                                    save the existing client request into the database (not implementing as well).
+    ///  2019MAY20 - Jason Delos Reyes  -  Fixed the error that wasn't allowing the program to save the new information onto the
+    ///                                    PI page if new information was entered.
+    ///  2019MAY22 - Jason Delos Reyes  -  Added functionality to be able to "archive" a client request (keep a copy in the database, but delete
+    ///                                    it from the front-end view).
     /// </summary>
     public partial class ClientForm : System.Web.UI.Page
     {
@@ -82,7 +90,7 @@ namespace ProjectManagement.Admin
                 Int32.TryParse(Request.QueryString["ClientRequestId"], out clientRequestId);
                 if (clientRequestId > 0)
                 {
-                     OpenClientRequest(clientRequestId);
+                    OpenClientRequest(clientRequestId);
                 }
 
             }
@@ -153,12 +161,12 @@ namespace ProjectManagement.Admin
                                 // If there is not an existing PI in the database,
                                 // Create create new PI entry and send email to admin.
                                 int investId = 0;
-                                Invest pi = db.Invests.FirstOrDefault(x => x.FirstName + " " + x.LastName == rqst.FirstName + " " + rqst.LastName);
+                                Invests pi = db.Invests.FirstOrDefault(x => (x.FirstName + " " + x.LastName) == (rqst.FirstName + " " + rqst.LastName));
 
 
                                 if (pi == null)
                                 {
-                                    Invest invest = CreateInvest(rqst);
+                                    Invests invest = CreateInvest(rqst);
 
                                     if (invest != null)
                                     {
@@ -174,7 +182,56 @@ namespace ProjectManagement.Admin
                                 }
                                 else
                                 {
+                                    // Insert mechanism here to differentiate old/new info.
+
+                                    //""" [Get InvestFromClientForm]
+                                    Invests invest = GetInvestByFromClientRequest(rqst);
+
+                                    //""" [Get InvestFromDB]
+                                    //-->pi
+
+                                    //""" [Replace the InvestFromDB with InvestFromClientForm]
+                                    //""" --> (Note: Before saving, tranfer phone and email to alternate.)
+                                    if (pi.Email != invest.Email) pi.AltEmail = pi.Email;
+                                    if (pi.Phone != invest.Phone) pi.AltPhone = pi.Phone;
+
+                                    // Replace with request details.
+                                    pi.OtherDegree = rqst.Degree;
+                                    pi.Email = rqst.Email;
+                                    pi.Phone = rqst.Phone;
+
+                                    //----------------------------------------------
+                                    // Update PI affiliations
+
+                                    //--->Degree
+                                    JabsomAffil investDegree = db.JabsomAffils.FirstOrDefault(g => g.Name == rqst.Degree);
+                                    if (investDegree != null) pi.JabsomAffils.Add(investDegree);
+
+                                    JabsomAffil otherDegree = db.JabsomAffils.FirstOrDefault(g => g.Type == "Degree" && g.Name == "Other");
+                                    if (pi.OtherDegree != null) pi.JabsomAffils.Add(otherDegree);
+
+                                    //-->Organization
+                                    JabsomAffil investOrganization = db.JabsomAffils.FirstOrDefault(g => g.Name == rqst.Department);
+                                    if (investOrganization != null)
+                                    {
+                                        pi.JabsomAffils.Add(investOrganization);
+                                    }
+                                    else
+                                    {
+                                        //pi.NonUHClient = rqst.Department;
+                                        pi.NonHawaiiClient = rqst.Department;
+                                    }
+                                    //----------------------------------------------
+
+
+                                    //pi = invest;
+
+
+                                    db.SaveChanges();
+
+                                    // Assign existing PI as project PI Id.
                                     investId = pi.Id;
+
                                 }
 
                                 ///<> Project <> ///
@@ -282,20 +339,20 @@ namespace ProjectManagement.Admin
         }
 
         /// <summary>
-        /// Pulls current PI or generates new PI based on what is in the database.
+        /// Generates new PI based on what is in the database.
         /// </summary>
         /// <param name="rqst">Provided client request from BQHSRequest Database.</param>
-        /// <returns>Created Invest </returns>
-        private Invest CreateInvest(ClientRequest2_cr rqst)
+        /// <returns>Created PI instance.</returns>
+        private Invests CreateInvest(ClientRequest2_cr rqst)
         {
             int investId = 0;
-            Invest invest;
+            Invests invest;
 
 
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
 
-                invest = new Invest()
+                invest = new Invests()
                 {
 
                     FirstName = rqst.FirstName,
@@ -306,8 +363,6 @@ namespace ProjectManagement.Admin
                     InvestStatusId = db.InvestStatus.FirstOrDefault(g => g.StatusValue == rqst.InvestStatus) != null ?
                                      db.InvestStatus.FirstOrDefault(g => g.StatusValue == rqst.InvestStatus).Id : -1,
                     IsApproved = false
-
-
 
                 };
 
@@ -322,6 +377,9 @@ namespace ProjectManagement.Admin
                 JabsomAffil investDegree = db.JabsomAffils.FirstOrDefault(g => g.Name == rqst.Degree);
                 if (investDegree != null) invest.JabsomAffils.Add(investDegree);
 
+                JabsomAffil otherDegree = db.JabsomAffils.FirstOrDefault(g => g.Type == "Degree" && g.Name == "Other");
+                if (invest.OtherDegree != null) invest.JabsomAffils.Add(otherDegree);
+
                 //-->Organization
                 JabsomAffil investOrganization = db.JabsomAffils.FirstOrDefault(g => g.Name == rqst.Department);
                 if (investOrganization != null)
@@ -330,7 +388,8 @@ namespace ProjectManagement.Admin
                 }
                 else
                 {
-                    invest.NonUHClient = rqst.Department;
+                    //invest.NonUHClient = rqst.Department;
+                    invest.NonHawaiiClient = rqst.Department;
                 }
 
 
@@ -343,8 +402,40 @@ namespace ProjectManagement.Admin
 
         }
 
+
         /// <summary>
-        /// Generates new Project based on what is in the database.
+        ///  Creates PI instance based on info Client Request.
+        /// </summary>
+        /// <param name="rqst">Provided client request from BQHSRequest Database.</param>
+        /// <returns>Created PI instance.</returns>
+        private Invests GetInvestByFromClientRequest(ClientRequest2_cr rqst)
+        {
+            using (ProjectTrackerContainer db = new ProjectTrackerContainer())
+            {
+                Invests invest = new Invests()
+                {
+
+                    FirstName = rqst.FirstName,
+                    LastName = rqst.LastName,
+                    OtherDegree = rqst.Degree,
+                    Email = rqst.Email,
+                    Phone = rqst.Phone,
+
+                    InvestStatusId = db.InvestStatus.FirstOrDefault(g => g.StatusValue == rqst.InvestStatus) != null ?
+                                    db.InvestStatus.FirstOrDefault(g => g.StatusValue == rqst.InvestStatus).Id : -1,
+
+                    IsApproved = false
+                };
+
+
+                return invest;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Generates new Project based on what is in the BQHSRequest Database.
         /// </summary>
         /// <param name="rqst">Provided client request from BQHSRequest Database.</param>
         /// <returns>Created Project</returns>
@@ -446,8 +537,11 @@ namespace ProjectManagement.Admin
 
             string subject = String.Format("A new PI is pending approval, id {0}", investId);
 
-            Uri uriAddress = new Uri(HttpContext.Current.Request.Url.AbsoluteUri);
-            string url = uriAddress.GetLeftPart(UriPartial.Authority) + "/PI";//HttpContext.Current.Request.Url.AbsoluteUri;
+            string url = Request.Url.Scheme + "://" + Request.Url.Authority +
+                            Request.ApplicationPath.TrimEnd('/') + "/PI";
+
+            //Uri uriAddress = new Uri(HttpContext.Current.Request.Url.AbsoluteUri);
+            //string url = uriAddress.GetLeftPart(UriPartial.Authority) + "/PI";//HttpContext.Current.Request.Url.AbsoluteUri;
             if (url.IndexOf("?Id") > 0)
             {
                 url = url.Substring(0, url.IndexOf("?Id"));
@@ -487,8 +581,13 @@ namespace ProjectManagement.Admin
 
             string subject = String.Format("A new project is pending approval, id {0}", projectId);
 
-            Uri uriAddress = new Uri(HttpContext.Current.Request.Url.AbsoluteUri);
-            string url = uriAddress.GetLeftPart(UriPartial.Authority) + "/ProjectForm2";//HttpContext.Current.Request.Url.AbsoluteUri;
+            string url = Request.Url.Scheme + "://" + Request.Url.Authority +
+                            Request.ApplicationPath.TrimEnd('/') + "/ProjectForm2";
+
+            //Uri uriAddress = new Uri(HttpContext.Current.Request.Url.AbsoluteUri);
+            //string url = uriAddress.GetLeftPart(UriPartial.Authority) + "/ProjectForm2";//HttpContext.Current.Request.Url.AbsoluteUri;
+
+
             if (url.IndexOf("?Id") > 0)
             {
                 sendTo = sendTo + ";" /*+ System.Configuration.ConfigurationManager.AppSettings["superAdminEmail"]*/;
@@ -576,7 +675,8 @@ namespace ProjectManagement.Admin
             using (ClientRequestTracker cr = new ClientRequestTracker())
             {
                 var query = cr.ClientRequest2_cr
-                    .Select(t => new { t.Id, t.FirstName, t.LastName, t.ProjectTitle, t.CreationDate, t.RequestStatus })
+                    .Select(t => new { t.Id, t.FirstName, t.LastName, t.ProjectTitle, t.CreationDate, t.RequestStatus, t.Archive })
+                    .Where(t=>t.Archive.Equals(false))
                     .OrderByDescending(t => t.Id);
 
 
@@ -635,7 +735,7 @@ namespace ProjectManagement.Admin
         /// <param name="e"></param>
         protected void rptClientRqst_ItemCommand(Object sender, RepeaterCommandEventArgs e)
         {
-            if (((Button)e.CommandSource).Text.Equals("Edit"))
+            if (e.CommandName.Equals("Edit"))//if (((Button)e.CommandSource).Text.Equals("Edit"))
             {
                 lblClientRqstId.Text = ((Button)e.CommandSource).CommandArgument;
 
@@ -655,6 +755,44 @@ namespace ProjectManagement.Admin
                                    "ModalScript", PageUtility.LoadEditScript(true), false);
                     }
                 }*/
+
+            // Marks request as "archived" and removes from list of Client Request if archived.
+            // (A copy remains in the database.)
+            }  else if (e.CommandName.Equals("Archive"))//else if (((Button)e.CommandSource).Text.Equals("Archive"))
+            {
+
+                lblClientRqstId.Text = ((LinkButton)e.CommandSource).CommandArgument;
+
+                int rqstId = 0;
+                int.TryParse(lblClientRqstId.Text, out rqstId);
+
+                // Javascript alert - Are you sure you want to archive this request?
+                // If yes, then mark "Archived" for current request and save into database.
+
+                string confirmValue = Request.Form["confirm_value"];
+                if (confirmValue == "Yes")
+                {
+                    //this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('You clicked YES!');", true);
+
+                    using (ClientRequestTracker cr = new ClientRequestTracker())
+                    {
+
+                        ClientRequest2_cr rqst = cr.ClientRequest2_cr.FirstOrDefault(x=>x.Id == rqstId);//GetClientRequestById(rqstId);
+                        if (rqst != null)
+                        {
+                            rqst.Archive = true;
+                            cr.SaveChanges();
+                            this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Client Request #"+rqstId+" archived');", true);
+                            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+                        }
+                    }
+
+
+                } /*else
+                {
+                    //this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('You clicked no.');", true);
+                }*/
+
             }
         }
 
@@ -988,7 +1126,7 @@ namespace ProjectManagement.Admin
 
 
                 Project2 project = FindProject(request);
-                
+
 
                 if (project != null)
                 {
@@ -1009,7 +1147,7 @@ namespace ProjectManagement.Admin
                 btnCreateProject.Enabled = true;
                 btnCreateProject.Text = "Create Project";
             }
-            
+
         }
 
         /// <summary>
@@ -1021,7 +1159,7 @@ namespace ProjectManagement.Admin
         private Project2 FindProject(ClientRequest2_cr request)
         {
             Project2 project = null;
-            Invest invest = null;
+            Invests invest = null;
 
             // Find link to existing project.
             // --> If a link can be found, then enable the button and link to that project.

@@ -61,7 +61,6 @@ namespace ProjectManagement
         public Nullable<System.DateTime> RmatrixRcvDate { get; set; }
         public bool NotReportRmatrix { get; set; }
     
-        public virtual Invest Invest { get; set; }
         public virtual ICollection<ProjectBioStat> ProjectBioStats { get; set; }
         public virtual ICollection<ProjectGrant> ProjectGrants { get; set; }
         public virtual ICollection<ProjectServiceType> ProjectServiceTypes { get; set; }
@@ -70,5 +69,6 @@ namespace ProjectManagement
         public virtual ICollection<Invoice> ProjectInvoices { get; set; }
         public virtual ICollection<ClientRequest> ClientRequest { get; set; }
         public virtual ICollection<ProjectPhase> ProjectPhase { get; set; }
+        public virtual Invests Invests { get; set; }
     }
 }

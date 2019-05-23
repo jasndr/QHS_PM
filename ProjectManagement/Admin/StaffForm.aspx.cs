@@ -74,8 +74,8 @@ namespace ProjectManagement.Admin
                 }
                 else
                 {
-                    var obj = new List<Invest>();
-                    obj.Add(new Invest());
+                    var obj = new List<Invests>();
+                    obj.Add(new Invests());
                     // Bind the DataTable which contain a blank row to the GridView
                     GridView1.DataSource = obj;
                     GridView1.DataBind();

@@ -50,7 +50,7 @@ namespace ProjectManagement
                 //            select d;
 
                 var query = db.Invests
-                            .Include(d => d.InvestStatu)
+                            .Include(d => d.InvestStatus)
                             .Where(a => a.LastName.Contains(txtSrchInvestorName.Text) || a.FirstName.Contains(txtSrchInvestorName.Text))
                             .OrderBy(d => d.Id);
 
@@ -119,7 +119,7 @@ namespace ProjectManagement
                 {
                     using (ProjectTrackerContainer context = new ProjectTrackerContainer())
                     {
-                        Invest invest = new Invest();
+                        Invests invest = new Invests();
                         invest.FirstName = txtFirstName.Text;
                         invest.LastName = txtLastName.Text;
                         invest.Email = txtEmail.Text;
@@ -163,7 +163,7 @@ namespace ProjectManagement
                 {
                     //int investorId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
                     int investorId = Convert.ToInt32(lblId.Text);
-                    Invest invest = context.Invests.First(x => x.Id == investorId);
+                    Invests invest = context.Invests.First(x => x.Id == investorId);
                     invest.FirstName = txtFirstName.Text;
                     invest.LastName = txtLastName.Text;
                     invest.Email = txtEmail.Text;
@@ -178,7 +178,7 @@ namespace ProjectManagement
             }
         }
 
-        private void WriteInvest(ProjectTrackerContainer context, Invest invest)
+        private void WriteInvest(ProjectTrackerContainer context, Invests invest)
         {
             var result = context.Entry(invest).GetValidationResult();
             if (!result.IsValid)
@@ -216,7 +216,7 @@ namespace ProjectManagement
                 }
                 if (e.Row.RowType == DataControlRowType.DataRow)
                 {
-                    ddl.SelectedValue = ((Invest)(e.Row.DataItem)).InvestStatu.Id.ToString();
+                    ddl.SelectedValue = ((Invests)(e.Row.DataItem)).InvestStatus.Id.ToString();
                 }
             }
         }   
@@ -228,7 +228,7 @@ namespace ProjectManagement
                 if (context.Invests.Count() > 0)
                 {
                     var query = context.Invests
-                           .Include(d => d.InvestStatu)
+                           .Include(d => d.InvestStatus)
                            .Where(a => a.LastName.Contains(txtSrchInvestorName.Text) || a.FirstName.Contains(txtSrchInvestorName.Text))
                            .OrderBy(d => d.Id);
 
@@ -237,8 +237,8 @@ namespace ProjectManagement
                 }
                 else
                 {
-                    var obj = new List<Invest>();
-                    obj.Add(new Invest());
+                    var obj = new List<Invests>();
+                    obj.Add(new Invests());
                     // Bind the DataTable which contain a blank row to the GridView
                     GridView1.DataSource = obj;
                     GridView1.DataBind();

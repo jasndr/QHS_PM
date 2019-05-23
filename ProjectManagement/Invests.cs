@@ -12,14 +12,15 @@ namespace ProjectManagement
     using System;
     using System.Collections.Generic;
     
-    public partial class Invest
+    public partial class Invests
     {
-        public Invest()
+        public Invests()
         {
+            this.GrantApps = new HashSet<GrantApp>();
+            this.GrantPI = new HashSet<GrantPI>();
+            this.Project2 = new HashSet<Project2>();
             this.Projects = new HashSet<Project>();
             this.JabsomAffils = new HashSet<JabsomAffil>();
-            this.GrantPIs = new HashSet<GrantPI>();
-            this.Project2 = new HashSet<Project2>();
         }
     
         public int Id { get; set; }
@@ -28,18 +29,22 @@ namespace ProjectManagement
         public string Email { get; set; }
         public string Phone { get; set; }
         public int InvestStatusId { get; set; }
-        public bool IsApproved { get; set; }
-        public string HashValue { get; set; }
         public string NonUHClient { get; set; }
         public string NonHawaiiClient { get; set; }
+        public bool IsApproved { get; set; }
+        public string HashValue { get; set; }
         public bool IsPilot { get; set; }
         public string OtherDegree { get; set; }
         public string OtherCommunityPartner { get; set; }
+        public string AltEmail { get; set; }
+        public string AltPhone { get; set; }
+        public string Notes { get; set; }
     
-        public virtual InvestStatus InvestStatu { get; set; }
+        public virtual ICollection<GrantApp> GrantApps { get; set; }
+        public virtual ICollection<GrantPI> GrantPI { get; set; }
+        public virtual ICollection<Project2> Project2 { get; set; }
+        public virtual InvestStatus InvestStatus { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<JabsomAffil> JabsomAffils { get; set; }
-        public virtual ICollection<GrantPI> GrantPIs { get; set; }
-        public virtual ICollection<Project2> Project2 { get; set; }
     }
 }

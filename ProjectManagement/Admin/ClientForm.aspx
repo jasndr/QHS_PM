@@ -57,6 +57,7 @@
                                             <th style="width: 35%; padding: 0,0,0,1px;">Project Title</th>
                                             <th style="width: 15%; padding: 0,0,0,1px;">Creation Date</th>
                                             <th style="width: 10%; padding: 0,0,0,1px;">Status</th>
+                                            <th style="padding: 0,0,0,1px;">Archive/Delete?</th>
                                             <th style="width: 10%; padding: 0,0,0,1px;"></th>
                                         </tr>
                                     </thead>
@@ -70,8 +71,10 @@
                                                     <td><%# Eval("ProjectTitle") %></td>
                                                     <td><%# Eval("CreateDate") %></td>
                                                     <td><%# Eval("Status") %></td>
+                                                    <td><asp:LinkButton ID="lnkArchive" runat="server" Text="" CommandName="Archive" ToolTip="Archive"
+                                                            CommandArgument='<%# Eval("Id") %>' OnClientClick="ArchiveConfirm();"><img src="../images/icon-edit.gif" /></asp:LinkButton></td>
                                                     <td>
-                                                        <asp:Button ID="btnRequest" runat="server" Text="Edit" CssClass="btn btn-info" CommandArgument='<%# Eval("Id") %>' /></td>
+                                                        <asp:Button ID="btnRequest" runat="server" Text="Edit" CommandName="Edit" CssClass="btn btn-info" CommandArgument='<%# Eval("Id") %>' /></td>
                                                 </tr>
                                             </ItemTemplate>
                                         </asp:Repeater>
@@ -825,6 +828,7 @@
                     { "bSortable": false },
                     { "bSortable": false },
                     { "bSortable": false },
+                    { "bSortable": false },
                     { "bSortable": false }
                 ],
                order: [[0, 'desc']]
@@ -1258,6 +1262,18 @@
                     otherField.parent().find('label').hide();
                 }
             });
+        }
+
+        function ArchiveConfirm() {
+            var confirm_value = document.createElement("INPUT");
+            confirm_value.type = "hidden";
+            confirm_value.name = "confirm_value";
+            if (confirm("Are you sure you want to archive this request (a copy will be retained in the database, but will become hidden from view)?")) {
+                confirm_value.value = "Yes";
+            } else {
+                confirm_value.value = "No";
+            }
+            document.forms[0].appendChild(confirm_value);
         }
 
         /// NAME: GetURLParameter(sParam)

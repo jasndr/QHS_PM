@@ -196,6 +196,10 @@
                                         <label for="TextBoxEmail">Email</label>
                                         <asp:TextBox ID="TextBoxEmail" runat="server" placeholder="Email" class="form-control"></asp:TextBox>
                                     </div>
+                                     <div class="col-xs-6 col-md-6">
+                                        <label for="TextBoxAltEmail">Alternate Email</label>
+                                        <asp:TextBox ID="TextBoxAltEmail" runat="server" placeholder="Alternate Email" class="form-control"></asp:TextBox>
+                                    </div>
                                     <%--<div class="col-xs-2 col-md-2">
                                         <label for="chkPilot">Pilot Investigator</label>
                                         <asp:CheckBox ID="chkPilot" runat="server"></asp:CheckBox>
@@ -206,6 +210,10 @@
                                     <div class="col-xs-6 col-md-6">
                                         <label for="TextBoxPhone">Phone</label>
                                         <asp:TextBox ID="TextBoxPhone" runat="server" placeholder="(___) ___-____" CssClass="form-control phoneNum"></asp:TextBox>
+                                    </div>
+                                    <div class="col-xs-6 col-md-6">
+                                        <label for="TextBoxAltPhone">Alternate Phone</label>
+                                        <asp:TextBox ID="TextBoxAltPhone" runat="server" placeholder="(___) ___-____" CssClass="form-control phoneNum"></asp:TextBox>
                                     </div>
                                 </div>
                                 <br />
@@ -253,6 +261,10 @@
                                                 </asp:GridView>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-xs-6 col-md-6">
+                                        <label for="txtNotes" id="lblNotes">Notes</label>
+                                        <textarea class="form-control noresize" rows="3" name="txtNotes" id="txtNotes" runat="Server"></textarea>
                                     </div>
                                 </div>
                                 <hr />
@@ -479,20 +491,20 @@
 
             $('#tblPI').DataTable({
                 "aoColumns": [
-                          null,  
-                          null,
-                          null,
-                          { "bSortable": false },
-                          { "bSortable": false },
-                          { "bSortable": false },
-                          { "bSortable": false }
-                ]                
+                    null,
+                    null,
+                    null,
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false },
+                    { "bSortable": false }
+                ]
             });
 
             $('#editModal').on('shown.bs.modal', function () {
                 $('#editModal').scrollTop(0);
-            });                               
-            
+            });
+
             //$('#currentdetail').modal('show');
             gridviewUHDeptToggle();
 
@@ -527,7 +539,7 @@
             //for (var i = 0; i < jsonObj.length; i++) {
             //    sourceArr.push(jsonObj[i].label);
             //}
-                        
+
             //$('#scrollable-dropdown-menu .typeahead').typeahead(null, {
             //    name: 'pies',
             //    limit: 10,
@@ -538,16 +550,16 @@
             //    source: sourceArr
             //});
             //var countries = ["India", "United States", "Canada"];
- 
+
             //$("#typeahead").typeahead(null, {
             //    source: countries
             //});
 
-            
-            
-        }    
-                     
-        
+
+
+        }
+
+
         function GridViewNonUHToggle(e) {
             if (e.id == 'MainContent_GridViewNonUH_chkRow_8') {
                 if (e.checked)
@@ -557,8 +569,8 @@
                     $('#MainContent_GridViewNonUH_txtNonUHOther').hide();
                 }
             }
-        }  
-        
+        }
+
         function GridViewDegreeToggle(e) {
             if (e.id == 'MainContent_GridViewDegree_chkRow_10') {
                 if (e.checked)
@@ -568,7 +580,7 @@
                     $('#MainContent_GridViewDegree_txtDegreeOther').hide();
                 }
             }
-        } 
+        }
 
         function GridViewCommunityPartnerToggle(e) {
             if (e.id == 'MainContent_GridViewCommunityPartner_chkRow_4') {
@@ -579,7 +591,7 @@
                     $('#MainContent_GridViewCommunityPartner_txtCommunityPartnerOther').hide();
                 }
             }
-        } 
+        }
 
         function divNonHawaiiToggle() {
             bindDivNonHawaii();
@@ -590,7 +602,7 @@
             var DropdownListStatus = document.getElementById('<%=ddlStatus.ClientID %>');
             var SelectedIndex = DropdownListStatus.selectedIndex;
 
-            var SelectedText= DropdownListStatus.options[DropdownListStatus.selectedIndex].text;
+            var SelectedText = DropdownListStatus.options[DropdownListStatus.selectedIndex].text;
 
             if (SelectedText.indexOf("Non-Hawaii") > -1 || SelectedText.indexOf("UH Student") > -1) {
                 <%--document.getElementById('<%=GridViewNonUH.ClientID %>').style.display = "inherit";--%>
@@ -614,7 +626,7 @@
             //else
             //    document.getElementById('divStudent').style.display = "none";
             //$('#MainContent_TextBoxNonHawaii').val('');
-            
+
         }
 
         function gridviewUHDeptToggle() {
@@ -622,7 +634,7 @@
             var SelectedIndexJabsomOther = DropdownListJabsomOther.selectedIndex;
             //var SelectedValue = DropdownList.value;
             var SelectedTextJabsomOther = DropdownListJabsomOther.options[DropdownListJabsomOther.selectedIndex].text;
-            
+
             if (SelectedTextJabsomOther.indexOf("UH School") > -1)
                 document.getElementById('<%=GridViewUHDept.ClientID %>').style.display = "inherit";
             else
@@ -689,9 +701,9 @@
                 }
             });
         }
-        
-        
-        var substringMatcher = function(strs) {
+
+
+        var substringMatcher = function (strs) {
             return function findMatches(q, cb) {
                 var matches, substringRegex;
 
@@ -703,7 +715,7 @@
 
                 // iterate through the pool of strings and for any string that
                 // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function(i, str) {
+                $.each(strs, function (i, str) {
                     if (substrRegex.test(str)) {
                         matches.push(str);
                     }
@@ -715,14 +727,14 @@
 
         //var pinames = [];
         //var map = {};
-            
+
         //var data = JSON.parse($('#MainContent_textAreaPI').val());
-                    
+
         //$.each(data, function (i, piname) {
         //        map[piname.FullName] = piname;
         //        pinames.push(piname.FullName);
         //    });                 
-                                
+
         //$('#the-basics .typeahead').typeahead({
         //    hint: true,
         //    highlight: true,
@@ -761,7 +773,7 @@
 
 
         $(document).ready(function () {
-        //$(window).load(function () {
+            //$(window).load(function () {
 
             //Automatically put parentheses and dash for phone number fields
             $(function () {
@@ -774,7 +786,7 @@
             });
 
         });
-       
+
     </script>
 
 </asp:Content>

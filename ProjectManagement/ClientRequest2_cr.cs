@@ -56,6 +56,7 @@ namespace ProjectManagement
         public Nullable<byte> IsHealthDisparity { get; set; }
         public Nullable<int> GrantDepartmentFundingType { get; set; }
         public string GrantDepartmentFundingOther { get; set; }
+        public bool Archive { get; set; }
     
         public virtual BioStat_cr BioStat { get; set; }
     }

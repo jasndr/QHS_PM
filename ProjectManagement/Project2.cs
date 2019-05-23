@@ -86,10 +86,10 @@ namespace ProjectManagement
     
         public virtual ICollection<ClientAgmt> ClientAgmt { get; set; }
         public virtual ICollection<Grant> Grants { get; set; }
-        public virtual Invest Invests { get; set; }
         public virtual ICollection<ProjectPhase> ProjectPhase { get; set; }
         public virtual ICollection<Publication> Publications { get; set; }
         public virtual ICollection<SurveyForm> SurveyForm { get; set; }
         public virtual ProjectField ProjectField { get; set; }
+        public virtual Invests Invests { get; set; }
     }
 }

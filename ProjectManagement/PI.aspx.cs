@@ -32,9 +32,11 @@ namespace ProjectManagement
     ///  2018APR06 - Jason Delos Reyes  -  Added comments/documentation for easier legibility and
     ///                                    easier data structure view and management.
     ///  2018APR09 - Jason Delos Reyes  -  Added comments/documentation for SendNotificationEmail script.
+    ///  2019MAY17 - Jason Delos Reyes  -  Added "Alternate Email", "Alternate Phone", and "Notes" fields to provide
+    ///                                    additional information for the admin team regarding the investigator.
     /// </summary>
     public partial class PI : System.Web.UI.Page
-    {       
+    {
         /// <summary>
         /// In the pop-out form, if there is a previous PI specified,
         /// the form will populate with the PI information already 
@@ -76,7 +78,7 @@ namespace ProjectManagement
 
                 if (investId > 0)
                 {
-                    Invest invest;
+                    Invests invest;
                     ICollection<JabsomAffil> jabsomAffilList;
 
                     using (ProjectTrackerContainer db = new ProjectTrackerContainer())
@@ -95,6 +97,9 @@ namespace ProjectManagement
                     TextBoxLastName.Text = invest.LastName;
                     TextBoxEmail.Text = invest.Email;
                     TextBoxPhone.Text = invest.Phone;
+                    TextBoxAltEmail.Text = invest.AltEmail;
+                    TextBoxAltPhone.Text = invest.AltPhone;
+                    txtNotes.InnerText = invest.Notes;// (Add textbox notes box here)
                     ddlStatus.SelectedValue = invest.InvestStatusId.ToString();
                     TextBoxNonHawaii.Text = invest.NonHawaiiClient;
 
@@ -216,7 +221,7 @@ namespace ProjectManagement
 
         //            chkApproved.Checked = invest.IsApproved;
         //            chkPilot.Checked = invest.IsPilot;
-                   
+
         //            //bind jabsom affils
         //            //if (jabsomAffilList.Count > 0)
         //            //{
@@ -241,7 +246,7 @@ namespace ProjectManagement
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void btnAdd_Click(object sender, EventArgs e)
-        {          
+        {
             ClearEditForm();
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -262,6 +267,9 @@ namespace ProjectManagement
             TextBoxLastName.Text = string.Empty;
             TextBoxEmail.Text = string.Empty;
             TextBoxPhone.Text = string.Empty;
+            TextBoxAltEmail.Text = string.Empty;
+            TextBoxAltPhone.Text = string.Empty;
+            txtNotes.InnerText = string.Empty;
             //TextBoxNonUH.Text = string.Empty;
             TextBoxNonHawaii.Text = string.Empty;
 
@@ -401,18 +409,21 @@ namespace ProjectManagement
         {
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
-                Invest invest;                        
+                Invests invest;
 
                 if (investId == 0) // new PI
                 {
                     if (!TextBoxFirstName.Text.Equals(string.Empty) && !TextBoxLastName.Text.Equals(string.Empty))
                     {
-                        invest = new Invest()
+                        invest = new Invests()
                         {
                             FirstName = TextBoxFirstName.Text.Trim(),
                             LastName = TextBoxLastName.Text.Trim(),
                             Email = TextBoxEmail.Text,
                             Phone = TextBoxPhone.Text,
+                            AltEmail = TextBoxAltEmail.Text,
+                            AltPhone = TextBoxAltPhone.Text,
+                            Notes = txtNotes.InnerText,
                             InvestStatusId = Convert.ToInt32(ddlStatus.SelectedValue),
                             IsApproved = chkApproved.Checked,
                             //IsPilot = chkPilot.Checked
@@ -428,10 +439,10 @@ namespace ProjectManagement
                         {
                             invest.NonHawaiiClient = TextBoxNonHawaii.Text;
                         }
-                        
+
                         TextBox txtNonUHOther = GridViewNonUH.FooterRow.FindControl("txtNonUHOther") as TextBox;
                         invest.NonUHClient = txtNonUHOther.Text;
-                       
+
                         TextBox txtDegreeOther = GridViewDegree.FooterRow.FindControl("txtDegreeOther") as TextBox;
                         invest.OtherDegree = txtDegreeOther.Text;
 
@@ -457,13 +468,16 @@ namespace ProjectManagement
                         return false;
                     }
                     else
-                    {                       
+                    {
                         if (invest != null && !TextBoxFirstName.Text.Equals(string.Empty) && !TextBoxLastName.Text.Equals(string.Empty))
                         {
                             invest.FirstName = TextBoxFirstName.Text.Trim();
                             invest.LastName = TextBoxLastName.Text.Trim();
                             invest.Email = TextBoxEmail.Text;
                             invest.Phone = TextBoxPhone.Text;
+                            invest.AltEmail = TextBoxAltEmail.Text;
+                            invest.AltPhone = TextBoxAltPhone.Text;
+                            invest.Notes = txtNotes.InnerText;
                             invest.InvestStatusId = Convert.ToInt32(ddlStatus.SelectedValue);
 
                             if (ddlStatus.SelectedItem.Text == "Non-Hawaii Client" || ddlStatus.SelectedItem.Text == "UH Student")
@@ -526,7 +540,7 @@ namespace ProjectManagement
             }
 
             return true;
-        }        
+        }
 
         /// <summary>
         /// - Populates lists for each of the following author affilation sections:
@@ -587,9 +601,9 @@ namespace ProjectManagement
                 }
             }
 
-            return idList;      
+            return idList;
         }
-       
+
         //protected void btnSearch_Click(object sender, EventArgs e)
         //{
         //    BindGridView();
@@ -733,8 +747,8 @@ namespace ProjectManagement
                     }
                 }
             }
-        }    
-            
+        }
+
         /// <summary>
         /// If there is an existing PI in the request, the pop-out form will populate with
         /// the PI information already stored into the database.
@@ -916,6 +930,6 @@ namespace ProjectManagement
             EmailService emailService = new EmailService();
             emailService.Send(im);
         }
-        
+
     }
 }

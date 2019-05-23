@@ -880,6 +880,9 @@
     <Compile Include="ImportRequest.aspx.designer.cs">
       <DependentUpon>ImportRequest.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Invests.cs">
+      <DependentUpon>ProjectTracker.tt</DependentUpon>
+    </Compile>
     <Compile Include="InvestStatus_cr.cs">
       <DependentUpon>ClientRequestTracker.tt</DependentUpon>
     </Compile>
@@ -1166,9 +1169,6 @@
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="HiProgram.cs">
-      <DependentUpon>ProjectTracker.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Invest.cs">
       <DependentUpon>ProjectTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="Investor.aspx.cs">

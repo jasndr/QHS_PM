@@ -14,8 +14,15 @@ namespace ProjectManagement
     
     public partial class InvestStatus
     {
+        public InvestStatus()
+        {
+            this.Invests = new HashSet<Invests>();
+        }
+    
         public int Id { get; set; }
         public string StatusValue { get; set; }
         public int DisplayOrder { get; set; }
+    
+        public virtual ICollection<Invests> Invests { get; set; }
     }
 }

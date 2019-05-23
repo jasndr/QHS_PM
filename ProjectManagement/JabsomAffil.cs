@@ -16,7 +16,7 @@ namespace ProjectManagement
     {
         public JabsomAffil()
         {
-            this.Invests = new HashSet<Invest>();
+            this.Invests = new HashSet<Invests>();
         }
     
         public int Id { get; set; }
@@ -24,6 +24,6 @@ namespace ProjectManagement
         public string Type { get; set; }
         public string PrevName { get; set; }
     
-        public virtual ICollection<Invest> Invests { get; set; }
+        public virtual ICollection<Invests> Invests { get; set; }
     }
 }

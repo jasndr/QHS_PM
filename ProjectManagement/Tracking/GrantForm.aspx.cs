@@ -741,11 +741,11 @@ namespace ProjectManagement.Admin
             StringBuilder sb = new StringBuilder();
             foreach (var pi in piList)
             {
-                if (pi.Invest != null)
+                if (pi.Invests != null)
                 {
-                    sb.Append(pi.Invest.FirstName);
+                    sb.Append(pi.Invests.FirstName);
                     sb.Append(" ");
-                    sb.Append(pi.Invest.LastName);
+                    sb.Append(pi.Invests.LastName);
                     sb.Append("; ");
 
                     if (pi.Id == 0)

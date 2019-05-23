@@ -20,5 +20,7 @@ namespace ProjectManagement
         public Nullable<int> ProjectId { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+    
+        public virtual Invests Invests { get; set; }
     }
 }

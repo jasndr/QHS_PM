@@ -191,7 +191,7 @@ namespace ProjectManagement.Model
                         {
                             List<GrantPI> lstPI = new List<GrantPI>();
                             GrantPI projectPI = new GrantPI();
-                            projectPI.Invest = db.Invests.FirstOrDefault(i => i.Id == project.PIId);
+                            projectPI.Invests = db.Invests.FirstOrDefault(i => i.Id == project.PIId);
                             lstPI.Add(projectPI);
                             grant.GrantPIs.Clear();
                             grant.GrantPIs = lstPI;
@@ -201,9 +201,9 @@ namespace ProjectManagement.Model
                     {
                         foreach (var grantPi in grant.GrantPIs)
                         {
-                            if (grantPi.Invest == null)
+                            if (grantPi.Invests == null)
                             {
-                                grantPi.Invest = db.Invests.First(i => i.Id == grantPi.PiId);
+                                grantPi.Invests = db.Invests.First(i => i.Id == grantPi.PiId);
                             }
                         }
                     }
@@ -317,7 +317,7 @@ namespace ProjectManagement.Model
 
                 foreach(var pi in prevPIs)
                 {
-                    string name = pi.Invest.FirstName + ' ' + pi.Invest.LastName;
+                    string name = pi.Invests.FirstName + ' ' + pi.Invests.LastName;
                     prevPILst.Add(name);
 
                     if (Array.IndexOf(piNames, name) < 0)   //(!piNames.All(name.Contains))

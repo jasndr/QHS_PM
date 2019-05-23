@@ -414,7 +414,7 @@ namespace ProjectManagement
         {
             // Pre-populate PI Form if username already exists in the database.
 
-            Invest currPI;
+            Invests currPI;
             ICollection<JabsomAffil> jabsomAffilList;
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {

@@ -114,7 +114,7 @@
                                 </div>
                                 <br />
                                 <div class="row">
-                                    <div class="col-sm-4"><b>Emaile:</b>
+                                    <div class="col-sm-4"><b>Email:</b>
                                         <asp:Label ID="lblEmail" runat="server"></asp:Label>
                                     </div>
                                     <div class="col-sm-4"><b>Phone:</b>
