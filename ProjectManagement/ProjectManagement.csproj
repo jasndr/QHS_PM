@@ -443,6 +443,9 @@
     <Content Include="ClientRequestTracker.edmx.diagram">
       <DependentUpon>ClientRequestTracker.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\DB_Bioinfo - External.pubxml" />
+    <None Include="Properties\PublishProfiles\DB_Bioinfo.pubxml" />
+    <None Include="Properties\PublishProfiles\DEV_Bioinfo.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

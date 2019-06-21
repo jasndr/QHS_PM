@@ -163,23 +163,20 @@ namespace ProjectManagement.Admin
                                 int investId = 0;
                                 Invests pi = db.Invests.FirstOrDefault(x => (x.FirstName + " " + x.LastName) == (rqst.FirstName + " " + rqst.LastName));
 
-
+                                // Creates a new PI if not exisitng in the database.
                                 if (pi == null)
                                 {
                                     Invests invest = CreateInvest(rqst);
 
                                     if (invest != null)
                                     {
-                                        //Delete - duplicates creation of PI's, which duplicates PI records.
-                                        //db.Invests.Add(invest);
-                                        //db.SaveChanges();
-
                                         investId = invest.Id;
 
                                         SendPINotificationEmail(investId);
                                     }
 
                                 }
+                                // Updates existing PI with request information if already exists in the database.
                                 else
                                 {
                                     // Insert mechanism here to differentiate old/new info.
@@ -365,6 +362,7 @@ namespace ProjectManagement.Admin
                     IsApproved = false
 
                 };
+
 
                 db.Invests.Add(invest);
                 db.SaveChanges();

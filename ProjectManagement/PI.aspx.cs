@@ -458,7 +458,7 @@ namespace ProjectManagement
                         SendNotificationEmail(invest.Id);
                     }
                 }
-                else
+                else // existing PI
                 {
                     invest = db.Invests.First(i => i.Id == investId);
 

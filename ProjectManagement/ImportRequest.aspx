@@ -86,7 +86,7 @@
                 </div>--%>
                 <div>
                     <asp:Button ID="btnImport" runat="server" Text="Import" CssClass="btn btn-info" OnClientClick="return validateControl(); return false;" OnClick="btnImport_Click" />
-                    <asp:Button ID="btnImport2" runat="server" Text="Import2" CssClass="btn btn-info" OnClientClick="return validateControl(); return false;" OnClick="btnImport2_Click" />
+                    <%--<asp:Button ID="btnImport2" runat="server" Text="Import2" CssClass="btn btn-info" OnClientClick="return validateControl(); return false;" OnClick="btnImport2_Click" />--%>
                     <%--OnClientClick="return validateControl(); return false;"--%>
                 </div>
             </div>
@@ -141,16 +141,24 @@
                                                     <label for="TextBoxEmail">Email</label>
                                                     <asp:TextBox ID="TextBoxEmail" runat="server" placeholder="Email" class="form-control"></asp:TextBox>
                                                 </div>
-                                                <div class="col-xs-2 col-md-2">
+                                                <div class="col-xs-6 col-md-6">
+                                                    <label for="TextBoxAltEmail">Alternate Email</label>
+                                                    <asp:TextBox ID="TextBoxAltEmail" runat="server" placeholder="Alternate Email" class="form-control"></asp:TextBox>
+                                                </div>
+                                                <%--<div class="col-xs-2 col-md-2">
                                                     <label for="chkPilot">Pilot Investigator</label>
                                                     <asp:CheckBox ID="chkPilot" runat="server"></asp:CheckBox>
-                                                </div>
+                                                </div>--%>
                                             </div>
                                             <br />
                                             <div class="row">
                                                 <div class="col-xs-6 col-md-6">
                                                     <label for="TextBoxPhone">Phone</label>
                                                     <asp:TextBox ID="TextBoxPhone" runat="server" placeholder="(___) ___-____" class="form-control"></asp:TextBox>
+                                                </div>
+                                                <div class="col-xs-6 col-md-6">
+                                                    <label for="TextBoxAltPhone">Alternate Phone</label>
+                                                    <asp:TextBox ID="TextBoxAltPhone" runat="server" placeholder="(___) ___-____" CssClass="form-control phoneNum"></asp:TextBox>
                                                 </div>
                                             </div>
                                             <br />
@@ -198,6 +206,10 @@
                                                             </asp:GridView>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="col-xs-6 col-md-6">
+                                                    <label for="txtNotes" id="lblNotes">Notes</label>
+                                                    <textarea class="form-control noresize" rows="3" name="txtNotes" id="txtNotes" runat="Server"></textarea>
                                                 </div>
                                             </div>
                                             <hr />
@@ -657,6 +669,7 @@
                                                                     <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
                                                                     <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
                                                                     <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                    <asp:HiddenField ID="FieldText" Value='<%#Eval("Name") %>' runat="server" />
                                                                     <%# Eval("Name") %>
                                                                 </td>
                                                         </ItemTemplate>
@@ -665,6 +678,7 @@
                                                                 <asp:CheckBox ID="chkId" runat="server"></asp:CheckBox>
                                                                 <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
                                                                 <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                <asp:HiddenField ID="FieldText" Value='<%#Eval("Name") %>' runat="server" />
                                                                 <%# Eval("Name") %>
                                                             </td>
                                                             </tr>
@@ -1152,7 +1166,7 @@
                 $('[type="text"]').val("");
                 $('textarea').val("");
 
-              
+
 
                 $('select option:selected').prop('selected', false);
             });
@@ -1993,7 +2007,7 @@
             }
 
         }
-        
+
 
         function divNonHawaiiToggle() {
             bindDivNonHawaii();

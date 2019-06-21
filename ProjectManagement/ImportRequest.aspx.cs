@@ -38,6 +38,11 @@ namespace ProjectManagement
     ///  2018OCT22 - Jason Delos Reyes  -  Added ability to to upload form and post into PI / Project form.
     ///                                    Will need to add "post to database" functionality, and revisit
     ///                                    possibly adding *checked* to read as well.
+    ///  2019MAY24 - Jason Delos Reyes  -  Based on new form, added functionality to add the following fields
+    ///                                    to the "Import" feature:
+    ///                                         • degree(s) 
+    ///                                         • organizations (completed 2019MAY29)
+    ///                              
     /// </summary>
     public partial class ImportRequest : System.Web.UI.Page
     {
@@ -200,75 +205,75 @@ namespace ProjectManagement
             }
         }
 
-        /// <summary>
-        /// /////////////////////////////////////////////////////////////////
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void btnImport2_Click(object sender, EventArgs e)
-        {
-            
-
-            /// Obtain the PDF from the upload field.
-            string strFilename = "";
-            string filePathName = "";
-            byte[] myData = new byte[0];
-            if (fileUpload.PostedFile != null)
-            {
-                // Get a reference to PostedFile object.
-                HttpPostedFile myFile = fileUpload.PostedFile;
-
-                // Get size of uploaded file.
-                int nFileLen = myFile.ContentLength;
-
-                // Make sure the size of the file is > 0.
-                if (nFileLen > 0)
-                {
-                    // Allocate a buffer for reading of the file.
-                    myData = new byte[nFileLen];
-
-                    // Read uploaded file from the Stream.
-                    myFile.InputStream.Read(myData, 0, nFileLen);
-
-                    // Create name for the file to store.
-                    strFilename = System.IO.Path.GetFileName(myFile.FileName);
-
-                    // Creates "UploadFiles" folder if does not exist yet.
-                    if (!(Directory.Exists(Path.GetTempPath()/*System.IO.Directory.Exists(Server.MapPath("~/UploadFiles/")*/)))
-                        System.IO.Directory.CreateDirectory(Path.GetTempPath()/*Server.MapPath("~/UploadFiles/")*/);
-
-                    //if (!(Directory.Exists(Path.GetTempFileName())))
-                    //    Directory.CreateDirectory(Path.GetTempFileName());
+        ///// <summary>
+        ///// ///(NOT BEING USED) - Alternative Button Import///
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //protected void btnImport2_Click(object sender, EventArgs e)
+        //{
 
 
-                    //Write data into a file
-                    WriteToFile(Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename*/, ref myData);
+        //    /// Obtain the PDF from the upload field.
+        //    string strFilename = "";
+        //    string filePathName = "";
+        //    byte[] myData = new byte[0];
+        //    if (fileUpload.PostedFile != null)
+        //    {
+        //        // Get a reference to PostedFile object.
+        //        HttpPostedFile myFile = fileUpload.PostedFile;
 
-                    filePathName = Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename)*/;//myFile.FileName; // Equivalent to --> System.IO.Path.GetFullPath(myFile.FileName);
-                                                                                                                      // Not working --> Server.MapPath(myFile.FileName);
+        //        // Get size of uploaded file.
+        //        int nFileLen = myFile.ContentLength;
+
+        //        // Make sure the size of the file is > 0.
+        //        if (nFileLen > 0)
+        //        {
+        //            // Allocate a buffer for reading of the file.
+        //            myData = new byte[nFileLen];
+
+        //            // Read uploaded file from the Stream.
+        //            myFile.InputStream.Read(myData, 0, nFileLen);
+
+        //            // Create name for the file to store.
+        //            strFilename = System.IO.Path.GetFileName(myFile.FileName);
+
+        //            // Creates "UploadFiles" folder if does not exist yet.
+        //            if (!(Directory.Exists(Path.GetTempPath()/*System.IO.Directory.Exists(Server.MapPath("~/UploadFiles/")*/)))
+        //                System.IO.Directory.CreateDirectory(Path.GetTempPath()/*Server.MapPath("~/UploadFiles/")*/);
+
+        //            //if (!(Directory.Exists(Path.GetTempFileName())))
+        //            //    Directory.CreateDirectory(Path.GetTempFileName());
 
 
-                    // Read file into string sections*.
-                    //string fileData = ExtractTextFromPdf(filePathName);
-                    Dictionary<string, string> data = ExtractTextFromPdf2(filePathName);
+        //            //Write data into a file
+        //            WriteToFile(Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename*/, ref myData);
 
-                    //Open modal, displaying PI/Project forms before saving into database.
-
-                    //--- Place into stored data into webform
-                    PlaceToWebForm(data);
+        //            filePathName = Path.GetTempPath() + strFilename/*Server.MapPath("~/UploadFiles/" + strFilename)*/;//myFile.FileName; // Equivalent to --> System.IO.Path.GetFullPath(myFile.FileName);
+        //                                                                                                              // Not working --> Server.MapPath(myFile.FileName);
 
 
-                    //System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    //sb.Append(@"<script type='text/javascript'>");
-                    //sb.Append("$('#editModal').modal('show');");
-                    //sb.Append(@"</script>");
-                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "ModalScript", sb.ToString(), false);
+        //            // Read file into string sections*.
+        //            //string fileData = ExtractTextFromPdf(filePathName);
+        //            Dictionary<string, string> data = ExtractTextFromPdf2(filePathName);
 
-                }
-            }
+        //            //Open modal, displaying PI/Project forms before saving into database.
+
+        //            //--- Place into stored data into webform
+        //            PlaceToWebForm(data);
 
 
-        }
+        //            //System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        //            //sb.Append(@"<script type='text/javascript'>");
+        //            //sb.Append("$('#editModal').modal('show');");
+        //            //sb.Append(@"</script>");
+        //            //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "ModalScript", sb.ToString(), false);
+
+        //        }
+        //    }
+
+
+        //}
 
         /// <summary>
         /// Extracts text from the PDF form being referred to.
@@ -287,9 +292,9 @@ namespace ProjectManagement
                 var dict = new Dictionary<string, string>();
 
 
-        
 
-               //File
+
+                //File
 
                 //Obtain fields to enter into the database (only readable characters for now, looking
                 //                                          into solution that reads checks in the future).
@@ -308,6 +313,55 @@ namespace ProjectManagement
                 var phoneNumber = Regex.Match(entirePdfText, @"(?<=6.\s+Phone number:\s+).+(?=\r)").ToString();
                 dict.Add("phoneNumber", phoneNumber);
 
+                int degFrom = entirePdfText.IndexOf("3.  Degree (select all that apply) ") + "3.  Degree (select all that apply) ".Length;
+                int degTo = entirePdfText.IndexOf("4.  Investigator status:");
+                var degrees = entirePdfText.Substring(degFrom, degTo - degFrom);
+                degrees.Replace(System.Environment.NewLine, " ");
+                if (degrees.Contains("Other"))
+                {
+                    int degOtherFrom = entirePdfText.IndexOf("3.  Degree (select all that apply) ") + "3.  Degree (select all that apply) ".Length;
+                    int degOtherTo = entirePdfText.IndexOf("4.  Investigator status:");
+                    var degreeOther = entirePdfText.Substring(degOtherFrom, degOtherTo - degOtherFrom);
+                    degrees = degrees + " " + degreeOther;
+                }
+                dict.Add("degrees", degrees);
+
+
+                //** Organization
+                int organizationFrom = entirePdfText.IndexOf("7. Affiliations") + "7. Affiliations".Length;
+                int organizationTo = entirePdfText.IndexOf("III. PROJECT INFORMATION");
+                var organization = entirePdfText.Substring(organizationFrom, organizationTo - organizationFrom);
+                organization = organization.Replace(System.Environment.NewLine, " ");
+                organization = organization.Replace("(select all that apply)", "");
+                organization = organization.Replace("Please select School/Office/Department John A. Burns School of Medicine (JABSOM)", "");
+                organization = organization.Replace("Please select School/Office/Department", "");
+                organization = organization.Replace("(select all that apply)", "");
+                organization = organization.Replace("If your study is under JABSOM Department(s), select ", "");
+                organization = organization.Replace(" all that apply ", "");
+                organization = organization.Replace("Please Select College/Center (select all that apply)", "");
+                organization = organization.Replace("Please select School/Office/Department (select all that apply)", "");
+                organization = organization.Replace("Please specify other (UH Hilo)", "");
+                organization = organization.Replace("Please specify other", "");
+                organization = organization.Replace("If your study is under JABSOM Department(s), select all that apply", "");
+                organization = organization.Replace("West Oahu (specify specialty area)", "");
+                organization = organization.Replace("Community Partners", "");
+                organization = organization.Replace("Hospitals (On Oahu)", "");
+                organization = organization.Replace("Other Hospital", "");
+                organization = organization.Replace("Hawaii Pacific Health Hospitals - On Oahu (select all that apply)", "");
+                organization = organization.Replace("Name University or College (Not UH System)", "");
+                organization = organization.Replace("Other Institution", "");
+                dict.Add("organization", organization);
+
+                //** ------------
+
+                //** Investigator Status
+                int investstatFrom = entirePdfText.IndexOf("4.  Investigator status: ") + "4.  Investigator status: ".Length;
+                int investstatTo = entirePdfText.IndexOf("5.  Email:");
+                var investstat = entirePdfText.Substring(investstatFrom, investstatTo - investstatFrom);
+                investstat.Replace(System.Environment.NewLine, " ");
+                dict.Add("investstat", investstat);
+                //** -------------------
+
                 int ptFrom = entirePdfText.IndexOf("8a.  Project Title ") + "8a.  Project Title ".Length;
                 int ptTo = entirePdfText.IndexOf("(If no current project please type ");
                 var projectTitle = entirePdfText.Substring(ptFrom, ptTo - ptFrom);
@@ -316,9 +370,27 @@ namespace ProjectManagement
 
                 int psFrom = entirePdfText.IndexOf("8b.  Project Summary ") + "8b.  Project Summary ".Length;
                 int psTo = entirePdfText.IndexOf("(If no current project type");
-                var projectSummary = entirePdfText.Substring(psFrom, psTo - psFrom);
-                projectSummary.Replace(System.Environment.NewLine, " ");
-                dict.Add("projectSummary", projectSummary);
+                string projectSummary = "";
+                if (psTo > 0)
+                {
+                    projectSummary = entirePdfText.Substring(psFrom, psTo - psFrom);
+                    projectSummary.Replace(System.Environment.NewLine, " ");
+                    dict.Add("projectSummary", projectSummary);
+                }
+
+                //** Ethnic Group
+                int egFrom = entirePdfText.IndexOf("V.  ETHNIC GROUP") + "V.  ETHNIC GROUP".Length;
+                int egTo = entirePdfText.IndexOf("VI. PROJECT FUNDING");
+                var ethnicGroup = entirePdfText.Substring(egFrom, egTo - egFrom);
+                ethnicGroup = ethnicGroup.Replace(System.Environment.NewLine, " ");
+                ethnicGroup = ethnicGroup.Replace("(select all that apply)", "");
+                ethnicGroup = ethnicGroup.Replace("10a.  Which ethnic group is involved in your study?", "");
+                ethnicGroup = ethnicGroup.Replace("11a.  Which population in Hawaii is involved in your ", "");
+                ethnicGroup = ethnicGroup.Replace("(Select all that apply)", "");
+                ethnicGroup = ethnicGroup.Replace(" study?", "");
+                dict.Add("ethnicGroup", ethnicGroup);
+                //** ------------
+
 
                 return dict;//requestType; //entirePdfText;
                 //return stripper.getText(doc); 
@@ -345,7 +417,7 @@ namespace ProjectManagement
 
 
                 //Pd
-                
+
 
                 //iTextSharpExample ------------------------------------------------------------------------------------------
                 PdfReader reader = new PdfReader(path);
@@ -355,9 +427,9 @@ namespace ProjectManagement
                 {
                     bool isRadio = 3 == (af.GetFieldType(field.Key));
                 }
-                    
 
-                https://stackoverflow.com/questions/10651671/read-check-box-radio-button-name-and-values-from-pdf-using-itext-sharp
+
+                //https://stackoverflow.com/questions/10651671/read-check-box-radio-button-name-and-values-from-pdf-using-itext-sharp
 
                 //------------------------------------------------------------------------------------------------------------
 
@@ -426,24 +498,40 @@ namespace ProjectManagement
                 currPI = db.Invests.Where(x => (x.FirstName + " " + x.LastName)
                                            .Contains(piNameFromForm)).FirstOrDefault();
 
-
+                // Update PI information from the client request, if available.
                 if (currPI != null)
                 {
-                    // PI Information - from request form  
+                    // -------------- [PI Information - from request form (existing PI)] ---------------------------  
                     TextBoxFirstName.Text = data.ContainsKey("firstName") ? data["firstName"] : currPI.FirstName;
                     TextBoxLastName.Text = data.ContainsKey("lastName") ? data["lastName"] : currPI.LastName;
-                    TxtPI.Text = data["firstName"] + " " + data["lastName"]; TxtPI.ReadOnly = true;
 
                     TextBoxEmail.Text = data.ContainsKey("email") && data["email"] != "__________________________________" ? data["email"] : currPI.Email;
                     TextBoxPhone.Text = data.ContainsKey("phoneNumber") && data["phoneNumber"] != "__________________________________" ? data["phoneNumber"] : currPI.Phone;
 
-                    //if (data.ContainsKey("firstName")) TextBoxFirstName.Text = data["firstName"];
-                    //if (data.ContainsKey("lastName")) TextBoxLastName.Text = data["lastName"];
-                    //if (data.ContainsKey("email")) TextBoxEmail.Text = data["email"];
-                    //if (data.ContainsKey("phoneNumber")) TextBoxPhone.Text = data["phoneNumber"];
+                    TextBoxAltEmail.Text = data.ContainsKey("email") && data["email"] != "__________________________________" ? currPI.Email : "";
+                    TextBoxAltPhone.Text = data.ContainsKey("phoneNumber") && data["phoneNumber"] != "__________________________________" ? currPI.Phone : "";
 
-                    // PI Information - from database
-                    chkPilot.Checked = currPI.IsPilot;
+
+                    // (1) Create list of degrees (jabsom affils) associated with PI
+                    //  ---> Obtain a list of degrees?
+                    //var degrees = data["degrees"];
+
+                    //List<int> degreeList = new List<int>();
+                    //var allDegrees = db.JabsomAffils.Where(x => x.Type == "Degree").ToDictionary(x=>x.Id, x=>x.Name);
+
+                    //foreach (var degree in allDegrees)
+                    //{
+                    //    if (degree.Value.Contains(degrees)) degreeList.Add(degree.Key);
+                    //}
+
+                    //// (2) PageUtility.SelectRow_GridView(GridViewDegree, /*listOfJabsomAffils*/);
+
+                    //PageUtility.SelectRow_GridView(GridViewDegree, degreeList);
+
+
+
+                    // -------------- [PI Information - from database (existing PI)] ---------------------------  
+
                     ddlStatus.SelectedIndex = currPI.InvestStatusId;
                     TextBoxNonHawaii.Text = currPI.NonHawaiiClient;
 
@@ -477,7 +565,7 @@ namespace ProjectManagement
                         txtCommunityPartnerOther.Text = string.Empty;
                     }
 
-
+                    // Binds PI affiliation checkboxes
                     jabsomAffilList = currPI.JabsomAffils;
                     Bind_JabsomAffil(jabsomAffilList);
 
@@ -485,25 +573,246 @@ namespace ProjectManagement
                 }
                 else
                 {
-                    // PI Information - from request form
+                    // ------------------- [PI Information - from request form (new PI)]--------------------------------
                     if (data.ContainsKey("firstName")) TextBoxFirstName.Text = data["firstName"];
 
                     if (data.ContainsKey("lastName")) TextBoxLastName.Text = data["lastName"];
-                    TxtPI.Text = data["firstName"] + " " + data["lastName"]; TxtPI.ReadOnly = true;
 
                     if (data.ContainsKey("email")) TextBoxEmail.Text = data["email"];
 
                     if (data.ContainsKey("phoneNumber")) TextBoxPhone.Text = data["phoneNumber"];
+
+
+                    // ---> List of degrees (jabsom affils) associated with PI
+                    var degrees = data["degrees"];
+
+                    List<int> degreeList = new List<int>();
+                    var allDegrees = db.JabsomAffils.Where(x => x.Type == "Degree").ToDictionary(x => x.Id, x => x.Name);
+
+                    foreach (var degree in allDegrees)
+                    {
+                        if (degrees.Contains(degree.Value)) degreeList.Add(degree.Key);
+                    }
+
+                    PageUtility.SelectRow_GridView(GridViewDegree, degreeList);
+
+
+
+                    // ---> Organizations
+                    var organizations = data["organization"];
+
+                    List<int> organizationList = new List<int>();
+                    var allOrganizations = db.JabsomAffils.Where(x => x.Type != "Degree"
+                                                                  && x.Type != "NonUH"
+                                                                  && x.Type != "UHFaculty"
+                                                                  && x.Type != "Unknown"
+                                                                  && !x.Name.Contains("test")).ToDictionary(x => x.Id, x => x.Name);
+
+                    string remainingOrganizations = organizations;
+
+                    foreach (var organization in allOrganizations)
+                    {
+                        if (organizations.Contains(organization.Value))
+                            organizationList.Add(organization.Key);
+
+                        //** Unique cases for name mismatch
+                        if (organizations.Contains("Daniel K. Inouye College of Pharmacy"))
+                            organizationList.Add(allOrganizations.Where(x => x.Value == "University of Hawaii at Hilo College of Pharmacy").FirstOrDefault().Key);
+
+
+                        if (organizations.Contains("Kokua Kalihi Valley Comprehensive Family Services"))
+                            organizationList.Add(allOrganizations.Where(x => x.Value == "Kalihi Kokua Valley").FirstOrDefault().Key);
+
+                        if (organizations.Contains("Waimanalo Health Center / Community"))
+                            organizationList.Add(allOrganizations.Where(x => x.Value == "Waimanalo Health Center/Community").FirstOrDefault().Key);
+
+                        if (organizations.Contains("Hawaii Pacific Health Hospitals") && organizations.Contains("Kapiolani Women's & Children's Medical Center"))
+                            organizationList.Add(allOrganizations.Where(x => x.Value == "HPH - Kapiolani Women's & Children's Medical Center").FirstOrDefault().Key);
+
+                        if (organizations.Contains("Hawaii Pacific Health Hospitals") && organizations.Contains("Pali Momi Medical Center"))
+                            organizationList.Add(allOrganizations.Where(x => x.Value == "HPH - Pali Momi Medical Center").FirstOrDefault().Key);
+
+                        if (organizations.Contains("Hawaii Pacific Health Hospitals") && organizations.Contains("Straub Clinic & Hospital"))
+                            organizationList.Add(allOrganizations.Where(x => x.Value == "HPH - Straub Clinic & Hospital").FirstOrDefault().Key);
+
+
+                        remainingOrganizations = remainingOrganizations.Replace(organization.Value, "");
+
+                    }
+
+
+                    PageUtility.SelectRow_GridView(GridViewDept, organizationList);
+
+                    PageUtility.SelectRow_GridView(GridViewOffice, organizationList);
+
+                    PageUtility.SelectRow_GridView(GridViewNonUH, organizationList);
+
+                    PageUtility.SelectRow_GridView(GridViewCommunityCollege, organizationList);
+
+                    PageUtility.SelectRow_GridView(GridViewCommunityPartner, organizationList);
+
+                    // (With remaining organization, check "Non-UH Hawaii Client - Other" and place remaining organizations there).
+
+                    if (!String.IsNullOrWhiteSpace(remainingOrganizations))
+                    {
+                        txtNotes.InnerText = "Other organizations: " + remainingOrganizations;
+                        //foreach (GridViewRow row in GridViewNonUH.Rows)
+                        //{
+                        //    if (row.RowType == DataControlRowType.DataRow)
+                        //    {
+                        //        CheckBox chkRow = (row.Cells[0].FindControl("chkRow") as CheckBox);
+                        //        Label lblName = row.FindControl("lblName") as Label;
+
+                        //        if (lblName.Text.Equals("Other"))
+                        //        {
+
+                        //            chkRow.Checked = true;
+                        //            TextBox textbox = row.FindControl("txtNonUHOther") as TextBox;
+                        //            if (!textbox.Equals(null))
+                        //            {
+                        //                textbox.Text = remainingOrganizations;
+                        //            }
+                        //            else
+                        //            {
+                        //                txtNotes.InnerText = "Other organizations: " + remainingOrganizations;
+                        //            }
+
+                        //        }
+
+
+                        //    }
+                        //}
+                    }
+
+
+                    // ---> Investigator Status
+                    var investStat = data["investstat"];
+
+                    switch (data["investstat"])
+                    {
+                        case "Professor":
+                            ddlUHFaculty.SelectedItem.Text = "Professor, Researcher, or Specialist";
+                            break;
+                        case "Associate Professor, Associate Researcher, or<br> Associate Specialist":
+                            ddlUHFaculty.SelectedItem.Text = "Associate Professor, Associate Researcher, or Associate Specialist";
+                            break;
+                        case "Assistant Professor, Assistant Researcher or<br>Assistant Specialist":
+                            ddlUHFaculty.SelectedItem.Text = "Assistant Professor, Assistant Researcher or Assistant Specialist";
+                            break;
+                        case "Adjunct, Affiliate, or Clinical Faculty":
+                            ddlUHFaculty.SelectedItem.Text = "Adjunct, Affiliate, or Clinical Faculty";
+                            break;
+                        default: // Fellow / Resident, Post - Doc, Other Research Staff<br>(e.g.Research Coordinator, Research Assistant), Student,
+                                 // Community Researcher(Non-faculty), Other Status not listed above
+                                 // [Do nothing]
+                            break;
+                    }
+
+
                 }
+
+                // ------------------- [PI Information - from request form (old/new PI)]--------------------------------
+                TxtPI.Text = data["firstName"] + " " + data["lastName"]; TxtPI.ReadOnly = true;
+
+
+
+                // ---------------------- [Project Information - from request form (old/new PI)] ------------------
+                TxtProject.Text = "Add new project"; TxtProject.ReadOnly = true;
+
+                if (data.ContainsKey("projectTitle")) TxtTitle.Text = data["projectTitle"].Replace(Environment.NewLine, " ");
+
+                if (data.ContainsKey("projectSummary")) TxtSummary.Value = data["projectSummary"].Replace(Environment.NewLine, " ");
+
+
+                // ---------------------- [Study Population - from request form] ----------------------------------------
+                var ethnicGroups = data["ethnicGroup"];
+                var studyPopulations = db.ProjectField.Where(f => f.IsStudyPopulation == true).ToList();
+
+
+
+
+
+                foreach (RepeaterItem repeaterItem in rptStudyPopulation.Items)
+                {
+                    CheckBox chk = (CheckBox)repeaterItem.FindControl("chkId");
+                    HiddenField hf = (HiddenField)repeaterItem.FindControl("FieldText");
+
+                    if (ethnicGroups.Contains("Native Hawaiians and Other Pacific Islanders (Includes Filipinos)"))
+                    {
+
+                        if (hf.Value.Equals("Native Hawaiians and/or Pacific Islanders Only (include Filipinos)"))
+                        {
+                            chk.Checked = true;
+                        }
+
+                        if (hf.Value.Equals("Hawaii Populations"))
+                        {
+                            chk.Checked = true;
+                        }
+                    }
+
+                    if (ethnicGroups.Contains("Native Hawaiians and Other Pacific Islanders (Includes Filipinos)")
+                    || ethnicGroups.Contains("Native Hawaiians Only")
+                    || ethnicGroups.Contains("Native Hawaiians and Other Ethnic Groups")
+                    || ethnicGroups.Contains("Other Pacific Islanders Only"))
+                    {
+                        if (hf.Value.Equals("Hawaii Populations"))
+                        {
+                            chk.Checked = true;
+                        }
+
+                    }
+
+                    if (ethnicGroups.Contains("N/A (e.g. non-human study, cell-line, etc)"))
+                    {
+                        if (hf.Value.Equals("N/A"))
+                        {
+                            chk.Checked = true;
+                        }
+                    }
+
+
+                }
+
+                //if (ethnicGroups.Contains("Native Hawaiians and Other Pacific Islanders (Includes Filipinos)")
+                //    || ethnicGroups.Contains("Native Hawaiians Only")
+                //    || ethnicGroups.Contains("Native Hawaiians and Other Ethnic Groups")
+                //    || ethnicGroups.Contains("Other Pacific Islanders Only"))
+                //{
+
+                //    foreach (RepeaterItem repeaterItem in rptStudyPopulation.Items)
+                //    {
+                //        CheckBox chk = (CheckBox)repeaterItem.FindControl("chkId");
+                //        HiddenField hf = (HiddenField)repeaterItem.FindControl("FieldText");
+
+                //        if (hf.Value.Equals("Hawaii Populations"))
+                //        {
+                //            chk.Checked = true;
+                //        }
+                //    }
+                //}
+
+                //if (ethnicGroups.Contains("N/A (e.g. non-human study, cell-line, etc)"))
+                //{
+                //    foreach (RepeaterItem repeaterItem in rptStudyPopulation.Items)
+                //    {
+                //        CheckBox chk = (CheckBox)repeaterItem.FindControl("chkId");
+                //        HiddenField hf = (HiddenField)repeaterItem.FindControl("FieldText");
+
+                //        if (hf.Value.Equals("N/A"))
+                //        {
+                //            chk.Checked = true;
+                //        }
+                //    }
+                //}
+
+
+
+
+
             }
 
 
-            // Project Information - from request form
-            TxtProject.Text = "Add new project"; TxtProject.ReadOnly = true;
-
-            if (data.ContainsKey("projectTitle")) TxtTitle.Text = data["projectTitle"].Replace(Environment.NewLine, " ");
-
-            if (data.ContainsKey("projectSummary")) TxtSummary.Value = data["projectSummary"].Replace(Environment.NewLine, " ");
 
 
         }

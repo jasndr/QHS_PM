@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="https://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>JABSOM Biostatistics Core Facility Request Form</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -13,7 +13,7 @@
     <script src="../Scripts/InputMask.js"></script>
     <%-- Refer to reCaptcha API --%>
     <%--<script src="https://www.google.com/recaptcha/api.js?onload=renderRecaptcha&render=explicit" async="async" defer="defer"></script>--%>
-    <script src="http://www.google.com/recaptcha/api.js?render=<%= ConfigurationManager.AppSettings["captchaSiteKeyV3Test"] %>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= ConfigurationManager.AppSettings["captchaSiteKey"] %>"></script>
     
 
     <%-- https://www.c-sharpcorner.com/article/integration-of-google-recaptcha-in-websites/ --%>
@@ -198,7 +198,7 @@
 
         <asp:ScriptManager runat="server">
             <Scripts>
-                <%--To learn more about bundling scripts in ScriptManager see http://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
                 <%--Framework Scripts--%>
                 <asp:ScriptReference Name="MsAjaxBundle" />
                 <%--Site Scripts--%>
@@ -235,7 +235,7 @@
                     </p>
                     <br />
                     <p class="contentWords">
-                        Please review the <a href="http://oitwp02.jabsom.hawaii.edu/cim/wp-content/uploads/sites/31/2018/01/QHS-Core-Collaborative-Process-clean-MT012218.pdf" target="_blank" class="greenLink"><strong>QHS Core Collaborative Process</strong></a> <strong>prior</strong> to submitting this request.
+                        Please review the <a href="https://qhs.jabsom.hawaii.edu/wp-content/uploads/sites/31/2019/06/20190507-Biostat-Core-Policies_Final.pdf" target="_blank" class="greenLink"><strong>Biostatistics Core Facility Policies</strong></a> <strong>prior</strong> to submitting this request.
                     </p>
                     <br />
                     <p class="contentWords">
@@ -928,7 +928,7 @@
                 <br />
                 <div class="row">
                     <div class="col-sm-3">
-                        <label class="control-label">QHS faculty/staff preference (if any)</label>
+                        <label class="control-label">Biostatistics faculty/staff preference (if any)</label>
                     </div>
                     <div class="col-sm-3">
                         <asp:DropDownList ID="ddlBiostat" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -1056,7 +1056,7 @@
     <script type="text/javascript">
 
         grecaptcha.ready(function () {
-            grecaptcha.execute('<%= ConfigurationManager.AppSettings["captchaSiteKeyV3Test"] %>', { action: 'validate_captcha' })
+            grecaptcha.execute('<%= ConfigurationManager.AppSettings["captchaSiteKey"] %>', { action: 'validate_captcha' })
                 .then(function (token) {
                     $('#GcaptchaResponse').val(token);
                 })

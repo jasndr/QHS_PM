@@ -134,7 +134,10 @@ namespace ProjectManagement.Guest
                                                                          && b.Name != "Youping Deng"
                                                                          && b.Name != "Mark Menor"
                                                                          && b.Name != "Laura Tipton"
-                                                                         && b.Name != "JaNay Wyss")
+                                                                         && b.Name != "JaNay Wyss"
+                                                                         && b.Name != "Meliza Roman"
+                                                                         && b.Name != "Masako Matsunaga"
+                                                                         && b.Name != "Munirih Taafaki")
                                    .OrderBy(b => b.Name)
                                    .ToDictionary(c => c.Id, c => c.Name);
 
@@ -304,7 +307,7 @@ namespace ProjectManagement.Guest
             string Fdata = string.Format("secret={0}&response={1}",
                 new object[]
                 {
-                    HttpUtility.UrlEncode(ConfigurationManager.AppSettings["captchaSecretKeyV3Test"]),
+                    HttpUtility.UrlEncode(ConfigurationManager.AppSettings["captchaSecretKey"]),
                     HttpUtility.UrlEncode(GcaptchaResponse.Value),
                 });
 
