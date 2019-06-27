@@ -58,6 +58,7 @@ namespace ProjectManagement
     ///                                    was only temporary.
     ///  2019JAN18 - Jason Delos Reyes  -  Restored rounding that was originally fixed in 2019JAN09.  An page view error
     ///                                    appeared during publish. Will need to revisit issue.
+    ///  2019JUN25 - Jason Delos Reyes  -  Made Time Entry view page only display *current* QHS faculty/staff.
     /// </summary>
     public partial class TimeEntry1 : System.Web.UI.Page
     {
@@ -912,7 +913,7 @@ namespace ProjectManagement
                         if (Page.User.IsInRole("Admin"))
                         {
                             dropDownSource = context.BioStats
-                                            .Where(b => b.Id > 0 && b.Id < 90)
+                                            .Where(b => b.Id > 0 && b.Id < 90 && b.EndDate > DateTime.Now)
                                             .OrderBy(b => b.Id)
                                             .ToDictionary(c => c.Id, c => c.Name);
 

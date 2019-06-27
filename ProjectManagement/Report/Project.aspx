@@ -112,7 +112,7 @@
                     <label class="control-label">Core:</label>
                 </div>
                 <div class="col-md-1 offset2">
-                    <asp:CheckBox ID="chkBiostat" runat="server" Text="Biostat" Checked="True"></asp:CheckBox>
+                    <asp:CheckBox ID="chkBiostat" runat="server" Text="Biostat"></asp:CheckBox>
                 </div>
                 <div class="col-md-1 offset2">
                     <asp:CheckBox ID="chkBioinfo" runat="server" Text="BioInfo"></asp:CheckBox>
@@ -121,7 +121,7 @@
                     <label class="control-label">Credit To:</label>
                 </div>
                 <div class="col-md-1 offset2">
-                    <asp:CheckBox ID="chkCreditToBiostat" runat="server" Text="Biostat" Checked="True"></asp:CheckBox>
+                    <asp:CheckBox ID="chkCreditToBiostat" runat="server" Text="Biostat"></asp:CheckBox>
                 </div>
                 <div class="col-md-1 offset2">
                     <asp:CheckBox ID="chkCreditToBioinfo" runat="server" Text="BioInfo"></asp:CheckBox>

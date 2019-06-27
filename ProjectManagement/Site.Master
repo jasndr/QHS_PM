@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <title><%: Page.Title %> - Quantitative Health Sciences Project Tracking</title>
+    <title><%: Page.Title %> - Bioinfo Project Tracking</title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
@@ -60,7 +60,7 @@
                         <div class="navbar nav_title" style="border: 0;">
                             <a class="site_title" runat="server" href="~/">
                             <i class="fa fa-gears"></i>
-                            <span style="height: 25%; /*font-size: 9.1pt;*/">Project Tracking</span>
+                            <span style="height: 25%; font-size: 9.1pt;">Bioinformatics Project Tracking</span>
                             </a>
                         </div>
 
