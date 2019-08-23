@@ -918,7 +918,7 @@ namespace ProjectManagement
                                             .ToDictionary(c => c.Id, c => c.Name);
 
                             PageUtility.BindDropDownList(ddlBioStat, dropDownSource, string.Empty);
-                            ddlBioStat.Items.FindByText(biostat.Name).Selected = true;
+                            //ddlBioStat.Items.FindByText(biostat.Name).Selected = true;
                         }
                         /// Non-admin faculty and staff only have access to their own 
                         /// time entries.

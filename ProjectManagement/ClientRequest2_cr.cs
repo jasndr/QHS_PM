@@ -57,6 +57,9 @@ namespace ProjectManagement
         public Nullable<int> GrantDepartmentFundingType { get; set; }
         public string GrantDepartmentFundingOther { get; set; }
         public bool Archive { get; set; }
+        public Nullable<System.DateTime> ConsultDate1 { get; set; }
+        public Nullable<System.DateTime> ConsultDate2 { get; set; }
+        public Nullable<System.DateTime> ConsultDate3 { get; set; }
     
         public virtual BioStat_cr BioStat { get; set; }
     }

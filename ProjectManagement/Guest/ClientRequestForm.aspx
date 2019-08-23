@@ -5,22 +5,27 @@
 <html xmlns="https://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>JABSOM Biostatistics Core Facility Request Form</title>
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/bootstrap-datepicker.min.js"></script>
-    <script src="../Scripts/jquery.validate.js"></script>
-    <script src="../Scripts/bootstrap.min.js"></script>
-    <script src="../Scripts/InputMask.js"></script>
+
+    <link href="../Content/jquery-ui.min.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
+
+    <script src="../Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery-ui-1.12.1.min.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery.validate.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../Scripts/InputMask.js" type="text/javascript"></script>
     <%-- Refer to reCaptcha API --%>
     <%--<script src="https://www.google.com/recaptcha/api.js?onload=renderRecaptcha&render=explicit" async="async" defer="defer"></script>--%>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= ConfigurationManager.AppSettings["captchaSiteKey"] %>"></script>
-    
+
 
     <%-- https://www.c-sharpcorner.com/article/integration-of-google-recaptcha-in-websites/ --%>
 
     <%--<script src="../Scripts/jquery.cookie.js"></script>--%>
 
-     
+
 
     <style>
         /*h3 {
@@ -137,10 +142,10 @@
             padding: 3px;
         }
 
-        .tt-selectable:hover,
-        .tt-selectable:focus {
-            background-color: lightgreen;
-        }
+            .tt-selectable:hover,
+            .tt-selectable:focus {
+                background-color: lightgreen;
+            }
 
         .tooltip2 {
             position: relative;
@@ -149,26 +154,26 @@
             font-weight: bold;
         }
 
-        .tooltip2 .tooltiptext2 {
-            visibility: hidden;
-            width: 120px;
-            background-color: grey;
-            color: #FFF;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            font-weight: normal;
-            /* Position the tooltip. */
-            position: absolute;
-            z-index: 1;
-            top: -5px;
-            left: 105%;
-            /* Fade in tooltip - takes 1 second to go from 0% to 100% opacity. */
-            opacity: 0;
-            transition: opacity 1s;
-        }
+            .tooltip2 .tooltiptext2 {
+                visibility: hidden;
+                width: 120px;
+                background-color: grey;
+                color: #FFF;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px;
+                font-weight: normal;
+                /* Position the tooltip. */
+                position: absolute;
+                z-index: 1;
+                top: -5px;
+                left: 105%;
+                /* Fade in tooltip - takes 1 second to go from 0% to 100% opacity. */
+                opacity: 0;
+                transition: opacity 1s;
+            }
 
-        /*.tooltip2 .tooltiptext2::after {
+            /*.tooltip2 .tooltiptext2::after {
         content: "";
         position: absolute;
         top: 50%;
@@ -178,16 +183,35 @@
         border-style: solid;
         border-color: transparent black transparent transparent;
         }*/
-        .tooltip2:hover .tooltiptext2 {
-            visibility: visible;
-            opacity: 1;
-        }
+            .tooltip2:hover .tooltiptext2 {
+                visibility: visible;
+                opacity: 1;
+            }
 
-        .help-block{
+        .help-block {
             font-weight: normal;
             color: #AAA;
         }
 
+        .requiredStar:after {
+            content: "*";
+            font-weight: bold;
+            color: red;
+        }
+
+        #requiredFieldLabel {
+            color: red;
+            font-size: 10pt;
+        }
+
+        .leftAlign {
+            text-align: left;
+        }
+
+        #btnConfirm, #btnSubmit {
+            background-color: darkseagreen;
+            color: #000;
+        }
     </style>
 
 </head>
@@ -243,10 +267,23 @@
                     </p>
                     <br />
                     <p class="contentWords">
+                        <strong>JABSOM medical trainees (i.e., medical students, residents or fellows)</strong>: If you meet the following criteria,
+                    </p>
+                    <ul class="contentWords">
+                        <li>You are the Principal Investigator (PI) of this research project</li>
+                        <li>You will be the first author of forthcoming publications related to this research project</li>
+                    </ul>
+                    <p class="contentWords">
+                        you can directly schedule a consultation appointment through the Biostatistics Core Facility <a href="https://qhs.jabsom.hawaii.edu/biostatistics-core/consulting/" class="greenLink"><strong>medical trainee consultation calendar </strong></a>
+                        (no need to submit a separate JABSOM Biostatistics Core Facility request form). 
+                    </p>
+                    <br />
+                    <p class="contentWords">
                         Please complete the fields below with your contact information.
                     </p>
                 </div>
                 <hr />
+                <p class="contentWords" id="requiredFieldLabel">Fields marked with an asterisk (*) are required.</p>
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <h4 class="text-center"><b>Investigator Information</b></h4>
@@ -260,15 +297,15 @@
             </div>
         </div>--%>
                 <div class="row form-group-md">
-                    <label class="col-sm-2 control-label" for="txtFirstName">First name</label>
+                    <label class="col-sm-2 control-label requiredStar" for="txtFirstName">First name</label>
                     <div class="col-sm-2">
-                        <input class="form-control" type="text" name="txtFirstName" id="txtFirstName" placeholder="First name" runat="server" />
+                        <input class="form-control requiredStar" type="text" name="txtFirstName" id="txtFirstName" placeholder="First name" runat="server" />
                     </div>
-                    <label class="col-sm-2 control-label" for="txtLastName">Last name</label>
+                    <label class="col-sm-2 control-label requiredStar" for="txtLastName">Last name</label>
                     <div class="col-sm-2">
                         <input class="form-control" type="text" name="txtLastName" id="txtLastName" placeholder="Last name" runat="server" />
                     </div>
-                    <label class="col-sm-1 control-label" for="ddlDegree">Degree</label>
+                    <label class="col-sm-1 control-label requiredStar" for="ddlDegree">Degree</label>
                     <div class="col-sm-3">
                         <%--<input class="form-control" type="text" name="txtDegree" id="txtDegree" placeholder="Degree" runat="server" />--%>
                         <asp:DropDownList ID="ddlDegree" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -283,16 +320,16 @@
                 </div>
                 <br />
                 <div class="row form-group-md">
-                    <label class="col-sm-2 control-label" for="txtEmail">Email</label>
+                    <label class="col-sm-2 control-label requiredStar" for="txtEmail">Email</label>
                     <div class="col-sm-2">
                         <input class="form-control" type="text" name="txtEmail" id="txtEmail" placeholder="Email" runat="server" />
                     </div>
-                    <label class="col-sm-2 control-label" for="txtPhone">
+                    <label class="col-sm-2 control-label requiredStar" for="txtPhone">
                         Phone number
                 <%--<p class="help-block">(only enter numbers)</p>--%>
                     </label>
                     <div class="col-sm-2">
-                        <input class="form-control phoneNum" type="text" name="txtPhone" id="txtPhone" placeholder="Phone" runat="server" />
+                        <input class="form-control phoneNum requiredStar" type="text" name="txtPhone" id="txtPhone" placeholder="Phone" runat="server" />
                     </div>
                     <%--<div class="col-xs-2 col-md-2">
                         <label for="chkPilot">Pilot Investigator</label>
@@ -301,11 +338,11 @@
                 </div>
                 <br />
                 <div class="row form-group-md">
-                    <label class="col-sm-2 control-label" for="txtDept">Organization/Department</label>
+                    <label class="col-sm-2 control-label requiredStar" for="txtDept">Organization/Department</label>
                     <div class="col-sm-5">
                         <input class="form-control typeahead" type="text" name="txtDept" id="txtDept" placeholder="Organization/Department" runat="server" onchange="updateId(this)" />
                     </div>
-                    <label class="col-sm-2 control-label">Investigator status</label>
+                    <label class="col-sm-2 control-label requiredStar">Investigator status</label>
                     <div class="col-sm-3">
                         <%--<select class="form-control" name="ddlPIStatus">
                             <option value="UH Faculty">UH Faculty</option>
@@ -339,7 +376,7 @@
                     <div>
                         <div class="col-sm-4">
                             <label for="chkJuniorPIYes">Is PI a </label>
-                            <div class="tooltip2">junior investigator<span class="tooltiptext2">Assistant Professor, Researcher, Specialist or below</span>?</div>
+                            <div class="tooltip2 requiredStar">junior investigator<span class="tooltiptext2">Assistant Professor, Researcher, Specialist or below</span>?</div>
                             <%--<div class="tooltip">Help!<span class="tooltiptext">Hello</span></div>--%>
                         </div>
                         <div class="col-sm-2">
@@ -354,7 +391,7 @@
                 <div class="row" id="divMentorQ">
                     <div>
                         <div class="col-sm-4">
-                            <label for="chkMentorYes">Does PI have mentor?</label>
+                            <label for="chkMentorYes" class="requiredStar">Does PI have mentor?</label>
                         </div>
                         <div class="col-sm-2">
                             <asp:CheckBox ID="chkMentorYes" value="1" runat="server" Text="Yes"></asp:CheckBox>
@@ -368,19 +405,19 @@
 
                 <div class="row" id="divMentor">
                     <div class="col-sm-2 text-left">
-                        <label class="control-label" for="txtTitle">Mentor first name:</label>
+                        <label class="control-label requiredStar" for="txtTitle">Mentor first name:</label>
                     </div>
                     <div class="col-sm-2">
                         <input class="form-control" type="text" name="txtMentorFirstName" id="txtMentorFirstName" runat="Server" />
                     </div>
                     <div class="col-sm-2 text-right">
-                        <label class="control-label" for="txtTitle">Mentor last name:</label>
+                        <label class="control-label requiredStar" for="txtTitle">Mentor last name:</label>
                     </div>
                     <div class="col-sm-2">
                         <input class="form-control" type="text" name="txtMentorLastName" id="txtMentorLastName" runat="Server" />
                     </div>
                     <div class="col-sm-1 text-right">
-                        <label class="control-label" for="txtTitle">Email:</label>
+                        <label class="control-label requiredStar" for="txtTitle">Email:</label>
                     </div>
                     <div class="col-sm-3">
                         <input class="form-control" type="text" name="txtMentorEmail" id="txtMentorEmail" runat="Server" />
@@ -394,7 +431,7 @@
                     </div>
                 </div>
                 <div class="row form-group-md">
-                    <label class="col-sm-2 control-label" for="txtProjectTitle">Project title</label>
+                    <label class="col-sm-2 control-label requiredStar" for="txtProjectTitle">Project title</label>
                     <div class="col-sm-10">
                         <input class="form-control" type="text" name="txtProjectTitle" id="txtProjectTitle" placeholder="Project title" runat="server" />
                     </div>
@@ -402,11 +439,11 @@
                 <br />
                 <div class="row">
                     <label class="col-sm-2 control-label" for="txtProjectSummary">
-                        Summary of project and QHS need
+                        Project Summary
                     </label>
                     <div class="col-sm-10">
                         <textarea class="form-control noresize" rows="5" id="txtProjectSummary" name="txtProjectSummary" runat="server"></textarea>
-                        <p class="help-block">Please provide a short summary of your project: description of data, outcomes, and a short statement of your service needs. It will be helpful for QHS to evaluate your need ahead of our initial consultation. (4000 character limit)</p>
+                        <p class="help-block">Providing a description of data, outcome, and service need will be helpful to the Biostatistics Core Facility prior to our initial consultation. (4000 character limit)</p>
 
                     </div>
                 </div>
@@ -415,7 +452,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        Study Area(s)<span class="help-block">(check all that apply)</span>
+                        <span class="requiredStar">Study Area(s)</span><span class="help-block">(check all that apply)</span>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblStudyArea">
@@ -518,7 +555,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        Health Database(s) Utilized<span class="help-block">(check all that apply)</span>
+                        <span class="requiredStar">Health Database(s) Utilized</span><span class="help-block">(check all that apply)</span>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblHealthData">
@@ -563,7 +600,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        Study Type<span class="help-block">(check all that apply)</span>
+                        <span class="requiredStar">Study Type</span><span class="help-block">(check all that apply)</span>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblStudyType">
@@ -608,7 +645,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        Study Population<span class="help-block">(check all that apply)</span>
+                        <span class="requiredStar">Study Population</span><span class="help-block">(check all that apply)</span>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblStudyPopulation">
@@ -639,7 +676,7 @@
                         <div class="row">
                             <div class="col-sm-4" id="divHealthDisparity">
                                 <div class="col-sm-3">
-                                    <label for="chkHealthDisparityYes">Health disparity?</label>
+                                    <label for="chkHealthDisparityYes" class="requiredStar">Health disparity?</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <asp:CheckBox ID="chkHealthDisparityYes" runat="server" Text="Yes"></asp:CheckBox>
@@ -651,7 +688,7 @@
                                     <asp:CheckBox ID="chkHealthDisparityNA" runat="server" Text="N/A"></asp:CheckBox>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-2">
                                 <label class="control-label" for="txtStudyPopulationOther">Specify:</label>
                                 <input class="form-control" type="text" name="txtStudyPopulationOther" id="txtStudyPopulationOther" placeholder="International Populations - Specify" runat="Server" />
                                 <br />
@@ -668,8 +705,8 @@
                 <div class="row">
                     <div class="col-sm-2">
                         <label class="control-label">
-                            Type(s) of support needed
-                <span class="help-block">(check all that apply)</span>
+                            <span class="requiredStar">Type(s) of support needed</span>
+                            <span class="help-block">(check all that apply)</span>
                         </label>
                     </div>
                     <div class="col-sm-10">
@@ -773,7 +810,7 @@
                 <div class="row" id="divPilotQ">
                     <div>
                         <div class="col-sm-4">
-                            <label for="chkPilotYes">Is project a funded infrastructure grant pilot study?</label>
+                            <label for="chkPilotYes" class="requiredStar">Is project a funded infrastructure grant pilot study?</label>
                         </div>
                         <div class="col-sm-2">
                             <asp:CheckBox ID="chkPilotYes" value="1" runat="server" Text="Yes"></asp:CheckBox>
@@ -788,7 +825,7 @@
                 <div class="row" id="divProposalQ">
                     <div>
                         <div class="col-sm-4">
-                            <label for="chkProposalYes">Is this project for a grant proposal?</label>
+                            <label for="chkProposalYes" class="requiredStar">Is this project for a grant proposal?</label>
                         </div>
                         <div class="col-sm-2">
                             <asp:CheckBox ID="chkProposalYes" value="1" runat="server" Text="Yes"></asp:CheckBox>
@@ -803,7 +840,7 @@
                 <div class="row divGrantProposal" id="divGrantProposal">
                     <div class="col-sm-6">
                         <div class="col-sm-9 text-left">
-                            <label class="control-label" for="txt">Is this application to a pilot program of a UH infrastructure grant?</label>
+                            <label class="control-label requiredStar" for="txt">Is this application to a pilot program of a UH infrastructure grant?</label>
                         </div>
                         <div class="col-sm-3">
                             <input type="checkbox" id="chkIsUHPilotGrantYes" value="1" runat="server" />Yes
@@ -813,7 +850,7 @@
                     </div>
                     <div class="col-sm-6" id="divGrantProposalFundingAgency">
                         <div class="col-sm-4 text-left">
-                            <label class="control-label" for="ddlUHGrant">What is the grant name?</label>
+                            <label class="control-label requiredStar" for="ddlUHGrant">What is the grant name?</label>
                         </div>
                         <div class="col-sm-6">
                             <input class="form-control" type="text" name="txtGrantProposalFundingAgency"
@@ -829,7 +866,7 @@
 
                 <div class="row">
                     <label class="col-sm-2 control-label">
-                        What is the funding source to support this request?<span class="help-block">(check all that apply)</span> <%--Is your project affiliated with any of the following grants?--%>
+                        <span class="requiredStar">What is the funding source to support this request?</span><span class="help-block">(check all that apply)</span> <%--Is your project affiliated with any of the following grants?--%>
                     </label>
                     <div class="col-sm-10">
                         <table class="table" id="tblFunding">
@@ -918,7 +955,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class='input-group date' id='dtpDueDate'>
-                            <span class="input-group-addon">
+                            <span class="input-group-addon" id="spDueDate">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                             <asp:TextBox ID="txtDueDate" runat="server" class="form-control"></asp:TextBox>
@@ -945,6 +982,36 @@
                     </div>
                 </div>
                 <br />
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label class="control-label">Select up to three dates/times you would like to meet for a consultation:</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group date' id='dtpConsult1'>
+                            <span class="input-group-addon" id="spConsult1">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <asp:TextBox ID="txtConsult1" runat="server" class="form-control"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group date' id='dtpConsult2'>
+                            <span class="input-group-addon" id="spConsult2">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <asp:TextBox ID="txtConsult2" runat="server" class="form-control"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group date' id='dtpConsult3'>
+                            <span class="input-group-addon" id="spConsult3">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <asp:TextBox ID="txtConsult3" runat="server" class="form-control"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
 
                 <%--[Not including bioinformatics for now]--%>
                 <%--<div class="row" id="divProjectTypeQ">
@@ -1007,10 +1074,13 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <asp:Button ID="btnSubmit" name="btnSubmit" runat="server" Text="Submit" class="btn center-block" OnClick="btnSubmit_Click" PnClientClick="ClientSideClick(this)" UseSubmitBehavior="false" />
+                        <asp:Button ID="btnConfirm" name="btnConfirm" runat="server" Text="Submit" class="btn center-block" OnClick="btnConfirm_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="false" />
                         <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
-                            data-toggle="modal" data-target="#warningModal">
+                            data-toggle="modal" data-backdrop="static" data-target="#warningModal">
                             Warning Modal</button>
+                        <button type="button" style="display: none" id="btnShowReviewModal" class="btn btn-info btn-lg"
+                            data-toggle="modal" data-backdrop="static" data-target="#reviewModal">
+                            Review Modal</button>
                     </div>
                 </div>
                 <div class="hidden">
@@ -1028,7 +1098,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <button type="button" class="close btnClose" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <img style="height: 100px; width: 100px; display: block; margin-left: auto; margin-right: auto;"
                                 src="../images/Stop_sign.png" />
                             <br />
@@ -1043,7 +1113,558 @@
                             <p class="txt-warning" id="textWarning"></p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default btnClose" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="reviewModal" class="modal fade">
+                <div class="modal-dialog" style="width: 90%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close btnClose" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <img style="height: 100px; width: 100px; display: block; margin-left: auto; margin-right: auto;"
+                                src="../images/AttentionSign.png" />
+                            <br />
+                            <div id="formReview" class="modal-title">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h4 class="text-center"><strong>Please review your submission below before proceeding.</strong></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4><strong>Investigator Info</strong></h4>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row form-group-md">
+                                    <label class="col-sm-2 control-label" for="txtFirstName_review">First name</label>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="txtFirstName_review" id="txtFirstName_review" runat="server" readonly="readonly" />
+                                    </div>
+                                    <label class="col-sm-2 control-label" for="txtLastName_review">Last name</label>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="txtLastName_review" id="txtLastName_review" runat="server" readonly="readonly" />
+                                    </div>
+                                    <label class="col-sm-1 control-label" for="txtDegree_review">Degree</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="text" name="txtDegree_review" id="txtDegree_review" runat="server" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row form-group-md">
+                                    <label class="col-sm-2 control-label" for="txtEmail_review">Email</label>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="txtEmail_review" id="txtEmail_review" placeholder="Email" runat="server" readonly="readonly" />
+                                    </div>
+                                    <label class="col-sm-2 control-label" for="txtPhone_review">
+                                        Phone number
+                                    </label>
+                                    <div class="col-sm-2">
+                                        <input class="form-control phoneNum" type="text" name="txtPhone_review" id="txtPhone_review" placeholder="Phone" runat="server" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row form-group-md">
+                                    <label class="col-sm-2 control-label" for="txtDept_review">Organization/Department</label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control typeahead" type="text" name="txtDept_review" id="txtDept_review" placeholder="Organization/Department" runat="server" readonly="readonly" />
+                                    </div>
+                                    <label class="col-sm-2 control-label" for="txtPIStatus_review">Investigator status</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control typeahead" type="text" name="txtPIStatus_review" id="txtPIStatus_review" runat="server" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="chkJuniorPIYes">Is PI a junior investigator?</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <asp:CheckBox ID="chkJuniorPIYes_review" value="1" runat="server" Text="Yes" Enabled="false"></asp:CheckBox>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <asp:CheckBox ID="chkJuniorPINo_review" value="0" runat="server" Text="No" Enabled="false"></asp:CheckBox>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="chkMentorYes">Does PI have mentor?</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <asp:CheckBox ID="chkMentorYes_review" value="1" runat="server" Text="Yes" Enabled="false"></asp:CheckBox>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <asp:CheckBox ID="chkMentorNo_review" value="0" runat="server" Text="No" Enabled="false"></asp:CheckBox>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row" id="divMentor_review" runat="server" visible="false">
+                                    <div class="col-sm-2 text-left">
+                                        <label class="control-label" for="txtMentorFirstName_review">Mentor first name:</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="txtMentorFirstName_review" id="txtMentorFirstName_review" runat="Server" readonly="readonly" />
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        <label class="control-label" for="txtMentorLastName_review">Mentor last name:</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="txtMentorLastName_review" id="txtMentorLastName_review" runat="Server" readonly="readonly" />
+                                    </div>
+                                    <div class="col-sm-1 text-right">
+                                        <label class="control-label" for="txtMentorEmail_review">Email:</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="text" name="txtMentorEmail_review" id="txtMentorEmail_review" runat="Server" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <br />
+
+                                <hr />
+                                <%--<h4 style="background-color: cornflowerblue">Project Info</h4>--%>
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4><strong>Project Info</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row form-group-md">
+                                    <label class="col-sm-2 control-label" for="txtProjectTitle_review">Project title</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" name="txtProjectTitle_review" id="txtProjectTitle_review" runat="server" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <label class="col-sm-2 control-label" for="txtProjectSummary_review">
+                                        Project Summary
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control noresize" rows="5" id="txtProjectSummary_review" name="txtProjectSummary_review" runat="server" readonly="readonly"></textarea>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <%--<div class="row">
+                                    <div class="col-sm-6">
+                                        <strong>Study Area:</strong>
+                                        <asp:Label ID="lblStudyArea" runat="server"></asp:Label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong>Health Database(s) Utilized:</strong>
+                                        <asp:Label ID="lblHealthData" runat="server"></asp:Label>
+                                    </div>
+                                </div>
+                                <br />--%>
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">
+                                        <span>Study Area(s)</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <table class="table">
+                                            <tbody>
+                                                <asp:Repeater ID="rptStudyArea_review" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td style="width: 50%">
+                                                                <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                <%# Eval("Name") %>
+                                                            </td>
+                                                    </ItemTemplate>
+                                                    <AlternatingItemTemplate>
+                                                        <td style="width: 50%">
+                                                            <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                            <%# Eval("Name") %>
+                                                        </td>
+                                                        </tr>
+                                                    </AlternatingItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                        <div class="row" id="divStudyAreaOther_review" runat="server">
+                                            <div class="col-sm-6">
+                                                <label class="control-label" for="txtStudyAreaOther_review">Other:</label>
+                                                <input class="form-control" type="text" name="txtStudyAreaOther_review" id="txtStudyAreaOther_review" placeholder="Study Area(s) - Other" runat="Server" readonly="readonly" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">
+                                        <span>Health Database(s) Utilized</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <table class="table">
+                                            <%--runat="server"--%>
+                                            <tbody>
+                                                <asp:Repeater ID="rptHealthData_review" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td style="width: 50%">
+                                                                <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                <%# Eval("Name") %>
+                                                            </td>
+                                                    </ItemTemplate>
+                                                    <AlternatingItemTemplate>
+                                                        <td style="width: 50%">
+                                                            <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                            <%# Eval("Name") %>
+                                                        </td>
+                                                        </tr>
+                                                    </AlternatingItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                        <div class="row" id="divHealthDataOther_review" runat="server">
+                                            <div class="col-sm-6">
+                                                <label class="control-label" for="txtHealthDataOther_review">Other:</label>
+                                                <input class="form-control" type="text" name="txtHealthDataOther_review" id="txtHealthDataOther_review" placeholder="Health Database(s) Utilized - Other" runat="Server" readonly="readonly" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">
+                                        <span>Study Type</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <table class="table">
+                                            <tbody>
+                                                <asp:Repeater ID="rptStudyType_review" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td style="width: 50%">
+                                                                <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                <%# Eval("Name") %>
+                                                            </td>
+                                                    </ItemTemplate>
+                                                    <AlternatingItemTemplate>
+                                                        <td style="width: 50%">
+                                                            <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                            <%# Eval("Name") %>
+                                                        </td>
+                                                        </tr>
+                                                    </AlternatingItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                        <div class="row" id="divStudyTypeOther_review" runat="server">
+                                            <div class="col-sm-6">
+                                                <label class="control-label" for="txtStudyTypeOther_review">Other:</label>
+                                                <input class="form-control" type="text" name="txtStudyTypeOther_review" id="txtStudyTypeOther_review" placeholder="Study Type - Other" runat="Server" readonly="readonly" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">
+                                        <span>Study Population</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <table class="table">
+                                            <tbody>
+                                                <asp:Repeater ID="rptStudyPopulation_review" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td style="width: 50%">
+                                                                <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                <%# Eval("Name") %>
+                                                            </td>
+                                                    </ItemTemplate>
+                                                    <AlternatingItemTemplate>
+                                                        <td style="width: 50%">
+                                                            <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                            <%# Eval("Name") %>
+                                                        </td>
+                                                        </tr>
+                                                    </AlternatingItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-4" id="divHealthDisparity_review" runat="server">
+                                                <div class="col-sm-3">
+                                                    <label for="chkHealthDisparityYes_review">Health disparity?</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <asp:CheckBox ID="chkHealthDisparityYes_review" runat="server" Text="Yes" Enabled="false"></asp:CheckBox>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <asp:CheckBox ID="chkHealthDisparityNo_review" runat="server" Text="No" Enabled="false"></asp:CheckBox>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <asp:CheckBox ID="chkHealthDisparityNA_review" runat="server" Text="N/A" Enabled="false"></asp:CheckBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6" id="divStudyPopulationOther_review" runat="server">
+                                                <label class="control-label" for="txtStudyPopulationOther_review">Specify:</label>
+                                                <input class="form-control" type="text" name="txtStudyPopulationOther_review" id="txtStudyPopulationOther_review" placeholder="International Populations - Specify" runat="Server" readonly="readonly" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="control-label">
+                                            <span>Type(s) of support needed</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <table class="table">
+                                            <tbody>
+                                                <asp:Repeater ID="rptService_review" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td style="width: 50%">
+                                                                <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                                <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                                <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                                <%# Eval("Name") %>
+                                                            </td>
+                                                    </ItemTemplate>
+                                                    <AlternatingItemTemplate>
+                                                        <td style="width: 50%">
+                                                            <asp:CheckBox ID="chkId" runat="server" Enabled="false"></asp:CheckBox>
+                                                            <asp:HiddenField ID="Id" Value='<%#Eval("Id")%>' runat="server" />
+                                                            <asp:HiddenField ID="BitValue" Value='<%#Eval("BitValue")%>' runat="server" />
+                                                            <%# Eval("Name") %>
+                                                        </td>
+                                                        </tr>
+                                                    </AlternatingItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-6" id="divServiceOther_review" runat="server">
+                                                <label class="control-label" for="txtServiceOther_review">Other:</label>
+                                                <input class="form-control" type="text" name="txtServiceOther_review" id="txtServiceOther_review" runat="Server" readonly="readonly" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="row" id="divPilotQ_review">
+                                    <div>
+                                        <div class="col-sm-4">
+                                            <label for="chkPilotYes_review">Is project a funded infrastructure grant pilot study?</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkPilotYes_review" value="1" runat="server" Text="Yes" Enabled="false"></asp:CheckBox>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkPilotNo_review" value="0" runat="server" Text="No" Enabled="false"></asp:CheckBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div class="row" id="divProposalQ_review">
+                                    <div>
+                                        <div class="col-sm-4">
+                                            <label for="chkProposalYes_review">Is this project for a grant proposal?</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkProposalYes_review" value="1" runat="server" Text="Yes" Enabled="false"></asp:CheckBox>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <asp:CheckBox ID="chkProposalNo_review" value="0" runat="server" Text="No" Enabled="false"></asp:CheckBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div class="row divGrantProposal" id="divGrantProposal_review" runat="server">
+                                    <div class="col-sm-6" id="divIsUHPilotGrant_review" runat="server">
+                                        <div class="col-sm-9 text-left">
+                                            <label for="chkIsUHPilotGrantYes_review">Is this application to a pilot program of a UH infrastructure grant?</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <asp:CheckBox ID="chkIsUHPilotGrantYes_review" value="1" runat="server" Text="Yes" Enabled="false"></asp:CheckBox>
+                                            &nbsp;
+                                            <asp:CheckBox ID="chkIsUHPilotGrantNo_review" value="0" runat="server" Text="No" Enabled="false"></asp:CheckBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6" id="divGrantProposalFundingAgency_review" runat="server">
+                                        <div class="col-sm-4 text-left">
+                                            <label class="control-label requiredStar" for="txtGrantProposalFundingAgency_review">What is the grant name?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input class="form-control" type="text" name="txtGrantProposalFundingAgency_review" id="txtGrantProposalFundingAgency_review" runat="Server" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+
+
+                                <hr />
+
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">
+                                        <span>What is the funding source to support this request?</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <table class="table">
+                                            <tbody>
+                                                <asp:Repeater ID="rptFunding_review" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td style="width: 25%">
+                                                <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                                <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                                <%# Eval("Name1") %>
+                                            </td>
+                                            <td style="width: 25%">
+                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                                <%# Eval("Name2") %>
+                                            </td>
+                                    </ItemTemplate>
+                                    <AlternatingItemTemplate>
+                                        <td style="width: 25%">
+                                            <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                            <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                            <%# Eval("Name1") %>
+                                        </td>
+                                        <td style="width: 25%">
+                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                            <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                            <%# Eval("Name2") %>
+                                        </td>
+                                        </tr>
+                                    </AlternatingItemTemplate>
+                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-4" id="divDepartmentFunding_review" runat="server">
+                                                <label class="control-label" for="txtDepartmentFunding_review">Department Funding</label>
+                                                <input class="form-control" type="text" name="txtDepartmentFunding_review" id="txtDepartmentFunding_review" readonly="readonly" runat="Server" />
+                                            </div>
+                                            <div class="col-sm-1"></div>
+                                            <div class="col-sm-3" id="divFundingOther_review" runat="server">
+                                                <label class="control-label" for="txtFundingOther_review">Other:</label>
+                                                <input class="form-control" type="text" name="txtFundingOther_review" id="txtFundingOther_review" readonly="readonly" runat="Server" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div id="divDeptFundMou_review" runat="server">
+                                                <div class="col-sm-6">
+                                                    <div class="col-sm-4">
+                                                        <label for="chkDeptFundMouYes_review">Is this project supported by an MOU?</label>
+                                                    </div>
+                                                    <div class="col-sm-1">
+                                                        <asp:CheckBox ID="chkDeptFundMouYes_review" runat="server" Text="Yes" Enabled="false" />
+                                                    </div>
+                                                    <div class="col-sm-1">
+                                                        <asp:CheckBox ID="chkDeptFundMouNo_review" runat="server" Text="No" Enabled="false" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+
+                                <hr />
+
+
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="control-label">Important deadlines</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="txtDueDate_review" id="txtDueDate_review" readonly="readonly" runat="Server" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label class="control-label">Biostatistics faculty/staff preference (if any)</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="text" name="txtBiostat_review" id="txtBiostat_review" readonly="readonly" runat="Server" />
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Select up to three dates/times you would like to meet for a consultation:</label>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input class="form-control" type="text" name="txtConsult1_review" id="txtConsult1_review" readonly="readonly" runat="Server" />
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input class="form-control" type="text" name="txtConsult2_review" id="txtConsult2_review" readonly="readonly" runat="Server" />
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input class="form-control" type="text" name="txtConsult3_review" id="txtConsult3_review" readonly="readonly" runat="Server" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h4 class="text-center"><strong>Click "Submit" to submit your response or "Close" to go back and edit your response.</strong></h4>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5"></div>
+                                <span class="col-sm-1"><asp:Button ID="btnSubmit" name="btnSubmit" runat="server" Text="Submit" class="btn center-block" OnClick="btnSubmit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="false" /></span>
+                                <span class="col-sm-1"><button type="button" class="btn btn-default btnClose"  data-dismiss="modal">Close</button></span>
+                                <div class="col-sm-5"></div>
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 </div>
@@ -1067,13 +1688,108 @@
             bindForm();
 
             $(function () {
-                $('#dtpDueDate').datepicker({
-                    todayHighlight: true,
-                    format: "mm/dd/yyyy",
-                    autoclose: true,
-                    orientation: "top"
+
+
+                $("#spDueDate").click(function () {
+                    $("#txtDueDate").datepicker({
+                        changeMonth: true,
+                        changeYear: true
+                    });
+                    $("#txtDueDate").datepicker("show");
                 });
+
+
+                $('#txtDueDate').datepicker({
+                    changeMonth: true,
+                    changeYear: true
+                });
+
+
+
+                $("#spConsult1").click(function () {
+                    $("#txtConsult1").datetimepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        controlType: 'select',
+                        timeInput: true,
+                        timeFormat: 'hh:mm tt',
+                        hourMin: 7,
+                        hourMax: 17,
+                        stepMinute: 30
+                    });
+                    $("#txtConsult1").datepicker("show");
+                });
+
+                $("#txtConsult1").datetimepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    controlType: 'select',
+                    timeInput: true,
+                    timeFormat: 'hh:mm tt',
+                    hourMin: 7,
+                    hourMax: 17,
+                    stepMinute: 30
+
+                });
+
+
+                $("#spConsult2").click(function () {
+                    $("#txtConsult2").datetimepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        controlType: 'select',
+                        timeInput: true,
+                        timeFormat: 'hh:mm tt',
+                        hourMin: 7,
+                        hourMax: 17,
+                        stepMinute: 30
+                    });
+                    $("#txtConsult2").datepicker("show");
+                });
+
+                $("#txtConsult2").datetimepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    controlType: 'select',
+                    timeInput: true,
+                    timeFormat: 'hh:mm tt',
+                    hourMin: 7,
+                    hourMax: 17,
+                    stepMinute: 30
+                });
+
+
+                $("#spConsult3").click(function () {
+                    $("#txtConsult3").datetimepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        controlType: 'select',
+                        timeInput: true,
+                        timeFormat: 'hh:mm tt',
+                        hourMin: 7,
+                        hourMax: 17,
+                        stepMinute: 30
+                    });
+                    $("#txtConsult3").datepicker("show");
+                });
+
+                $("#txtConsult3").datetimepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    controlType: 'select',
+                    timeInput: true,
+                    timeFormat: 'hh:mm tt',
+                    hourMin: 7,
+                    hourMax: 17,
+                    stepMinute: 30
+                });
+
+
+
+
             });
+
+
 
             $(function () {
                 $(':text').bind('keydown', function (e) {
@@ -1086,7 +1802,7 @@
                 });
             });
 
-            //Automatically put parentheses and dash for phone number fields
+            // Automatically put parentheses and dash for phone number fields
             $(function () {
                 var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-##############" }];
                 $('.phoneNum').inputmask({
@@ -1094,6 +1810,113 @@
                     greedy: false,
                     definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
                 });
+            });
+
+            // Set checkboxes in repeater to store in local storage upon clicking
+
+            //++  StudyArea
+            var studyAreaValues = JSON.parse(localStorage.getItem('studyAreaValues')) || {};
+            var $studyAreaCheckboxes = $('#tblStudyArea :checkbox');
+
+            $studyAreaCheckboxes.on('change', function () {
+                $studyAreaCheckboxes.each(function () {
+                    studyAreaValues[this.id] = this.checked;
+                });
+                localstorage.setItem("studyAreaValues", JSON.stringify(studyAreaValues));
+            });
+
+            $.each(studyAreaValues, function (key, value) {
+                $("#" + key).prop('checked', value);
+            });
+
+            //++  HealthData
+            var healthDataValues = JSON.parse(localStorage.getItem('healthDataValues')) || {};
+            var $healthDataCheckboxes = $('#tblHealthData :checkbox');
+
+            $healthDataCheckboxes.on('change', function () {
+                $healthDataCheckboxes.each(function () {
+                    healthDataValues[this.id] = this.checked;
+                });
+                localstorage.setItem("healthDataValues", JSON.stringify(healthDataValues));
+            });
+
+            $.each(healthDataValues, function (key, value) {
+                $("#" + key).prop('checked', value);
+            });
+
+            //++  StudyType
+            var studyTypeValues = JSON.parse(localStorage.getItem('studyTypeValues')) || {};
+            var $studyTypeCheckboxes = $('#tblStudyType :checkbox');
+
+            $studyTypeCheckboxes.on('change', function () {
+                $studyTypeCheckboxes.each(function () {
+                    studyTypeValues[this.id] = this.checked;
+                });
+                localstorage.setItem("studyTypeValues", JSON.stringify(studyTypeValues));
+            });
+
+            $.each(studyTypeValues, function (key, value) {
+                $("#" + key).prop('checked', value);
+            });
+
+            //++  StudyPopulation
+            var studyPopulationValues = JSON.parse(localStorage.getItem('studyPopulationValues')) || {};
+            var $studyPopulationCheckboxes = $('#tblStudyPopulation :checkbox');
+
+            $studyPopulationCheckboxes.on('change', function () {
+                $studyPopulationCheckboxes.each(function () {
+                    studyPopulationValues[this.id] = this.checked;
+                });
+                localstorage.setItem("studyPopulationValues", JSON.stringify(studyPopulationValues));
+            });
+
+            $.each(studyPopulationValues, function (key, value) {
+                $("#" + key).prop('checked', value);
+            });
+
+            //++  Service
+            var serviceValues = JSON.parse(localStorage.getItem('serviceValues')) || {};
+            var $serviceCheckboxes = $('#tblService :checkbox');
+
+            $serviceCheckboxes.on('change', function () {
+                $serviceCheckboxes.each(function () {
+                    serviceValues[this.id] = this.checked;
+                });
+                localstorage.setItem("serviceValues", JSON.stringify(serviceValues));
+            });
+
+            $.each(serviceValues, function (key, value) {
+                $("#" + key).prop('checked', value);
+            });
+
+            //++  Funding
+            var fundingValues = JSON.parse(localStorage.getItem('fundingValues')) || {};
+            var $fundingCheckboxes = $('#tblFunding :checkbox');
+
+            $fundingCheckboxes.on('change', function () {
+                $fundingCheckboxes.each(function () {
+                    fundingValues[this.id] = this.checked;
+                });
+                localstorage.setItem("fundingValues", JSON.stringify(fundingValues));
+            });
+
+            $.each(fundingValues, function (key, value) {
+                $("#" + key).prop('checked', value);
+            });
+
+            // When close button in modal is clicked, rebinds each checkbox value in a repeater to its checkbox.
+            $(".btnClose").click(function () {
+
+                /// Searches repeater checkboxes and checks the front end checkboxes to its original value upon submission.
+                $("input[id^=rpt]").each(function () {
+
+                    if ($(this).attr('checked')) {     // checkedness of input
+
+                        $(this).prop('checked', true); // current state of checkbox
+                    }
+
+                });
+
             });
 
 
@@ -1176,10 +1999,10 @@
 
 
             $("#chkHealthDisparityYes").change(function () {
-            if (this.checked) {
-                $('#chkHealthDisparityNo').prop('checked', false);
-                $('#chkHealthDisparityNA').prop('checked', false);
-            }
+                if (this.checked) {
+                    $('#chkHealthDisparityNo').prop('checked', false);
+                    $('#chkHealthDisparityNA').prop('checked', false);
+                }
             });
 
             $("#chkHealthDisparityNo").change(function () {
@@ -1243,19 +2066,19 @@
 
                 });
 
-                $('#tblStudyPopulation').on('click',
-                    'input[type="checkbox"]',
-                    function () {
-                        if ($(this).is($('#rptStudyPopulation_chkId_0')) // Native Hawaiians,
-                            //--- Pacific Islanders,
-                            //--- and Filipinos
-                            || $(this).is($('#rptStudyPopulation_chkId_1')) // Hawaii Populations
-                            || $(this).is($('#rptStudyPopulation_chkId_2')) // U.S. Populations
-                            || $(this).is($('#rptStudyPopulation_chkId_3')) // International Populations
-                        ) {
-                            ToggleDiv($(this), $('#divHealthDisparity'));
-                        }
-                    });
+            $('#tblStudyPopulation').on('click',
+                'input[type="checkbox"]',
+                function () {
+                    if ($(this).is($('#rptStudyPopulation_chkId_0')) // Native Hawaiians,
+                        //--- Pacific Islanders,
+                        //--- and Filipinos
+                        || $(this).is($('#rptStudyPopulation_chkId_1')) // Hawaii Populations
+                        || $(this).is($('#rptStudyPopulation_chkId_2')) // U.S. Populations
+                        || $(this).is($('#rptStudyPopulation_chkId_3')) // International Populations
+                    ) {
+                        ToggleDiv($(this), $('#divHealthDisparity'));
+                    }
+                });
 
             /// [Not including bioinformatics for now]
             //$("#chkProjectTypeBiostat").change(function () {
@@ -1552,7 +2375,7 @@
                 ddlUHGrant: {
                     required: true
                 },
-                txtGrantProposalFundingAgency:{
+                txtGrantProposalFundingAgency: {
                     required: true
                 }
                 //,
@@ -1640,21 +2463,24 @@
             });
         };
 
-        var reCaptchaCallback = function (response) {
-            if (response !== '') {
-                $('#lblRecaptchaMessage').css('color', 'green').html('Success');
-            }
-        };
+        // [] //
+        //var reCaptchaCallback = function (response) {
+        //    if (response !== '') {
+        //        $('#lblRecaptchaMessage').css('color', 'green').html('Success');
+        //    }
+        //};
 
-        $('button[type="button"]').click(function (e) {
-            var message = 'Please check the checkbox';
-            if (typeof (grecaptcha) != 'undefined') {
-                //var response = grecaptcha.getResponse();
-                (grecaptcha.getResponse().length === 0) ? (message = 'Captcha verification failed') : (message = 'Success!');
-            }
-            $('#lblrecaptchaMessage').html(message);
-            $('#lblrecaptchaMessage').css('color', (message.toLowerCase() == 'success!') ? "green" : "red");
-        });
+        //$('button[type="button"]').click(function (e) {
+        //    var message = 'Please check the checkbox';
+        //    if (typeof (grecaptcha) != 'undefined') {
+        //        //var response = grecaptcha.getResponse();
+        //        (grecaptcha.getResponse().length === 0) ? (message = 'Captcha verification failed') : (message = 'Success!');
+        //    }
+        //    $('#lblrecaptchaMessage').html(message);
+        //    $('#lblrecaptchaMessage').css('color', (message.toLowerCase() == 'success!') ? "green" : "red");
+        //});
+
+        // [] //
 
         //function ShowWarningModal() {
         //    $('#btnShowWarningModal').click();

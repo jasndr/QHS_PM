@@ -76,15 +76,15 @@
         <br />
             <div class="panel panel-success">
                 <div class="panel-heading">              
-                    <h4 class="text-center"><b>Mahalo for your request!  &mdash; Request ID # <%=Request.QueryString["Id"] %></b></h4>
+                    <h4 class="text-center"><b>Mahalo! We will be contacting your regarding your request soon.</b></h4>
                 </div>
             </div>
 
             <div class="text-center">
                 <h2></h2>
                 <br />
-                <h3><b>We will contact you soon regarding your request. For more information about the JABSOM Biostatistics Core Facility, feel free to contact us:</b></h3>
-                <br />
+                <%--<h3><b>We will contact you soon regarding your request. For more information about the JABSOM Biostatistics Core Facility, feel free to contact us:</b></h3>--%>
+               
                 <p style="font-size:120%;">
                     <%--<h4>Office of Biostatistics & Quantitative Health Sciences (BQHS)</h4>
                 <h4>University of Hawaii John A. Burns School of Medicine</h4>
@@ -98,9 +98,8 @@
                     University of Hawaii John A. Burns School of Medicine<br />
                     651 Ilalo Street, Medical Education Building, Suite 411<br />
                     Honolulu, HI 96813<br />
-                    Phone: (808) 692-1840<br />
-                    E-mail: qhs@hawaii.edu<br />
-                    <a href="http://biostat.jabsom.hawaii.edu/" target="_blank">http://biostat.jabsom.hawaii.edu/</a>
+                    E-mail: biostat@hawaii.edu<br />
+                    <a href="https://qhs.jabsom.hawaii.edu/biostatistics-core" target="_blank">https://qhs.jabsom.hawaii.edu/biostatistics-core</a>
                 </p>
             </div>
         </div>

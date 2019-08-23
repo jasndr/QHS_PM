@@ -607,6 +607,33 @@ namespace ProjectManagement.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPreferBiostatId;
         
         /// <summary>
+        /// txtConsult1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtConsult1;
+        
+        /// <summary>
+        /// txtConsult2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtConsult2;
+        
+        /// <summary>
+        /// txtConsult3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtConsult3;
+        
+        /// <summary>
         /// chkCompleted control.
         /// </summary>
         /// <remarks>

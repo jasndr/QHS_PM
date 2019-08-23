@@ -45,6 +45,12 @@ namespace ProjectManagement.Guest
     ///                                    file to build the "second database" functionality of the system.
     ///  2019MAY13 - Jason Delos Reyes  -  Updated notification email link to link with the proper Client Request review form.
     ///  2019MAY16 - Jason Delos Reyes  -  Replaced reCAPTCHA from v2 to v3 for increased security.
+    ///  2019JUL23 - Jason Delos Reyes  -  Added "Study Population" to list of errors as it previously was not part of the checks.
+    ///  2019AUG23 - Jason Delos Reyes  -  Added new verbiage to instructions.
+    ///                                 -  Added new "confirmation" pop-up modal in order to give users the option to review their 
+    ///                                    choices before saving it into the database for review.
+    ///                                 -  Added dates of consultation for individuals wanting to present their date/time availabilities
+    ///                                    to save time in consultation scheduling.
     /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
@@ -60,9 +66,9 @@ namespace ProjectManagement.Guest
                 //FillCapctha();
 
                 BindControl();
-
             }
         }
+
 
         /// <summary>
         /// Populates dropdowns and checkboxes with existing database values.
@@ -342,34 +348,365 @@ namespace ProjectManagement.Guest
         }
 
         /// <summary>
-        /// Checks if reCaptcha is valid. 
-        ///    - If it is valid, it saves the request into the database.
-        ///    - Otherwise, it creates a pop-up message saying that captcha verification has failed.
+        /// • Checks if validation form fields are valid.
+        ///     - If it is not valid, 
+        ///       it creates a pop-up message telling which validation has failed.
+        ///     - Otherwise, it sends to affirmation screen to verify that the submitted information is correct.
+        ///       From here, the user can choose to either go back and edit their choices, or submit to the 
+        ///       Biostatistics Core.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void btnSubmit_Click(object sender, EventArgs e)
+        protected void btnConfirm_Click(object sender, EventArgs e)
         {
-            bool isValid = IsReCaptchaValid();
 
             string validateForm = ValidateForm();
 
-            if (isValid && validateForm.Equals(string.Empty))
+            if (validateForm.Equals(string.Empty))
             {
-                int newRequestId = SaveRequest();
-                if (newRequestId > 0)
+
+                using (ClientRequestTracker cr = new ClientRequestTracker())
                 {
-                    SendEmailNotification(newRequestId);
-                    Response.Redirect(String.Format("MahaloRequest?Id={0}", newRequestId));
+                    // Fill out fields before
+                    txtFirstName_review.Value = txtFirstName.Value; //lblFirstName.Text = txtFirstName.Value;
+                    txtLastName_review.Value = txtLastName.Value; //lblLastName.Text = txtLastName.Value;
+                    txtDegree_review.Value = ddlDegree.SelectedItem.Text;//lblDegree.Text = ddlDegree.SelectedItem.Text;
+                    if (!txtDegreeOther.Value.Equals(string.Empty))
+                    {
+                        txtDegree_review.Value = txtDegree_review.Value + " - " + txtDegreeOther.Value;
+                    }//if (!txtDegreeOther.Value.Equals(string.Empty)) lblDegree.Text = lblDegree.Text + " - " + txtDegreeOther.Value;
+                    txtEmail_review.Value = txtEmail.Value;//lblEmail.Text = txtEmail.Value;
+                    txtPhone_review.Value = txtPhone.Value;//lblPhone.Text = txtPhone.Value;
+                    txtDept_review.Value = txtDept.Value;//lblDept.Text = txtDept.Value;
+                    txtPIStatus_review.Value = ddlPIStatus.SelectedItem.Text;//lblInvestStatus.Text = ddlPIStatus.SelectedItem.Text;
+                    chkJuniorPIYes_review.Checked = chkJuniorPIYes.Checked ? true : false;//lblJuniorPI.Text = chkJuniorPIYes.Checked ? "Yes" : "No";
+                    chkJuniorPINo_review.Checked = chkJuniorPINo.Checked ? true : false;
+                    chkMentorYes_review.Checked = chkMentorYes.Checked ? true : false;//lblMentor.Text = chkMentorYes.Checked ? "Yes" : "No";
+                    chkMentorNo_review.Checked = chkMentorNo.Checked ? true : false;
+                    if (chkMentorYes.Checked)
+                    {
+                        divMentor_review.Visible = true;
+                        txtMentorFirstName_review.Value = txtMentorFirstName.Value;
+                        txtMentorLastName_review.Value = txtMentorLastName.Value;
+                        txtMentorEmail_review.Value = txtMentorEmail.Value;
+                    }
+                    else
+                    {
+                        divMentor_review.Visible = false;
+                    }
+                    txtProjectTitle_review.Value = txtProjectTitle.Value;//lblProjectTitle.Text = txtProjectTitle.Value;
+                    txtProjectSummary_review.Value = txtProjectSummary.Value;
+                    //if (txtProjectSummary.Value.Equals(string.Empty))
+                    //{
+                    //    lblProjectSummary.Text = "-----";
+                    //}
+                    //else
+                    //{
+                    //    lblProjectSummary.Text = txtProjectSummary.Value;
+                    //}
+
+                    /// (Study Area)
+                    
+                    // Populates 'Study Area' checkbox grid.
+                    var qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyArea == true).ToList();
+
+                    rptStudyArea_review.DataSource = qProjectField;
+                    rptStudyArea_review.DataBind();
+
+                    // Bind checkboxes
+                    int studyAreaBitSum = 0;
+                    Int32.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum);
+
+                    BindTable(rptStudyArea_review, studyAreaBitSum);
+
+                    // Other
+                    if (!txtStudyAreaOther.Value.Equals(String.Empty))
+                    {
+                        divStudyAreaOther_review.Visible = true;
+                        txtStudyAreaOther_review.Value = txtStudyAreaOther.Value;
+                    } else
+                    {
+                        divStudyAreaOther_review.Visible = false;
+                    }
+
+
+                    // (Study Area)
+                    /*Dictionary<int, string> studyAreas = cr.ProjectField_cr.Where(f => f.IsStudyArea == true)
+                                                                           .Select(d => new { d.BitValue, d.Name })
+                                                                           .ToDictionary(g => g.BitValue, g => g.Name);
+
+                    foreach (var sa in studyAreas)
+                    {
+                        
+                        int bitValue = sa.Key;
+                        int match = studyAreaBitSum & bitValue;
+                        if (match == sa.Key)
+                        {
+                            
+                            // check this current checkbox
+
+
+                            //if (lblStudyArea.Text.Equals(string.Empty) && sa.Value.Equals("Other"))
+                            //{
+                            //    lblStudyArea.Text = sa.Value + " - " + txtStudyAreaOther.Value;
+                            //} else if (!lblStudyArea.Text.Equals(string.Empty) && sa.Value.Equals("Other"))
+                            //{
+                            //    lblStudyArea.Text = lblStudyArea.Text + ", " + sa.Value + " - " + txtStudyAreaOther.Value;
+                            //} else if (lblStudyArea.Text.Equals(string.Empty))
+                            //{
+                            //    lblStudyArea.Text = sa.Value;
+                            //} else
+                            //{
+                            //    lblStudyArea.Text = lblStudyArea.Text + ", " + sa.Value;
+                            //}
+                        }
+                    }*/
+
+                    /// (Health Data)
+
+                    // Populates 'Health Data' checkbox grid.
+                    qProjectField = cr.ProjectField_cr.Where(f => f.IsHealthData == true).ToList();
+
+                    rptHealthData_review.DataSource = qProjectField;
+                    rptHealthData_review.DataBind();
+
+                    // Bind checkboxes
+                    int healthDataBitSum = 0;
+                    Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum);
+
+                    BindTable(rptHealthData_review, healthDataBitSum);
+
+                    // Other
+                    if (!txtHealthDataOther.Value.Equals(String.Empty))
+                    {
+                        divHealthDataOther_review.Visible = true;
+                        txtHealthDataOther_review.Value = txtHealthDataOther.Value;
+                    }
+                    else
+                    {
+                        divHealthDataOther_review.Visible = false;
+                    }
+
+                    // (Study Type)
+
+                    // Populates 'StudyType' checkbox grid.
+                    qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyType == true).ToList();
+
+                    rptStudyType_review.DataSource = qProjectField;
+                    rptStudyType_review.DataBind();
+
+                    // Bind checkboxes
+                    int studyTypeBitSum = 0;
+                    Int32.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum);
+
+                    BindTable(rptStudyType_review, studyTypeBitSum);
+
+                    // Other
+                    if (!txtStudyTypeOther.Value.Equals(String.Empty))
+                    {
+                        divStudyTypeOther_review.Visible = true;
+                        txtStudyTypeOther_review.Value = txtStudyTypeOther.Value;
+                    }
+                    else
+                    {
+                        divStudyTypeOther_review.Visible = false;
+                    }
+
+
+                    // (Study Population)
+
+                    // Populates 'StudyType' checkbox grid.
+                    qProjectField = cr.ProjectField_cr.Where(f => f.IsStudyPopulation == true).ToList();
+
+                    rptStudyPopulation_review.DataSource = qProjectField;
+                    rptStudyPopulation_review.DataBind();
+
+                    // Bind checkboxes
+                    int studyPopulationBitSum = 0;
+                    Int32.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum);
+
+                    BindTable(rptStudyPopulation_review, studyPopulationBitSum);
+
+                    // Other
+                    if (!txtStudyPopulationOther.Value.Equals(String.Empty))
+                    {
+                        divStudyPopulationOther_review.Visible = true;
+                        txtStudyPopulationOther_review.Value = txtStudyPopulationOther.Value;
+                    }
+                    else
+                    {
+                        divStudyPopulationOther_review.Visible = false;
+                    }
+
+                    if(chkHealthDisparityYes.Checked || chkHealthDisparityNo.Checked || chkHealthDisparityNA.Checked)
+                    {
+                        divHealthDisparity_review.Visible = true;
+                        chkHealthDisparityYes_review.Checked = chkHealthDisparityYes.Checked;
+                        chkHealthDisparityNo_review.Checked = chkHealthDisparityNo.Checked;
+                        chkHealthDisparityNA_review.Checked = chkHealthDisparityNA.Checked;
+                    }
+                    else
+                    {
+                        divHealthDisparity_review.Visible = false;
+                    }
+
+                    // (Service)
+
+                    // Populates 'Service' checkbox grid.
+                    qProjectField = cr.ProjectField_cr.Where(f => f.IsService == true).ToList();
+
+                    rptService_review.DataSource = qProjectField;
+                    rptService_review.DataBind();
+
+                    // Bind checkboxes
+                    int serviceBitSum = 0;
+                    Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum);
+
+                    BindTable(rptService_review, serviceBitSum);
+
+                    // Other
+                    if (!txtServiceOther.Value.Equals(String.Empty))
+                    {
+                        divServiceOther_review.Visible = true;
+                        txtServiceOther_review.Value = txtServiceOther.Value;
+                    }
+                    else
+                    {
+                        divServiceOther_review.Visible = false;
+                    }
+
+
+                    //"Is project a funding infrastructure grant pilot study"
+                    chkPilotYes_review.Checked = chkPilotYes.Checked;
+                    chkPilotNo_review.Checked = chkPilotNo.Checked;
+
+
+                    // "Is this project for a grant proposal?"
+                    chkProposalYes_review.Checked = chkProposalYes.Checked;
+                    chkProposalNo_review.Checked = chkProposalNo.Checked;
+
+                    if (chkProposalYes.Checked)
+                    {
+                        divIsUHPilotGrant_review.Visible = true;
+                        chkIsUHPilotGrantYes_review.Checked = chkIsUHPilotGrantYes.Checked;
+                        chkIsUHPilotGrantNo_review.Checked = chkIsUHPilotGrantNo.Checked;
+                    }
+                    else
+                    {
+                        divIsUHPilotGrant_review.Visible = false;
+                    }
+
+                    if (!txtGrantProposalFundingAgency.Value.Equals(String.Empty))
+                    {
+                        divGrantProposalFundingAgency_review.Visible = true;
+                        txtGrantProposalFundingAgency_review.Value = txtGrantProposalFundingAgency.Value;
+                    }
+                    else
+                    {
+                        divGrantProposalFundingAgency_review.Visible = false;
+                    }
+
+
+                    // (Funding Source)
+                    // Populates 'FundingSource' checkbox grid.
+                    var qFundingSource = cr.ProjectField_cr.Where(f => f.IsGrant == true
+                                                             && f.IsFundingSource == true
+                                                             && f.Name != "N/A"
+                                                             && f.Name != "No (No funding)"
+                                                             && f.Name != "COBRE-Cardiovascular"
+                                                             && f.Name != "RMATRIX"
+                                                             && f.Name != "Ola Hawaii"
+                                                             && f.Name != "P30 UHCC")
+                                      .OrderBy(b => b.DisplayOrder)
+                                      .ToDictionary(c => c.BitValue, c => c.Name);
+
+                    BindTable2(qFundingSource, rptFunding_review);
+
+                    // Bind checkboxes
+                    long fundingSourceBitSum = 0;
+                    Int64.TryParse(txtFundingBitSum.Value, out fundingSourceBitSum);
+
+                    BindTable(rptFunding_review, (int)fundingSourceBitSum);
+
+                    // Other
+                    if (!txtFundingOther.Value.Equals(String.Empty))
+                    {
+                        divFundingOther_review.Visible = true;
+                        txtFundingOther_review.Value = txtFundingOther.Value;
+                    }
+                    else
+                    {
+                        divFundingOther_review.Visible = false;
+                    }
+
+                    // Department Funding
+                    if (!ddlDepartmentFunding.SelectedItem.Text.Equals(String.Empty))
+                    {
+                        divDepartmentFunding_review.Visible = true;
+                        txtDepartmentFunding_review.Value = ddlDepartmentFunding.SelectedItem.Text;
+
+                        // MOU - if Dept.Funding == "SONDH"
+                        if (ddlDepartmentFunding.SelectedItem.Equals("School of Nursing & Dental Hygiene")) 
+                        {
+                            divDeptFundMou_review.Visible = true;
+                            chkDeptFundMouYes_review.Checked = chkDeptFundMouYes.Checked;
+                            chkDeptFundMouNo_review.Checked = chkDeptFundMouNo.Checked;
+                        }
+                        else
+                        {
+                            divDeptFundMou_review.Visible = false;
+                        }
+
+                        // Other - if Dept. Funding == "Other"
+                        if (ddlDepartmentFunding.SelectedItem.Equals("Other")) 
+                        {
+                            divFundingOther_review.Visible = true;
+                            txtFundingOther_review.Value = txtFundingOther.Value;
+                        }
+                        else
+                        {
+                            divFundingOther_review.Visible = false;
+                        }
+
+                    }
+                    else
+                    {
+                        divDepartmentFunding_review.Visible = false;
+                        divDeptFundMou_review.Visible = false;
+                        divFundingOther_review.Visible = false;
+                    }
+
+                    // Important Deadlines (should be empty if blank)
+                    txtDueDate_review.Value = txtDueDate.Text.ToString().Equals(String.Empty) ? "N/A" : txtDueDate.Text.ToString();
+
+                    // Biostatistics Core Facility faculty/staff preference
+                    txtBiostat_review.Value = !ddlBiostat.SelectedItem.Text.Equals(String.Empty) ? ddlBiostat.SelectedItem.Text : "N/A" ;
+
+                    // Select up to three dates/times you would like to meet for a consultation
+                    txtConsult1_review.Value = txtConsult1.Text.ToString().Equals(String.Empty) ? "N/A" : txtConsult1.Text.ToString();
+                    txtConsult2_review.Value = txtConsult2.Text.ToString().Equals(String.Empty) ? "N/A" : txtConsult2.Text.ToString();
+                    txtConsult3_review.Value = txtConsult3.Text.ToString().Equals(String.Empty) ? "N/A" : txtConsult3.Text.ToString();
+
+
                 }
+                
+
+
+                // Open confirmation modal
+                StringBuilder sb2 = new StringBuilder();
+                sb2.Append(@"<script type='text/javascript'>");
+                //sb2.Append("$('#MainContent_lblWarning').text('Please review the following error message:');");
+                //sb2.Append("$('#textWarning').append('<span>" + validateForm + "</span>');");
+                sb2.Append("$('#btnShowReviewModal').click();");
+                sb2.Append(@"</script>");
+
+                Page.ClientScript.RegisterStartupScript(this.GetType(),
+                    "ShowModalScript", sb2.ToString());
+
+                
             }
             else
             {
-
-                if (!isValid)
-                {
-                    validateForm = validateForm + "Captcha verification failed! <br />";
-                }
 
                 StringBuilder sb2 = new StringBuilder();
                 sb2.Append(@"<script type='text/javascript'>");
@@ -473,8 +810,15 @@ namespace ProjectManagement.Guest
                 validateForm.Append("Health data is required. <br />");
             }
 
+            int studyTypeBitSum = 0;
+            Int32.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum);
+            if (studyTypeBitSum <= 0)
+            {
+                validateForm.Append("Study type is required. <br />");
+            }
+
             int studyPopulationBitSum = 0;
-            Int32.TryParse(txtStudyTypeBitSum.Value, out studyPopulationBitSum);
+            Int32.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum);
             if (studyPopulationBitSum <= 0)
             {
                 validateForm.Append("Study population is required. <br />");
@@ -491,7 +835,7 @@ namespace ProjectManagement.Guest
             Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum);
             if (serviceBitSum <= 0)
             {
-                validateForm.Append("Service is required. <br />");
+                validateForm.Append("Type(s) of support needed is required. <br />");
             }
 
             if (!chkPilotYes.Checked && !chkPilotNo.Checked)
@@ -511,7 +855,7 @@ namespace ProjectManagement.Guest
 
             if ((chkIsUHPilotGrantYes.Checked || chkIsUHPilotGrantNo.Checked) && txtGrantProposalFundingAgency.Value.Equals(string.Empty))
             {
-                validateForm.Append(">>> UH Infrastructure Grant specified - Response to follow-up question \"What is the funding agency?\" is required. <br />");
+                validateForm.Append(">>> UH Infrastructure Grant specified - Response to follow-up question \"What is the grant name?\" is required. <br />");
             }
 
             int fundingBitSum = 0;
@@ -522,6 +866,50 @@ namespace ProjectManagement.Guest
             }
 
             return validateForm.ToString();
+        }
+
+        /// <summary>
+        /// • Checks if reCaptcha is valid. 
+        ///    - If it is valid, it saves the request into the database.
+        ///    - Otherwise, it creates a pop-up message saying that captcha verification has failed.
+        /// • If both reCaptcha validation succeeds, saves the client form into the database for approval.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            bool isValid = IsReCaptchaValid();
+
+            if (!isValid)
+            {
+                string reCaptchaFailed = "Captcha verification failed! Please resubmit form again.<br />";
+
+                StringBuilder sb2 = new StringBuilder();
+                sb2.Append(@"<script type='text/javascript'>");
+                sb2.Append("$('#MainContent_lblWarning').text('Please review the following error message:');");
+                sb2.Append("$('#textWarning').append('<span>" + reCaptchaFailed + "</span>');");
+                //sb2.Append("ShowWarningModal();");
+                sb2.Append("$('#btnShowWarningModal').click();");
+                sb2.Append(@"</script>");
+
+                Page.ClientScript.RegisterStartupScript(this.GetType(),
+                    "ShowModalScript", sb2.ToString());
+            }
+            else
+            {
+                // Save into database here
+                int newRequestId = SaveRequest();
+                if (newRequestId > 0)
+                {
+                    //Direct Notification
+                    SendEmailNotification(newRequestId);
+                    Response.Redirect(String.Format("MahaloRequest"));
+                }
+
+
+            }
+
+
         }
 
         /// <summary>
@@ -576,7 +964,7 @@ namespace ProjectManagement.Guest
             int requestId = 0, /*uhGrantId = 0,*/ biostatId = 0, grantDepartmentFundingType = 0;
             long studyAreaBitSum = 0, healthDataBitSum = 0, studyTypeBitSum = 0, studyPopulationBitSum = 0,
                  serviceBitSum = 0, grantBitSum = 0;
-            DateTime dt;
+            DateTime dt, tc1, tc2, tc3;
             ClientRequest2_cr rqst = new ClientRequest2_cr()
             {
                 FirstName = Request.Form["txtFirstName"],
@@ -619,17 +1007,20 @@ namespace ProjectManagement.Guest
                 Creator = Request.UserHostAddress.ToString(),
                 CreationDate = DateTime.Now,
                 RequestStatus = "Created",
-                Archive = false
+                Archive = false,
+                ConsultDate1 = DateTime.TryParse(txtConsult1.Text, out tc1) ? tc1 : (DateTime?)null,
+                ConsultDate2 = DateTime.TryParse(txtConsult2.Text, out tc2) ? tc2 : (DateTime?)null,
+                ConsultDate3 = DateTime.TryParse(txtConsult3.Text, out tc3) ? tc3 : (DateTime?)null
             };
 
             try
             {
                 using (ClientRequestTracker cr = new ClientRequestTracker())
                 {
-                    //Make Dr. John Chen default if no preferrence.
+                    //Make N/A default if no preferrence.
                     if (rqst.BiostatId == 0)
                     {
-                        rqst.BiostatId = cr.BioStat_cr.FirstOrDefault(f => f.Name == "John Chen").Id;
+                        rqst.BiostatId = 99;
                     }
 
                     cr.ClientRequest2_cr.Add(rqst);
@@ -679,5 +1070,66 @@ namespace ProjectManagement.Guest
 
             return chkList;
         }
+
+
+        /// <summary>
+        /// Binds grid of checkboxes to the values of referred table.
+        /// </summary>
+        /// <param name="rpt">Grid of Checkboxes (e.g., rptBiostat = List of Biostat Members)</param>
+        /// <param name="bitSum">Bitsum of referred field to match grid of checkboxes. 
+        ///                      (e.g., Bitsum 894224 = Chelu & Ved [pseudoexample])</param>
+        private void BindTable(Repeater rpt, int bitSum)
+        {
+            foreach (RepeaterItem i in rpt.Items)
+            {
+                CheckBox cb, cb1, cb2;
+                HiddenField hdnBitValue, hdnBitValue1, hdnBitValue2;
+
+                cb = (CheckBox)i.FindControl("chkId");
+                hdnBitValue = (HiddenField)i.FindControl("BitValue");
+
+                if (cb != null && hdnBitValue != null)
+                {
+                    cb.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue) : false;
+                }
+
+                if (cb == null)
+                {
+                    cb1 = (CheckBox)i.FindControl("FirstchkId");
+                    cb2 = (CheckBox)i.FindControl("SecondchkId");
+
+                    hdnBitValue1 = (HiddenField)i.FindControl("FirstBitValue");
+                    hdnBitValue2 = (HiddenField)i.FindControl("SecondBitValue");
+
+                    if (cb1 != null && hdnBitValue1 != null)
+                    {
+                        cb1.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue1) : false;
+                    }
+
+                    if (cb2 != null && hdnBitValue2 != null)
+                    {
+                        cb2.Checked = bitSum > 0 ? CheckBitValue(bitSum, hdnBitValue2) : false;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Checks whether or not the bit value exists in the current bit sum calculation.
+        /// </summary>
+        /// <param name="bitSum">Total bit sum (e.g., [1026](fake) = Ved[2] & Chelu[1024])</param>
+        /// <param name="hdnBitValue">Bit Value of current selection (e.g., 1024 = Chelu</param>
+        /// <returns>Returns 1 if the bit value is in the bitsum, 0 if not.</returns>
+        private bool CheckBitValue(int bitSum, HiddenField hdnBitValue)
+        {
+            int bitValue = 0;
+            Int32.TryParse(hdnBitValue.Value, out bitValue);
+
+            int c = bitSum & bitValue;
+
+            return c == bitValue;
+        }
+
     }
 }

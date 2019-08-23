@@ -72,6 +72,7 @@ namespace ProjectManagement.Admin
     ///                                    PI page if new information was entered.
     ///  2019MAY22 - Jason Delos Reyes  -  Added functionality to be able to "archive" a client request (keep a copy in the database, but delete
     ///                                    it from the front-end view).
+    ///  2019AUG23 - Jason Delos Reyes  -  Edited form to include additional dates for consultation (which saves into admin comments section).
     /// </summary>
     public partial class ClientForm : System.Web.UI.Page
     {
@@ -157,7 +158,7 @@ namespace ProjectManagement.Admin
                             else
                             {
 
-                                ///<> PI <> ///
+                                /// <> PI <> ///
                                 // If there is not an existing PI in the database,
                                 // Create create new PI entry and send email to admin.
                                 int investId = 0;
@@ -231,7 +232,7 @@ namespace ProjectManagement.Admin
 
                                 }
 
-                                ///<> Project <> ///
+                                /// <> Project <> ///
                                 // Push create new PROJECT entry and send email to admin for approval. 
 
                                 // If reached this point, save changes into Client Request database.
@@ -303,7 +304,7 @@ namespace ProjectManagement.Admin
         }
 
         /// <summary>
-        /// (CURRENTLY NOT IN USE) Marks "Client Request Form" as "Completed" or "Requested".
+        /// (CURRENTLY NOT IN USE - REFER TO btnCreateProject_Click) Marks "Client Request Form" as "Completed" or "Requested".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -468,6 +469,14 @@ namespace ProjectManagement.Admin
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
 
+                string consultationDates = "";
+                if (!rqst.ConsultDate1.Equals(String.Empty) && !rqst.ConsultDate1.Equals("N/A") && !rqst.ConsultDate1.Equals(null))
+                    consultationDates = consultationDates + "\n Consultation Date/Time 1: " + rqst.ConsultDate1;
+                if (!rqst.ConsultDate2.Equals(String.Empty) && !rqst.ConsultDate2.Equals("N/A") && !rqst.ConsultDate2.Equals(null))
+                    consultationDates = consultationDates + "\n Consultation Date/Time 2: " + rqst.ConsultDate2;
+                if (!rqst.ConsultDate3.Equals(String.Empty) && !rqst.ConsultDate3.Equals("N/A") && !rqst.ConsultDate3.Equals(null))
+                    consultationDates = consultationDates + "\n Consultation Date/Time 3: " + rqst.ConsultDate3;
+
                 project = new Project2()
                 {
                     Id = id,   // required 
@@ -476,6 +485,7 @@ namespace ProjectManagement.Admin
                     Summary = rqst.ProjectSummary,
                     InitialDate = DateTime.Now,
                     DeadLine = rqst.DeadLine,
+                    Comments =  consultationDates,
                     LeadBiostatId = rqst.BiostatId != null ? (int)rqst.BiostatId : -1,// required
                     OtherMemberBitSum = otherMemberBitSum, // required
                     StudyAreaBitSum = rqst.StudyAreaBitSum, // required
@@ -918,7 +928,7 @@ namespace ProjectManagement.Admin
                 /// Populates "QHS Faculty/Staff preference" dropdown\
                 dropDownSource = cr.BioStat_cr
                                    .Where(b => b.EndDate >= DateTime.Now && b.Id > 0
-                                                                         && b.Name != "N/A"
+                                                                         /*&& b.Name != "N/A"*/
                                                                          && b.Name != "Vedbar Khadka"
                                                                          && b.Name != "Youping Deng"
                                                                          && b.Name != "Mark Menor"
@@ -990,7 +1000,7 @@ namespace ProjectManagement.Admin
         private void SetRequest(ClientRequest2_cr request)
         {
 
-            DateTime dt;
+            DateTime dt, tc1, tc2, tc3;
 
             lblClientRqstId.Text = request.Id.ToString();
 
@@ -1110,10 +1120,13 @@ namespace ProjectManagement.Admin
                                                                                         : string.Empty;
             txtDeptFundOth.Value = request.GrantDepartmentFundingOther;
 
-            txtDueDate.Text = DateTime.TryParse(request.DeadLine.ToString(), out dt) ? dt.ToShortDateString() : "";
+            txtDueDate.Text = DateTime.TryParse(request.DeadLine.ToString(), out dt) ? dt.ToShortDateString() : "N/A";
 
             ddlBiostat.SelectedValue = request.BiostatId > 0 ? request.BiostatId.ToString() : string.Empty;
 
+            txtConsult1.Text = DateTime.TryParse(request.ConsultDate1.ToString(), out tc1) ? tc1.ToString("MM/dd/yyyy hh:mm tt") : "N/A";
+            txtConsult2.Text = DateTime.TryParse(request.ConsultDate2.ToString(), out tc2) ? tc2.ToString("MM/dd/yyyy hh:mm tt") : "N/A";
+            txtConsult3.Text = DateTime.TryParse(request.ConsultDate3.ToString(), out tc3) ? tc3.ToString("MM/dd/yyyy hh:mm tt") : "N/A";
 
 
             if (request.RequestStatus == "Completed")
@@ -1310,7 +1323,7 @@ namespace ProjectManagement.Admin
             int biostatId = 0, grantDepartmentFundingType = 0;
             long studyAreaBitSum = 0, healthDataBitSum = 0, studyTypeBitSum = 0, studyPopulationBitSum = 0,
                  serviceBitSum = 0, grantBitSum = 0;
-            DateTime dt;
+            DateTime dt, tc1, tc2, tc3;
 
             //ClientRequest2_cr rqst = GetClientRequestById(rqstId);
 
@@ -1357,6 +1370,9 @@ namespace ProjectManagement.Admin
                 rqst.GrantDepartmentFundingOther = txtDeptFundOth.Value; //Request.Form["txtDeptFundOth"];
                 rqst.DeadLine = DateTime.TryParse(txtDueDate.Text, out dt) ? dt : (DateTime?)null;
                 rqst.BiostatId = Int32.TryParse(ddlBiostat.SelectedItem.Value, out biostatId) ? biostatId : 0;
+                rqst.ConsultDate1 = DateTime.TryParse(txtConsult1.Text, out tc1) ? tc1 : (DateTime?)null;
+                rqst.ConsultDate2 = DateTime.TryParse(txtConsult2.Text, out tc2) ? tc2 : (DateTime?)null;
+                rqst.ConsultDate3 = DateTime.TryParse(txtConsult3.Text, out tc3) ? tc3 : (DateTime?)null;
                 /*Fields that we want to capture from original form that hasn't been transformed from original request.*/
                 //rqst.Creator = Request.UserHostAddress.ToString();
                 //rqst.CreationDate = DateTime.Now;

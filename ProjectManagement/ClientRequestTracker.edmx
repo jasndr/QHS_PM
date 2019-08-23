@@ -87,6 +87,9 @@
           <Property Name="GrantDepartmentFundingType" Type="int" />
           <Property Name="GrantDepartmentFundingOther" Type="nvarchar" MaxLength="255" />
           <Property Name="Archive" Type="bit" Nullable="false" />
+          <Property Name="ConsultDate1" Type="datetime" />
+          <Property Name="ConsultDate2" Type="datetime" />
+          <Property Name="ConsultDate3" Type="datetime" />
         </EntityType>
         <EntityType Name="InvestStatus">
           <Key>
@@ -288,6 +291,9 @@
           <Property Name="GrantDepartmentFundingType" Type="Int32" />
           <Property Name="GrantDepartmentFundingOther" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Archive" Type="Boolean" Nullable="false" />
+          <Property Name="ConsultDate1" Type="DateTime" Precision="3" />
+          <Property Name="ConsultDate2" Type="DateTime" Precision="3" />
+          <Property Name="ConsultDate3" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_ClientRequest2_BioStats">
           <End Type="BQHSRequest_Model.BioStat_cr" Role="BioStat_cr" Multiplicity="0..1" />
@@ -388,6 +394,9 @@
           <EntitySetMapping Name="ClientRequest2_cr">
             <EntityTypeMapping TypeName="BQHSRequest_Model.ClientRequest2_cr">
               <MappingFragment StoreEntitySet="ClientRequest2">
+                <ScalarProperty Name="ConsultDate3" ColumnName="ConsultDate3" />
+                <ScalarProperty Name="ConsultDate2" ColumnName="ConsultDate2" />
+                <ScalarProperty Name="ConsultDate1" ColumnName="ConsultDate1" />
                 <ScalarProperty Name="Archive" ColumnName="Archive" />
                 <ScalarProperty Name="GrantDepartmentFundingOther" ColumnName="GrantDepartmentFundingOther" />
                 <ScalarProperty Name="GrantDepartmentFundingType" ColumnName="GrantDepartmentFundingType" />

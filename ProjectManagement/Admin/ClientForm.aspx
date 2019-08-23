@@ -722,6 +722,36 @@
                                     </div>
                                     <br />
 
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label class="control-label">Available dates/times for consultation</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class='input-group date' id='dtpConsult1'>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                                <asp:TextBox ID="txtConsult1" runat="server" class="form-control"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class='input-group date' id='dtpConsult2'>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                                <asp:TextBox ID="txtConsult2" runat="server" class="form-control"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class='input-group date' id='dtpConsult3'>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                                <asp:TextBox ID="txtConsult3" runat="server" class="form-control"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
 
                                     <div class="row">
                                         <div class="col-md-6">
