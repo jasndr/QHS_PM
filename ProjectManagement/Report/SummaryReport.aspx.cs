@@ -56,6 +56,7 @@ namespace ProjectManagement.Report
     ///                                 -  Fixed summary reports for Ola Hawaii to pull *all* the columns from the report.
     ///  2019MAR20 - Jason Delos Reyes  -  Redirected Publications and Abstracts to Rpt_Paper2b stored procedure to 
     ///                                    add information specifically regarding to Ola HAWAII-specific numbers.
+    ///  2019AUG30 - Jason Delos Reyes  -  Integrated "Rpt_Ola_Hawaii_Summary2a" to reorganize Ola-specific fields in summary report.
     /// </summary>
     public partial class SummaryReport : System.Web.UI.Page
     {
@@ -522,7 +523,7 @@ namespace ProjectManagement.Report
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
 
-            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary2" :
+            var cmdText = grantId == 2 ? "Rpt_Ola_Hawaii_Summary2a" :
                           grantId == 1 ? "Rpt_Rmatrix_Summary" :
                                          "Rpt_CollabCtr_Summary";
 

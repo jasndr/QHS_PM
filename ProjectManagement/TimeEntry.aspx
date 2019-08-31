@@ -807,10 +807,10 @@
 
                 $("#MainContent_ddlProject > option").each(function () {
                     if (this.text.indexOf(filterPI) > 0 || filterPI.length == 0 || filterPI.indexOf('Search') >= 0) {
-                        $("#MainContent_ddlProject").children("option[value=" + this.value + "]").show();
+                        $("#MainContent_ddlProject").children("option[value='" + this.value + "']").show();
                     }
                     else {
-                        $("#MainContent_ddlProject").children("option[value=" + this.value + "]").hide();
+                        $("#MainContent_ddlProject").children("option[value='" + this.value + "']").hide();
                     }
 
                     //if (this.value == currentProjectId) {

@@ -194,8 +194,8 @@
                                             <td><%# Eval("StudyType") %></td>
                                             <td><%# Eval("StudyPopulation") %></td>
                                             <td><%# Eval("IsOlaHawaiiRequest") %></td>
-                                            <td><%# Eval("IsOlaProject") %></td>
-                                            <td><%# Eval("IsInternal") %></td>
+                                            <td><%# Eval("IsOlaSubmitted") %></td>
+                                            <td><%# Eval("IsOlaReported") %></td>
                                             <td><%# Eval("IsPilotPI") %></td>
                                             <td><%# Eval("IsHealthDisparity") %></td>
                                             <td><%# Eval("IsNewPI") %></td>
