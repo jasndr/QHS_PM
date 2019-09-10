@@ -109,6 +109,14 @@ namespace ProjectManagement
     ///  2019APR04 - Jason Delos Reyes  -  Changed "Department Funding" dropdown options functionality for "Funding Source" 
     ///                                    and "Acknowledgement" sections so that it matches text value vs. numeric value
     ///                                    to account for management changes.
+    ///  2019SEP05 - Jason Delos Reyes  -  Fixed issue where loading projects for just for specific selected PI isn't working. 
+    ///  2019SEP06 - Jason Delos Reyes  -  Redirected "Request Type" options to appear if either "Submit to Ola HAWAII" or "Ola HAWAII request
+    ///                                    for resources" are seleceted in the admin section of the project page.
+    ///                                 -  Made "RMATRIX-II request for resources" and "Submit to RMATRIX" mutually exclusive (can only select one or the other).
+    ///                                    Same for "Ola HAWAII request for resources" and "Ola HAWAII".
+    ///  2019SEP09 - Jason Delos Reyes  -  Reorganized "Request Type" options to specify distinction between "application" and "funded" projects
+    ///                                    that are either have the type "pilot", "R21", "R01", or "other".  Created new fields in the database
+    ///                                    to correspond to this change.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
@@ -1016,14 +1024,31 @@ namespace ProjectManagement
                 txtOlaHawaiiNum.Value = project.OlaHawaiiNum.ToString();
                 txtOlaHawaiiSubDate.Text = project.OlaHawaiiSubDate != null ? Convert.ToDateTime(project.OlaHawaiiSubDate).ToShortDateString() : string.Empty;
 
-                chkRequestTypeRfunded.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Rfunded;
-                chkRequestTypePilotPI.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.PilotPI;
-                chkRequestTypeOther.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Other;
+               // chkRequestTypeRfunded.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Rfunded;
+               // chkRequestTypePilotPI.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.PilotPI;
+               // chkRequestTypeOther.Checked = project.OlaHawaiiRequestType == (byte)OlaHawaiiRequestType.Other;
 
             }
             else
             {
                 chkIsOlaHawaii.Checked = false;
+            }
+
+            if (project.IsOlaHawaiiRequest.HasValue || project.IsReportOlaHawaii.HasValue)
+            {
+                // request type
+                chkRequestTypeFunded.Checked = project.OlaHIRequestType == (byte)OlaHIRequestType.Funded;
+                chkRequestTypeApplication.Checked = project.OlaHIRequestType == (byte)OlaHIRequestType.Application;
+
+                // project type
+                chkRequestTypeOlaPilot.Checked = project.OlaHIProjectType == (byte)OlaHIRequestType.OlaHIPilot;
+                chkRequestTypeOlaR21.Checked = project.OlaHIProjectType == (byte)OlaHIRequestType.OlaHIR21;
+                chkRequestTypeOlaR01.Checked = project.OlaHIProjectType == (byte)OlaHIRequestType.OlaHIR01;
+                chkRequestTypeOlaOther.Checked = project.OlaHIProjectType == (byte)OlaHIRequestType.OlaHIOther;
+
+                // request year
+                txtRequestTypeYear.Value = project.OlaHIRequestYear.ToString();
+
             }
 
             if (project.IsHealthDisparity.HasValue)
@@ -1615,7 +1640,8 @@ namespace ProjectManagement
                 aknDepartmentFundingType = 0,
                 rmatrixNum = 0,
                 olaHawaiiNum = 0,
-                uhGrantId = 0;
+                uhGrantId = 0,
+                olaRequestTypeYear = 0;
 
             long otherMemberBitSum = 0;
 
@@ -1644,7 +1670,7 @@ namespace ProjectManagement
                 ServiceBitSum = Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0, // required
                 ServiceOther = txtServiceOther.Value,
                 //IsLetterOfSupport = chkLetterOfSupportYes.Checked ? (byte)HealthDisparityType.Yes : chkLetterOfSupportNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
-                IsLosCollaborative = chkLOS_Collaborative.Checked ? (byte)HealthDisparityType.Yes : chkLOS_Noncollaborative.Checked ? (byte)HealthDisparityType.No: chkLOS_NA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
+                IsLosCollaborative = chkLOS_Collaborative.Checked ? (byte)HealthDisparityType.Yes : chkLOS_Noncollaborative.Checked ? (byte)HealthDisparityType.No : chkLOS_NA.Checked ? (byte)HealthDisparityType.NA : (byte)0,
                 IsMOU = chkDeptFundMouYes.Checked ? (byte)HealthDisparityType.Yes : chkDeptFundMouNo.Checked ? (byte)HealthDisparityType.No : (byte)0,
                 GrantBitSum = Int32.TryParse(txtGrantBitSum.Value, out grantBitSum) ? grantBitSum : 0,
                 GrantOther = txtGrantOther.Value,
@@ -1676,7 +1702,10 @@ namespace ProjectManagement
                 IsOlaHawaiiRequest = chkIsOlaHawaii.Checked,
                 OlaHawaiiNum = Int32.TryParse(txtOlaHawaiiNum.Value, out olaHawaiiNum) ? olaHawaiiNum : (Int32?)null,
                 OlaHawaiiSubDate = DateTime.TryParse(txtOlaHawaiiSubDate.Text, out dtOlaHawaiiSubDate) ? dtOlaHawaiiSubDate : (DateTime?)null,
-                OlaHawaiiRequestType = chkRequestTypeRfunded.Checked ? (byte)OlaHawaiiRequestType.Rfunded : chkRequestTypePilotPI.Checked ? (byte)OlaHawaiiRequestType.PilotPI : chkRequestTypeOther.Checked ? (byte)OlaHawaiiRequestType.Other : (byte)0,
+                //   OlaHawaiiRequestType = chkRequestTypeRfunded.Checked ? (byte)OlaHawaiiRequestType.Rfunded : chkRequestTypePilotPI.Checked ? (byte)OlaHawaiiRequestType.PilotPI : chkRequestTypeOther.Checked ? (byte)OlaHawaiiRequestType.Other : (byte)0,
+                OlaHIRequestType = chkRequestTypeFunded.Checked ? (byte)OlaHIRequestType.Funded : chkRequestTypeApplication.Checked ? (byte)OlaHIRequestType.Application : (byte)0,
+                OlaHIProjectType = chkRequestTypeOlaPilot.Checked ? (byte)OlaHIRequestType.OlaHIPilot : chkRequestTypeOlaR21.Checked ? (byte)OlaHIRequestType.OlaHIR21 : chkRequestTypeOlaR01.Checked ? (byte)OlaHIRequestType.OlaHIR01 : chkRequestTypeOlaOther.Checked ? (byte)OlaHIRequestType.OlaHIOther : (byte)0,
+                OlaHIRequestYear = Int32.TryParse(txtRequestTypeYear.Value, out olaRequestTypeYear) ? olaRequestTypeYear : (Int32?)null,
                 ProjectCompletionDate = DateTime.TryParse(txtCompletionDate.Text, out dtCompletionDate) ? dtCompletionDate : (DateTime?)null,
                 ProjectStatus = txtProjectStatus.Value,
                 Comments = txtComments.Value,

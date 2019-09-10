@@ -491,6 +491,9 @@
           <Property Name="GrantProposalFundingAgency" Type="nvarchar" MaxLength="255" />
           <Property Name="UHGrantID" Type="int" />
           <Property Name="IsLosCollaborative" Type="tinyint" />
+          <Property Name="OlaHIRequestType" Type="tinyint" />
+          <Property Name="OlaHIProjectType" Type="tinyint" />
+          <Property Name="OlaHIRequestYear" Type="int" />
         </EntityType>
         <EntityType Name="ProjectBioStat">
           <Key>
@@ -4236,6 +4239,9 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <NavigationProperty Name="ProjectField" Relationship="ProjectTracker.FK_UHGrantProject2" FromRole="Project2" ToRole="ProjectField" />
           <Property Name="IsLosCollaborative" Type="Byte" />
           <NavigationProperty Name="Invests" Relationship="ProjectTracker.FK_InvestProject2" FromRole="Project2" ToRole="Invests" />
+          <Property Name="OlaHIRequestType" Type="Byte" />
+          <Property Name="OlaHIProjectType" Type="Byte" />
+          <Property Name="OlaHIRequestYear" Type="Int32" />
         </EntityType>
         <Association Name="FK_ClientAgmt_Project2">
           <End Type="ProjectTracker.Project2" Role="Project2" Multiplicity="1" />
@@ -5452,6 +5458,9 @@ warning 6002: The table/view 'BioStatProject_DA.dbo.vwProjectBiostat' does not h
           <EntitySetMapping Name="Project2">
             <EntityTypeMapping TypeName="ProjectTracker.Project2">
               <MappingFragment StoreEntitySet="Project2">
+                <ScalarProperty Name="OlaHIRequestYear" ColumnName="OlaHIRequestYear" />
+                <ScalarProperty Name="OlaHIProjectType" ColumnName="OlaHIProjectType" />
+                <ScalarProperty Name="OlaHIRequestType" ColumnName="OlaHIRequestType" />
                 <ScalarProperty Name="IsLosCollaborative" ColumnName="IsLosCollaborative" />
                 <ScalarProperty Name="UHGrantID" ColumnName="UHGrantID" />
                 <ScalarProperty Name="GrantProposalFundingAgency" ColumnName="GrantProposalFundingAgency" />

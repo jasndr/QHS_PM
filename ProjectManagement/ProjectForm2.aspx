@@ -52,11 +52,10 @@
             color: red;
         }
 
-        #divGrantProposal2{
+        #divGrantProposal2 {
             margin-left: 5%;
             margin-right: 5%;
         }
-
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -669,15 +668,16 @@
                                 <Columns>
                                     <asp:TemplateField HeaderText="Id" HeaderStyle-Width="5%">
                                         <ItemTemplate>
-                                            <asp:LinkButton runat="server" ID="btnGrant" CommandName="editRecord" CommandArgument='<%# Eval("Id") %>' > <%--OnClientClick="javascript:return loading();"--%>
+                                            <asp:LinkButton runat="server" ID="btnGrant" CommandName="editRecord" CommandArgument='<%# Eval("Id") %>'>
+                                                <%--OnClientClick="javascript:return loading();"--%>
                                                 <asp:Label ID="lblGrantId" runat="server" Text='<%# Eval("Id") %>'></asp:Label>
                                             </asp:LinkButton>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField DataField="PI" HeaderText="PI" HeaderStyle-Width="15%" />
-                                    <asp:BoundField DataField="GrantTitle" HeaderText="Title" HeaderStyle-Width="40%" />                                    
+                                    <asp:BoundField DataField="GrantTitle" HeaderText="Title" HeaderStyle-Width="40%" />
                                     <asp:BoundField DataField="GrantStatus" HeaderText="Status" HeaderStyle-Width="5%" />
-                                    <asp:BoundField DataField="GrantSubmitDate" HeaderText="Submission Date" HeaderStyle-Width="5%" />                                                                  
+                                    <asp:BoundField DataField="GrantSubmitDate" HeaderText="Submission Date" HeaderStyle-Width="5%" />
                                 </Columns>
                             </asp:GridView>
                         </div>
@@ -991,104 +991,134 @@
 
                     </div>
 
-                <div class="tab-pane" id="tabAdmin" runat="server">
-                    <h5>Admin</h5>
-                    <br />
+                    <div class="tab-pane" id="tabAdmin" runat="server">
+                        <h5>Admin</h5>
+                        <br />
 
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <input type="checkbox" id="chkIsRmatrix" value="1" runat="server" />&nbsp;RMATRIX-II request for resources
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="row" id="divRmatrixRequest">
-                                <div class="col-sm-3 text-right">
-                                    <label class="control-label" for="txtTitle">Request number:</label>
-                                </div>
-                                <div class="col-sm-3">
-                                    <input class="form-control" type="text" name="txtRmatrixNum" id="txtRmatrixNum" runat="Server" />
-                                </div>
-                                <div class="col-sm-3 text-right">
-                                    <label class="control-label" for="txtRmatrixSubDate">Submission date:</label>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class='input-group date' id='dtpRmatrixSubDate'>
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                        <asp:TextBox ID="txtRmatrixSubDate" runat="server" class="form-control"></asp:TextBox>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <input type="checkbox" id="chkIsRmatrix" value="1" runat="server" />&nbsp;RMATRIX-II request for resources
                             </div>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <%--<div class="col-sm-5">
-                                <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
-                            </div>--%>
-                        <div class="col-sm-5">
-                            <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;<%--Report--%>Submit to RMATRIX
-                        </div>
-                        <div class="col-sm-5">
-                            <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;<%--Report--%>Submit to Ola Hawaii
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <input type="checkbox" id="chkIsOlaHawaii" value="1" runat="server" />&nbsp;Ola Hawaii request for resources
-                        </div>
-                        <div class="col-sm-9">
-
-                            <div id="divOlaHawaiiRequest">
-                                <div class="row">
+                            <div class="col-sm-9">
+                                <div class="row" id="divRmatrixRequest">
                                     <div class="col-sm-3 text-right">
                                         <label class="control-label" for="txtTitle">Request number:</label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input class="form-control" type="text" name="txtOlaHawaiiNum" id="txtOlaHawaiiNum" runat="Server" />
+                                        <input class="form-control" type="text" name="txtRmatrixNum" id="txtRmatrixNum" runat="Server" />
                                     </div>
                                     <div class="col-sm-3 text-right">
-                                        <label class="control-label" for="txtOlaHawaiiSubDate">Submission date:</label>
+                                        <label class="control-label" for="txtRmatrixSubDate">Submission date:</label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <div class='input-group date' id='dtpOlaHawaiiSubDate'>
+                                        <div class='input-group date' id='dtpRmatrixSubDate'>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
-                                            <asp:TextBox ID="txtOlaHawaiiSubDate" runat="server" class="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="txtRmatrixSubDate" runat="server" class="form-control"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="row offset2">
-                                        <div class="col-sm-6 text-right">
-                                            <label class="control-label">Request Type:</label>
-                                        </div>
-                                        <div class="col-sm-6"></div>
-                                    </div>
-                                    <div class="row offset2">
-                                        <div class="col-sm-6"></div>
-                                        <div class="col-sm-2">
-                                            <asp:CheckBox ID="chkRequestTypeRfunded" runat="server" Text="R-funded"></asp:CheckBox>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <asp:CheckBox ID="chkRequestTypePilotPI" runat="server" Text="Pilot PI"></asp:CheckBox>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <asp:CheckBox ID="chkRequestTypeOther" runat="server" Text="Other"></asp:CheckBox>
-                                        </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <%--<div class="col-sm-5">
+                                <input type="checkbox" id="chkRmatrixReport" value="1" runat="server" />&nbsp;Do not report to RMATRIX
+                            </div>--%>
+                            <div class="col-sm-5">
+                                <input type="checkbox" id="chkReportToRmatrix" value="1" runat="server" />&nbsp;<%--Report--%>Submit to RMATRIX
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="checkbox" id="chkReportToOlaHawaii" value="1" runat="server" />&nbsp;<%--Report--%>Submit to Ola HAWAII
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <input type="checkbox" id="chkIsOlaHawaii" value="1" runat="server" />&nbsp;Ola HAWAII request for resources
+                            </div>
+                            <div class="col-sm-9">
 
+                                <div id="divOlaHawaiiRequest">
+                                    <div class="row">
+                                        <div class="col-sm-3 text-right">
+                                            <label class="control-label" for="txtTitle">Request number:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input class="form-control" type="text" name="txtOlaHawaiiNum" id="txtOlaHawaiiNum" runat="Server" />
+                                        </div>
+                                        <div class="col-sm-3 text-right">
+                                            <label class="control-label" for="txtOlaHawaiiSubDate">Submission date:</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class='input-group date' id='dtpOlaHawaiiSubDate'>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                                <asp:TextBox ID="txtOlaHawaiiSubDate" runat="server" class="form-control"></asp:TextBox>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
 
+                            </div>
+                        </div>
+
+
+                        <div id="divRequestType">
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-1">
+                                    <label class="control-label">Request Type:</label>
+                                </div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                            <%--<div class="row">
+                                <div class="col-sm-2 col-sm-offset-1">
+                                    <asp:CheckBox ID="chkRequestTypeRfunded" runat="server" Text="R-funded"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <asp:CheckBox ID="chkRequestTypePilotPI" runat="server" Text="Pilot PI"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <asp:CheckBox ID="chkRequestTypeOther" runat="server" Text="Other"></asp:CheckBox>
+                                </div>
+                            </div>--%>
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-1">
+                                    <asp:CheckBox ID="chkRequestTypeApplication" runat="server" Text="Application"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <asp:CheckBox ID="chkRequestTypeFunded" runat="server" Text="Funded"></asp:CheckBox>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-1">
+                                    <asp:CheckBox ID="chkRequestTypeOlaPilot" runat="server" Text="Ola HAWAII Pilot"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <asp:CheckBox ID="chkRequestTypeOlaR21" runat="server" Text="Ola HAWAII R21"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <asp:CheckBox ID="chkRequestTypeOlaR01" runat="server" Text="Ola HAWAII R01"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <asp:CheckBox ID="chkRequestTypeOlaOther" runat="server" Text="Ola HAWAII Other"></asp:CheckBox>
+                                </div>
+                                <div class="col-sm-1 text-right yearCallWave">
+                                    <label class="control-label" for="txtRequestTypeYear"><span id="olaYear">Year</span><span id="olaCall">Call</span><span id="olaWave">Wave</span>:</label>
+                                </div>
+                                <div class="col-sm-2 yearCallWave">
+                                    <input class="form-control" type="text" name="txtRequestTypeYear" id="txtRequestTypeYear" runat="Server" />
+                                    <asp:CompareValidator runat="server" Operator="DataTypeCheck" Type="Integer" ControlToValidate="txtRequestTypeYear"
+                                        ErrorMessage="Value Must be a whole number" ForeColor="Red" Font-Bold="true"></asp:CompareValidator>
                                 </div>
                             </div>
 
                         </div>
-                    </div>
-                    <br />
+                        <br />
 
-                    <%--<b>Phase Completion:</b>
+                        <%--<b>Phase Completion:</b>
                 <asp:Repeater ID="rptPhaseCompletion" runat="server">
                     <HeaderTemplate>
                         <table class="table table-bordered table-hover" id="tblPhaseCompletion">
@@ -1118,65 +1148,65 @@
                     </FooterTemplate>
                 </asp:Repeater>
                 <br />--%>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label class="control-label" for="txtCompletionDate">Project completion date:</label>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class='input-group date' id='dtpCompletionDate'>
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                                <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control"></asp:TextBox>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="control-label" for="txtCompletionDate">Project completion date:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class='input-group date' id='dtpCompletionDate'>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    <asp:TextBox ID="txtCompletionDate" runat="server" class="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <%--<button type="button" ID="btnSurvey" OnClick="ShowSurveyModal()"  class="btn btn-primary">Survey</button>--%>
+                                <asp:Button class="btn btn-primary" ID="btnSurvey" runat="server" Text="Send Client Survey" OnClick="btnSurvey_Click"></asp:Button>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <%--<button type="button" ID="btnSurvey" OnClick="ShowSurveyModal()"  class="btn btn-primary">Survey</button>--%>
-                            <asp:Button class="btn btn-primary" ID="btnSurvey" runat="server" Text="Send Client Survey" OnClick="btnSurvey_Click"></asp:Button>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label class="control-label" for="txtProjectStatus">Project status:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="txtProjectStatus" id="txtProjectStatus" runat="Server" />
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:Button class="btn btn-primary" ID="btnAddGrant" runat="server" Text="Add Fund" OnClick="btnAddGrant_Click"></asp:Button>
+                            </div>
                         </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <label class="control-label" for="txtProjectStatus">Project status:</label>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-1 text-left">
+                                <label class="control-label" for="txtSummary">Comments:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
+                            </div>
+                            <div class="col-sm-2">
+                                <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
+                                <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
+                                    data-toggle="modal" data-target="#warningModal">
+                                    Warning Modal</button>
+                            </div>
                         </div>
-                        <div class="col-sm-5">
-                            <input class="form-control" type="text" name="txtProjectStatus" id="txtProjectStatus" runat="Server" />
-                        </div>
-                        <div class="col-sm-2">
-                            <asp:Button class="btn btn-primary" ID="btnAddGrant" runat="server" Text="Add Fund" OnClick="btnAddGrant_Click"></asp:Button>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-sm-1 text-left">
-                            <label class="control-label" for="txtSummary">Comments:</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <textarea class="form-control noresize" rows="3" name="txtComments" id="txtComments" runat="Server"></textarea>
-                        </div>
-                        <div class="col-sm-2">
-                            <asp:Button ID="btnAdminSubmit" runat="server" Text="Submit" OnClick="btnSubmit1_Click" class="btn btn-primary submitBtn" OnClientClick="ClientSideClick(this);" UseSubmitBehavior="False" />
-                            <button type="button" style="display: none" id="btnShowWarningModal" class="btn btn-primary btn-lg"
-                                data-toggle="modal" data-target="#warningModal">
-                                Warning Modal</button>
-                        </div>
-                    </div>
-                    <br />
-                    <hr />
+                        <br />
+                        <hr />
 
+                    </div>
+
+                    <ul class="pager wizard">
+                        <li class="previous first" style="display: none;"><a href="#">First</a></li>
+                        <li class="previous"><a href="#">Previous</a></li>
+                        <li class="next last" style="display: none;"><a href="#">Last</a></li>
+                        <li class="next"><a href="#">Next</a></li>
+                    </ul>
                 </div>
-
-                <ul class="pager wizard">
-                    <li class="previous first" style="display: none;"><a href="#">First</a></li>
-                    <li class="previous"><a href="#">Previous</a></li>
-                    <li class="next last" style="display: none;"><a href="#">Last</a></li>
-                    <li class="next"><a href="#">Next</a></li>
-                </ul>
             </div>
-        </div>
 
-    </div>
+        </div>
     </div>
 
     <div id="surveyModal" class="modal fade">
@@ -1407,7 +1437,14 @@
             ToggleDiv($('#MainContent_chkIsUHPilotGrantNo'), $('#divGrantProposalFundingAgency'));
             ToggleDiv($('#MainContent_chkIsRmatrix'), $('#divRmatrixRequest'));
             ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divOlaHawaiiRequest'));
+            ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divRequestType'));
+            ToggleDiv($('#MainContent_chkReportToOlaHawaii'), $('#divRequestType'));
             //ToggleDiv($('#MainContent_rptGrant_SecondchkId_6'), $('#divDeptFund'));
+
+            ToggleDiv($('#MainContent_chkRequestTypeOlaPilot'), $('.yearCallWave'));
+            ToggleDiv($('#MainContent_chkRequestTypeOlaR21'), $('.yearCallWave'));
+            ToggleDiv($('#MainContent_chkRequestTypeOlaR01'), $('.yearCallWave'));
+
 
             ToggleDiv4($('#MainContent_rptStudyPopulation_chkId_0'),
                 $('#MainContent_rptStudyPopulation_chkId_1'),
@@ -1415,7 +1452,7 @@
                 $('#MainContent_rptStudyPopulation_chkId_3'),
                 $('#divHealthDisparity'));
 
-           // ToggleDiv($('#MainContent_rptService_chkId_3'), $('#divLetterOfSupport'));
+            // ToggleDiv($('#MainContent_rptService_chkId_3'), $('#divLetterOfSupport'));
             ToggleDiv($('#MainContent_rptService_chkId_8'), $('#divCollaborativeLOS'));
 
 
@@ -1426,6 +1463,63 @@
 
             $('#MainContent_chkIsOlaHawaii').change(function () {
                 ToggleDiv($(this), $('#divOlaHawaiiRequest'));
+                ToggleDiv($(this), $('#divRequestType'));
+            });
+
+            $('#MainContent_chkReportToRmatrix').change(function () {
+                if ($(this).is(":checked")) {
+                    $('#divRmatrixRequest').hide();
+                }
+            });
+
+            $('#MainContent_chkReportToOlaHawaii').change(function () {
+                ToggleDiv($(this), $('#divRequestType'));
+                if ($(this).is(":checked")) {
+                    $('#divOlaHawaiiRequest').hide();
+                }
+            });
+
+
+            /*ToggleDiv4($('#MainContent_chkRequestTypeOlaPilot'), $('#MainContent_chkRequestTypeOlaR21'),
+                $('#MainContent_chkRequestOlaR01'), null, $('.yearCallWave'));*/
+
+            $('#MainContent_chkRequestTypeOlaPilot').change(function () {
+                ToggleDiv($(this), $('.yearCallWave'));
+                if ($(this).is(":checked")) {
+                    $("#olaYear").show();
+                    $("#olaCall").hide();
+                    $("#olaWave").hide();
+                } else {
+                    $("#olaYear").hide();
+                }
+            });
+
+            $('#MainContent_chkRequestTypeOlaR21').change(function () {
+                ToggleDiv($(this), $('.yearCallWave'));
+                if ($(this).is(":checked")) {
+                    $("#olaYear").hide();
+                    $("#olaCall").hide();
+                    $("#olaWave").show();
+                } else {
+                    $("#olaWave").hide();
+                }
+            });
+
+            $('#MainContent_chkRequestTypeOlaR01').change(function () {
+                ToggleDiv($(this), $('.yearCallWave'));
+                if ($(this).is(":checked")) {
+                    $("#olaYear").hide();
+                    $("#olaCall").show();
+                    $("#olaWave").hide();
+                } else {
+                    $("#olaCall").hide();
+                }
+            });
+
+            $('#MainContent_chkRequestTypeOlaOther').change(function () {
+                if ($(this).is(':checked')) {
+                    $('.yearCallWave').hide();
+                }
             });
 
             //If Department funding is checked, show dropdown list.
@@ -1522,7 +1616,7 @@
                     if ($(this).is($('#MainContent_rptService_chkId_8'))) {
                         ToggleDiv($(this), $('#divCollaborativeLOS'));
                     }
-            });
+                });
 
             // -- If exisitng project, adds ability to add grant, invoice, or survey. -- \\
             var projectId = $("#MainContent_lblProjectId").text();
@@ -1844,6 +1938,10 @@
 
         // -- Initializes view of projects -- \\
         function bindProjects() {
+
+            // (Solves issue of binding projects not working in Firefox and Microsoft Edge)
+            if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 || navigator.userAgent.toLowerCase().indexOf('microsoft edge')) { window.event = {}; }
+
             //var piId = $("#MainContent_ddlPI").val();
 
             // --> First + Last Name of PI.
@@ -1949,7 +2047,7 @@
                 $('#MainContent_txtAknDeptFundOth').parent().find('label').hide();
 
 
-                <%=ClientScript.GetPostBackEventReference(upPhase, "")%>
+                <%= Page.ClientScript.GetPostBackEventReference(upPhase, String.Empty)%>;
 
                 //$('#MainContent_txtRequestRcvdDate').val('');                
 
@@ -1984,7 +2082,7 @@
                         chkBox.prop('checked', false);
                     }
                 });
-                
+
 
                 $('#MainContent_txtMentorFirstName').val('');
                 $('#MainContent_txtMentorLastName').val('');
@@ -1998,6 +2096,9 @@
 
                 $('#MainContent_txtRmatrixNum').val('');
                 $('#MainContent_txtRmatrixSubDate').val('');
+
+                $('#MainContent_chkIsRmatrix').prop('checked', false);
+                $('#MainContent_chkReportToRmatrix').prop('checked', false);
 
                 $('#MainContent_chkIsOlaHawaii').prop('checked', false);
 
@@ -2074,26 +2175,149 @@
         });
 
         //------------------------------------------------------------------
-        $("#MainContent_chkRequestTypeRfunded").change(function () {
+        //$("#MainContent_chkRequestTypeRfunded").change(function () {
+        //    if (this.checked) {
+        //        $('#MainContent_chkRequestTypePilotPI').prop('checked', false);
+        //        $('#MainContent_chkRequestTypeOther').prop('checked', false);
+        //    }
+        //    //else
+        //    //    $('#MainContent_chkCreditToBioinfo').prop('checked', true);
+        //});
+
+        //$("#MainContent_chkRequestTypePilotPI").change(function () {
+        //    if (this.checked) {
+        //        $('#MainContent_chkRequestTypeRfunded').prop('checked', false);
+        //        $('#MainContent_chkRequestTypeOther').prop('checked', false);
+        //    }
+        //});
+
+        //$("#MainContent_chkRequestTypeOther").change(function () {
+        //    if (this.checked) {
+        //        $('#MainContent_chkRequestTypeRfunded').prop('checked', false);
+        //        $('#MainContent_chkRequestTypePilotPI').prop('checked', false);
+        //    }
+        //});
+
+        ////------------------------------------------------------------------
+
+        $("#MainContent_chkRequestTypeApplication").change(function () {
             if (this.checked) {
-                $('#MainContent_chkRequestTypePilotPI').prop('checked', false);
-                $('#MainContent_chkRequestTypeOther').prop('checked', false);
+                $('#MainContent_chkRequestTypeFunded').prop('checked', false);
             }
             //else
             //    $('#MainContent_chkCreditToBioinfo').prop('checked', true);
         });
 
-        $("#MainContent_chkRequestTypePilotPI").change(function () {
+        $("#MainContent_chkRequestTypeFunded").change(function () {
             if (this.checked) {
-                $('#MainContent_chkRequestTypeRfunded').prop('checked', false);
-                $('#MainContent_chkRequestTypeOther').prop('checked', false);
+                $('#MainContent_chkRequestTypeApplication').prop('checked', false);      
             }
         });
 
-        $("#MainContent_chkRequestTypeOther").change(function () {
+        //------------------------------------------------------------------
+
+        $("#MainContent_chkRequestTypeOlaPilot").change(function () {
             if (this.checked) {
-                $('#MainContent_chkRequestTypeRfunded').prop('checked', false);
-                $('#MainContent_chkRequestTypePilotPI').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR21').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR01').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaOther').prop('checked', false);
+            }
+            //else
+            //    $('#MainContent_chkCreditToBioinfo').prop('checked', true);
+        });
+
+        $("#MainContent_chkRequestTypeOlaR21").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaPilot').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR01').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaOther').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkRequestTypeOlaR01").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaPilot').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR21').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaOther').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkRequestTypeOlaOther").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaPilot').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR01').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR21').prop('checked', false);
+            }
+        });
+
+        //------------------------------------------------------------------
+
+
+        $("#MainContent_chkRequestTypeOlaPilot").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaR21').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR01').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaOther').prop('checked', false);
+            }
+            //else
+            //    $('#MainContent_chkCreditToBioinfo').prop('checked', true);
+        });
+
+        $("#MainContent_hkRequestTypeOlaR21").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaPilot').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR01').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaOther').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkRequestTypeOlaR01").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaR21').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaPilot').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaOther').prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkRequestTypeOlaOther").change(function () {
+            if (this.checked) {
+                $('#MainContent_chkRequestTypeOlaR21').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaR01').prop('checked', false);
+                $('#MainContent_chkRequestTypeOlaPilot').prop('checked', false);
+            }
+        });
+
+        //-----------------------------------------------------------------
+
+        $("#MainContent_chkIsRmatrix").change(function () {
+            if (this.checked) {
+                $("#MainContent_chkReportToRmatrix").prop('checked', false);
+            }
+        });
+
+        $("#MainContent_chkReportToRmatrix").change(function () {
+            if (this.checked) {
+                $("#MainContent_chkIsRmatrix").prop('checked', false);
+                $("divRmatrixRequest").hide(); //hideRMATRIX
+            }
+        });
+
+        //-----------------------------------------------------------------
+
+        $("#MainContent_chkIsOlaHawaii").change(function () {
+            if (this.checked) {
+                $("#MainContent_chkReportToOlaHawaii").prop('checked', false);
+            } else {
+                $("#divOlaHawaiiRequest").hide();
+                $('#divRequestType').hide();
+            }
+        });
+
+        $("#MainContent_chkReportToOlaHawaii").change(function () {
+            if (this.checked) {
+                $("#MainContent_chkIsOlaHawaii").prop('checked', false);
+            } else {
+                $('#divRequestType').hide();
             }
         });
 

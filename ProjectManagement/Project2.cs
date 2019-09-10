@@ -83,6 +83,9 @@ namespace ProjectManagement
         public string GrantProposalFundingAgency { get; set; }
         public Nullable<int> UHGrantID { get; set; }
         public Nullable<byte> IsLosCollaborative { get; set; }
+        public Nullable<byte> OlaHIRequestType { get; set; }
+        public Nullable<byte> OlaHIProjectType { get; set; }
+        public Nullable<int> OlaHIRequestYear { get; set; }
     
         public virtual ICollection<ClientAgmt> ClientAgmt { get; set; }
         public virtual ICollection<Grant> Grants { get; set; }

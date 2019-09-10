@@ -11,27 +11,27 @@ function WebForm_PostBackOptions(eventTarget, eventArgument, validation, validat
 function WebForm_DoPostBackWithOptions(options) {
     var validationResult = true;
     if (options.validation) {
-        if (typeof(Page_ClientValidate) == 'function') {
+        if (typeof(Page_ClientValidate) === 'function') {
             validationResult = Page_ClientValidate(options.validationGroup);
         }
     }
     if (validationResult) {
-        if ((typeof(options.actionUrl) != "undefined") && (options.actionUrl != null) && (options.actionUrl.length > 0)) {
+        if ((typeof(options.actionUrl) !== "undefined") && (options.actionUrl !== null) && (options.actionUrl.length > 0)) {
             theForm.action = options.actionUrl;
         }
         if (options.trackFocus) {
             var lastFocus = theForm.elements["__LASTFOCUS"];
-            if ((typeof(lastFocus) != "undefined") && (lastFocus != null)) {
-                if (typeof(document.activeElement) == "undefined") {
+            if ((typeof(lastFocus) !== "undefined") && (lastFocus !== null)) {
+                if (typeof(document.activeElement) === "undefined") {
                     lastFocus.value = options.eventTarget;
                 }
                 else {
                     var active = document.activeElement;
-                    if ((typeof(active) != "undefined") && (active != null)) {
-                        if ((typeof(active.id) != "undefined") && (active.id != null) && (active.id.length > 0)) {
+                    if ((typeof(active) !== "undefined") && (active !== null)) {
+                        if ((typeof(active.id) !== "undefined") && (active.id !== null) && (active.id.length > 0)) {
                             lastFocus.value = active.id;
                         }
-                        else if (typeof(active.name) != "undefined") {
+                        else if (typeof(active.name) !== "undefined") {
                             lastFocus.value = active.name;
                         }
                     }
@@ -75,7 +75,7 @@ function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, 
     callback.async = useAsync;
     var callbackIndex = WebForm_FillFirstAvailableSlot(__pendingCallbacks, callback);
     if (!useAsync) {
-        if (__synchronousCallBackIndex != -1) {
+        if (__synchronousCallBackIndex !== -1) {
             __pendingCallbacks[__synchronousCallBackIndex] = null;
         }
         __synchronousCallBackIndex = callbackIndex;
@@ -176,7 +176,7 @@ function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, 
 function WebForm_CallbackComplete() {
     for (var i = 0; i < __pendingCallbacks.length; i++) {
         callbackObject = __pendingCallbacks[i];
-        if (callbackObject && callbackObject.xmlRequest && (callbackObject.xmlRequest.readyState == 4)) {
+        if (callbackObject && callbackObject.xmlRequest && (callbackObject.xmlRequest.readyState === 4)) {
             if (!__pendingCallbacks[i].async) {
                 __synchronousCallBackIndex = -1;
             }
@@ -192,23 +192,23 @@ function WebForm_CallbackComplete() {
 }
 function WebForm_ExecuteCallback(callbackObject) {
     var response = callbackObject.xmlRequest.responseText;
-    if (response.charAt(0) == "s") {
-        if ((typeof(callbackObject.eventCallback) != "undefined") && (callbackObject.eventCallback != null)) {
+    if (response.charAt(0) === "s") {
+        if ((typeof(callbackObject.eventCallback) !== "undefined") && (callbackObject.eventCallback !== null)) {
             callbackObject.eventCallback(response.substring(1), callbackObject.context);
         }
     }
-    else if (response.charAt(0) == "e") {
-        if ((typeof(callbackObject.errorCallback) != "undefined") && (callbackObject.errorCallback != null)) {
+    else if (response.charAt(0) === "e") {
+        if ((typeof(callbackObject.errorCallback) !== "undefined") && (callbackObject.errorCallback !== null)) {
             callbackObject.errorCallback(response.substring(1), callbackObject.context);
         }
     }
     else {
         var separatorIndex = response.indexOf("|");
-        if (separatorIndex != -1) {
+        if (separatorIndex !== -1) {
             var validationFieldLength = parseInt(response.substring(0, separatorIndex));
             if (!isNaN(validationFieldLength)) {
                 var validationField = response.substring(separatorIndex + 1, separatorIndex + validationFieldLength + 1);
-                if (validationField != "") {
+                if (validationField !== "") {
                     var validationFieldElement = theForm["__EVENTVALIDATION"];
                     if (!validationFieldElement) {
                         validationFieldElement = document.createElement("INPUT");
@@ -218,7 +218,7 @@ function WebForm_ExecuteCallback(callbackObject) {
                     }
                     validationFieldElement.value = validationField;
                 }
-                if ((typeof(callbackObject.eventCallback) != "undefined") && (callbackObject.eventCallback != null)) {
+                if ((typeof(callbackObject.eventCallback) !== "undefined") && (callbackObject.eventCallback !== null)) {
                     callbackObject.eventCallback(response.substring(separatorIndex + validationFieldLength + 1), callbackObject.context);
                 }
             }
@@ -233,7 +233,7 @@ function WebForm_FillFirstAvailableSlot(array, element) {
     array[i] = element;
     return i;
 }
-var __nonMSDOMBrowser = (window.navigator.appName.toLowerCase().indexOf('explorer') == -1);
+var __nonMSDOMBrowser = (window.navigator.appName.toLowerCase().indexOf('explorer') === -1);
 var __theFormPostData = "";
 var __theFormPostCollection = new Array();
 var __callbackTextTypes = /^(text|password|hidden|search|tel|url|email|number|range|color|datetime|date|month|week|time|datetime-local)$/i;
@@ -244,23 +244,23 @@ function WebForm_InitCallback() {
     for (var i = 0; i < count; i++) {
         element = formElements[i];
         var tagName = element.tagName.toLowerCase();
-        if (tagName == "input") {
+        if (tagName === "input") {
             var type = element.type;
-            if ((__callbackTextTypes.test(type) || ((type == "checkbox" || type == "radio") && element.checked))
-                && (element.id != "__EVENTVALIDATION")) {
+            if ((__callbackTextTypes.test(type) || ((type === "checkbox" || type === "radio") && element.checked))
+                && (element.id !== "__EVENTVALIDATION")) {
                 WebForm_InitCallbackAddField(element.name, element.value);
             }
         }
-        else if (tagName == "select") {
+        else if (tagName === "select") {
             var selectCount = element.options.length;
             for (var j = 0; j < selectCount; j++) {
                 var selectChild = element.options[j];
-                if (selectChild.selected == true) {
+                if (selectChild.selected === true) {
                     WebForm_InitCallbackAddField(element.name, element.value);
                 }
             }
         }
-        else if (tagName == "textarea") {
+        else if (tagName === "textarea") {
             WebForm_InitCallbackAddField(element.name, element.value);
         }
     }
@@ -282,7 +282,7 @@ function WebForm_EncodeCallback(parameter) {
 }
 var __disabledControlArray = new Array();
 function WebForm_ReEnableControls() {
-    if (typeof(__enabledControlArray) == 'undefined') {
+    if (typeof(__enabledControlArray) === 'undefined') {
         return false;
     }
     var disabledIndex = 0;
@@ -294,7 +294,7 @@ function WebForm_ReEnableControls() {
         else {
             c = document.all[__enabledControlArray[i]];
         }
-        if ((typeof(c) != "undefined") && (c != null) && (c.disabled == true)) {
+        if ((typeof(c) !== "undefined") && (c !== null) && (c.disabled === true)) {
             c.disabled = false;
             __disabledControlArray[disabledIndex++] = c;
         }
@@ -328,14 +328,14 @@ function WebForm_SimulateClick(element, event) {
     return true;
 }
 function WebForm_FireDefaultButton(event, target) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
         var src = event.srcElement || event.target;
         if (src &&
-            ((src.tagName.toLowerCase() == "input") &&
-             (src.type.toLowerCase() == "submit" || src.type.toLowerCase() == "button")) ||
-            ((src.tagName.toLowerCase() == "a") &&
-             (src.href != null) && (src.href != "")) ||
-            (src.tagName.toLowerCase() == "textarea")) {
+            ((src.tagName.toLowerCase() === "input") &&
+             (src.type.toLowerCase() === "submit" || src.type.toLowerCase() === "button")) ||
+            ((src.tagName.toLowerCase() === "a") &&
+             (src.href !== null) && (src.href !== "")) ||
+            (src.tagName.toLowerCase() === "textarea")) {
             return true;
         }
         var defaultButton;
@@ -388,7 +388,7 @@ function WebForm_SaveScrollPositionSubmit() {
         theForm.__SCROLLPOSITIONX.value = WebForm_GetScrollX();
         theForm.__SCROLLPOSITIONY.value = WebForm_GetScrollY();
     }
-    if ((typeof(this.oldSubmit) != "undefined") && (this.oldSubmit != null)) {
+    if ((typeof(this.oldSubmit) !== "undefined") && (this.oldSubmit !== null)) {
         return this.oldSubmit();
     }
     return true;
@@ -396,7 +396,7 @@ function WebForm_SaveScrollPositionSubmit() {
 function WebForm_SaveScrollPositionOnSubmit() {
     theForm.__SCROLLPOSITIONX.value = WebForm_GetScrollX();
     theForm.__SCROLLPOSITIONY.value = WebForm_GetScrollY();
-    if ((typeof(this.oldOnSubmit) != "undefined") && (this.oldOnSubmit != null)) {
+    if ((typeof(this.oldOnSubmit) !== "undefined") && (this.oldOnSubmit !== null)) {
         return this.oldOnSubmit();
     }
     return true;
@@ -408,13 +408,13 @@ function WebForm_RestoreScrollPosition() {
     else {
         window.scrollTo(theForm.__SCROLLPOSITIONX.value, theForm.__SCROLLPOSITIONY.value);
     }
-    if ((typeof(theForm.oldOnLoad) != "undefined") && (theForm.oldOnLoad != null)) {
+    if ((typeof(theForm.oldOnLoad) !== "undefined") && (theForm.oldOnLoad !== null)) {
         return theForm.oldOnLoad();
     }
     return true;
 }
 function WebForm_TextBoxKeyHandler(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
         var target;
         if (__nonMSDOMBrowser) {
             target = event.target;
@@ -422,8 +422,8 @@ function WebForm_TextBoxKeyHandler(event) {
         else {
             target = event.srcElement;
         }
-        if ((typeof(target) != "undefined") && (target != null)) {
-            if (typeof(target.onchange) != "undefined") {
+        if ((typeof(target) !== "undefined") && (target !== null)) {
+            if (typeof(target.onchange) !== "undefined") {
                 target.onchange();
                 event.cancelBubble = true;
                 if (event.stopPropagation) event.stopPropagation();
@@ -434,7 +434,7 @@ function WebForm_TextBoxKeyHandler(event) {
     return true;
 }
 function WebForm_TrimString(value) {
-    return value.replace(/^\s+|\s+$/g, '')
+    return value.replace(/^\s+|\s+$/g, '');
 }
 function WebForm_AppendToClassName(element, className) {
     var currentClassName = ' ' + WebForm_TrimString(element.className) + ' ';
@@ -503,10 +503,10 @@ function WebForm_GetElementPosition(element) {
             result.x += parent.offsetLeft;
             result.y += parent.offsetTop;
             var parentTagName = parent.tagName.toLowerCase();
-            if (parentTagName != "table" &&
-                parentTagName != "body" && 
-                parentTagName != "html" && 
-                parentTagName != "div" && 
+            if (parentTagName !== "table" &&
+                parentTagName !== "body" && 
+                parentTagName !== "html" && 
+                parentTagName !== "div" && 
                 parent.clientTop && 
                 parent.clientLeft) {
                 result.x += parent.clientLeft;
@@ -540,7 +540,7 @@ function WebForm_GetElementPosition(element) {
 function WebForm_GetParentByTagName(element, tagName) {
     var parent = element.parentNode;
     var upperTagName = tagName.toUpperCase();
-    while (parent && (parent.tagName.toUpperCase() != upperTagName)) {
+    while (parent && (parent.tagName.toUpperCase() !== upperTagName)) {
         parent = parent.parentNode ? parent.parentNode : parent.parentElement;
     }
     return parent;
@@ -565,3 +565,4 @@ function WebForm_SetElementY(element, y) {
         element.style.top = y + "px";
     }
 }
+

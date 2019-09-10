@@ -28,7 +28,6 @@ namespace ProjectManagement
         }
     
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<Invests> Invests { get; set; }
         public virtual DbSet<InvestStatus> InvestStatus { get; set; }
         public virtual DbSet<ServiceType> ServiceTypes { get; set; }
         public virtual DbSet<BioStatGroup> BioStatGroups { get; set; }
@@ -95,6 +94,7 @@ namespace ProjectManagement
         public virtual DbSet<vwProject> vwProject { get; set; }
         public virtual DbSet<Project2> Project2 { get; set; }
         public virtual DbSet<ViewGrant2> ViewGrant2 { get; set; }
+        public virtual DbSet<Invests> Invests { get; set; }
     
         public virtual int P_PROJECT_HOURS(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> projectId, ObjectParameter phdHours, ObjectParameter mSHours)
         {

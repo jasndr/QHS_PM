@@ -778,31 +778,67 @@ namespace ProjectManagement {
         protected global::System.Web.UI.WebControls.TextBox txtOlaHawaiiSubDate;
         
         /// <summary>
-        /// chkRequestTypeRfunded control.
+        /// chkRequestTypeApplication control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeRfunded;
+        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeApplication;
         
         /// <summary>
-        /// chkRequestTypePilotPI control.
+        /// chkRequestTypeFunded control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypePilotPI;
+        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeFunded;
         
         /// <summary>
-        /// chkRequestTypeOther control.
+        /// chkRequestTypeOlaPilot control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeOther;
+        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeOlaPilot;
+        
+        /// <summary>
+        /// chkRequestTypeOlaR21 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeOlaR21;
+        
+        /// <summary>
+        /// chkRequestTypeOlaR01 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeOlaR01;
+        
+        /// <summary>
+        /// chkRequestTypeOlaOther control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkRequestTypeOlaOther;
+        
+        /// <summary>
+        /// txtRequestTypeYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtRequestTypeYear;
         
         /// <summary>
         /// txtCompletionDate control.

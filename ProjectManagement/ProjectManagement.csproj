@@ -1045,6 +1045,7 @@
     </Compile>
     <Compile Include="Model\AgreementExportEnum.cs" />
     <Compile Include="Model\HealthDisparityType.cs" />
+    <Compile Include="Model\OlaHIRequestType.cs" />
     <Compile Include="Model\OlaHawaiiRequestType.cs" />
     <Compile Include="Model\ProjectType.cs" />
     <Compile Include="Model\FileExport.cs" />
