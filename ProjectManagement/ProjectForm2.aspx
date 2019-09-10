@@ -1441,9 +1441,9 @@
             ToggleDiv($('#MainContent_chkReportToOlaHawaii'), $('#divRequestType'));
             //ToggleDiv($('#MainContent_rptGrant_SecondchkId_6'), $('#divDeptFund'));
 
-            ToggleDiv($('#MainContent_chkRequestTypeOlaPilot'), $('.yearCallWave'));
-            ToggleDiv($('#MainContent_chkRequestTypeOlaR21'), $('.yearCallWave'));
-            ToggleDiv($('#MainContent_chkRequestTypeOlaR01'), $('.yearCallWave'));
+            ToggleDiv($('#MainContent_chkRequestTypeOlaPilot'), $('#olaYear'));
+            ToggleDiv($('#MainContent_chkRequestTypeOlaR21'), $('#olaWave'));
+            ToggleDiv($('#MainContent_chkRequestTypeOlaR01'), $('#olaCall'));
 
 
             ToggleDiv4($('#MainContent_rptStudyPopulation_chkId_0'),

@@ -117,6 +117,7 @@ namespace ProjectManagement
     ///  2019SEP09 - Jason Delos Reyes  -  Reorganized "Request Type" options to specify distinction between "application" and "funded" projects
     ///                                    that are either have the type "pilot", "R21", "R01", or "other".  Created new fields in the database
     ///                                    to correspond to this change.
+    ///  2019SEP10 - Jason Delos Reyes  -  Fixed "Year/Call/Wave" display issue not separating upon reading from database.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
