@@ -1543,39 +1543,44 @@
                                         <table class="table">
                                             <tbody>
                                                 <asp:Repeater ID="rptFunding_review" runat="server">
-                                    <ItemTemplate>
-                                        <tr>
-                                            <td style="width: 25%">
-                                                <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
-                                                <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
-                                                <%# Eval("Name1") %>
-                                            </td>
-                                            <td style="width: 25%">
-                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
-                                                <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
-                                                <%# Eval("Name2") %>
-                                            </td>
-                                    </ItemTemplate>
-                                    <AlternatingItemTemplate>
-                                        <td style="width: 25%">
-                                            <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
-                                            <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
-                                            <%# Eval("Name1") %>
-                                        </td>
-                                        <td style="width: 25%">
-                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
-                                            <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
-                                            <%# Eval("Name2") %>
-                                        </td>
-                                        </tr>
-                                    </AlternatingItemTemplate>
-                                </asp:Repeater>
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td style="width: 25%">
+                                                                <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                                                <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                                                <%# Eval("Name1") %>
+                                                            </td>
+                                                            <td style="width: 25%">
+                                                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                                <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                                                <%# Eval("Name2") %>
+                                                            </td>
+                                                    </ItemTemplate>
+                                                    <AlternatingItemTemplate>
+                                                        <td style="width: 25%">
+                                                            <asp:CheckBox ID="FirstchkId" runat="server"></asp:CheckBox>
+                                                            <asp:HiddenField ID="FirstBitValue" Value='<%#Eval("BitValue1")%>' runat="server" />
+                                                            <%# Eval("Name1") %>
+                                                        </td>
+                                                        <td style="width: 25%">
+                                                            <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                                            <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
+                                                            <%# Eval("Name2") %>
+                                                        </td>
+                                                        </tr>
+                                                    </AlternatingItemTemplate>
+                                                </asp:Repeater>
                                             </tbody>
                                         </table>
                                         <div class="row">
                                             <div class="col-sm-4" id="divDepartmentFunding_review" runat="server">
                                                 <label class="control-label" for="txtDepartmentFunding_review">Department Funding</label>
                                                 <input class="form-control" type="text" name="txtDepartmentFunding_review" id="txtDepartmentFunding_review" readonly="readonly" runat="Server" />
+                                            </div>
+                                            <div class="col-sm-1"></div>
+                                            <div class="col-sm-3" id="divDeptFundOth_review" runat="server">
+                                                <label class="control-label" for="txtDeptFundOth_review">Other</label>
+                                                <input class="form-control" type="text" name="txtDeptFundOth_review" id="txtDeptFundOth_review" readonly="readonly" runat="Server" />
                                             </div>
                                             <div class="col-sm-1"></div>
                                             <div class="col-sm-3" id="divFundingOther_review" runat="server">
@@ -1650,21 +1655,23 @@
                         <div class="modal-footer">
                             <div class="row">
                                 <div class="col-sm-offset-1 col-sm-10">
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        <h4 class="text-center"><strong>Click "Submit" to submit your response or "Close" to go back and edit your response.</strong></h4>
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <h4 class="text-center"><strong>Click "Submit" to submit your response or "Close" to go back and edit your response.</strong></h4>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-5"></div>
-                                <span class="col-sm-1"><asp:Button ID="btnSubmit" name="btnSubmit" runat="server" Text="Submit" class="btn center-block" OnClick="btnSubmit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="false" /></span>
-                                <span class="col-sm-1"><button type="button" class="btn btn-default btnClose"  data-dismiss="modal">Close</button></span>
+                                <span class="col-sm-1">
+                                    <asp:Button ID="btnSubmit" name="btnSubmit" runat="server" Text="Submit" class="btn center-block" OnClick="btnSubmit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="false" /></span>
+                                <span class="col-sm-1">
+                                    <button type="button" class="btn btn-default btnClose" data-dismiss="modal">Close</button></span>
                                 <div class="col-sm-5"></div>
                             </div>
-                            
-                            
+
+
                         </div>
                     </div>
                 </div>

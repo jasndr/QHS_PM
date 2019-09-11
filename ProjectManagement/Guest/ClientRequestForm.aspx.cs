@@ -51,6 +51,7 @@ namespace ProjectManagement.Guest
     ///                                    choices before saving it into the database for review.
     ///                                 -  Added dates of consultation for individuals wanting to present their date/time availabilities
     ///                                    to save time in consultation scheduling.
+    ///  2019SEP11 - Jason Delos Reyes  -  Fixed "other" issue not saving into client request database upon submitting form.
     /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
@@ -660,12 +661,12 @@ namespace ProjectManagement.Guest
                         // Other - if Dept. Funding == "Other"
                         if (ddlDepartmentFunding.SelectedItem.Equals("Other")) 
                         {
-                            divFundingOther_review.Visible = true;
-                            txtFundingOther_review.Value = txtFundingOther.Value;
+                            divDeptFundOth_review.Visible = true;
+                            txtDeptFundOth_review.Value = txtDeptFundOth_review.Value;
                         }
                         else
                         {
-                            divFundingOther_review.Visible = false;
+                            divDeptFundOth_review.Visible = false;
                         }
 
                     }
@@ -673,7 +674,7 @@ namespace ProjectManagement.Guest
                     {
                         divDepartmentFunding_review.Visible = false;
                         divDeptFundMou_review.Visible = false;
-                        divFundingOther_review.Visible = false;
+                        divDeptFundOth_review.Visible = false;
                     }
 
                     // Important Deadlines (should be empty if blank)
@@ -970,12 +971,12 @@ namespace ProjectManagement.Guest
                 FirstName = Request.Form["txtFirstName"],
                 LastName = Request.Form["txtLastName"],
                 Degree = ddlDegree.SelectedItem.Text,//Request.Form["ddlDegree"],
-                DegreeOther = Request.Form["txtDegreeOther"],
+                DegreeOther = Request.Form["txtDegreeOther_review"],
                 Email = Request.Form["txtEmail"],
                 Phone = Request.Form["txtPhone"],
                 Department = Request.Form["txtDept"],
                 InvestStatus = ddlPIStatus.SelectedItem.Text,//Request.Form["ddlPIStatus"],
-                InvestStatusOther = Request.Form["txtPIStatusOther"],
+                InvestStatusOther = Request.Form["txtPIStatusOther_review"],
                 IsJuniorPI = chkJuniorPIYes.Checked ? true : false,
                 HasMentor = chkMentorYes.Checked ? true : false,
                 MentorFirstName = Request.Form["txtMentorFirstName"],
@@ -984,13 +985,13 @@ namespace ProjectManagement.Guest
                 ProjectTitle = Request.Form["txtProjectTitle"],
                 ProjectSummary = Request.Form["txtProjectSummary"],
                 StudyAreaBitSum = Int64.TryParse(txtStudyAreaBitSum.Value, out studyAreaBitSum) ? studyAreaBitSum : 0,
-                StudyAreaOther = Request.Form["txtStudyAreaOther"],
+                StudyAreaOther = Request.Form["txtStudyAreaOther_review"],
                 HealthDateBitSum = Int64.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum) ? healthDataBitSum : 0,
-                HealthDataOther = Request.Form["txtHealthDataOther"],
+                HealthDataOther = Request.Form["txtHealthDataOther_review"],
                 StudyTypeBitSum = Int64.TryParse(txtStudyTypeBitSum.Value, out studyTypeBitSum) ? studyTypeBitSum : 0,
-                StudyTypeOther = Request.Form["txtStudyTypeOther"],
+                StudyTypeOther = Request.Form["txtStudyTypeOther_review"],
                 StudyPopulationBitSum = Int64.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum) ? studyPopulationBitSum : 0,
-                StudyPopulationOther = Request.Form["txtStudyPopulationOther"],
+                StudyPopulationOther = Request.Form["txtStudyPopulationOther_review"],
                 IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)1 : chkHealthDisparityNo.Checked ? (byte)2 : chkHealthDisparityNA.Checked ? (byte)3 : (byte)0,
                 ServiceBitSum = Int64.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0,
                 IsPilot = chkPilotYes.Checked ? true : false,
@@ -999,9 +1000,9 @@ namespace ProjectManagement.Guest
                 UHGrantName = /*ddlUHGrant.SelectedItem.Text*/null,
                 GrantProposalFundingAgency = Request.Form["txtGrantProposalFundingAgency"],
                 GrantBitSum = Int64.TryParse(txtFundingBitSum.Value, out grantBitSum) ? grantBitSum : 0,
-                GrantOther = Request.Form["txtFundingOther"],
+                GrantOther = Request.Form["txtFundingOther_review"],
                 GrantDepartmentFundingType = Int32.TryParse(ddlDepartmentFunding.SelectedValue, out grantDepartmentFundingType) ? grantDepartmentFundingType : 0,
-                GrantDepartmentFundingOther = Request.Form["txtDeptFundOth"],
+                GrantDepartmentFundingOther = Request.Form["txtDeptFundOth_review"],
                 DeadLine = DateTime.TryParse(txtDueDate.Text, out dt) ? dt : (DateTime?)null,
                 BiostatId = Int32.TryParse(ddlBiostat.SelectedItem.Value, out biostatId) ? biostatId : 0,
                 Creator = Request.UserHostAddress.ToString(),

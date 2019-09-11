@@ -1021,6 +1021,24 @@ namespace ProjectManagement.Guest {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtDepartmentFunding_review;
         
         /// <summary>
+        /// divDeptFundOth_review control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDeptFundOth_review;
+        
+        /// <summary>
+        /// txtDeptFundOth_review control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtDeptFundOth_review;
+        
+        /// <summary>
         /// divFundingOther_review control.
         /// </summary>
         /// <remarks>
