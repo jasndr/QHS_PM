@@ -28,6 +28,9 @@ namespace ProjectManagement.Report
     ///                                    the addition of the Ola HAWAII grant for now.
     ///  2019APR29 - Jason Delos Reyes  -  Edited query to pull *only* Biostatistics project and paying external projects
     ///                                    for Ola HAWAII.
+    ///  2019OCT10 - Jason Delos Reyes  -  Removed restriction for Pilot projects in Ola HAWAII monthly report view
+    ///                                    in order to make it consistent with the report that is being downloaded
+    ///                                    when exporting the monthly summary report.
     /// </summary>
     public partial class MonthlyReport : System.Web.UI.Page
     {
@@ -181,7 +184,7 @@ namespace ProjectManagement.Report
                                                                  && !(bool)pp2.p.IsOlaRequest
                                                                  && !(bool)pp2.p.NotReportOla
                                                                  && (int)pp2.p.IsInternal == 0
-                                                                 && pp2.p.IsPilot == "N"
+                                                                 /*&& pp2.p.IsPilot == "N"*/
                                                                  
                                                                  && pp2.p.ProjectType == 1
                                                                  

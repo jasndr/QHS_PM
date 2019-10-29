@@ -41,6 +41,22 @@ namespace ProjectManagement.Model
             }
         }
 
+        public static void BindDropDownList(DropDownList ddl, IDictionary<long, string> dataSource, string firstItemText)
+        {
+            if (ddl != null)
+            {
+                ddl.DataSource = dataSource;
+                ddl.DataValueField = "Key";
+                ddl.DataTextField = "Value";
+                ddl.DataBind();
+
+                if (firstItemText != null)  //(dataSource.Count > 1)
+                {
+                    ddl.Items.Insert(0, new ListItem(firstItemText, String.Empty));
+                }
+            }
+        }
+
         public static void BindDropDownList(DropDownList ddl, IDictionary<string, string> dataSource, string firstItemText)
         {
             if (ddl != null)

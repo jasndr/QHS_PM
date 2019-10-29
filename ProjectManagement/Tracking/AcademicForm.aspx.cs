@@ -30,6 +30,9 @@ namespace ProjectManagement.Admin
     ///  2018MAY09 - Jason Delos Reyes  -  Added "mentor for student" section to be able to distinguish 
     ///                                    student mentor from other activities (such as participation 
     ///                                    in their thesis/dissertation committees).
+    ///  2019OCT29 - Jason Delos Reyes  -  Added additional comments/documentation for readibility.
+    ///                                 -  Converted faculty/staff list (rptBiostat) to be of type
+    ///                                    "long" instead of "int" to account for large Bitsum value.
     /// </summary>
     public partial class AcademicForm : System.Web.UI.Page
     {
@@ -41,6 +44,12 @@ namespace ProjectManagement.Admin
             }    
         }        
 
+        /// <summary>
+        /// Populates Staff, Academic Type, Event Details, and Comments fields
+        /// with the selected Academic Event from the dropdown.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ddlEvent_Changed(Object sender, EventArgs e)
         {
             //BindProject(-1);
@@ -54,6 +63,12 @@ namespace ProjectManagement.Admin
             //lblMsg.Text = selectedProjectId.ToString();
         }
 
+        /// <summary>
+        /// Obtains the Academic table from the database with
+        /// the given Academic Event Id selected from the
+        /// dropdown.
+        /// </summary>
+        /// <param name="eventId">Given Academic Event Id from dropdown.</param>
         private void BindControl(int eventId)
         {
             //if (eventId > 0)
@@ -73,6 +88,11 @@ namespace ProjectManagement.Admin
             //}
         }
 
+        /// <summary>
+        /// Binds the Academic form fields based on the information from
+        /// the Academic database table.
+        /// </summary>
+        /// <param name="ae">Given Academic Event instance.</param>
         private void BindControl(Academic ae)
         {
             int typeId = 0;
@@ -95,7 +115,8 @@ namespace ProjectManagement.Admin
                 txtComments.Value = ae.Comments;
                 //txtCheckCode.Value = "";
 
-                BindTable(rptBiostat, (int)ae.BiostatBitSum);
+                /// Binds checkboxes based on BiostatBitSum
+                BindTable(rptBiostat, (long)ae.BiostatBitSum);
 
                 string Title = ae.Title
                       , Organization = ae.Organization
@@ -206,11 +227,17 @@ namespace ProjectManagement.Admin
             
         }
 
+        /// <summary>
+        /// Prepopulates the Academic Type and Events dropdowns, as well as staff list
+        /// for the Academic Form.
+        /// </summary>
         private void BindControl()
         {                        
             using (ProjectTrackerContainer db = new ProjectTrackerContainer())
             {
                 var dropDownSource = new Dictionary<int, string>();
+                var dropDownSource2 = new Dictionary<long, string>();
+
 
                 dropDownSource = db.Academic
                                 .Where(a => a.Id > 0)
@@ -229,12 +256,12 @@ namespace ProjectManagement.Admin
 
                 PageUtility.BindDropDownList(ddlEventHdn, dropDownSource, "Add new event");
 
-                dropDownSource = db.BioStats
-                                .Where(b => b.BitValue > 0 && b.EndDate >= DateTime.Now && b.Name != "N/A")
-                                .OrderBy(b => b.Id)
-                                .ToDictionary(c => (int)c.BitValue, c => c.Name);
+                dropDownSource2 = db.BioStats
+                                    .Where(b => b.BitValue > 0 && b.EndDate >= DateTime.Now && b.Name != "N/A")
+                                    .OrderBy(b => b.Id)
+                                    .ToDictionary(c => (long)c.BitValue, c => c.Name);
 
-                BindTable2(dropDownSource, rptBiostat);
+                BindTable2(dropDownSource2, rptBiostat);
                
                 //dropDownSource = db.AcademicField.OfType<AcademicType>().OrderBy(f => f.DisplayOrder).ToDictionary(c => c.Id, c => c.Name);
                 dropDownSource = db.AcademicField.Where(f => f.Category == "AcademicType").OrderBy(f => f.DisplayOrder).ToDictionary(c => c.Id, c => c.Name);
@@ -266,14 +293,19 @@ namespace ProjectManagement.Admin
 
         }
 
+        /// <summary>
+        /// Saves Academic form into the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             //int biostatBitSum = GetBiostatBitSum();
 
             int typeId = 0;
             Int32.TryParse(ddlAcademicType.SelectedValue, out typeId);
-            int bitSum = 0;
-            Int32.TryParse(txtBiostatBitSum.Value, out bitSum);
+            long bitSum = 0;
+            Int64.TryParse(txtBiostatBitSum.Value, out bitSum);
 
 
             Academic ae = GetAcademic(typeId);
@@ -303,6 +335,11 @@ namespace ProjectManagement.Admin
             }
         }
 
+        /// <summary>
+        /// Saves Academic table into database.
+        /// </summary>
+        /// <param name="ae">Given academic table.</param>
+        /// <returns>Academic table that was given.</returns>
         private Academic SaveAcademic(Academic ae)
         {
             Academic acad;
@@ -336,6 +373,12 @@ namespace ProjectManagement.Admin
             return acad;
         }
 
+        /// <summary>
+        /// Provides Acadmic Event fields based on 
+        /// given acadmic type.
+        /// </summary>
+        /// <param name="typeId">Academic type id.</param>
+        /// <returns>Academic form with the correct fields per academic type.</returns>
         private Academic GetAcademic(int typeId)
         {
             int id = 0,
@@ -501,7 +544,13 @@ namespace ProjectManagement.Admin
             }
         }
 
-        private void BindTable(Repeater rpt, int bitSum)
+        /// <summary>
+        /// Binds the checkboxes for the faculty/staff table
+        /// based on the given bitsum value from the academic database table.
+        /// </summary>
+        /// <param name="rpt"></param>
+        /// <param name="bitSum"></param>
+        private void BindTable(Repeater rpt, long bitSum)
         {
             foreach (RepeaterItem i in rpt.Items)
             {
@@ -537,17 +586,23 @@ namespace ProjectManagement.Admin
             }
         }
 
-        private void BindTable2(Dictionary<int, string> collection, Repeater rpt)
+        /// <summary>
+        /// Binds the list table of faculty/staff with the dictioanry of faculty/staff
+        /// that are currently active (EndDate > today).
+        /// </summary>
+        /// <param name="collection">Given dictionary of faculty/staff.</param>
+        /// <param name="rpt">Given repeater of faculty/staff table.</param>
+        private void BindTable2(Dictionary<long, string> collection, Repeater rpt)
         {
             DataTable dt = new DataTable("tblRpt");
 
-            dt.Columns.Add("Id1", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Id1", System.Type.GetType("System.Int64"));
             dt.Columns.Add("Name1", System.Type.GetType("System.String"));
-            dt.Columns.Add("BitValue1", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("BitValue1", System.Type.GetType("System.Int64"));
 
-            dt.Columns.Add("Id2", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Id2", System.Type.GetType("System.Int64"));
             dt.Columns.Add("Name2", System.Type.GetType("System.String"));
-            dt.Columns.Add("BitValue2", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("BitValue2", System.Type.GetType("System.Int64"));
 
             var query = collection.ToArray();
 
@@ -579,12 +634,21 @@ namespace ProjectManagement.Admin
             rpt.DataBind();
         }
 
-        private bool CheckBitValue(int bitSum, HiddenField hdnBitValue)
+        /// <summary>
+        /// Checks if given bitsum value matches a repeater's 
+        /// bit value.  Compares individual faculty/staff member
+        /// with academic event entry to see if checkbox can
+        /// be checked on the corresponding academic form.
+        /// </summary>
+        /// <param name="bitSum">Given bitsumv alue.</param>
+        /// <param name="hdnBitValue">Given hidden value of individual faculty/staff member.</param>
+        /// <returns>1 or 0 value to confirm if bitsum matches bit value</returns>
+        private bool CheckBitValue(long bitSum, HiddenField hdnBitValue)
         {
-            int bitValue = 0;
-            Int32.TryParse(hdnBitValue.Value, out bitValue);
+            long bitValue = 0;
+            Int64.TryParse(hdnBitValue.Value, out bitValue);
 
-            int c = bitSum & bitValue;
+            long c = bitSum & bitValue;
 
             return c == bitValue;
         }

@@ -60,7 +60,7 @@
                                     <%# Eval("Name1") %>
                                 </td>
                                 <td>
-                                    <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                    <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (long)Eval("Id2") > 0 %>'></asp:CheckBox>
                                     <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
                                     <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
                                     <%# Eval("Name2") %>
@@ -74,7 +74,7 @@
                                 <%# Eval("Name1") %>
                             </td>
                             <td>
-                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (int)Eval("Id2") > 0 %>'></asp:CheckBox>
+                                <asp:CheckBox ID="SecondchkId" runat="server" Visible='<%# (long)Eval("Id2") > 0 %>'></asp:CheckBox>
                                 <%--<asp:HiddenField ID="Id2" Value='<%#Eval("Id2")%>' runat="server" />--%>
                                 <asp:HiddenField ID="SecondBitValue" Value='<%#Eval("BitValue2")%>' runat="server" />
                                 <%# Eval("Name2") %>
