@@ -1437,14 +1437,18 @@
             ToggleDiv($('#MainContent_chkIsUHPilotGrantNo'), $('#divGrantProposalFundingAgency'));
             ToggleDiv($('#MainContent_chkIsRmatrix'), $('#divRmatrixRequest'));
             ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divOlaHawaiiRequest'));
-            ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divRequestType'));
-            ToggleDiv($('#MainContent_chkReportToOlaHawaii'), $('#divRequestType'));
+            ToggleDiv2($('#MainContent_chkIsOlaHawaii'), $('#MainContent_chkReportToOlaHawaii'), $('#divRequestType'));
+            //ToggleDiv($('#MainContent_chkIsOlaHawaii'), $('#divRequestType'));
+            //ToggleDiv($('#MainContent_chkReportToOlaHawaii'), $('#divRequestType'));
             //ToggleDiv($('#MainContent_rptGrant_SecondchkId_6'), $('#divDeptFund'));
 
             ToggleDiv($('#MainContent_chkRequestTypeOlaPilot'), $('#olaYear'));
             ToggleDiv($('#MainContent_chkRequestTypeOlaR21'), $('#olaWave'));
             ToggleDiv($('#MainContent_chkRequestTypeOlaR01'), $('#olaCall'));
 
+            ToggleDiv4($('#MainContent_chkRequestTypeOlaPilot'), $('#MainContent_chkRequestTypeOlaR01'),
+                       $('#MainContent_chkRequestTypeOlaR21'), $('#MainContent_chkRequestTypeOlaOther'), $('.yearCallWave'));
+                
 
             ToggleDiv4($('#MainContent_rptStudyPopulation_chkId_0'),
                 $('#MainContent_rptStudyPopulation_chkId_1'),
@@ -2084,6 +2088,15 @@
                 });
 
 
+                //------ liwayway
+
+                $('divhealthDisparity')
+
+                //------
+
+                    
+
+
                 $('#MainContent_txtMentorFirstName').val('');
                 $('#MainContent_txtMentorLastName').val('');
                 $('#MainContent_txtMentorEmail').val('');
@@ -2115,6 +2128,15 @@
         // ToggleDiv - shows section if check; otherwise remain hidden.
         function ToggleDiv(checkBox, theDiv) {
             if (checkBox.is(":checked"))
+                theDiv.show();
+            else
+                theDiv.hide();
+        }
+
+        // ToggleDiv2 - Same functionality as 'ToggleDiv' with ability to handle two checkboxes.
+        function ToggleDiv2(checkBox1, checkBox2, theDiv) {
+            if (checkBox1.is(":checked")
+                || checkBox2.is(":checked"))
                 theDiv.show();
             else
                 theDiv.hide();
