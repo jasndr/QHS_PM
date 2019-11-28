@@ -52,6 +52,8 @@ namespace ProjectManagement.Guest
     ///                                 -  Added dates of consultation for individuals wanting to present their date/time availabilities
     ///                                    to save time in consultation scheduling.
     ///  2019SEP11 - Jason Delos Reyes  -  Fixed "other" issue not saving into client request database upon submitting form.
+    ///  2019NOV27 - Jason Delos Reyes  -  Made it easier to exclude or include Biostatistics and Bioinformatics individuals 
+    ///                                    in the list of preferred members for clients to choose from.
     /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
@@ -137,9 +139,24 @@ namespace ProjectManagement.Guest
                 dropDownSource = cr.BioStat_cr
                                    .Where(b => b.EndDate >= DateTime.Now && b.Id > 0
                                                                          && b.Name != "N/A"
+
+                                                                         /** Exclude Bioinfo Members **/
                                                                          && b.Name != "Vedbar Khadka"
                                                                          && b.Name != "Youping Deng"
+                                                                         && b.Name != "Yuanyuan Fu"
                                                                          && b.Name != "Mark Menor"
+
+                                                                         /** Exclude Biostat Members**/
+                                                                         //&& b.Name != "Breanna Morrison"
+                                                                         //&& b.Name != "Chathura Siriwardhana"
+                                                                         //&& b.Name != "Eunjung Lim"
+                                                                         //&& b.Name != "Hyeong Jun Ahn"
+                                                                         //&& b.Name != "James Davis"
+                                                                         //&& b.Name != "Jason Delos Reyes"
+                                                                         //&& b.Name != "John Chen"
+                                                                         //&& b.Name != "So Yung Choi"
+
+                                                                         /** (Always exclude) */
                                                                          && b.Name != "Laura Tipton"
                                                                          && b.Name != "JaNay Wyss"
                                                                          && b.Name != "Meliza Roman"
