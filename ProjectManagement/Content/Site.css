@@ -275,3 +275,10 @@ if it's not present, don't show loader */
 
 
 /* typeahead end*/
+
+
+
+.emphasize{
+    border: 2px solid #000;
+    border-radius: 4px;
+}

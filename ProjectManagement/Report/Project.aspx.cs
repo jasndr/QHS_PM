@@ -44,6 +44,8 @@ namespace ProjectManagement.Report
     ///                                    "Submitted to RMATRIX" and "Submitted to Ola HAWAII" checked.
     ///  2020APR23 - Jason Delos Reyes  -  Edited "Master" dropdown to also pull other MS and below QHS faculty/staff 
     ///                                    that doesn't necessarily have the label "master" as biostat type.
+    ///  2020APR27 - Jason Delos Reyes  -  Added customized "Check-in Summary" report for Project report to 
+    ///                                    be able to better facilitate work-from-home check-in summary sessions.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
@@ -114,6 +116,15 @@ namespace ProjectManagement.Report
                         .Select(x => new {Id = x.Id, Name = x.FirstName +" " + x.LastName});
 
                     textAreaPI.Value = Newtonsoft.Json.JsonConvert.SerializeObject(piName);
+
+                    Dictionary<int, string> reportType = new Dictionary<int, string>();
+                    reportType.Add(1, "Check-in Meeting Report");
+
+                    PageUtility.BindDropDownList(ddlReportType, reportType, "Full Report");
+
+
+
+
                 }
             }
             
@@ -126,14 +137,30 @@ namespace ProjectManagement.Report
         /// <param name="e"></param>
         protected void btnSumbit_Click(object sender, EventArgs e)
         {
-            divProject.Visible = true;
+            if (ddlReportType.SelectedIndex.Equals(1))
+            {
+                divProject2.Visible = true;
 
-            DataTable dt = GetProjectTable();
+                DataTable dt = GetProjectTable();
 
-            rptProjectSummary.DataSource = dt;
-            rptProjectSummary.DataBind();
+                rptProjectSummary2.DataSource = dt;
+                rptProjectSummary2.DataBind();
 
-            hdnRowCount.Value = dt.Rows.Count.ToString();
+                hdnRowCount.Value = dt.Rows.Count.ToString();
+            } 
+            else
+            {
+                divProject.Visible = true;
+
+                DataTable dt = GetProjectTable();
+
+                rptProjectSummary.DataSource = dt;
+                rptProjectSummary.DataBind();
+
+                hdnRowCount.Value = dt.Rows.Count.ToString();
+            }
+
+            
 
             //Control footerTemplate = rptProjectSummary.Controls[rptProjectSummary.Controls.Count - 1].Controls[0];
             //Label lblFooter = footerTemplate.FindControl("lblTotal") as Label;
@@ -181,8 +208,10 @@ namespace ProjectManagement.Report
 
             //dt.Rows.Add(dr);
 
-            string reportHeader = "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate;
-            string fileName = "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;
+            string reportHeader = ddlReportType.SelectedIndex.Equals(1) ? "(Check-in Summary) Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate
+                                                                        : "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate; 
+            string fileName = ddlReportType.SelectedIndex.Equals(1) ? "Check-in_Summary_Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate 
+                                                                    : "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;
 
             FileExport fileExport = new FileExport(this.Response);
             fileExport.ExcelExport2(dt, fileName, reportHeader);
@@ -295,15 +324,19 @@ namespace ProjectManagement.Report
         {
             DataTable dt = new DataTable("tblProject");
 
+            string reportToUse = ddlReportType.SelectedIndex.Equals(1) ? "Rpt_Project_Summary2b" : "Rpt_Project_Summary2a";
+
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
+
 
             try
             {
 
+
                 using (SqlConnection sqlcon = new SqlConnection(constr))
                 {
-                    using (SqlCommand cmd = new SqlCommand("Rpt_Project_Summary2a", sqlcon))
+                    using (SqlCommand cmd = new SqlCommand(reportToUse, sqlcon))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@FromDate", fromDate);

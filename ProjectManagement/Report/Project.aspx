@@ -30,39 +30,40 @@
 
         <div class="panel-body">
             <div class="row offset2">
-                <div class="col-md-1 text-right">
+                <div class="col-xs-3 col-md-2">
                     <label class="control-label">Project Type:</label>
                 </div>
-                <div class="col-md-1 offset2">
+                <div class="col-xs-4 col-md-2 offset2">
                     <asp:CheckBox ID="chkProject" runat="server" Text="Project" Checked="True"></asp:CheckBox>
                 </div>
-                <div class="col-md-1 offset2">
+                <div class="col-xs-4 col-md-2 offset2">
                     <asp:CheckBox ID="chkConsult" runat="server" Text="Consult"></asp:CheckBox>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-xs-3 col-md-2">
                     <label class="control-label">Request for Resources:</label>
                 </div>
-                <div class="col-md-2 offset1">
+                <div class="col-xs-4 col-md-2 ">
                     <asp:CheckBox ID="chkRmatrixRequest" runat="server" Text="RMATRIX" ></asp:CheckBox>
                 </div>
-                <div class="col-md-2 offset1">
+                <div class="col-xs-4 col-md-2 ">
                     <asp:CheckBox ID="chkOlaRequest" runat="server" Text="Ola HAWAII"></asp:CheckBox>
                 </div>
-                <div class="col-md-1 text-right">
+                
+            </div>
+            <div class="row offset2">
+                <div class="col-xs-2 col-md-2">
                     <label class="control-label">Letter of Support?</label>
                 </div>
-                <div class="col-md-1 offset2">
+                <div class="col-xs-10 col-md-1 offset2">
                     <asp:CheckBox ID="chkLetterOfSupport" runat="server" Text="Yes" ></asp:CheckBox>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-offset-4 col-md-1">
+                <div class="col-xs-3 col-md-2 col-md-offset-3">
                     <label class="control-label">Submitted to:</label>
                 </div>
-                <div class="col-md-2 offset1">
+                <div class="col-xs-4 col-md-2 ">
                     <asp:CheckBox ID="chkSubmitToRMATRIX" runat="server" Text="RMATRIX" />
                 </div>
-                <div class="col-md-2 offset1">
+                <div class="col-xs-4 col-md-2 ">
                     <asp:CheckBox ID="chkSubmitToOlaHAWAII" runat="server" Text="Ola HAWAII" />
                 </div>
             </div>
@@ -90,22 +91,23 @@
                         <asp:TextBox ID="txtToDate" runat="server" class="form-control"></asp:TextBox>
                     </div>
                 </div>
-            </div>
-            <div class="row offset2">
-                <div class="col-md-1 text-right">
+                 <div class="col-md-1 text-right">
                     <label class="control-label">PhD:</label>
                 </div>
-                <div class="col-xs-6 col-md-2">
+                <div class="col-xs-11 col-md-2">
                     <asp:DropDownList ID="ddlPhd" runat="server" CssClass="form-control">
                     </asp:DropDownList>
                 </div>
                 <div class="col-md-1 text-right">
                     <label class="control-label">Master:</label>
                 </div>
-                <div class="col-xs-6 col-md-2">
+                <div class="col-xs-11 col-md-2">
                     <asp:DropDownList ID="ddlMs" runat="server" CssClass="form-control">
                     </asp:DropDownList>
                 </div>
+            </div>
+            <div class="row offset2">
+               
             </div>
             <div class="row offset2">
                 <div class="col-md-1 text-right">
@@ -129,25 +131,34 @@
                 <div class="col-md-1 offset2">
                     <asp:CheckBox ID="chkCreditToBoth" runat="server" Text="Both"></asp:CheckBox>
                 </div>
+                <div class="col-md-offset-1">
+                    <div class="col-xs-2 col-md-1">
+                    <label class="control-label">Report Type:</label>
+                </div>
+                <div class="col-xs-10 col-md-3">
+                    <asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-control emphasize">
+                    </asp:DropDownList>
+                </div>
+                </div>
             </div>
-            <div class="row offset2">
-                <div class="col-md-1 text-right">
+            <div class="row">
+                <div class="col-xs-2 col-md-1">
                     <label class="control-label">PI Name:</label>
                 </div>
-                <div class="col-xs-6 col-md-2">
+                <div class="col-xs-10 col-md-2">
                     <input class="form-control nameahead" type="text" name="txtPIName" id="txtPIName" runat="Server" onchange="updateId(this)" />
                 </div>
-                <div class="col-md-1 text-right">
+                <div class="col-xs-2 col-md-1">
                     <label class="control-label">PI Status:</label>
                 </div>
-                <div class="col-xs-6 col-md-3">
+                <div class="col-xs-10 col-md-3">
                     <asp:DropDownList ID="ddlPIStatus" runat="server" CssClass="form-control">
                     </asp:DropDownList>
                 </div>
-                <div class="col-md-1 text-right">
+                <div class="col-xs-2 col-md-1">
                     <label class="control-label">Affiliation:</label>
                 </div>
-                <div class="col-xs-6 col-md-3">
+                <div class="col-xs-10 col-md-3">
                     <input class="form-control typeahead" type="text" name="txtAffiliation" id="txtAffiliation" runat="Server" onchange="updateId(this)" />
                 </div>
             </div>
@@ -165,26 +176,27 @@
                     <input class="form-control" type="text" name="txtAffilId" id="txtAffilId" runat="Server" />
                 </div>
             </div>
-            <div class="row offset2">
-                <div class="col-md-1 text-right">
+            <br />
+            <div class="row">
+                <div class="col-xs-2 col-md-1 ">
                     <label class="control-label">Health Data:</label>
                 </div>
-                <div class="col-xs-6 col-md-2">
+                <div class="col-xs-10 col-md-2">
                     <asp:DropDownList ID="ddlHealthData" runat="server" CssClass="form-control">
                     </asp:DropDownList>
                 </div>
-                <div class="col-md-1 text-right">
+                <div class="col-xs-2 col-md-1 ">
                     <label class="control-label">Funding Source:</label>
                 </div>
-                <div class="col-xs-6 col-md-3">
+                <div class="col-xs-10 col-md-3">
                     <asp:DropDownList ID="ddlGrant" runat="server" CssClass="form-control">
                     </asp:DropDownList>
                 </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-2">
+                <div class="col-xs-2 col-md-1"></div>
+                <div class="col-xs-2 col-md-2">
                     <asp:Button ID="btnSumbit" runat="server" Text="Get Report" CssClass="btn btn-info" OnClick="btnSumbit_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-xs-2 col-md-2">
                     <asp:Button ID="btnExportExcel" runat="server" Text="Download" CssClass="btn btn-info" OnClick="btnExportExcel_Click" OnClientClick="ClientSideClick(this)" UseSubmitBehavior="False" />
                 </div>
             </div>
@@ -270,6 +282,58 @@
                                                     <td>
                                                         <asp:Label ID="lblMsHrs" runat="server" /></td>
                                                 </tr>--%>
+                                            </FooterTemplate>
+                                        </asp:Repeater>
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="divProject2" runat="server" visible="false">
+                <div class="col-md-12">
+
+                    <div class="outerContainer">
+                        <div class="innerContainer">
+                                <table id="headerTable2" class="table table-striped table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="16">(Check-in Summary) Project Report - <% =ReportType %> - from <% =FromDate %> to <% =ToDate %></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-sm-1">Id</th>
+                                            <th class="col-sm-1">First Name</th>
+                                            <th class="col-sm-1">Last Name</th>
+                                            <th class="col-sm-2">Title</th>
+                                            <th class="col-sm-1">Initial Date</th>
+                                            <th class="col-sm-1">Completion Date</th>
+                                            <th class="col-sm-1">Lead</th>
+                                            <th class="col-sm-1">Member</th>
+                                            <th class="col-sm-1">Internal/External</th>
+                                            <th>Phd Hrs</th>
+                                            <th>Ms Hrs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <asp:Repeater ID="rptProjectSummary2" runat="server">
+                                            <ItemTemplate>
+                                                <tr>
+                                                    <td><%# Eval("Id") %></td>
+                                                    <td><%# Eval("FirstName") %></td>
+                                                    <td><%# Eval("LastName") %></td>
+                                                    <td><%# Eval("Title") %></td>
+                                                    <td><%# Eval("InitialDate") %></td>
+                                                    <td><%# Eval("CompletionDate") %></td>
+                                                    <td><%# Eval("LeadBio") %></td>
+                                                    <td><%# Eval("Member") %></td>
+                                                    <td><%# Eval("IsInternal") %></td>
+                                                    <td><%# Eval("PhdHrs") %></td>
+                                                    <td><%# Eval("MsHrs") %></td>
+                                                </tr>
+                                            </ItemTemplate>
+                                            <FooterTemplate>
+                                                
                                             </FooterTemplate>
                                         </asp:Repeater>
                                     </tbody>

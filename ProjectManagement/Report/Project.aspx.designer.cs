@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectManagement.Report {
-    
-    
-    public partial class Project {
-        
+namespace ProjectManagement.Report
+{
+
+
+    public partial class Project
+    {
+
         /// <summary>
         /// chkProject control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkProject;
-        
+
         /// <summary>
         /// chkConsult control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkConsult;
-        
+
         /// <summary>
         /// chkRmatrixRequest control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkRmatrixRequest;
-        
+
         /// <summary>
         /// chkOlaRequest control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkOlaRequest;
-        
+
         /// <summary>
         /// chkLetterOfSupport control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkLetterOfSupport;
-        
+
         /// <summary>
         /// chkSubmitToRMATRIX control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkSubmitToRMATRIX;
-        
+
         /// <summary>
         /// chkSubmitToOlaHAWAII control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkSubmitToOlaHAWAII;
-        
+
         /// <summary>
         /// txtFromDate control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFromDate;
-        
+
         /// <summary>
         /// txtToDate control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtToDate;
-        
+
         /// <summary>
         /// ddlPhd control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPhd;
-        
+
         /// <summary>
         /// ddlMs control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMs;
-        
+
         /// <summary>
         /// chkBiostat control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkBiostat;
-        
+
         /// <summary>
         /// chkBioinfo control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkBioinfo;
-        
+
         /// <summary>
         /// chkCreditToBiostat control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCreditToBiostat;
-        
+
         /// <summary>
         /// chkCreditToBioinfo control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCreditToBioinfo;
-        
+
         /// <summary>
         /// chkCreditToBoth control.
         /// </summary>
@@ -155,7 +157,16 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCreditToBoth;
-        
+
+        /// <summary>
+        /// ddlReportType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlReportType;
+
         /// <summary>
         /// txtPIName control.
         /// </summary>
@@ -164,7 +175,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPIName;
-        
+
         /// <summary>
         /// ddlPIStatus control.
         /// </summary>
@@ -173,7 +184,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPIStatus;
-        
+
         /// <summary>
         /// txtAffiliation control.
         /// </summary>
@@ -182,7 +193,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtAffiliation;
-        
+
         /// <summary>
         /// txtPIId control.
         /// </summary>
@@ -191,7 +202,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPIId;
-        
+
         /// <summary>
         /// txtAffilId control.
         /// </summary>
@@ -200,7 +211,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtAffilId;
-        
+
         /// <summary>
         /// ddlHealthData control.
         /// </summary>
@@ -209,7 +220,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlHealthData;
-        
+
         /// <summary>
         /// ddlGrant control.
         /// </summary>
@@ -218,7 +229,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGrant;
-        
+
         /// <summary>
         /// btnSumbit control.
         /// </summary>
@@ -227,7 +238,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSumbit;
-        
+
         /// <summary>
         /// btnExportExcel control.
         /// </summary>
@@ -236,7 +247,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnExportExcel;
-        
+
         /// <summary>
         /// textAreaPI control.
         /// </summary>
@@ -245,7 +256,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea textAreaPI;
-        
+
         /// <summary>
         /// textAreaAffil control.
         /// </summary>
@@ -254,7 +265,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea textAreaAffil;
-        
+
         /// <summary>
         /// hdnRowCount control.
         /// </summary>
@@ -263,7 +274,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText hdnRowCount;
-        
+
         /// <summary>
         /// download_token control.
         /// </summary>
@@ -272,7 +283,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText download_token;
-        
+
         /// <summary>
         /// divProject control.
         /// </summary>
@@ -281,7 +292,7 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divProject;
-        
+
         /// <summary>
         /// rptProjectSummary control.
         /// </summary>
@@ -290,5 +301,23 @@ namespace ProjectManagement.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptProjectSummary;
+
+        /// <summary>
+        /// divProject2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divProject2;
+
+        /// <summary>
+        /// rptProjectSummary2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptProjectSummary2;
     }
 }
