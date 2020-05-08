@@ -119,6 +119,8 @@ namespace ProjectManagement
     ///                                    to correspond to this change.
     ///  2019SEP10 - Jason Delos Reyes  -  Fixed "Year/Call/Wave" display issue not separating upon reading from database.
     ///  2019NOV13 - Jason Delos Reyes  -  Fixed "Year/Call/Wave" box appearing despite Ola HAWAII Request Type (Pilot, R21, R01, Other) not selected.
+    ///  2020MAY07 - Jason Delos Reyes  -  Made "Acknowledgement" section check only "Ola HAWAII" by default. Also fixed default
+    ///                                    checking of "Submit to RMATRIX" and "Submit to Ola HAWAII" to see default setting.
     /// </summary>
     public partial class ProjectForm2 : System.Web.UI.Page
     {
