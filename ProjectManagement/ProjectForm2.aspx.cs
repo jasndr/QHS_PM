@@ -2333,8 +2333,7 @@ namespace ProjectManagement
             body.AppendLine("<p></P>");
             body.AppendLine("<p>Aloha,</P>");
             body.AppendLine("<p></P>");
-            body.AppendLine(@"<p>Quantitative Health Sciences (QHS)<br />
-                                Department of Complementary & Integrative Medicine<br />
+            body.AppendLine(@"<p>Department of Quantitative Health Sciences<br />
                                 University of Hawaii John A. Burns School of Medicine<br />
                                 651 Ilalo Street, Medical Education Building, Suite 411<br />
                                 Honolulu, HI 96813<br />

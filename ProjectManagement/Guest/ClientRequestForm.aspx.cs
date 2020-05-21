@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using ProjectManagement.Model;
 using System;
@@ -54,6 +55,9 @@ namespace ProjectManagement.Guest
     ///  2019SEP11 - Jason Delos Reyes  -  Fixed "other" issue not saving into client request database upon submitting form.
     ///  2019NOV27 - Jason Delos Reyes  -  Made it easier to exclude or include Biostatistics and Bioinformatics individuals 
     ///                                    in the list of preferred members for clients to choose from.
+    ///  2020MAY12 - Jason Delos Reyes  -  Added "Types of support needed - Other" field error message to intake to resolve missing error.
+    ///  2020MAY21 - Jason Delos Reyes  -  Continued to add error message to "Other" field types for users to not leave those
+    ///                                    options blank
     /// </summary>
     public partial class ClientRequestForm : System.Web.UI.Page
     {
@@ -820,12 +824,24 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Study area is required. <br />");
             }
+            // Makes sure that "Study Area - Other" fill-inthe-blank field is not left blank.
+            if ((studyAreaBitSum & 128) == 128 && txtStudyAreaOther.Value.Equals(string.Empty)) 
+            {
+                validateForm.Append("\"Study area - Other\" field required because \"Other\" specified" +
+                    " in Study Area section. <br />");
+            }
 
             int healthDataBitSum = 0;
             Int32.TryParse(txtHealthDataBitSum.Value, out healthDataBitSum);
             if (healthDataBitSum <= 0)
             {
                 validateForm.Append("Health data is required. <br />");
+            }
+            // Ensures that "Health data - Other" fill-in-the-blank field is not left blank.
+            if ((healthDataBitSum & 256) == 256 && txtHealthDataOther.Value.Equals(string.Empty))
+            {
+                validateForm.Append("\"Health data - Other\" field required becuase \"Other\" specified" +
+                    " in Health Data section. <br />");
             }
 
             int studyTypeBitSum = 0;
@@ -834,6 +850,13 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Study type is required. <br />");
             }
+            // Ensures that "Study type - Other" fill-in-the-blank field is not left blank.
+            if ((studyTypeBitSum & 16) == 16 && txtStudyTypeOther.Value.Equals(string.Empty))
+            {
+                validateForm.Append("\"Study type = Other\" field required because \"Other\" specified" +
+                    " in Study Type section. <br />");
+            }
+
 
             int studyPopulationBitSum = 0;
             Int32.TryParse(txtStudyPopulationBitSum.Value, out studyPopulationBitSum);
@@ -845,9 +868,16 @@ namespace ProjectManagement.Guest
             {
                 if ((studyPopulationBitSum != 32 && studyPopulationBitSum > 0) && (!chkHealthDisparityYes.Checked && !chkHealthDisparityNo.Checked && !chkHealthDisparityNA.Checked))
                 {
-                    validateForm.Append("Study population >> Health disparity is required since study population is specified. \\n");
+                    validateForm.Append("Study population >> Health disparity is required since study population is specified. <br />");
+                }
+                // Validates that "International Populations - specify" field is filled and not left blank.
+                if ((studyPopulationBitSum & 16) == 16 && txtStudyPopulationOther.Value.Equals(string.Empty))
+                {
+                    validateForm.Append("Study population >> Specify - Please specify type of international populations" +
+                        " as \"International Populations\" has been selected as an option. <br />");
                 }
             }
+
 
             int serviceBitSum = 0;
             Int32.TryParse(txtServiceBitSum.Value, out serviceBitSum);
@@ -875,6 +905,12 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append(">>> UH Infrastructure Grant specified - Response to follow-up question \"What is the grant name?\" is required. <br />");
             }
+            // Ensures that "Other" is specified under "Types of support needed" question.
+            if ((serviceBitSum & 256) == 256 && txtServiceOther.Value.Equals(string.Empty))
+            {
+                validateForm.Append("\"Types of support needed - Other\" field required since \"Other\" option" +
+                    " selected in \"Types of support needed\" section. <br />");
+            }
 
             int fundingBitSum = 0;
             Int32.TryParse(txtFundingBitSum.Value, out fundingBitSum);
@@ -882,6 +918,30 @@ namespace ProjectManagement.Guest
             {
                 validateForm.Append("Funding source is required. <br />");
             }
+            // Ensures "Other" option for "Funding" section is not left blank.
+            if ((fundingBitSum & 65536) == 65536 && txtFundingOther.Value.Equals(string.Empty))
+            {
+                validateForm.Append("\"Funding source - other\" required since \"Other\" option" +
+                    " selected in \"What is the funding source to support this request?\" section. <br />");
+            }
+            
+            if ((fundingBitSum & 16384) == 16384)
+            {
+                // Ensures "Department Funding" dropdown selected if option selected in "Funding" section.
+                if (ddlDepartmentFunding.SelectedValue.Equals(string.Empty))
+                {
+                    validateForm.Append("\"Department Funding\" drop-down option required since \"Department Funding\" option" +
+                        " selected in \"What is the funding source to support this request?\" section. <br />");
+                }
+                // Ensures "Department Funding - Other" option filled if option selected in "Department Funding" dropdown.
+                if (ddlDepartmentFunding.SelectedValue.Equals(96) && txtDeptFundOth.Value.Equals(string.Empty))
+                {
+                    validateForm.Append("\"Department Funding - other\"  required since \"Other\" option" +
+                        " selected in \"Funding Source >> Department Funding\" dropdown. <br />");
+                }
+            }
+           
+
 
             return validateForm.ToString();
         }
@@ -1011,6 +1071,7 @@ namespace ProjectManagement.Guest
                 StudyPopulationOther = Request.Form["txtStudyPopulationOther_review"],
                 IsHealthDisparity = chkHealthDisparityYes.Checked ? (byte)1 : chkHealthDisparityNo.Checked ? (byte)2 : chkHealthDisparityNA.Checked ? (byte)3 : (byte)0,
                 ServiceBitSum = Int64.TryParse(txtServiceBitSum.Value, out serviceBitSum) ? serviceBitSum : 0,
+                ServiceOther = Request.Form["txtServiceOther_review"],
                 IsPilot = chkPilotYes.Checked ? true : false,
                 IsGrantProposal = chkProposalYes.Checked ? true : false,
                 IsUHGrant = chkIsUHPilotGrantYes.Checked ? true : false,
