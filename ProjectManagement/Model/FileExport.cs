@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using ClosedXML.Excel;
+using com.sun.rowset.@internal;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace ProjectManagement.Model
 {
@@ -91,6 +93,11 @@ namespace ProjectManagement.Model
 
                 //Format all titles in one shot
                 wb.NamedRanges.NamedRange("Titles").Ranges.Style = titlesStyle;
+
+
+                //Style "Lead" and "Member" subsectins (on hold for now)
+                 
+
 
                 ws.Columns().AdjustToContents();
 

@@ -48,6 +48,9 @@ namespace ProjectManagement.Report
     ///                                    be able to better facilitate work-from-home check-in summary sessions.
     ///  2020MAY01 - Jason Delos Reyes  -  Need to fix error in code that shows two different reports in the same
     ///                                    screen when it should be displaying just one.
+    ///  2020MAY29 - Jason Delos Reyes  -  Created Rpt_Project_Summary2c stored procedure to replace existing 
+    ///                                    Check-in Meeting Report. Need to update title on front-end to
+    ///                                    use faculty/staff name on report title for check-in meeting reports.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
@@ -328,7 +331,7 @@ namespace ProjectManagement.Report
         {
             DataTable dt = new DataTable("tblProject");
 
-            string reportToUse = ddlReportType.SelectedIndex.Equals(1) ? "Rpt_Project_Summary2b" : "Rpt_Project_Summary2a";
+            string reportToUse = ddlReportType.SelectedIndex.Equals(1) ? "Rpt_Project_Summary2c" : "Rpt_Project_Summary2a";
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);

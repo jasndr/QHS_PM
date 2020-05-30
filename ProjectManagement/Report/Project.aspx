@@ -310,7 +310,7 @@
                                             <th class="col-sm-1">Completion Date</th>
                                             <th class="col-sm-1">Lead</th>
                                             <th class="col-sm-1">Member</th>
-                                            <th class="col-sm-1">Internal/External</th>
+                                            <th class="col-sm-1">Project Type</th>
                                             <th>Phd Hrs</th>
                                             <th>Ms Hrs</th>
                                         </tr>
@@ -327,7 +327,7 @@
                                                     <td><%# Eval("CompletionDate") %></td>
                                                     <td><%# Eval("LeadBio") %></td>
                                                     <td><%# Eval("Member") %></td>
-                                                    <td><%# Eval("IsInternal") %></td>
+                                                    <td><%# Eval("ProjectType") %></td>
                                                     <td><%# Eval("PhdHrs") %></td>
                                                     <td><%# Eval("MsHrs") %></td>
                                                 </tr>
