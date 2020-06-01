@@ -51,6 +51,8 @@ namespace ProjectManagement.Report
     ///  2020MAY29 - Jason Delos Reyes  -  Created Rpt_Project_Summary2c stored procedure to replace existing 
     ///                                    Check-in Meeting Report. Need to update title on front-end to
     ///                                    use faculty/staff name on report title for check-in meeting reports.
+    ///  2020JUN01 - Jason Delos Reyes  -  Edited report to allow individual MS or Phd name to be entered in 
+    ///                                    report title when selected.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
@@ -261,6 +263,9 @@ namespace ProjectManagement.Report
 
             if (healthValue > 0) ReportType = ReportType + " " + ddlHealthData.SelectedItem.Text;
             if (grantValue > 0) ReportType = ReportType + " " + ddlGrant.SelectedItem.Text;
+            if (phdId > 0) ReportType = ReportType + " " + ddlPhd.SelectedItem.Text;
+            if (msId > 0) ReportType = ReportType + " " + ddlMs.SelectedItem.Text;
+            
 
             isProject = chkProject.Checked ? 1 : 0;
 
