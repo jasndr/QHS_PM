@@ -70,7 +70,7 @@
         <br />
             <div class="row offset2">
                 <div class="col-md-1 text-right">
-                    <label class="control-label">From Date:</label>
+                    <label class="control-label" id="lblFromDate">From Date:</label>
                 </div>
                 <div class="col-md-2">
                     <div class="input-group date" id="dtpFromDate">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="col-md-1 text-right">
-                    <label class="control-label">To Date:</label>
+                    <label class="control-label" id="lblToDate">To Date:</label>
                 </div>
                 <div class="col-md-2">
                     <div class="input-group date" id="dtpToDate">
@@ -106,8 +106,19 @@
                     </asp:DropDownList>
                 </div>
             </div>
-            <div class="row offset2">
-               
+ 
+            <div class="row offset2" id="divReferenceRow">
+                <div class="col-md-1 text-right">
+                    <label class="control-label">Reference Date:</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group date" id="dtpReferenceDate">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        <asp:TextBox ID="txtReferenceDate" runat="server" class="form-control"></asp:TextBox>
+                    </div>
+                </div>
             </div>
             <div class="row offset2">
                 <div class="col-md-1 text-right">
@@ -211,7 +222,7 @@
 
             <div class="row" id="divProject" runat="server" visible="false">
                 <div class="col-md-12">
-
+                      
                     <div class="outerContainer">
                         <div class="innerContainer">
                                 <table id="headerTable" class="table table-striped table-hover table-bordered">
@@ -299,7 +310,7 @@
                                 <table id="headerTable2" class="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th colspan="16">(Check-in Summary) Project Report - <% =ReportType %> - from <% =FromDate %> to <% =ToDate %></th>
+                                            <th colspan="16">(Check-in Summary) Project Report - <% =ReportType %> - [Short Term/Last 2 Weeks: <%=FromDate %>-<% =ToDate %>][Reference: <%=ReferenceDate %>-<%=ToDate %>][Cumulative: Project Start Date-<%=ToDate %>]</th>
                                         </tr>
                                         <tr>
                                             <th class="col-sm-1">Id</th>
@@ -311,8 +322,9 @@
                                             <th class="col-sm-1">Lead</th>
                                             <th class="col-sm-1">Member</th>
                                             <th class="col-sm-1">Project Type</th>
-                                            <th>Phd Hrs</th>
-                                            <th>Ms Hrs</th>
+                                            <th>Hrs from last 2 weeks</th>
+                                            <th>Reference Hours</th>
+                                            <th>Cumulative Hours</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -328,8 +340,9 @@
                                                     <td><%# Eval("LeadBio") %></td>
                                                     <td><%# Eval("Member") %></td>
                                                     <td><%# Eval("ProjectType") %></td>
-                                                    <td><%# Eval("PhdHrs") %></td>
-                                                    <td><%# Eval("MsHrs") %></td>
+                                                    <td><%# Eval("Last2WeeksHrs") %></td>
+                                                    <td><%# Eval("ReferenceHrs") %></td>
+                                                    <td><%# Eval("CumulativeHrs") %></td>
                                                 </tr>
                                             </ItemTemplate>
                                             <FooterTemplate>
@@ -370,11 +383,46 @@
             var toDate = new DatePicker('dtpToDate');
             toDate.init();
 
+            var referenceDate = new DatePicker('dtpReferenceDate');
+            referenceDate.init();
+
             if ($('#MainContent_hdnRowCount').val() > 0)
                 $('#MainContent_btnExportExcel').prop("disabled", false);
             else {
                 $('#MainContent_btnExportExcel').prop("disabled", true);
             }
+
+            // Show/Hide fields for Full vs. Check-in Report (on page load)
+            if ($('#MainContent_ddlReportType').value == '1')
+            //.....................^.......
+            {
+                $('#divReferenceRow').show();
+                $('#lblFromDate').text("Short Term Date:");
+                $('#lblToDate').text("End Date:");
+            }
+            else {
+                $('#divReferenceRow').hide();
+                $('#lblFromDate').text("From Date:");
+                $('#lblToDate').text("To Date:");
+            }
+
+            // Show/Hide fields for Full vs. Check-in Report (on selection change)
+            $('#MainContent_ddlReportType').on('change', function () {
+                if (this.value == '1')
+                //.....................^.......
+                {
+                    $('#divReferenceRow').show();
+                    $('#lblFromDate').text("Short Term Date:");
+                    $('#lblToDate').text("End Date:");
+                }
+                else {
+                    $('#divReferenceRow').hide();
+                    $('#lblFromDate').text("From Date:");
+                    $('#lblToDate').text("To Date:");
+                }
+            });
+
+
 
             //$('#MainContent_txtPIName').change(function() {
             //    alert('changed');

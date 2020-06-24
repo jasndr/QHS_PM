@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace ProjectManagement.Report
 {
@@ -53,12 +54,17 @@ namespace ProjectManagement.Report
     ///                                    use faculty/staff name on report title for check-in meeting reports.
     ///  2020JUN01 - Jason Delos Reyes  -  Edited report to allow individual MS or Phd name to be entered in 
     ///                                    report title when selected.
+    ///  2020JUN23 - Jason Delos Reyes  -  Created Rpt_Project_Summary2d stored procedure to allow for adding
+    ///                                    Short Term, Reference, and Cumulative Hours into the Check-in Reports.
+    ///                                    Added optional "reference date" field on front end to accomodate 
+    ///                                    additional date for report.
     /// </summary>
     public partial class Project : System.Web.UI.Page
     {
         protected string ReportType { get; set; }
         protected string FromDate { get; set; }
         protected string ToDate { get; set; }
+        protected string ReferenceDate { get; set; }
 
         /// <summary>
         /// Prepares initial page load for use.
@@ -147,7 +153,11 @@ namespace ProjectManagement.Report
             if (ddlReportType.SelectedIndex.Equals(1))
             {
                 divProject2.Visible = true;
+                /*divReferenceRow.Visible = true;
+                //lblFromDate.InnerText = "Short Term Start Date \n (e.g., Date two weeks ago)";
+                lblToDate.InnerText = "End Date";*/
                 divProject.Visible = false;
+               
 
                 DataTable dt = GetProjectTable();
 
@@ -160,6 +170,7 @@ namespace ProjectManagement.Report
             {
                 divProject.Visible = true;
                 divProject2.Visible = false;
+                /*divReferenceRow.Visible = false;*/
 
                 DataTable dt = GetProjectTable();
 
@@ -217,9 +228,14 @@ namespace ProjectManagement.Report
 
             //dt.Rows.Add(dr);
 
-            string reportHeader = ddlReportType.SelectedIndex.Equals(1) ? "(Check-in Summary) Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate
+
+            /* (Check-in Summary) Report - So Yung Choi - [Short Term/Last 2 Weeks: 6/4/2020-6/18/2020][Reference: 4/1/2020-6/18/2020][Project Start - 6/18/2020] */
+            string reportHeader = ddlReportType.SelectedIndex.Equals(1) ? "(Check-in Summary) Project Report - " + ReportType 
+                                                                          + " - [Short Term/Last 2 Weeks: " + FromDate + "-"+ ToDate
+                                                                          + "][Reference: " + ReferenceDate + "-" + ToDate
+                                                                          + "][Cumulative: Project Start Date-" + ToDate +"]"
                                                                         : "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate; 
-            string fileName = ddlReportType.SelectedIndex.Equals(1) ? "Check-in_Summary_Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate 
+            string fileName = ddlReportType.SelectedIndex.Equals(1) ? "Check-in_Summary_Project_Report_-_" + ReportType + "_-_" + ToDate 
                                                                     : "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;
 
             FileExport fileExport = new FileExport(this.Response);
@@ -253,7 +269,7 @@ namespace ProjectManagement.Report
 
             Int32.TryParse(ddlPIStatus.SelectedValue, out piStatusId);
 
-            int phdId = 0, msId = 0, healthValue = 0, grantValue = 0, isProject = 1, isBiostat = 1, creditTo = 1,
+            int phdId = 0, msId = 0, healthValue = 0, grantValue = 0, isProject = 1, isBiostat = -1, creditTo = -1,
                 isRmatrixRequest = 0, isOlaRequest = 0, submitRMATRIX = 1, submitOlaHAWAII = 1, letterOfSupport = 0;
 
             Int32.TryParse(ddlPhd.SelectedValue, out phdId);
@@ -296,15 +312,17 @@ namespace ProjectManagement.Report
                                                                                   : new DateTime(2000, 01, 01);
             DateTime toDate = DateTime.TryParse(txtToDate.Text, out toDate) ? DateTime.Parse(txtToDate.Text)
                                                                             : DateTime.Now;/*DateTime(2099, 01, 01)*/
+            DateTime referenceDate = DateTime.TryParse(txtReferenceDate.Text, out referenceDate) ? DateTime.Parse(txtReferenceDate.Text) : new DateTime(2020, 04, 01); 
                                                                                                      
 
             //DateTime fromDate = new DateTime(2000,01,01), toDate = new DateTime(2099,01,01);
             //if (DateTime.TryParse(txtFromDate.Text, out fromDate) && DateTime.TryParse(txtToDate.Text, out toDate))
             //{
-            dt = GetProjectTable(fromDate, toDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, submitRMATRIX, submitOlaHAWAII, letterOfSupport, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
+            dt = GetProjectTable(fromDate, toDate, referenceDate, phdId, msId, isProject, isBiostat, isRmatrixRequest, isOlaRequest, submitRMATRIX, submitOlaHAWAII, letterOfSupport, creditTo, piId, piStatusId, affilId, healthValue, grantValue);
 
             FromDate = fromDate.ToString("MM/dd/yyyy");
             ToDate = toDate.ToString("MM/dd/yyyy");
+            ReferenceDate = referenceDate.ToString("MM/dd/yyyy");
             //}
 
             return dt;
@@ -315,6 +333,7 @@ namespace ProjectManagement.Report
         /// </summary>
         /// <param name="fromDate">Starting date of range.</param>
         /// <param name="toDate">Ending date of range.</param>
+        /// <param name="referenceDate">Intermediate date of reference (for reference hours).</param>
         /// <param name="phdId">Biostat ID of Phd faculty.</param>
         /// <param name="msId">Biostat ID of MS staff.</param>
         /// <param name="isProject">Pulls either projects (1) or consultations (0).</param>
@@ -331,12 +350,12 @@ namespace ProjectManagement.Report
         /// <param name="healthValue">Health Database specified.</param>
         /// <param name="grantValue">Funding Source specified.</param>
         /// <returns></returns>
-        private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, int phdId, int msId, int isProject, int isBiostat, 
+        private DataTable GetProjectTable(DateTime fromDate, DateTime toDate, DateTime referenceDate, int phdId, int msId, int isProject, int isBiostat, 
             int isRmatrixRequest, int isOlaRequest, int submitRMATRIX, int submitOlaHAWAII, int letterOfSupport, int creditTo, int piId, int piStatusId, int affilId, int healthValue, int grantValue)
         {
             DataTable dt = new DataTable("tblProject");
 
-            string reportToUse = ddlReportType.SelectedIndex.Equals(1) ? "Rpt_Project_Summary2c" : "Rpt_Project_Summary2a";
+            string reportToUse = ddlReportType.SelectedIndex.Equals(1) ? "Rpt_Project_Summary2d" : "Rpt_Project_Summary2a";
 
             string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection con = new SqlConnection(constr);
@@ -353,6 +372,7 @@ namespace ProjectManagement.Report
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@FromDate", fromDate);
                         cmd.Parameters.AddWithValue("@ToDate", toDate);
+                        if (ddlReportType.SelectedIndex.Equals(1)) { cmd.Parameters.AddWithValue("@ReferenceDate", referenceDate);}
                         cmd.Parameters.AddWithValue("@PhdId", phdId);
                         cmd.Parameters.AddWithValue("@MsId", msId);
                         cmd.Parameters.AddWithValue("@IsProject", isProject);
