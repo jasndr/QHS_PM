@@ -232,8 +232,8 @@ namespace ProjectManagement.Report
             /* (Check-in Summary) Report - So Yung Choi - [Short Term/Last 2 Weeks: 6/4/2020-6/18/2020][Reference: 4/1/2020-6/18/2020][Project Start - 6/18/2020] */
             string reportHeader = ddlReportType.SelectedIndex.Equals(1) ? "(Check-in Summary) Project Report - " + ReportType 
                                                                           + " - [Short Term/Last 2 Weeks: " + FromDate + "-"+ ToDate
-                                                                          + "][Reference: " + ReferenceDate + "-" + ToDate
-                                                                          + "][Cumulative: Project Start Date-" + ToDate +"]"
+                                                                          + "] [Reference: " + ReferenceDate + "-" + ToDate
+                                                                          + "] [Cumulative: Project Start Date-" + ToDate +"]"
                                                                         : "Project Report - " + ReportType + " - from " + FromDate + " to " + ToDate; 
             string fileName = ddlReportType.SelectedIndex.Equals(1) ? "Check-in_Summary_Project_Report_-_" + ReportType + "_-_" + ToDate 
                                                                     : "Project_Report_-_" + ReportType + "_-_from_" + FromDate + "_to_" + ToDate;

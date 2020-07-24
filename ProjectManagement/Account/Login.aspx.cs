@@ -28,6 +28,8 @@ namespace ProjectManagement.Account
     ///                                    easier data structure view and management.
     ///                                 -  Added requirement of a "confirmed" email account before
     ///                                    accessing your account.
+    ///  2020JUL23 - Jason Delos Reyes  -  Created warning message for those attempting to log into the
+    ///                                    existing tracking system in preparation for the database split.
     ///  </summary>
     public partial class Login : Page
     {

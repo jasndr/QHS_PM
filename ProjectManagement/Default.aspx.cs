@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
@@ -19,6 +20,8 @@ using System.Web.UI.WebControls;
 /// @Maintenance/Revision History:
 ///  YYYYDDMMM - NAME/INITIALS      -  REVISION
 ///  2018MAR19 - Jason Delos Reyes  -  Started adding documentation to make code more easily maintainable. 
+///  2020JUL23 - Jason Delos Reyes  -  Added warning message to redirect users to new Biostatistics and Bioinformatics
+///                                    Project Tracking Systems.
 /// </summary>
 namespace ProjectManagement
 {
@@ -45,6 +48,29 @@ namespace ProjectManagement
             {
                 divDashboard.Visible = false;
                 divIdleProject.Visible = false;
+
+                // Display error message and redirect users to new Project Tracking System links.
+                //var errorMsg = "====SAMPLS====";
+                var errorMsg = "Please visit the following links instead:<br /><br />" +
+                                            "<span style=\"color: maroon; font-size: 16pt;\"><strong>[Biostatistics Core Facility]</strong></span><br />" +
+                                                                        "<span style=\"color: maroon; font-size: 12pt;\">External Link = <a href=\"https://bqhsportal.jabsom.hawaii.edu/PM-Biostat\">bqhsportal.jabsom.hawaii.edu/PM-Biostat</a><br />" +
+                                                                        "Internal Link = <a href=\"http://qhsdb.jabsomit.hawaii.edu/PM-Biostat\">qhsdb.jabsomit.hawaii.edu/PM-Biostat</a></span><br /><br />" +
+                                             "<span style=\"color: green; font-size: 16pt; font-weight: bold;\">[Bioinformatics Core Facility]</span><br />" +
+                                                                        "<span style=\"color: green; font-size: 12pt;\">External Link = <a href=\"https://bqhsportal.jabsom.hawaii.edu/PM-Biostat\">bqhsportal.jabsom.hawaii.edu/PM-Biostat</a><br />" +
+                                                                        "Internal Link = <a href=\"http://qhsdb.jabsomit.hawaii.edu/PM-Bioinfo\">qhsdb.jabsomit.hawaii.edu/PM-Bioinfo</a></span>";
+
+
+                StringBuilder sb2 = new StringBuilder();
+                sb2.Append(@"<script type='text/javascript'>");
+                sb2.Append("$('#MainContent_lblWarning').text('Please find the appropriate website:');");
+                sb2.Append("$('#textWarning').append('<span>" + errorMsg + "</span>');");
+                sb2.Append("ShowWarningModal();");
+                sb2.Append(@"</script>");
+
+                Page.ClientScript.RegisterStartupScript(this.GetType(),
+                    "ShowModalScript", sb2.ToString());
+
+
             }
 
         }

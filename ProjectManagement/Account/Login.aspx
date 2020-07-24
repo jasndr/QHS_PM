@@ -5,12 +5,39 @@
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <h3><%: Title %></h3>
 
-    <div class="row" >
+
+    <div class="jumbotron" style="background-color: #DCDCDC !important; color: black;">
+        <h3 style="color: red; font-weight: bold;">Notice: Site no longer in use</h3>
+        <h5>Logging into this site is now only permitted for the QHS Tracking Team.  Please visit the 
+            new Project Tracking websites for the corresponding Core Facility below. Note that external links
+            allows you access to the websites outside of JABSOM, the internal links can only be accessed
+            through JABSOM-connected computers, which is fundamentally more secure.
+        </h5>
+        <br />
+        <div>
+            <p style="color: maroon; font-size: 16pt;">
+                [Biostatistics Core Facility]
+            </p>
+            <ul style="font-size: 12pt;">
+                <li>External Link - <a href="https://bqhsportal.jabsom.hawaii.edu/PM-Biostat">bqhsportal.jabsom.hawaii.edu/PM-Biostat</a></li>
+                <li>Internal Link - <a href="http://qhsdb.jabsomit.hawaii.edu/PM-Biostat">qhsdb.jabsomit.hawaii.edu/PM-Biostat</a></li>
+            </ul>
+            <p style="color: green; font-size: 16pt;">[Bioinformatics Core Facility]</p>
+            <ul style="font-size: 12pt;">
+                <li>External Link - <a href="https://bqhsportal.jabsom.hawaii.edu/PM-Bioinfo">bqhsportal.jabsom.hawaii.edu/PM-Bioinfo</a></li>
+                <li>Internal Link - <a href="http://qhsdb.jabsomit.hawaii.edu/PM-Bioinfo">qhsdb.jabsomit.hawaii.edu/PM-Bioinfo</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div class="row">
         <div class="col-md-8">
             <section id="loginForm">
                 <div class="form-horizontal">
                     <hr />
-                      <asp:PlaceHolder runat="server" ID="ErrorMessage" Visible="false">
+                    <asp:PlaceHolder runat="server" ID="ErrorMessage" Visible="false">
                         <p class="text-danger">
                             <asp:Literal runat="server" ID="FailureText" />
                         </p>
@@ -50,12 +77,12 @@
                     if you don't have a local account.
                 </p>
                 <p>
-                    <asp:HyperLink runat="server" ID="ForgotPasswordHyperLink" ViewStateMode="Disabled">Forgot your password?</asp:HyperLink>                    
+                    <asp:HyperLink runat="server" ID="ForgotPasswordHyperLink" ViewStateMode="Disabled">Forgot your password?</asp:HyperLink>
                 </p>
             </section>
         </div>
 
-       <%-- <div class="col-md-4">
+        <%-- <div class="col-md-4">
             <section id="socialLoginForm">
                 <uc:OpenAuthProviders runat="server" ID="OpenAuthLogin" />
             </section>

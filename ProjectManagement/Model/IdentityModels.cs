@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -85,13 +86,20 @@ namespace ProjectManagement
 
         public static string GetResetPasswordRedirectUrl(string code, HttpRequest request)
         {
-            var absoluteUri = "/Account/ResetPassword?" + CodeKey + "=" + HttpUtility.UrlEncode(code);
+
+            string requestUrl = request.Url.ToString();
+            string accountPasswordPart = requestUrl.Contains("BiostatPM") ? "/BiostatPM/Account/ResetPassword?" : "/Account/ResetPassword?";
+
+            var absoluteUri = accountPasswordPart + CodeKey + "=" + HttpUtility.UrlEncode(code);
             return new Uri(request.Url, absoluteUri).AbsoluteUri.ToString();
         }
 
         public static string GetUserConfirmationRedirectUrl(string code, string userId, HttpRequest request)
         {
-            var absoluteUri = "/Account/Confirm?" + CodeKey + "=" + HttpUtility.UrlEncode(code) + "&" + UserIdKey + "=" + HttpUtility.UrlEncode(userId);
+            string requestUrl = request.Url.ToString();
+            string accountConfirmPart = requestUrl.Contains("BiostatPM") ? "/BiostatPM/Account/Confirm?" : "/Account/Confirm?";
+
+            var absoluteUri = accountConfirmPart + CodeKey + "=" + HttpUtility.UrlEncode(code) + "&" + UserIdKey + "=" + HttpUtility.UrlEncode(userId);
             return new Uri(request.Url, absoluteUri).AbsoluteUri.ToString();
         }
 

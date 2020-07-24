@@ -310,7 +310,7 @@
                                 <table id="headerTable2" class="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th colspan="16">(Check-in Summary) Project Report - <% =ReportType %> - [Short Term/Last 2 Weeks: <%=FromDate %>-<% =ToDate %>][Reference: <%=ReferenceDate %>-<%=ToDate %>][Cumulative: Project Start Date-<%=ToDate %>]</th>
+                                            <th colspan="16">(Check-in Summary) Project Report - <% =ReportType %> - [Short Term/Last 2 Weeks: <%=FromDate %>-<% =ToDate %>] [Reference: <%=ReferenceDate %>-<%=ToDate %>] [Cumulative: Project Start Date-<%=ToDate %>]</th>
                                         </tr>
                                         <tr>
                                             <th class="col-sm-1">Id</th>

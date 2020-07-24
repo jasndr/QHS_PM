@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectManagement {
-    
-    
-    public partial class _Default {
-        
+namespace ProjectManagement
+{
+
+
+    public partial class _Default
+    {
+
         /// <summary>
         /// divDashboard control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDashboard;
-        
+
         /// <summary>
         /// rptProject control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptProject;
-        
+
         /// <summary>
         /// lblProjectCnt control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblProjectCnt;
-        
+
         /// <summary>
         /// hlTimeCnt control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hlTimeCnt;
-        
+
         /// <summary>
         /// divIdleProject control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ProjectManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divIdleProject;
-        
+
         /// <summary>
         /// rptIdleProject control.
         /// </summary>
