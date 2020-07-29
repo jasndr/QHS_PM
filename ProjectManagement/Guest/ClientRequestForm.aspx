@@ -232,7 +232,7 @@
         <div class="container body-content">
             <%--<div class="jumbotron">--%>
             <%--<img src="../images/Banner_Print3.jpg" class="img-rounded" />--%>
-            <img src="<%=Page.ResolveUrl("~/images/Banner_Print3_QHS-01.png")%>" class="img-rounded" />
+            <img src="<%=Page.ResolveUrl("~/images/banner_qhs_2020_website_wp.png")%>" class="img-rounded" />
             <br />
             <br />
             <div id="divRequest" visible="false">
